@@ -7,18 +7,7 @@
       </v-card-title>
       
       <v-card-text>
-        <v-row>
-          <v-col cols="6">
-            <v-text-field
-              v-model="search"
-              prepend-inner-icon="mdi-magnify"
-              label="Buscar intermediario"
-              variant="outlined"
-              density="comfortable"
-              hide-details
-            />
-          </v-col>
-        </v-row>
+        <SearchComponent searchIniinitialValueSearch="search" @on-write="setSearch" />
 
         <v-data-table
           :headers="headers"
@@ -51,12 +40,13 @@
 </template>
 
 <script setup>
+import SearchComponent from '@/components/catalogos/SearchComponent.vue';
 import { useIntermediarios } from '@/composables/catalogos/useIntermediarios';
 import { useSearch } from '@/composables/catalogos/useSearch';
 
 
 const { headers, intermediarios } = useIntermediarios();
-const { search } = useSearch();
+const { search, setSearch } = useSearch();
 
 const editItem = (item) => {
     console.log("Editar:", item);

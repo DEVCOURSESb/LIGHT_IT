@@ -21,6 +21,7 @@ declare module 'vue' {
     NavigationDrawer: typeof import('./components/NavigationDrawer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchComponent: typeof import('./components/catalogos/SearchComponent.vue')['default']
     SearchInput: typeof import('./components/ui/SearchInput.vue')['default']
   }
 }
