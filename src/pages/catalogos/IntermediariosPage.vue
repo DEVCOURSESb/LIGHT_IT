@@ -1,13 +1,52 @@
 <template>
   <div>
     <v-card>
-      <v-card-title class="d-flex align-center">
-        <v-icon icon="mdi-account-multiple" class="mr-2" />
-        Intermediarios
-      </v-card-title>
-      
+      <v-card-title class="d-flex align-center"> Intermediarios </v-card-title>
+
       <v-card-text>
-        <SearchComponent searchIniinitialValueSearch="search" @on-write="setSearch" />
+        <div class="d-flex justify-space-between align-center">
+          <SearchComponent
+            :initialValueSearch="search"
+            @on-write="setSearch"
+            placeholder="intermediarios"
+          />
+
+          <ModalComponent
+            text-button="Agregar intermediario"
+            title="Agregar nuevo intermediario"
+            :is-active="activeModal"
+            @onModifyActive="changeActiveModal"
+          >
+            <v-form id="modalIntermediario" @submit.prevent="submit">
+              <div class="d-none">
+                <v-text-field
+                v-model="id.value.value"
+              ></v-text-field>
+              </div>
+              <v-text-field
+                label="Clave"
+                v-model="clave.value.value"
+                :error-messages="clave.errorMessage.value"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="Nombre"
+                v-model="nombre.value.value"
+                :error-messages="nombre.errorMessage.value"
+                required
+              ></v-text-field>
+              <v-select
+                :items="itemsSelect"
+                density="comfortable"
+                label="Activo"
+                v-model="activo.value.value"
+                :error-messages="activo.errorMessage.value"
+                required
+              ></v-select>
+              <v-btn class="mt-2" type="submit" block>Guardar</v-btn>
+            </v-form>
+          </ModalComponent>
+        </div>
 
         <v-data-table
           :headers="headers"
@@ -19,9 +58,6 @@
             <v-toolbar flat>
               <v-toolbar-title>Lista de Intermediarios</v-toolbar-title>
               <v-spacer />
-              <v-btn color="primary" prepend-icon="mdi-plus">
-                Agregar
-              </v-btn>
             </v-toolbar>
           </template>
 
@@ -29,9 +65,7 @@
             <v-icon size="small" class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon size="small" @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
+            <v-icon size="small" @click="deleteItem(item)"> mdi-delete </v-icon>
           </template>
         </v-data-table>
       </v-card-text>
@@ -39,20 +73,13 @@
   </div>
 </template>
 
-<script setup>
-import SearchComponent from '@/components/catalogos/SearchComponent.vue';
-import { useIntermediarios } from '@/composables/catalogos/useIntermediarios';
-import { useSearch } from '@/composables/catalogos/useSearch';
+<script lang="ts" setup>
+import ModalComponent from "@/components/catalogos/ModalComponent.vue";
+import SearchComponent from "@/components/catalogos/SearchComponent.vue";
+import { useIntermediarios } from "@/composables/catalogos/useIntermediarios";
+import { useSearch } from "@/composables/catalogos/useSearch";
 
-
-const { headers, intermediarios } = useIntermediarios();
+const { headers, intermediarios, id, clave, nombre, activo, itemsSelect, submit, editItem, deleteItem, activeModal, changeActiveModal } = useIntermediarios();
 const { search, setSearch } = useSearch();
 
-const editItem = (item) => {
-    console.log("Editar:", item);
-  };
-
-  const deleteItem = (item) => {
-    console.log("Eliminar:", item);
-  };
 </script>

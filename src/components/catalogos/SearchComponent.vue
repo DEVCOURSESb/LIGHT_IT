@@ -4,11 +4,11 @@
       <v-text-field
         v-model="search"
         prepend-inner-icon="mdi-magnify"
-        label="Buscar intermediario"
+        :label="`Buscar ${placeholder}`"
         variant="outlined"
         density="comfortable"
         hide-details
-        @keydown="onKeyPress"
+        @keyup="onKeyPress"
       />
     </v-col>
   </v-row>
@@ -27,6 +27,7 @@ const props = defineProps<{ initialValueSearch: string, placeholder: string }>()
 
 /* prop inicial */
 const search = ref(props.initialValueSearch);
+const { placeholder } = props;
 
 /* evento */
 const onKeyPress = () => {

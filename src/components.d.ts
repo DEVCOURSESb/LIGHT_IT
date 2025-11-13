@@ -18,6 +18,8 @@ declare module 'vue' {
     MainLayout: typeof import('./components/MainLayout.vue')['default']
     MainMenu: typeof import('./components/MainMenu.vue')['default']
     MenuComponent: typeof import('./components/MenuComponent.vue')['default']
+    Modal: typeof import('./components/catalogos/ModalComponent.vue')['default']
+    ModalComponent: typeof import('./components/catalogos/ModalComponent.vue')['default']
     NavigationDrawer: typeof import('./components/NavigationDrawer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
