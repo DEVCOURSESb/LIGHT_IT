@@ -3,5 +3,5 @@ export interface Moneda {
   cveMoneda: number;
   descMoneda: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

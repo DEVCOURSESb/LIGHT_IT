@@ -16,5 +16,5 @@
 </template>
 
 <script lang="ts" setup>
-import CatalogosDropdown from "./catalogos/CatalogosDropdown.vue";
+import CatalogosDropdown from "./menu/CatalogosDropdown.vue";
 </script>

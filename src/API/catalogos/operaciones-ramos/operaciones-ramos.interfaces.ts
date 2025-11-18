@@ -4,7 +4,7 @@ export interface OperacionRamo {
   cveExtCober: string;
   descOperacionRamos: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
   operacion: string;
   ramo: string;
   subramo: string;

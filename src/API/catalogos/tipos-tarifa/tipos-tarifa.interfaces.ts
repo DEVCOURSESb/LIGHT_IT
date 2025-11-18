@@ -3,5 +3,5 @@ export interface TipoTarifa {
   cveTarifa: number;
   descTarifa: string;
   esActivo: boolean;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

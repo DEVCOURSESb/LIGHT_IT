@@ -13,8 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppBar: typeof import('./components/AppBar.vue')['default']
     AppBarComponent: typeof import('./components/AppBar.vue')['default']
-    CatalogosDropdown: typeof import('./components/catalogos/CatalogosDropdown.vue')['default']
-    CatalogosDropDown: typeof import('./components/catalogos/CatalogosDropDown.vue')['default']
+    CatalogosDropdown: typeof import('./components/menu/CatalogosDropdown.vue')['default']
     CrudTablePage: typeof import('./components/catalogos/CrudTablePage.vue')['default']
     MainLayout: typeof import('./components/MainLayout.vue')['default']
     MainMenu: typeof import('./components/MainMenu.vue')['default']

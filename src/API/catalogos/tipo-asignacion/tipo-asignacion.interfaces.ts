@@ -3,5 +3,5 @@ export interface TipoAsignacion {
   cveAsignacion: number;
   descAsignacion: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

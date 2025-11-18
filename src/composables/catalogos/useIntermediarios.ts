@@ -1,5 +1,5 @@
 import type { Intermediario } from "@/API/catalogos/intermediarios/intermediario.interfaces";
-import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediariosActions";
+import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediarios.actions";
 import { formatDate } from "@/utils/formatDate";
 import { useField, useForm } from "vee-validate";
 import { ref } from "vue";

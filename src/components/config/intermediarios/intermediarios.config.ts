@@ -1,5 +1,4 @@
-// config/catalogos/intermediarios.config.ts
-import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediariosActions";
+import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediarios.actions";
 
 const actions = IntermediariosActions();
 
@@ -13,9 +12,9 @@ export const intermediariosConfig = {
 
   headers: [
     { title: "Clave intermediario", key: "cveIntermediario", sortable: true },
-    { title: "Activo", key: "esActivo", sortable: true },
     { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Nombre intermediario", key: "nombreIntermediario", sortable: false },
+    { title: "Nombre intermediario", key: "nombreIntermediario", sortable: false, },
+    { title: "Activo", key: "esActivo", sortable: true },
     { title: "Acciones", key: "actions", sortable: false },
   ],
 

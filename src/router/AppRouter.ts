@@ -1,7 +1,9 @@
 import MainLayout from "@/layouts/MainLayout.vue";
 import IntermediariosPage from "@/pages/catalogos/IntermediariosPage.vue";
+import MonedaPage from "@/pages/catalogos/MonedaPage.vue";
 import OperacionesRamosPage from "@/pages/catalogos/OperacionesRamosPage.vue";
 import ReaseguradoresPage from "@/pages/catalogos/ReaseguradoresPage.vue";
+import TiposContratoPage from "@/pages/catalogos/TiposContratoPage.vue";
 import Home from "@/pages/Home.vue";
 
 export const AppRouter = () => {
@@ -35,6 +37,18 @@ export const AppRouter = () => {
               name: "operaciones_ramos",
               component: OperacionesRamosPage,
               meta: { title: "Operaciones Ramos" },
+            },
+            {
+              path: "tipos_contrato",
+              name: "tipos_contrato",
+              component: TiposContratoPage,
+              meta: { title: "Tipos Contrato" },
+            },
+            {
+              path: "monedas",
+              name: "monedas",
+              component: MonedaPage,
+              meta: { title: "Monedas" },
             },
           ],
         },

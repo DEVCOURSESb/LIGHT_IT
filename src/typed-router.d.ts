@@ -19,8 +19,10 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ReaseguradoresPage': RouteRecordInfo<'/catalogos/ReaseguradoresPage', '/catalogos/ReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
   }
 
@@ -39,12 +41,20 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/IntermediariosPage'
       views: never
     }
+    'src/pages/catalogos/MonedaPage.vue': {
+      routes: '/catalogos/MonedaPage'
+      views: never
+    }
     'src/pages/catalogos/OperacionesRamosPage.vue': {
       routes: '/catalogos/OperacionesRamosPage'
       views: never
     }
     'src/pages/catalogos/ReaseguradoresPage.vue': {
       routes: '/catalogos/ReaseguradoresPage'
+      views: never
+    }
+    'src/pages/catalogos/TiposContratoPage.vue': {
+      routes: '/catalogos/TiposContratoPage'
       views: never
     }
     'src/pages/Home.vue': {

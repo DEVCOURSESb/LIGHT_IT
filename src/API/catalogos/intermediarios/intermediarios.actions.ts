@@ -1,12 +1,13 @@
-// API/catalogos/intermediarios/intermediariosActions.ts
 import { BaseAPI } from "@/API/BaseAPI";
 import type { Intermediario } from "./intermediario.interfaces";
+import { fakeData } from "@/API/fakeData";
 
 export const IntermediariosActions = () => {
   const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfIntermediarioRest/" });
 
   const fetchIntermediarios = async (): Promise<Intermediario[]> => {
     try {
+      return fakeData().dataIntermediarios;
       const response = await baseAPI.get<Intermediario[]>("getAllRecords");
       return response.data;
     } catch (error) {
@@ -15,7 +16,9 @@ export const IntermediariosActions = () => {
     }
   };
 
-  const createIntermediario = async (data: Partial<Intermediario>): Promise<Intermediario> => {
+  const createIntermediario = async (
+    data: Partial<Intermediario>
+  ): Promise<Intermediario> => {
     try {
       const response = await baseAPI.post<Intermediario>("create", data);
       return response.data;
@@ -25,7 +28,10 @@ export const IntermediariosActions = () => {
     }
   };
 
-  const updateIntermediario = async (id: number, data: Partial<Intermediario>): Promise<Intermediario> => {
+  const updateIntermediario = async (
+    id: number,
+    data: Partial<Intermediario>
+  ): Promise<Intermediario> => {
     try {
       const response = await baseAPI.put<Intermediario>(`update/${id}`, data);
       return response.data;
