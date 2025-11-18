@@ -19,7 +19,9 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ExtensionPage': RouteRecordInfo<'/catalogos/ExtensionPage', '/catalogos/ExtensionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/FormaContractualPage': RouteRecordInfo<'/catalogos/FormaContractualPage', '/catalogos/FormaContractualPage', Record<never, never>, Record<never, never>>,
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
@@ -44,8 +46,16 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/ClasificacionCoberturaPage'
       views: never
     }
+    'src/pages/catalogos/DistribucionCesionPage.vue': {
+      routes: '/catalogos/DistribucionCesionPage'
+      views: never
+    }
     'src/pages/catalogos/ExtensionPage.vue': {
       routes: '/catalogos/ExtensionPage'
+      views: never
+    }
+    'src/pages/catalogos/FormaContractualPage.vue': {
+      routes: '/catalogos/FormaContractualPage'
       views: never
     }
     'src/pages/catalogos/IntermediariosPage.vue': {

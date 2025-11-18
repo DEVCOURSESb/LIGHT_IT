@@ -51,7 +51,7 @@ export const FormaContractualActions = () => {
   };
 
   return {
-    fetchMonedas: fetchFormaContractual,
+    fetchFormaContractual,
     createFormaContractual,
     updateFormaContractual,
     deleteFormaContractual,

@@ -70,6 +70,19 @@ export const AppRouter = () => {
               component: () => import("@/pages/catalogos/ClasificacionCoberturaPage.vue"),
               meta: { title: "Clasificación Cobertura" },
             },
+            {
+              path: "distribucion_cesion",
+              name: "distribucion_cesion",
+              component: () => import("@/pages/catalogos/DistribucionCesionPage.vue"),
+              meta: { title: "Distribución Cesión" },
+            },
+            {
+              path: "forma_contractual",
+              name: "forma_contractual",
+              component: () => import("@/pages/catalogos/FormaContractualPage.vue"),
+              meta: { title: "Forma Contractual" },
+            },
+
           ],
         },
       ],
