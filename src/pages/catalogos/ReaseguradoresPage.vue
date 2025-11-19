@@ -2,31 +2,32 @@
   <div>
     <v-card>
       <v-card-title class="d-flex align-center">
-        <v-icon icon="mdi-domain" class="mr-2" />
+        <v-icon class="mr-2" icon="mdi-domain" />
         Reaseguradores
       </v-card-title>
-      
+
       <v-card-text>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="3">
             <v-text-field
               v-model="search"
-              prepend-inner-icon="mdi-magnify"
-              label="Buscar reasegurador"
-              variant="outlined"
               density="comfortable"
               hide-details
+              label="Buscar reasegurador"
+              prepend-inner-icon="mdi-magnify"
+              variant="outlined"
             />
           </v-col>
         </v-row>
 
         <v-data-table
+          class="mt-4"
           :headers="headers"
           :items="reaseguradores"
           :search="search"
-          class="mt-4"
+          striped="odd"
         >
-          <template v-slot:top>
+          <template #top>
             <v-toolbar flat>
               <v-toolbar-title>Lista de Reaseguradores</v-toolbar-title>
               <v-spacer />
@@ -36,8 +37,8 @@
             </v-toolbar>
           </template>
 
-          <template v-slot:item.actions="{ item }">
-            <v-icon size="small" class="mr-2" @click="editItem(item)">
+          <template #item.actions="{ item }">
+            <v-icon class="mr-2" size="small" @click="editItem(item)">
               mdi-pencil
             </v-icon>
             <v-icon size="small" @click="deleteItem(item)">
@@ -48,53 +49,20 @@
       </v-card-text>
     </v-card>
   </div>
-  
-   <div class="text-center pa-4">
-    <v-dialog
-      v-model="dialog"
-      max-width="400"
-      persistent
-    >
-      <template v-slot:activator="{ props: activatorProps }">
-        <v-btn v-bind="activatorProps">
-          Open Dialog
-        </v-btn>
-      </template>
-
-      <v-card
-        prepend-icon="mdi-map-marker"
-        text="Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running."
-        title="Use Google's location service?"
-      >
-        <template v-slot:actions>
-          <v-spacer></v-spacer>
-
-          <v-btn @click="dialog = false">
-            Disagree
-          </v-btn>
-
-          <v-btn @click="dialog = false">
-            Agree
-          </v-btn>
-        </template>
-      </v-card>
-    </v-dialog>
-  </div>
 </template>
 
 <script setup>
-import { useReaseguradores } from '@/composables/catalogos/useReaseguradores';
-import { ref } from 'vue';
+  import { ref } from 'vue'
+  import { useReaseguradores } from '@/composables/catalogos/useReaseguradores'
 
+  const { search, reaseguradores, headers } = useReaseguradores()
+  const dialog = ref(false)
 
-const { search, reaseguradores, headers } = useReaseguradores();
-const dialog = ref(false)
+  function editItem (item) {
+    console.log('Editar:', item)
+  }
 
-const editItem = (item) => {
-  console.log('Editar:', item)
-}
-
-const deleteItem = (item) => {
-  console.log('Eliminar:', item)
-}
+  function deleteItem (item) {
+    console.log('Eliminar:', item)
+  }
 </script>

@@ -2,20 +2,21 @@
   <div>
     <v-card>
       <v-card-title class="d-flex align-center">
-        <v-icon icon="mdi-account-multiple" class="mr-2" />
+        <v-icon class="mr-2" icon="mdi-account-multiple" />
         Intermediarios
       </v-card-title>
-      
+
       <v-card-text>
-        <SearchComponent searchIniinitialValueSearch="search" @on-write="setSearch" />
+        <SearchComponent search-iniinitial-value-search="search" @on-write="setSearch" />
 
         <v-data-table
+          class="mt-4"
           :headers="headers"
           :items="intermediarios"
           :search="search"
-          class="mt-4"
+          striped="odd"
         >
-          <template v-slot:top>
+          <template #top>
             <v-toolbar flat>
               <v-toolbar-title>Lista de Intermediarios</v-toolbar-title>
               <v-spacer />
@@ -25,11 +26,11 @@
             </v-toolbar>
           </template>
 
-          <template v-slot:item.actions="{ item }">
-            <v-icon size="small" class="mr-2" @click="editItem(item)">
+          <template #item.actions="{ item }">
+            <v-icon class="edit" size="small" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon size="small" @click="deleteItem(item)">
+            <v-icon class="delete" size="small" @click="deleteItem(item)">
               mdi-delete
             </v-icon>
           </template>
@@ -40,19 +41,18 @@
 </template>
 
 <script setup>
-import SearchComponent from '@/components/catalogos/SearchComponent.vue';
-import { useIntermediarios } from '@/composables/catalogos/useIntermediarios';
-import { useSearch } from '@/composables/catalogos/useSearch';
+  import SearchComponent from '@/components/catalogos/SearchComponent.vue'
+  import { useIntermediarios } from '@/composables/catalogos/useIntermediarios'
+  import { useSearch } from '@/composables/catalogos/useSearch'
 
+  const { headers, intermediarios } = useIntermediarios()
+  const { search, setSearch } = useSearch()
 
-const { headers, intermediarios } = useIntermediarios();
-const { search, setSearch } = useSearch();
+  function editItem (item) {
+    console.log('Editar:', item)
+  }
 
-const editItem = (item) => {
-    console.log("Editar:", item);
-  };
-
-  const deleteItem = (item) => {
-    console.log("Eliminar:", item);
-  };
+  function deleteItem (item) {
+    console.log('Eliminar:', item)
+  }
 </script>

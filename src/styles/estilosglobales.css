@@ -81,6 +81,15 @@
 .v-text-field .v-input__control {
     color: white !important;
 }
+.v-list{
+    background-color: #003c71 !important;
+}
+.v-list-item {
+    color: white !important;
+}
+.v-list-item-title {
+    color: white !important;
+}
 .logo-container {
   max-height: 50px;
   display: flex;

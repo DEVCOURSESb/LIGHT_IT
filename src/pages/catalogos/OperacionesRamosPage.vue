@@ -2,31 +2,32 @@
   <div>
     <v-card>
       <v-card-title class="d-flex align-center">
-        <v-icon icon="mdi-account-multiple" class="mr-2" />
+        <v-icon class="mr-2" icon="mdi-account-multiple" />
         Operaciones Ramos
       </v-card-title>
-      
+
       <v-card-text>
         <v-row>
-          <v-col cols="6">
+          <v-col cols="3">
             <v-text-field
               v-model="search"
-              prepend-inner-icon="mdi-magnify"
-              label="Buscar operación ramo"
-              variant="outlined"
               density="comfortable"
               hide-details
+              label="Buscar operación ramo"
+              prepend-inner-icon="mdi-magnify"
+              variant="outlined"
             />
           </v-col>
         </v-row>
 
         <v-data-table
+          class="mt-4"
           :headers="headers"
           :items="OperacionesRamos"
           :search="search"
-          class="mt-4"
+          striped="odd"
         >
-          <template v-slot:top>
+          <template #top>
             <v-toolbar flat>
               <v-toolbar-title>Lista de operaciones ramos</v-toolbar-title>
               <v-spacer />
@@ -36,11 +37,11 @@
             </v-toolbar>
           </template>
 
-          <template v-slot:item.actions="{ item }">
-            <v-icon size="small" class="mr-2" @click="editItem(item)">
+          <template #item.actions="{ item }">
+            <v-icon class="edit" size="small" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon size="small" @click="deleteItem(item)">
+            <v-icon class="delete" size="small" @click="deleteItem(item)">
               mdi-delete
             </v-icon>
           </template>
@@ -51,18 +52,17 @@
 </template>
 
 <script setup>
-import { useOperacionesRamos } from '@/composables/catalogos/useOperacionesRamos';
-import { useSearch } from '@/composables/catalogos/useSearch';
+  import { useOperacionesRamos } from '@/composables/catalogos/useOperacionesRamos'
+  import { useSearch } from '@/composables/catalogos/useSearch'
 
+  const { headers, OperacionesRamos } = useOperacionesRamos()
+  const { search } = useSearch()
 
-const { headers, OperacionesRamos } = useOperacionesRamos();
-const { search } = useSearch();
+  function editItem (item) {
+    console.log('Editar:', item)
+  }
 
-const editItem = (item) => {
-    console.log("Editar:", item);
-  };
-
-  const deleteItem = (item) => {
-    console.log("Eliminar:", item);
-  };
+  function deleteItem (item) {
+    console.log('Eliminar:', item)
+  }
 </script>
