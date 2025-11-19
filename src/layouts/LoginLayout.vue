@@ -1,7 +1,6 @@
 <template>
   <v-app>
-    <AppBar />
-
+    <LoginC />
     <v-main>
       <v-container fluid>
         <router-view />
@@ -11,5 +10,5 @@
 </template>
 
 <script setup>
-  import AppBar from '@/components/AppBar.vue'
+  import LoginC from '@/pages/LoginC.vue'
 </script>
