@@ -67,22 +67,50 @@ export const AppRouter = () => {
             {
               path: "clasificacion_cobertura",
               name: "clasificacion_cobertura",
-              component: () => import("@/pages/catalogos/ClasificacionCoberturaPage.vue"),
+              component: () =>
+                import("@/pages/catalogos/ClasificacionCoberturaPage.vue"),
               meta: { title: "Clasificación Cobertura" },
             },
             {
               path: "distribucion_cesion",
               name: "distribucion_cesion",
-              component: () => import("@/pages/catalogos/DistribucionCesionPage.vue"),
+              component: () =>
+                import("@/pages/catalogos/DistribucionCesionPage.vue"),
               meta: { title: "Distribución Cesión" },
             },
             {
               path: "forma_contractual",
               name: "forma_contractual",
-              component: () => import("@/pages/catalogos/FormaContractualPage.vue"),
+              component: () =>
+                import("@/pages/catalogos/FormaContractualPage.vue"),
               meta: { title: "Forma Contractual" },
             },
-
+            {
+              path: "ptu",
+              name: "ptu",
+              component: () => import("@/pages/catalogos/PtuPage.vue"),
+              meta: { title: "PTU" },
+            },
+            {
+              path: "tipo_asignacion",
+              name: "tipo_asignacion",
+              component: () =>
+                import("@/pages/catalogos/TipoAsignacionPage.vue"),
+              meta: { title: "Tipo Asignación" },
+            },
+            {
+              path: "tipo_reaseguro",
+              name: "tipo_reaseguro",
+              component: () =>
+                import("@/pages/catalogos/TipoReaseguroPage.vue"),
+              meta: { title: "Tipo Reaseguro" },
+            },
+            {
+              path: "tipo_tarifa",
+              name: "tipo_tarifa",
+              component: () => import("@/pages/catalogos/TipoTarifaPage.vue"),
+              meta: { title: "Tipo Tarifa" },
+            },
           ],
         },
       ],
