@@ -111,6 +111,18 @@ export const AppRouter = () => {
               component: () => import("@/pages/catalogos/TipoTarifaPage.vue"),
               meta: { title: "Tipo Tarifa" },
             },
+            {
+              path: "perfil",
+              name: "perfil",
+              component: () => import("@/pages/catalogos/PerfilPage.vue"),
+              meta: { title: "Perfil" },
+            },
+            {
+              path: "cobertura",
+              name: "cobertura",
+              component: () => import("@/pages/catalogos/CoberturaPage.vue"),
+              meta: { title: "Cobertura" },
+            },
           ],
         },
       ],

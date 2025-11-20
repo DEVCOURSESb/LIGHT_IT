@@ -1,10 +1,12 @@
 import type { Clasificacion } from "./catalogos/clasificacion/clasificacion.interfaces";
+import type { Cobertura } from "./catalogos/coberturas/coberturas.interfaces";
 import type { DistribucionCesion } from "./catalogos/distribucion-cesion/distribucion-cesion.interfaces";
 import type { Extension } from "./catalogos/extensiones/extensiones.interfaces";
 import type { FormaContractual } from "./catalogos/forma-contractual/forma-contractual.interface";
 import type { Intermediario } from "./catalogos/intermediarios/intermediario.interfaces";
 import type { Moneda } from "./catalogos/monedas/moneda.interfaces";
 import type { OperacionRamo } from "./catalogos/operaciones-ramos/operaciones-ramos.interfaces";
+import type { Perfil } from "./catalogos/perfiles/perfiles.interfaces";
 import type { Ptu } from "./catalogos/ptu/ptu.interfaces";
 import type { Reasegurador } from "./catalogos/reaseguradores/reasegurador.interface";
 import type { TipoAsignacion } from "./catalogos/tipo-asignacion/tipo-asignacion.interfaces";
@@ -12,6 +14,7 @@ import type { TipoReaseguro } from "./catalogos/tipo-reaseguro/tipo-reaseguro.in
 import type { TipoCaptura } from "./catalogos/tipos-captura/tipo-captura.interfaces";
 import type { TipoContrato } from "./catalogos/tipos-contrato/tipos-contrato.interfaces";
 import type { TipoTarifa } from "./catalogos/tipos-tarifa/tipos-tarifa.interfaces";
+import type { Usuario } from "./catalogos/usuarios/usuarios.interface";
 
 export const fakeData = () => {
   const dataIntermediarios: Intermediario[] = [
@@ -1550,28 +1553,28 @@ export const fakeData = () => {
   const dataExtensiones: Extension[] = [
     {
       id: 1,
-      cveExtCober: 0,
+      cveExtCober: "0",
       descExtCober: "OPERACIÓN",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.453",
     },
     {
       id: 2,
-      cveExtCober: 1,
+      cveExtCober: "1",
       descExtCober: "RAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.457",
     },
     {
       id: 3,
-      cveExtCober: 2,
+      cveExtCober: "2",
       descExtCober: "SUBRAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.457",
     },
     {
       id: 4,
-      cveExtCober: 3,
+      cveExtCober: "3",
       descExtCober: "SUBSUBRAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.46",
@@ -1740,6 +1743,247 @@ export const fakeData = () => {
     },
   ];
 
+  const dataCoberturas: Cobertura[] = [
+    {
+      id: 1,
+      fechaRegistro: "45965.3930176736",
+      cveCob: 0,
+      idCob: "MTE",
+      descCob: "FALLECIMIENTO",
+      esActivo: true,
+    },
+    {
+      id: 2,
+      fechaRegistro: "45965.3930177083",
+      cveCob: 1,
+      idCob: "MTE",
+      descCob: "GASTOS FUNERARIOS ",
+      esActivo: true,
+    },
+    {
+      id: 3,
+      fechaRegistro: "45965.3930177083",
+      cveCob: 2,
+      idCob: "SEPEL",
+      descCob: "ANTICIPO PARA GASTOS FUNERARIOS",
+      esActivo: true,
+    },
+    {
+      id: 4,
+      fechaRegistro: "45965.3930177083",
+      cveCob: 3,
+      idCob: "IAA",
+      descCob: "BAA",
+      esActivo: true,
+    },
+    {
+      id: 5,
+      fechaRegistro: "45965.3930177431",
+      cveCob: 4,
+      idCob: "ENFGR",
+      descCob: "BAGE",
+      esActivo: true,
+    },
+    {
+      id: 6,
+      fechaRegistro: "45965.3930177431",
+      cveCob: 5,
+      idCob: "BC",
+      descCob: "BC",
+      esActivo: true,
+    },
+    {
+      id: 7,
+      fechaRegistro: "45965.3930177431",
+      cveCob: 6,
+      idCob: "EPP",
+      descCob: "BIT",
+      esActivo: true,
+    },
+    {
+      id: 8,
+      fechaRegistro: "45965.3930177893",
+      cveCob: 7,
+      idCob: "MTEA",
+      descCob: "DI-MA",
+      esActivo: true,
+    },
+    {
+      id: 9,
+      fechaRegistro: "45965.3930177893",
+      cveCob: 8,
+      idCob: "MAPO",
+      descCob: "DI-MAPO",
+      esActivo: true,
+    },
+    {
+      id: 10,
+      fechaRegistro: "45965.3930177893",
+      cveCob: 9,
+      idCob: "MAPA",
+      descCob: "DI-MAPO A",
+      esActivo: true,
+    },
+    {
+      id: 11,
+      fechaRegistro: "45965.3930178241",
+      cveCob: 10,
+      idCob: "MAPB",
+      descCob: "DI-MAPO B",
+      esActivo: true,
+    },
+    {
+      id: 12,
+      fechaRegistro: "45965.3930178241",
+      cveCob: 11,
+      idCob: "MAPAD",
+      descCob: "DI-MAPOC A",
+      esActivo: true,
+    },
+    {
+      id: 13,
+      fechaRegistro: "45965.3930178241",
+      cveCob: 12,
+      idCob: "MAPBD",
+      descCob: "DI-MAPOC B",
+      esActivo: true,
+    },
+    {
+      id: 14,
+      fechaRegistro: "45965.3930178588",
+      cveCob: 13,
+      idCob: "MAPOD",
+      descCob: "DI-TOTAL",
+      esActivo: true,
+    },
+    {
+      id: 15,
+      fechaRegistro: "45965.3930178588",
+      cveCob: 14,
+      idCob: "MTE",
+      descCob: "GASTOS FUNERARIOS DE LOS HIJOS (GFH)",
+      esActivo: true,
+    },
+    {
+      id: 16,
+      fechaRegistro: "45965.3930178588",
+      cveCob: 15,
+      idCob: "MTE",
+      descCob: "GASTOS FUNERARIOS DEL CONYUGE (GFC)",
+      esActivo: true,
+    },
+    {
+      id: 17,
+      fechaRegistro: "45965.3930179051",
+      cveCob: 16,
+      idCob: "MTE",
+      descCob: "GASTOS FUNERARIOS DEL PADRE O MADRE (GFP)",
+      esActivo: true,
+    },
+    {
+      id: 18,
+      fechaRegistro: "45965.3930179051",
+      cveCob: 17,
+      idCob: "IPSA",
+      descCob: "IPSA  ",
+      esActivo: true,
+    },
+    {
+      id: 19,
+      fechaRegistro: "45965.3930179051",
+      cveCob: 18,
+      idCob: "IPSAA",
+      descCob: "IPSA  ACC.",
+      esActivo: true,
+    },
+    {
+      id: 20,
+      fechaRegistro: "45965.3930179398",
+      cveCob: 19,
+      idCob: "IPSA",
+      descCob: "IPSA AE",
+      esActivo: true,
+    },
+    {
+      id: 21,
+      fechaRegistro: "45965.3930179398",
+      cveCob: 20,
+      idCob: "MTEA",
+      descCob: "MUERTE ACCIDENTAL",
+      esActivo: true,
+    },
+  ];
+
+  const dataPerfiles: Perfil[] = [
+    {
+      idPerfil: 1,
+      nombrePerfil: "ADMINISTRADOR",
+      accesos: "NULL",
+      fechaAlta: "45962",
+      usuarioAlta: "ADMINISTRADOR",
+      fechaModifica: "45962",
+      usuarioModifica: "NULL",
+      activo: 1,
+    },
+  ];
+
+  const dataUsuarios: Usuario[] = [
+    {
+      id: 1,
+      apellidoMaterno: "apellidoMaterno",
+      apellidoPaterno: "apellidoPaterno",
+      clave: "1",
+      codigoVerificacion: "809876",
+      correoElectronico: "correoElectronico",
+      esActivo: 1,
+      fechaActualizacion: "2025-11-08 00:00:00.0",
+      fechaFinSesion: "2025-11-08",
+      fechaInicioSesion: "2025-11-08 00:00:00.0",
+      fechaRegistro: "2025-11-08 00:00:00.0",
+      fechaSolicitud: "2025-11-08 00:00:00.0",
+      nombre: "nombre",
+      password: "$2a$10$hHw2Y5e.eakIpB/VtCvvVe9Gofn8QBwZAXnZ.RL8bMoiQ1XOnp7rO",
+      perfilClave: "2",
+      username: "username",
+      enabled: true,
+      accountNonLocked: true,
+      authorities: [
+        {
+          authority: "2",
+        },
+      ],
+      credentialsNonExpired: true,
+      accountNonExpired: true,
+    },
+    {
+      id: 2,
+      apellidoMaterno: "Bautista",
+      apellidoPaterno: "Reyes",
+      clave: "1",
+      codigoVerificacion: "809876",
+      correoElectronico: "aoreyes@light.it.mx",
+      esActivo: 1,
+      fechaActualizacion: "2025-11-11 00:00:00.0",
+      fechaFinSesion: "2025-11-11",
+      fechaInicioSesion: "2025-11-11 00:00:00.0",
+      fechaRegistro: "2025-11-11 00:00:00.0",
+      fechaSolicitud: "2025-11-11 00:00:00.0",
+      nombre: "Aldo Obed",
+      password: "$2a$10$0d8vqS6H3ZtEcp78x5TL5.wyME79/ewfDUcRuRhNTOGS0Iie96whC",
+      perfilClave: "1",
+      username: "aoreyes",
+      enabled: true,
+      accountNonLocked: true,
+      authorities: [
+        {
+          authority: "1",
+        },
+      ],
+      credentialsNonExpired: true,
+      accountNonExpired: true,
+    },
+  ];
+
   return {
     dataIntermediarios,
     dataReaseguradores,
@@ -1755,5 +1999,8 @@ export const fakeData = () => {
     dataTipoAsignacion,
     dataTipoReaseguro,
     dataTipoTarifa,
+    dataCoberturas,
+    dataPerfiles,
+    dataUsuarios,
   };
 };

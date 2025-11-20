@@ -19,12 +19,14 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ExtensionPage': RouteRecordInfo<'/catalogos/ExtensionPage', '/catalogos/ExtensionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/FormaContractualPage': RouteRecordInfo<'/catalogos/FormaContractualPage', '/catalogos/FormaContractualPage', Record<never, never>, Record<never, never>>,
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/PerfilPage': RouteRecordInfo<'/catalogos/PerfilPage', '/catalogos/PerfilPage', Record<never, never>, Record<never, never>>,
     '/catalogos/PtuPage': RouteRecordInfo<'/catalogos/PtuPage', '/catalogos/PtuPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ReaseguradoresPage': RouteRecordInfo<'/catalogos/ReaseguradoresPage', '/catalogos/ReaseguradoresPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoAsignacionPage': RouteRecordInfo<'/catalogos/TipoAsignacionPage', '/catalogos/TipoAsignacionPage', Record<never, never>, Record<never, never>>,
@@ -50,6 +52,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/ClasificacionCoberturaPage'
       views: never
     }
+    'src/pages/catalogos/CoberturaPage.vue': {
+      routes: '/catalogos/CoberturaPage'
+      views: never
+    }
     'src/pages/catalogos/DistribucionCesionPage.vue': {
       routes: '/catalogos/DistribucionCesionPage'
       views: never
@@ -72,6 +78,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/catalogos/OperacionesRamosPage.vue': {
       routes: '/catalogos/OperacionesRamosPage'
+      views: never
+    }
+    'src/pages/catalogos/PerfilPage.vue': {
+      routes: '/catalogos/PerfilPage'
       views: never
     }
     'src/pages/catalogos/PtuPage.vue': {

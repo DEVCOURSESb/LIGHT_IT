@@ -1,4 +1,4 @@
-export interface Usuarios {
+export interface Usuario {
     id:                    number;
     apellidoMaterno:       string;
     apellidoPaterno:       string;
@@ -6,11 +6,11 @@ export interface Usuarios {
     codigoVerificacion:    string;
     correoElectronico:     string;
     esActivo:              number;
-    fechaActualizacion:    Date;
-    fechaFinSesion:        Date;
-    fechaInicioSesion:     Date;
-    fechaRegistro:         Date;
-    fechaSolicitud:        Date;
+    fechaActualizacion:    string;
+    fechaFinSesion:        string;
+    fechaInicioSesion:     string;
+    fechaRegistro:         string;
+    fechaSolicitud:        string;
     nombre:                string;
     password:              string;
     perfilClave:           string;

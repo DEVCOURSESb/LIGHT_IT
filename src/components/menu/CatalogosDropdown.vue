@@ -45,5 +45,6 @@ const listItems: ListItem[] = [
   { name: "tipo_asignacion", title: "Tipo asignación", icon: "mdi-chart-pie" },
   { name: "tipo_reaseguro", title: "Tipo reaseguro", icon: "mdi-chart-pie" },
   { name: "tipo_tarifa", title: "Tipo tarifa", icon: "mdi-chart-pie" },
+  { name: "perfil", title: "Perfil", icon: "mdi-chart-pie" },
 ];
 </script>
