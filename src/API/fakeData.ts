@@ -20,7 +20,7 @@ export const fakeData = () => {
   const dataIntermediarios: Intermediario[] = [
     {
       id: 1,
-      cveIntermediario: "1",
+      cveIntermediario: 1,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.477",
       nombreIntermediario:
@@ -28,7 +28,7 @@ export const fakeData = () => {
     },
     {
       id: 2,
-      cveIntermediario: "2",
+      cveIntermediario: 2,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.477",
       nombreIntermediario:
@@ -36,7 +36,7 @@ export const fakeData = () => {
     },
     {
       id: 3,
-      cveIntermediario: "4",
+      cveIntermediario: 4,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.48",
       nombreIntermediario:
@@ -44,28 +44,28 @@ export const fakeData = () => {
     },
     {
       id: 4,
-      cveIntermediario: "5",
+      cveIntermediario: 5,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.48",
       nombreIntermediario: "MERIT RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 5,
-      cveIntermediario: "6",
+      cveIntermediario: 6,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.48",
       nombreIntermediario: "GLOBAL, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 6,
-      cveIntermediario: "7",
+      cveIntermediario: 7,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.483",
       nombreIntermediario: "REASINTER INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 7,
-      cveIntermediario: "11",
+      cveIntermediario: 11,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.483",
       nombreIntermediario:
@@ -73,7 +73,7 @@ export const fakeData = () => {
     },
     {
       id: 8,
-      cveIntermediario: "15",
+      cveIntermediario: 15,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.487",
       nombreIntermediario:
@@ -81,7 +81,7 @@ export const fakeData = () => {
     },
     {
       id: 9,
-      cveIntermediario: "16",
+      cveIntermediario: 16,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.487",
       nombreIntermediario:
@@ -89,7 +89,7 @@ export const fakeData = () => {
     },
     {
       id: 10,
-      cveIntermediario: "20",
+      cveIntermediario: 20,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.49",
       nombreIntermediario:
@@ -97,28 +97,28 @@ export const fakeData = () => {
     },
     {
       id: 11,
-      cveIntermediario: "21",
+      cveIntermediario: 21,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.49",
       nombreIntermediario: "CALOMEX, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 12,
-      cveIntermediario: "22",
+      cveIntermediario: 22,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.49",
       nombreIntermediario: "PORTEMAR, INTERMEDIARIO DE REASEGURO, S.A.",
     },
     {
       id: 13,
-      cveIntermediario: "23",
+      cveIntermediario: 23,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.493",
       nombreIntermediario: "SOM.US, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 14,
-      cveIntermediario: "26",
+      cveIntermediario: 26,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.493",
       nombreIntermediario:
@@ -126,14 +126,14 @@ export const fakeData = () => {
     },
     {
       id: 15,
-      cveIntermediario: "32",
+      cveIntermediario: 32,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.497",
       nombreIntermediario: "SEMA, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 16,
-      cveIntermediario: "39",
+      cveIntermediario: 39,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.497",
       nombreIntermediario:
@@ -141,21 +141,21 @@ export const fakeData = () => {
     },
     {
       id: 17,
-      cveIntermediario: "43",
+      cveIntermediario: 43,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.497",
       nombreIntermediario: "PLUS RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 18,
-      cveIntermediario: "44",
+      cveIntermediario: 44,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.5",
       nombreIntermediario: "PRAAM, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 19,
-      cveIntermediario: "45",
+      cveIntermediario: 45,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.5",
       nombreIntermediario:
@@ -163,7 +163,7 @@ export const fakeData = () => {
     },
     {
       id: 20,
-      cveIntermediario: "46",
+      cveIntermediario: 46,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.5",
       nombreIntermediario:
@@ -171,14 +171,14 @@ export const fakeData = () => {
     },
     {
       id: 21,
-      cveIntermediario: "47",
+      cveIntermediario: 47,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.503",
       nombreIntermediario: "TBS, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 22,
-      cveIntermediario: "50",
+      cveIntermediario: 50,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.503",
       nombreIntermediario:
@@ -186,28 +186,28 @@ export const fakeData = () => {
     },
     {
       id: 23,
-      cveIntermediario: "51",
+      cveIntermediario: 51,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.507",
       nombreIntermediario: "ÍCARO RB, INTERMEDIARIO DE REASEGURO S.A. DE C.V.",
     },
     {
       id: 24,
-      cveIntermediario: "52",
+      cveIntermediario: 52,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.507",
       nombreIntermediario: "NRGI RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 25,
-      cveIntermediario: "53",
+      cveIntermediario: 53,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.51",
       nombreIntermediario: "EAGLE RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 26,
-      cveIntermediario: "54",
+      cveIntermediario: 54,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.51",
       nombreIntermediario:
@@ -215,7 +215,7 @@ export const fakeData = () => {
     },
     {
       id: 27,
-      cveIntermediario: "55",
+      cveIntermediario: 55,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.51",
       nombreIntermediario:
@@ -223,42 +223,42 @@ export const fakeData = () => {
     },
     {
       id: 28,
-      cveIntermediario: "56",
+      cveIntermediario: 56,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.51",
       nombreIntermediario: "DOCK RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 29,
-      cveIntermediario: "57",
+      cveIntermediario: 57,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.513",
       nombreIntermediario: "EM RE, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 30,
-      cveIntermediario: "58",
+      cveIntermediario: 58,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.513",
       nombreIntermediario: "RE21, INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 31,
-      cveIntermediario: "59",
+      cveIntermediario: 59,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.517",
       nombreIntermediario: "CREST INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 32,
-      cveIntermediario: "60",
+      cveIntermediario: 60,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.517",
       nombreIntermediario: "MSC RE INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 33,
-      cveIntermediario: "61",
+      cveIntermediario: 61,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.52",
       nombreIntermediario:
@@ -266,21 +266,21 @@ export const fakeData = () => {
     },
     {
       id: 34,
-      cveIntermediario: "62",
+      cveIntermediario: 62,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.52",
       nombreIntermediario: "MRS INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 35,
-      cveIntermediario: "63",
+      cveIntermediario: 63,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.52",
       nombreIntermediario: "ORION INTERMEDIARIO DE REASEGURO, S.A. DE C.V.",
     },
     {
       id: 36,
-      cveIntermediario: "64",
+      cveIntermediario: 64,
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:40:41.523",
       nombreIntermediario:
@@ -291,7 +291,7 @@ export const fakeData = () => {
   const dataReaseguradores: Reasegurador[] = [
     {
       id: 1,
-      cveReasegurador: "1",
+      cveReasegurador: 1,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:34.66",
@@ -300,7 +300,7 @@ export const fakeData = () => {
     },
     {
       id: 2,
-      cveReasegurador: "2",
+      cveReasegurador: 2,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.647",
@@ -309,7 +309,7 @@ export const fakeData = () => {
     },
     {
       id: 3,
-      cveReasegurador: "3",
+      cveReasegurador: 3,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.65",
@@ -318,7 +318,7 @@ export const fakeData = () => {
     },
     {
       id: 4,
-      cveReasegurador: "4",
+      cveReasegurador: 4,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.65",
@@ -327,7 +327,7 @@ export const fakeData = () => {
     },
     {
       id: 5,
-      cveReasegurador: "5",
+      cveReasegurador: 5,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.65",
@@ -336,7 +336,7 @@ export const fakeData = () => {
     },
     {
       id: 6,
-      cveReasegurador: "6",
+      cveReasegurador: 6,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.653",
@@ -345,7 +345,7 @@ export const fakeData = () => {
     },
     {
       id: 7,
-      cveReasegurador: "7",
+      cveReasegurador: 7,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.653",
@@ -354,7 +354,7 @@ export const fakeData = () => {
     },
     {
       id: 8,
-      cveReasegurador: "8",
+      cveReasegurador: 8,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.657",
@@ -363,7 +363,7 @@ export const fakeData = () => {
     },
     {
       id: 9,
-      cveReasegurador: "9",
+      cveReasegurador: 9,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.657",
@@ -372,7 +372,7 @@ export const fakeData = () => {
     },
     {
       id: 10,
-      cveReasegurador: "10",
+      cveReasegurador: 10,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.657",
@@ -382,7 +382,7 @@ export const fakeData = () => {
     },
     {
       id: 11,
-      cveReasegurador: "11",
+      cveReasegurador: 11,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.66",
@@ -391,7 +391,7 @@ export const fakeData = () => {
     },
     {
       id: 12,
-      cveReasegurador: "12",
+      cveReasegurador: 12,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.66",
@@ -400,7 +400,7 @@ export const fakeData = () => {
     },
     {
       id: 13,
-      cveReasegurador: "13",
+      cveReasegurador: 13,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.66",
@@ -410,7 +410,7 @@ export const fakeData = () => {
     },
     {
       id: 14,
-      cveReasegurador: "14",
+      cveReasegurador: 14,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.663",
@@ -419,7 +419,7 @@ export const fakeData = () => {
     },
     {
       id: 15,
-      cveReasegurador: "15",
+      cveReasegurador: 15,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.663",
@@ -428,7 +428,7 @@ export const fakeData = () => {
     },
     {
       id: 16,
-      cveReasegurador: "16",
+      cveReasegurador: 16,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.663",
@@ -437,7 +437,7 @@ export const fakeData = () => {
     },
     {
       id: 17,
-      cveReasegurador: "17",
+      cveReasegurador: 17,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.667",
@@ -446,7 +446,7 @@ export const fakeData = () => {
     },
     {
       id: 18,
-      cveReasegurador: "18",
+      cveReasegurador: 18,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.667",
@@ -455,7 +455,7 @@ export const fakeData = () => {
     },
     {
       id: 19,
-      cveReasegurador: "19",
+      cveReasegurador: 19,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.67",
@@ -464,7 +464,7 @@ export const fakeData = () => {
     },
     {
       id: 20,
-      cveReasegurador: "20",
+      cveReasegurador: 20,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.67",
@@ -473,7 +473,7 @@ export const fakeData = () => {
     },
     {
       id: 21,
-      cveReasegurador: "21",
+      cveReasegurador: 21,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.67",
@@ -482,7 +482,7 @@ export const fakeData = () => {
     },
     {
       id: 22,
-      cveReasegurador: "22",
+      cveReasegurador: 22,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.67",
@@ -491,7 +491,7 @@ export const fakeData = () => {
     },
     {
       id: 23,
-      cveReasegurador: "23",
+      cveReasegurador: 23,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.673",
@@ -500,7 +500,7 @@ export const fakeData = () => {
     },
     {
       id: 24,
-      cveReasegurador: "24",
+      cveReasegurador: 24,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.673",
@@ -509,7 +509,7 @@ export const fakeData = () => {
     },
     {
       id: 25,
-      cveReasegurador: "25",
+      cveReasegurador: 25,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.677",
@@ -519,7 +519,7 @@ export const fakeData = () => {
     },
     {
       id: 26,
-      cveReasegurador: "26",
+      cveReasegurador: 26,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.677",
@@ -528,7 +528,7 @@ export const fakeData = () => {
     },
     {
       id: 27,
-      cveReasegurador: "27",
+      cveReasegurador: 27,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.677",
@@ -537,7 +537,7 @@ export const fakeData = () => {
     },
     {
       id: 28,
-      cveReasegurador: "28",
+      cveReasegurador: 28,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.68",
@@ -546,7 +546,7 @@ export const fakeData = () => {
     },
     {
       id: 29,
-      cveReasegurador: "29",
+      cveReasegurador: 29,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.68",
@@ -555,7 +555,7 @@ export const fakeData = () => {
     },
     {
       id: 30,
-      cveReasegurador: "30",
+      cveReasegurador: 30,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.68",
@@ -564,7 +564,7 @@ export const fakeData = () => {
     },
     {
       id: 31,
-      cveReasegurador: "31",
+      cveReasegurador: 31,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.683",
@@ -573,7 +573,7 @@ export const fakeData = () => {
     },
     {
       id: 32,
-      cveReasegurador: "32",
+      cveReasegurador: 32,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.683",
@@ -582,7 +582,7 @@ export const fakeData = () => {
     },
     {
       id: 33,
-      cveReasegurador: "33",
+      cveReasegurador: 33,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.687",
@@ -591,7 +591,7 @@ export const fakeData = () => {
     },
     {
       id: 34,
-      cveReasegurador: "34",
+      cveReasegurador: 34,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.687",
@@ -601,7 +601,7 @@ export const fakeData = () => {
     },
     {
       id: 35,
-      cveReasegurador: "35",
+      cveReasegurador: 35,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.687",
@@ -611,7 +611,7 @@ export const fakeData = () => {
     },
     {
       id: 36,
-      cveReasegurador: "36",
+      cveReasegurador: 36,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.69",
@@ -620,7 +620,7 @@ export const fakeData = () => {
     },
     {
       id: 37,
-      cveReasegurador: "37",
+      cveReasegurador: 37,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.69",
@@ -629,7 +629,7 @@ export const fakeData = () => {
     },
     {
       id: 38,
-      cveReasegurador: "38",
+      cveReasegurador: 38,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.69",
@@ -638,7 +638,7 @@ export const fakeData = () => {
     },
     {
       id: 39,
-      cveReasegurador: "39",
+      cveReasegurador: 39,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.693",
@@ -648,7 +648,7 @@ export const fakeData = () => {
     },
     {
       id: 40,
-      cveReasegurador: "40",
+      cveReasegurador: 40,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.693",
@@ -657,7 +657,7 @@ export const fakeData = () => {
     },
     {
       id: 41,
-      cveReasegurador: "41",
+      cveReasegurador: 41,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.693",
@@ -666,7 +666,7 @@ export const fakeData = () => {
     },
     {
       id: 42,
-      cveReasegurador: "42",
+      cveReasegurador: 42,
       esActivo: 1,
       extranjero: 1,
       fechaRegistro: "2025-11-04 10:52:37.697",
@@ -1553,28 +1553,28 @@ export const fakeData = () => {
   const dataExtensiones: Extension[] = [
     {
       id: 1,
-      cveExtCober: "0",
+      cveExtCober: 0,
       descExtCober: "OPERACIÓN",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.453",
     },
     {
       id: 2,
-      cveExtCober: "1",
+      cveExtCober: 1,
       descExtCober: "RAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.457",
     },
     {
       id: 3,
-      cveExtCober: "2",
+      cveExtCober: 2,
       descExtCober: "SUBRAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.457",
     },
     {
       id: 4,
-      cveExtCober: "3",
+      cveExtCober: 3,
       descExtCober: "SUBSUBRAMO",
       esActivo: 1,
       fechaRegistro: "2025-11-04 11:43:34.46",
@@ -1608,14 +1608,14 @@ export const fakeData = () => {
   const dataDistribucionCesion: DistribucionCesion[] = [
     {
       id: 1,
-      cveDistrcesion: "0",
+      cveDistrcesion: 0,
       descDistrcesion: "Por cobertura básica",
       esActivo: 1,
       fechaRegistro: "2025-11-04 10:58:00.7",
     },
     {
       id: 2,
-      cveDistrcesion: "1",
+      cveDistrcesion: 1,
       descDistrcesion: "Por cobertura",
       esActivo: 1,
       fechaRegistro: "2025-11-04 10:58:00.7",

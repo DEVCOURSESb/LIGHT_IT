@@ -28,9 +28,10 @@ export const tipoTarifaConfig = {
     {
       name: "cveTarifa",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveTarifa",
+      defaultValue: 0,
     },
     {
       name: "descTarifa",
@@ -38,23 +39,24 @@ export const tipoTarifaConfig = {
       type: "text",
       required: true,
       dataKey: "descTarifa",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      defaultValue: "Sí",
+      transformFromAPI: (value: boolean) => (value ? "Sí" : "No"),
+      transformToAPI: (value: string) => (value === "Sí"),
     },
   ],
 
   validationSchema: {
-    cveTarifa: (value: string) => value?.length >= 2 || "La clave es requerida",
-    descTarifa: (value: string) =>
-      value?.length > 0 || "La descripción es requerida",
+    cveTarifa: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
+    descTarifa: (value: string) => value?.length > 0 || "La descripción es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },
 

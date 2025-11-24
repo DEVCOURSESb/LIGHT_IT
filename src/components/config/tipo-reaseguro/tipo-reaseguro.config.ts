@@ -28,9 +28,10 @@ export const tipoReaseguroConfig = {
     {
       name: "cveTreaseg",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveTreaseg",
+      defaultValue: 0,
     },
     {
       name: "descTreaseg",
@@ -38,24 +39,24 @@ export const tipoReaseguroConfig = {
       type: "text",
       required: true,
       dataKey: "descTreaseg",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: "Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveTreaseg: (value: string) =>
-      value?.length >= 2 || "La clave es requerida",
-    descTreaseg: (value: string) =>
-      value?.length > 0 || "La fórmula es requerida",
+    cveTreaseg: (value: number) => !!value && value > 0 || "La clave es requerida y mayor a 0",
+    descTreaseg: (value: string) => value?.length > 0 || "La fórmula es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },
 

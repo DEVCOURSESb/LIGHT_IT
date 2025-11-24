@@ -3,12 +3,12 @@ import { FormaContractualActions } from "@/API/catalogos/forma-contractual/forma
 const actions = FormaContractualActions();
 
 export const FormaContractualConfig = {
-  entity: "distribucion-cesion",
-  title: "Distribución de Cesión",
-  searchPlaceholder: "distribución...",
-  addButtonText: "Agregar distribución",
-  modalTitle: "Agregar nueva distribución",
-  tableTitle: "Lista de Distribuciones de Cesión",
+  entity: "forma-contractual",
+  title: "Forma contractual",
+  searchPlaceholder: "forma contractual",
+  addButtonText: "Agregar forma contractual",
+  modalTitle: "Agregar nueva forma",
+  tableTitle: "Lista de forma contractual",
 
   headers: [
     { title: "Clave", key: "cveFcontrac", sortable: true },
@@ -28,9 +28,10 @@ export const FormaContractualConfig = {
     {
       name: "cveFcontrac",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveFcontrac",
+      defaultValue: 0,
     },
     {
       name: "descFcontrac",
@@ -38,21 +39,23 @@ export const FormaContractualConfig = {
       type: "text",
       required: true,
       dataKey: "descFcontrac",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: "Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveFcontrac: (value: string) => value?.length >= 2 || "La clave es requerida",
+    cveFcontrac: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
     descFcontrac: (value: string) => value?.length > 0 || "La descripción es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },

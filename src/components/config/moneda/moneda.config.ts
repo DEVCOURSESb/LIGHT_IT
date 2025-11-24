@@ -6,8 +6,9 @@ export const monedaConfig = {
   entity: "moneda",
   title: "Monedas",
   searchPlaceholder: "moneda",
-  addButtonText: "Agregar moneda",
-  modalTitle: "Agregar nuevo moneda",
+  addButtonText: "Nueva moneda",
+  modalTitle: "Agregar moneda",
+  editModalTitle: "Editar moneda",
   tableTitle: "Lista de Monedas",
 
   headers: [
@@ -28,9 +29,10 @@ export const monedaConfig = {
     {
       name: "cveMoneda",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveMoneda",
+      defaultValue: 0,
     },
     {
       name: "descMoneda",
@@ -38,21 +40,24 @@ export const monedaConfig = {
       type: "text",
       required: true,
       dataKey: "descMoneda",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: "Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
   ],
 
+
   validationSchema: {
-    cveMoneda: (value: string) => value?.length >= 2 || "La clave es requerida",
+    cveMoneda: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
     descMoneda: (value: string) => value?.length > 0 || "La descripción es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },

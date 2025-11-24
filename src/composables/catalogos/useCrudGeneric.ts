@@ -1,4 +1,3 @@
-// composables/catalogos/useCrudGeneric.ts
 import { ref, onMounted } from "vue";
 import { useForm } from "vee-validate";
 
@@ -17,18 +16,30 @@ export const useCrudGeneric = (config: CrudConfig) => {
   const items = ref<any[]>([]);
   const loading = ref(false);
   const activeModal = ref(false);
-  const formData = ref<Record<string, any>>({});
   const editingId = ref<number | null>(null);
 
-  // Inicializar campos del formulario
-  config.fields.forEach((field: any) => {
-    if (!field.hidden) {
-      formData.value[field.name] = field.defaultValue || "";
-    }
-  });
+  // Inicializar valores por defecto
+  const getInitialValues = () => {
+    const initialValues: Record<string, any> = {};
+    config.fields.forEach((field: any) => {
+      if (!field.hidden) {
+        initialValues[field.name] = field.defaultValue || "";
+      }
+    });
+    return initialValues;
+  };
 
-  const { handleSubmit: handleFormSubmit, resetForm, setFieldValue } = useForm({
+  // useForm con valores iniciales y esquema de validación
+  const {
+    handleSubmit: handleFormSubmit,
+    resetForm,
+    setFieldValue,
+    values: formData,
+    errors: formErrors,
+    setErrors,
+  } = useForm({
     validationSchema: config.validationSchema,
+    initialValues: getInitialValues(),
   });
 
   // Cargar items del API
@@ -54,12 +65,11 @@ export const useCrudGeneric = (config: CrudConfig) => {
       const apiKey = field.dataKey || field.name;
       let value = item[apiKey];
 
-      // Aplicar transformación si existe
       if (field.transformFromAPI) {
         value = field.transformFromAPI(value);
       }
 
-      mapped[field.name] = value;
+      mapped[field.name] = value ?? field.defaultValue ?? "";
     });
 
     return mapped;
@@ -73,7 +83,6 @@ export const useCrudGeneric = (config: CrudConfig) => {
       const apiKey = field.dataKey || field.name;
       let value = formValues[field.name];
 
-      // Aplicar transformación si existe
       if (field.transformToAPI) {
         value = field.transformToAPI(value);
       }
@@ -88,12 +97,6 @@ export const useCrudGeneric = (config: CrudConfig) => {
     if (activeModal.value) {
       resetForm();
       editingId.value = null;
-      // Limpiar formData
-      config.fields.forEach((field: any) => {
-        if (!field.hidden) {
-          formData.value[field.name] = field.defaultValue || "";
-        }
-      });
     }
     activeModal.value = !activeModal.value;
   };
@@ -104,21 +107,22 @@ export const useCrudGeneric = (config: CrudConfig) => {
       const apiData = mapFormToAPI(values);
 
       if (editingId.value) {
-        // Actualizar
         await config.apiActions.update(editingId.value, apiData);
-        console.log("Actualizado:", apiData);
       } else {
-        // Crear
         await config.apiActions.create(apiData);
-        console.log("Creado:", apiData);
       }
 
-      // Recargar items
       await loadItems();
       toggleModal();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error guardando:", error);
-      alert("Error al guardar. Por favor intenta nuevamente.");
+
+      // Manejar errores de validación del servidor
+      if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        alert("Error al guardar. Por favor intenta nuevamente.");
+      }
     } finally {
       loading.value = false;
     }
@@ -128,13 +132,10 @@ export const useCrudGeneric = (config: CrudConfig) => {
     editingId.value = item.id;
     const mappedData = mapAPIToForm(item);
 
-    // Setear valores en el formulario
-    Object.keys(mappedData).forEach((key) => {
-      setFieldValue(key, mappedData[key]);
-      formData.value[key] = mappedData[key];
-    });
+    // Resetear el formulario con los nuevos valores
+    resetForm({ values: mappedData });
 
-    toggleModal();
+    activeModal.value = true;
   };
 
   const deleteItem = async (item: any) => {
@@ -152,7 +153,6 @@ export const useCrudGeneric = (config: CrudConfig) => {
     }
   };
 
-  // Cargar items al montar
   onMounted(() => {
     loadItems();
   });
@@ -160,9 +160,11 @@ export const useCrudGeneric = (config: CrudConfig) => {
   return {
     items,
     formData,
+    formErrors,
     loading,
     activeModal,
     editingId,
+    setFieldValue,
     toggleModal,
     handleSubmit,
     editItem,

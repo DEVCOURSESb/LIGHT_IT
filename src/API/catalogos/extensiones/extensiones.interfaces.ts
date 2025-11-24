@@ -1,6 +1,6 @@
 export interface Extension {
   id: number;
-  cveExtCober: string;
+  cveExtCober: number;
   descExtCober: string;
   esActivo: number;
   fechaRegistro: string;

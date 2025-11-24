@@ -30,9 +30,10 @@ export const reaseguradoresConfig = {
     {
       name: "cveReasegurador",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveReasegurador",
+      defaultValue: 0,
     },
     {
       name: "nombreReasegurador",
@@ -40,6 +41,7 @@ export const reaseguradoresConfig = {
       type: "text",
       required: true,
       dataKey: "nombreReasegurador",
+      defaultValue: "",
     },
     {
       name: "registroCnsf",
@@ -47,6 +49,7 @@ export const reaseguradoresConfig = {
       type: "text",
       required: true,
       dataKey: "registroCnsf",
+      defaultValue: "",
     },
     {
       name: "extranjero",
@@ -55,6 +58,7 @@ export const reaseguradoresConfig = {
       items: ["Sí", "No"],
       required: true,
       dataKey: "extranjero",
+      defaultValue: "No",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
@@ -65,13 +69,14 @@ export const reaseguradoresConfig = {
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: "Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveReasegurador: (value: string) => value?.length > 3 || "La clave es requerida",
+    cveReasegurador: (value: number) => !!value && value > 0 || "La clave es requerida y mayor a 0",
     nombreReasegurador: (value: string) => value?.length > 0 || "El nombre es requerido",
     registroCnsf: (value: string) => value?.length > 0 || "El registro CNSF es requerido",
     extranjero: (value: string) => !!value || "El campo extranjero es requerido",

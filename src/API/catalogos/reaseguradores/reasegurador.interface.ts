@@ -1,6 +1,6 @@
 export interface Reasegurador {
   id: number;
-  cveReasegurador: string;
+  cveReasegurador: number;
   esActivo: number;
   extranjero: number;
   fechaRegistro: string;

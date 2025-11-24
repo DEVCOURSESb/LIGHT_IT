@@ -16,7 +16,7 @@
 
           <ModalComponent
             :text-button="config.addButtonText"
-            :title="config.modalTitle"
+            :title="editingId ? config.editModalTitle || config.modalTitle : config.modalTitle"
             :is-active="activeModal"
             @onModifyActive="toggleModal"
           >
@@ -25,20 +25,45 @@
                 <v-text-field
                   v-if="field.type === 'text'"
                   :label="field.label"
-                  v-model="formData[field.name]"
+                  :model-value="formData[field.name]"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                  :error-messages="formErrors[field.name]"
                   :required="field.required"
+                  density="comfortable"
+                  class="mb-2"
                 />
                 <v-select
                   v-else-if="field.type === 'select'"
                   :items="field.items"
                   :label="field.label"
-                  v-model="formData[field.name]"
+                  :model-value="formData[field.name]"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                  :error-messages="formErrors[field.name]"
                   :required="field.required"
                   density="comfortable"
+                  class="mb-2"
+                />
+                <v-text-field
+                  v-else-if="field.type === 'number'"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                  :error-messages="formErrors[field.name]"
+                  :required="field.required"
+                  type="number"
+                  density="comfortable"
+                  class="mb-2"
                 />
               </template>
-              <v-btn class="mt-2" type="submit" block :loading="loading">
-                Guardar
+              
+              <v-btn 
+                class="mt-4" 
+                type="submit" 
+                block 
+                :loading="loading"
+                color="primary"
+              >
+                {{ editingId ? 'Actualizar' : 'Guardar' }}
               </v-btn>
             </v-form>
           </ModalComponent>
@@ -59,12 +84,24 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon size="small" class="mr-2" @click="editItem(item)">
+            <v-icon 
+              size="small" 
+              class="mr-2" 
+              @click="editItem(item)"
+            >
               mdi-pencil
             </v-icon>
-            <v-icon size="small" @click="deleteItem(item)">
+            <v-icon 
+              size="small" 
+              @click="deleteItem(item)"
+            >
               mdi-delete
             </v-icon>
+          </template>
+          <template v-for="field in config.fields" :key="field.name" v-slot:[`item.${field.name}`]="{ item }">
+            <slot :name="`item.${field.name}`" :item="item">
+              {{ item[field.name] }}
+            </slot>
           </template>
         </v-data-table>
       </v-card-text>
@@ -85,6 +122,7 @@ interface CrudConfig {
   searchPlaceholder: string;
   addButtonText: string;
   modalTitle: string;
+  editModalTitle?: string;
   tableTitle: string;
   headers: any[];
   fields: any[];
@@ -101,12 +139,15 @@ const { search, setSearch } = useSearch();
 const {
   items,
   formData,
+  formErrors,
   loading,
   activeModal,
+  editingId,
   toggleModal,
   handleSubmit,
   editItem,
   deleteItem,
+  setFieldValue,
 } = useCrudGeneric(props.config);
 
 const visibleFields = computed(() =>

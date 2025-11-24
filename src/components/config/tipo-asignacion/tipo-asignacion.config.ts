@@ -28,9 +28,10 @@ export const tipoAsignacionConfig = {
     {
       name: "cveAsignacion",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveAsignacion",
+      defaultValue: 0,
     },
     {
       name: "descAsignacion",
@@ -38,24 +39,24 @@ export const tipoAsignacionConfig = {
       type: "text",
       required: true,
       dataKey: "descAsignacion",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: " Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveAsignacion: (value: string) =>
-      value?.length >= 2 || "La clave es requerida",
-    descAsignacion: (value: string) =>
-      value?.length > 0 || "La fórmula es requerida",
+    cveAsignacion: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
+    descAsignacion: (value: string) => value?.length > 0 || "La fórmula es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },
 

@@ -36,6 +36,7 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "cveCobertura",
+      defaultValue: "",
     },
     {
       name: "cveExtCober",
@@ -43,6 +44,7 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "cveExtCober",
+      defaultValue: "",
     },
     {
       name: "descOperacionRamos",
@@ -50,14 +52,16 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "descOperacionRamos",
+      defaultValue: "",
     },
     {
-      name: "activo",
+      name: "esActivo",
       label: "Activo",
       type: "select",
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
+      defaultValue: "Sí",
       transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
       transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
     },
@@ -67,6 +71,7 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "operacion",
+      defaultValue: "",
     },
     {
       name: "ramo",
@@ -74,6 +79,7 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "ramo",
+      defaultValue: "",
     },
     {
       name: "subramo",
@@ -81,6 +87,7 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "subramo",
+      defaultValue: "",
     },
     {
       name: "subsubramo",
@@ -88,11 +95,12 @@ export const operacionesRamosConfig = {
       type: "text",
       required: true,
       dataKey: "subsubramo",
+      defaultValue: "",
     },
   ],
 
   validationSchema: {
-    cveCobertura: (value: string) => value?.length > 3 || "La clave es requerida",
+    cveCobertura: (value: string) => value?.length > 0 || "La clave es requerida",
     cveExtCober: (value: string) => value?.length > 0 || "La clave extra cobertura es requerida",
     descOperacionRamos: (value: string) => value?.length > 0 || "La descripción es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",

@@ -1,6 +1,6 @@
 export interface DistribucionCesion {
   id: number;
-  cveDistrcesion: string;
+  cveDistrcesion: number;
   descDistrcesion: string;
   esActivo: number;
   fechaRegistro: string;

@@ -28,9 +28,10 @@ export const TiposCapturaConfig = {
     {
       name: "cveTcaptura",
       label: "Clave",
-      type: "text",
+      type: "number",
       required: true,
       dataKey: "cveTcaptura",
+      defaultValue: 0,
     },
     {
       name: "descTcaptura",
@@ -46,13 +47,13 @@ export const TiposCapturaConfig = {
       items: ["Sí", "No"],
       required: true,
       dataKey: "esActivo",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      transformFromAPI: (value: boolean) => (value ? "Sí" : "No"),
+      transformToAPI: (value: string) => (value === "Sí"),
     },
   ],
 
   validationSchema: {
-    cveTcaptura: (value: string) => value?.length >= 2 || "La clave es requerida",
+    cveTcaptura: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
     descTcaptura: (value: string) => value?.length > 0 || "La descripción es requerida",
     esActivo: (value: string) => !!value || "El campo activo es requerido",
   },
