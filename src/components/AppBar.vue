@@ -14,15 +14,15 @@
 
       <Administracion />
       <CatalogosDropdown />
-      <Reaseguro />
+      <!--<Reaseguro />-->
     </div>
     <v-spacer />
 
-    <!-- <v-btn v-bind="openDialog" class="mr-4" rounded="xl" :to="{ name: 'login' }" variant="text">
+    <v-btn class="mr-4" rounded="xl" :to="{ name: 'login' }" variant="text">
       <v-icon start>mdi-logout</v-icon>
       Salir
     </v-btn>
-    <DialogComponent
+    <!--<DialogComponent
       v-model:dialog-visible="fal"
       content="Este es el contenido del diálogo."
       title="Título del Diálogo"

@@ -3,6 +3,7 @@
     <v-col cols="4">
       <v-text-field
         v-model="search"
+        class="search"
         density="compact"
         hide-details
         :label="`Buscar ${placeholder}`"

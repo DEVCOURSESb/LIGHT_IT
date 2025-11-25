@@ -53,7 +53,6 @@
   const lastNameRules = ref([
     v => !!v || 'La contraseña es requerida',
   ])
-
   async function validate () {
     if (form.value) {
       const { valid } = await form.value.validate()
@@ -62,7 +61,6 @@
       }
     }
   }
-
   function navigate () {
     routes.push('/autenticacion')
   }

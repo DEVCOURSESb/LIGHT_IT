@@ -71,20 +71,9 @@
     margin-left: auto;
     margin-right: auto;
 }
-.v-text-field {
-    color: rgb(0, 0, 0) !important;
-}
-.v-text-field {
-    color: rgb(0, 0, 0)!important;
-}
-.v-label {
-  color: rgb(114, 114, 114) !important;
-}
-.v-text-field {
-    color: rgb(114, 114, 114);
-}
+.v
 .v-input__control {
-  color: black !important;
+  color: rgb(0, 0, 0) !important;
 }
 .v-list{
     background-color: #003c71 !important;
@@ -127,7 +116,7 @@
 .encabezado {
   background-color: white !important;
 }
-.v-card-title{
+.v-card-title .v-card-text{
   font-size: 25px;
   font-weight: bold;
   justify-content: center;
@@ -149,4 +138,7 @@
 .v-data-table{
   font-weight: lighter;
   text-align: justify;
+}
+.text-overline {
+  color: white;
 }
