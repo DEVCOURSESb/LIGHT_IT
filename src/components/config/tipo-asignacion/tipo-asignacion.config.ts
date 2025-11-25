@@ -1,63 +1,83 @@
-import { TipoAsignacionActions } from "@/API/catalogos/tipo-asignacion/tipo-asignacion.actions";
+import { TipoAsignacionActions } from '@/API/catalogos/tipo-asignacion/tipo-asignacion.actions'
 
-const actions = TipoAsignacionActions();
+const actions = TipoAsignacionActions()
 
 export const tipoAsignacionConfig = {
-  entity: "tipo-asignacion",
-  title: "Tipo Asignación",
-  searchPlaceholder: "tipo asignación",
-  addButtonText: "Agregar tipo asignación",
-  modalTitle: "Agregar nuevo tipo asignación",
-  tableTitle: "Lista de Tipo Asignación",
+  entity: 'tipo-asignacion',
+  title: 'Tipo Asignación',
+  searchPlaceholder: 'tipo asignación',
+  addButtonText: 'Agregar tipo asignación',
+  modalTitle: 'Agregar nuevo tipo asignación',
+  tableTitle: 'Lista de Tipo Asignación',
 
   headers: [
-    { title: "Clave", key: "cveAsignacion", sortable: true },
-    { title: "Descripción", key: "descAsignacion", sortable: true },
-    { title: "Activo", key: "esActivo", sortable: true },
-    { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Acciones", key: "actions", sortable: false },
+    { title: 'CLAVE', key: 'cveAsignacion', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'DESCRIPCIÓN', key: 'descAsignacion', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACCIONES', key: 'actions', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
   ],
 
   fields: [
     {
-      name: "id",
-      label: "ID",
-      type: "text",
+      name: 'id',
+      label: 'ID',
+      type: 'text',
       hidden: true,
     },
     {
-      name: "cveAsignacion",
-      label: "Clave",
-      type: "number",
+      name: 'cveAsignacion',
+      label: 'Clave',
+      type: 'number',
       required: true,
-      dataKey: "cveAsignacion",
+      dataKey: 'cveAsignacion',
       defaultValue: 0,
     },
     {
-      name: "descAsignacion",
-      label: "Formula PTU",
-      type: "text",
+      name: 'descAsignacion',
+      label: 'Formula PTU',
+      type: 'text',
       required: true,
-      dataKey: "descAsignacion",
-      defaultValue: "",
+      dataKey: 'descAsignacion',
+      defaultValue: '',
     },
     {
-      name: "esActivo",
-      label: "Activo",
-      type: "select",
-      items: ["Sí", "No"],
+      name: 'esActivo',
+      label: 'Activo',
+      type: 'select',
+      items: ['Sí', 'No'],
       required: true,
-      dataKey: "esActivo",
-      defaultValue: " Sí",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      dataKey: 'esActivo',
+      defaultValue: ' Sí',
+      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
+      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveAsignacion: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
-    descAsignacion: (value: string) => value?.length > 0 || "La fórmula es requerida",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
+    cveAsignacion: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor que 0',
+    descAsignacion: (value: string) => value?.length > 0 || 'La fórmula es requerida',
+    esActivo: (value: string) => !!value || 'El campo activo es requerido',
   },
 
   apiActions: {
@@ -66,4 +86,4 @@ export const tipoAsignacionConfig = {
     update: actions.updateTipoAsignacion,
     delete: actions.deleteTipoAsignacion,
   },
-};
+}

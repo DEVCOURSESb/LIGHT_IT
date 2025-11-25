@@ -24,6 +24,7 @@
                 al correo electrónico del usuario ingresado</v-label>
               <v-otp-input
                 v-model="codigo"
+                error
                 length="8"
                 :rules="codigoRules"
                 separator=""

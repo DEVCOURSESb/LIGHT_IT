@@ -1,63 +1,83 @@
-import { TipoReaseguroActions } from "@/API/catalogos/tipo-reaseguro/tipo-reaseguro.actions";
+import { TipoReaseguroActions } from '@/API/catalogos/tipo-reaseguro/tipo-reaseguro.actions'
 
-const actions = TipoReaseguroActions();
+const actions = TipoReaseguroActions()
 
 export const tipoReaseguroConfig = {
-  entity: "tipo-reaseguro",
-  title: "Tipo reaseguro",
-  searchPlaceholder: "tipo reaseguro",
-  addButtonText: "Agregar tipo de reaseguro",
-  modalTitle: "Tipo de reaseguro",
-  tableTitle: "Lista de tipos de Reaseguro",
+  entity: 'tipo-reaseguro',
+  title: 'Tipo reaseguro',
+  searchPlaceholder: 'tipo reaseguro',
+  addButtonText: 'Agregar tipo de reaseguro',
+  modalTitle: 'Tipo de reaseguro',
+  tableTitle: 'Lista de tipos de Reaseguro',
 
   headers: [
-    { title: "Clave", key: "cveTreaseg", sortable: true },
-    { title: "Descripción", key: "descTreaseg", sortable: true },
-    { title: "Activo", key: "esActivo", sortable: true },
-    { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Acciones", key: "actions", sortable: false },
+    { title: 'CLAVE', key: 'cveTreaseg', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'DESCRIPCIÓN', key: 'descTreaseg', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACCIONES', key: 'actions', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
   ],
 
   fields: [
     {
-      name: "id",
-      label: "ID",
-      type: "text",
+      name: 'id',
+      label: 'ID',
+      type: 'text',
       hidden: true,
     },
     {
-      name: "cveTreaseg",
-      label: "Clave",
-      type: "number",
+      name: 'cveTreaseg',
+      label: 'Clave',
+      type: 'number',
       required: true,
-      dataKey: "cveTreaseg",
+      dataKey: 'cveTreaseg',
       defaultValue: 0,
     },
     {
-      name: "descTreaseg",
-      label: "Descripción",
-      type: "text",
+      name: 'descTreaseg',
+      label: 'Descripción',
+      type: 'text',
       required: true,
-      dataKey: "descTreaseg",
-      defaultValue: "",
+      dataKey: 'descTreaseg',
+      defaultValue: '',
     },
     {
-      name: "esActivo",
-      label: "Activo",
-      type: "select",
-      items: ["Sí", "No"],
+      name: 'esActivo',
+      label: 'Activo',
+      type: 'select',
+      items: ['Sí', 'No'],
       required: true,
-      dataKey: "esActivo",
-      defaultValue: "Sí",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      dataKey: 'esActivo',
+      defaultValue: 'Sí',
+      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
+      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveTreaseg: (value: number) => !!value && value > 0 || "La clave es requerida y mayor a 0",
-    descTreaseg: (value: string) => value?.length > 0 || "La fórmula es requerida",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
+    cveTreaseg: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor a 0',
+    descTreaseg: (value: string) => value?.length > 0 || 'La fórmula es requerida',
+    esActivo: (value: string) => !!value || 'El campo activo es requerido',
   },
 
   apiActions: {
@@ -66,4 +86,4 @@ export const tipoReaseguroConfig = {
     update: actions.updateTipoReaseguro,
     delete: actions.deleteTipoReaseguro,
   },
-};
+}

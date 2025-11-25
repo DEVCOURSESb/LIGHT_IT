@@ -1,63 +1,83 @@
-import { DistribucionCesionActions } from "@/API/catalogos/distribucion-cesion/distribucion-cesion.actions";
+import { DistribucionCesionActions } from '@/API/catalogos/distribucion-cesion/distribucion-cesion.actions'
 
-const actions = DistribucionCesionActions();
+const actions = DistribucionCesionActions()
 
 export const DistribucionCesionConfig = {
-  entity: "distribucion-cesion",
-  title: "Distribución de Cesión",
-  searchPlaceholder: "distribución...",
-  addButtonText: "Agregar distribución",
-  modalTitle: "Agregar nueva distribución",
-  tableTitle: "Lista de Distribuciones de Cesión",
+  entity: 'distribucion-cesion',
+  title: 'Distribución de Cesión',
+  searchPlaceholder: 'distribución...',
+  addButtonText: 'Agregar distribución',
+  modalTitle: 'Agregar nueva distribución',
+  tableTitle: 'Lista de Distribuciones de Cesión',
 
   headers: [
-    { title: "Clave", key: "cveDistrcesion", sortable: true },
-    { title: "Descripción", key: "descDistrcesion", sortable: true },
-    { title: "Activo", key: "esActivo", sortable: true },
-    { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Acciones", key: "actions", sortable: false },
+    { title: 'CLAVE', key: 'cveDistrcesion', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'DESCRIPCIÓN', key: 'descDistrcesion', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACCIONES', key: 'actions', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
   ],
 
   fields: [
     {
-      name: "id",
-      label: "ID",
-      type: "text",
+      name: 'id',
+      label: 'ID',
+      type: 'text',
       hidden: true,
     },
     {
-      name: "cveDistrcesion",
-      label: "Clave",
-      type: "number",
+      name: 'cveDistrcesion',
+      label: 'Clave',
+      type: 'number',
       required: true,
-      dataKey: "cveDistrcesion",
+      dataKey: 'cveDistrcesion',
       defaultValue: 0,
     },
     {
-      name: "descDistrcesion",
-      label: "Descripción",
-      type: "text",
+      name: 'descDistrcesion',
+      label: 'Descripción',
+      type: 'text',
       required: true,
-      dataKey: "descDistrcesion",
-      defaultValue: "",
+      dataKey: 'descDistrcesion',
+      defaultValue: '',
     },
     {
-      name: "activo",
-      label: "Activo",
-      type: "select",
-      items: ["Sí", "No"],
+      name: 'activo',
+      label: 'Activo',
+      type: 'select',
+      items: ['Sí', 'No'],
       required: true,
-      dataKey: "esActivo",
-      defaultValue: "Sí",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      dataKey: 'esActivo',
+      defaultValue: 'Sí',
+      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
+      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveDistrcesion: (value: number) => value && value > 0 || "La clave es requerida y mayor que 0",
-    descDistrcesion: (value: string) => value?.length > 0 || "La descripción es requerida",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
+    cveDistrcesion: (value: number) => value && value > 0 || 'La clave es requerida y mayor que 0',
+    descDistrcesion: (value: string) => value?.length > 0 || 'La descripción es requerida',
+    esActivo: (value: string) => !!value || 'El campo activo es requerido',
   },
 
   apiActions: {
@@ -66,4 +86,4 @@ export const DistribucionCesionConfig = {
     update: actions.updateDistribucionCesion,
     delete: actions.deleteDistribucionCesion,
   },
-};
+}

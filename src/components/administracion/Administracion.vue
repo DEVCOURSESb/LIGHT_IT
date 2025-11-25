@@ -21,10 +21,9 @@
   interface ListItem {
     name: string
     title: string
-    icon: string
   }
 
   const listItems: ListItem[] = [
-    { name: 'bitacora', title: 'Bitácora', icon: 'mdi mdi-file-clock' },
+    { name: 'bitacora', title: 'Bitácora' },
   ]
 </script>

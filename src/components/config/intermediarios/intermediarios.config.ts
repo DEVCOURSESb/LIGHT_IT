@@ -1,62 +1,83 @@
-import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediarios.actions";
+import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
 
-const actions = IntermediariosActions();
+const actions = IntermediariosActions()
 
 export const intermediariosConfig = {
-  entity: "intermediarios",
-  title: "Intermediarios",
-  searchPlaceholder: "intermediarios",
-  addButtonText: "Agregar intermediario",
-  modalTitle: "Agregar nuevo intermediario",
-  tableTitle: "Lista de Intermediarios",
+  entity: 'intermediarios',
+  title: 'Intermediarios',
+  searchPlaceholder: 'intermediarios',
+  addButtonText: 'Agregar intermediario',
+  modalTitle: 'Agregar nuevo intermediario',
+  tableTitle: 'Lista de Intermediarios',
 
   headers: [
-    { title: "Clave intermediario", key: "cveIntermediario", sortable: true },
-    { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Nombre intermediario", key: "nombreIntermediario", sortable: false, },
-    { title: "Activo", key: "esActivo", sortable: true },
-    { title: "Acciones", key: "actions", sortable: false },
+    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACCIONES', key: 'actions', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
   ],
 
   fields: [
     {
-      name: "id",
-      label: "ID",
-      type: "text",
+      name: 'id',
+      label: 'ID',
+      type: 'text',
       hidden: true,
     },
     {
-      name: "cveIntermediario",
-      label: "Clave",
-      type: "number",
+      name: 'cveIntermediario',
+      label: 'Clave',
+      type: 'number',
       required: true,
-      dataKey: "cveIntermediario",
+      dataKey: 'cveIntermediario',
       defaultValue: 0,
     },
     {
-      name: "nombreIntermediario",
-      label: "Nombre",
-      type: "text",
+      name: 'nombreIntermediario',
+      label: 'Nombre',
+      type: 'text',
       required: true,
-      dataKey: "nombreIntermediario",
+      dataKey: 'nombreIntermediario',
     },
     {
-      name: "esActivo",
-      label: "Activo",
-      type: "select",
-      items: ["Sí", "No"],
+      name: 'esActivo',
+      label: 'Activo',
+      type: 'select',
+      items: ['Sí', 'No'],
       required: true,
-      dataKey: "esActivo",
-      defaultValue: "Sí",
-      transformFromAPI: (value: number) => (value === 1 ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí" ? 1 : 0),
+      dataKey: 'esActivo',
+      defaultValue: 'Sí',
+      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
+      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
     },
   ],
 
   validationSchema: {
-    cveIntermediario: (value: number) => !!value && value > 0 || "La clave es requerida y mayor a 0",
-    nombreIntermediario: (value: string) => value?.length > 0 || "El nombre es requerido",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
+    // eslint-disable-next-line @stylistic/no-mixed-operators
+    cveIntermediario: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor a 0',
+    nombreIntermediario: (value: string) => value?.length > 0 || 'El nombre es requerido',
+    esActivo: (value: string) => !!value || 'El campo activo es requerido',
   },
 
   apiActions: {
@@ -65,4 +86,4 @@ export const intermediariosConfig = {
     update: actions.updateIntermediario,
     delete: actions.deleteIntermediario,
   },
-};
+}

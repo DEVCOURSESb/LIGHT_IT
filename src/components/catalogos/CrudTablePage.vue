@@ -1,156 +1,160 @@
 <!-- components/catalogos/CrudTablePage.vue -->
 <template>
   <div>
-    <v-card>
-      <v-card-title class="d-flex align-center">
-        {{ config.title }}
-      </v-card-title>
+    <v-breadcrumbs :items="['Catálogos', config.title ]" />
+    <v-card-title class="d-flex align-center">
+      {{ config.title }}
+    </v-card-title>
 
-      <v-card-text>
-        <div class="d-flex justify-space-between align-center">
+    <v-card-text>
+
+      <v-row class="d-flex justify-end">
+        <v-col cols="8">
           <SearchComponent
-            :initialValueSearch="search"
-            @on-write="setSearch"
+            :initial-value-search="search"
             :placeholder="config.searchPlaceholder"
+            @on-write="setSearch"
           />
+        </v-col>
+      </v-row>
 
-          <ModalComponent
-            :text-button="config.addButtonText"
-            :title="editingId ? config.editModalTitle || config.modalTitle : config.modalTitle"
-            :is-active="activeModal"
-            @onModifyActive="toggleModal"
+      <ModalComponent
+        :is-active="activeModal"
+        :text-button="config.addButtonText"
+        :title="editingId ? config.editModalTitle || config.modalTitle : config.modalTitle"
+        @on-modify-active="toggleModal"
+      >
+        <v-form :id="`modal-${config.entity}`" @submit.prevent="handleSubmit">
+          <template v-for="field in visibleFields" :key="field.name">
+            <v-text-field
+              v-if="field.type === 'text'"
+              class="mb-2"
+              density="compact"
+              :error-messages="formErrors[field.name]"
+              :label="field.label"
+              :model-value="formData[field.name]"
+              :required="field.required"
+              @update:model-value="setFieldValue(field.name, $event)"
+            />
+            <v-select
+              v-else-if="field.type === 'select'"
+              class="mb-2"
+              density="compact"
+              :error-messages="formErrors[field.name]"
+              :items="field.items"
+              :label="field.label"
+              :model-value="formData[field.name]"
+              :required="field.required"
+              @update:model-value="setFieldValue(field.name, $event)"
+            />
+            <v-text-field
+              v-else-if="field.type === 'number'"
+              class="mb-2"
+              density="compact"
+              :error-messages="formErrors[field.name]"
+              :label="field.label"
+              :model-value="formData[field.name]"
+              :required="field.required"
+              type="number"
+              @update:model-value="setFieldValue(field.name, $event)"
+            />
+          </template>
+
+          <v-btn
+            block
+            class="btn-modificar"
+            :loading="loading"
+            type="submit"
           >
-            <v-form :id="`modal-${config.entity}`" @submit.prevent="handleSubmit">
-              <template v-for="field in visibleFields" :key="field.name">
-                <v-text-field
-                  v-if="field.type === 'text'"
-                  :label="field.label"
-                  :model-value="formData[field.name]"
-                  @update:model-value="setFieldValue(field.name, $event)"
-                  :error-messages="formErrors[field.name]"
-                  :required="field.required"
-                  density="comfortable"
-                  class="mb-2"
-                />
-                <v-select
-                  v-else-if="field.type === 'select'"
-                  :items="field.items"
-                  :label="field.label"
-                  :model-value="formData[field.name]"
-                  @update:model-value="setFieldValue(field.name, $event)"
-                  :error-messages="formErrors[field.name]"
-                  :required="field.required"
-                  density="comfortable"
-                  class="mb-2"
-                />
-                <v-text-field
-                  v-else-if="field.type === 'number'"
-                  :label="field.label"
-                  :model-value="formData[field.name]"
-                  @update:model-value="setFieldValue(field.name, $event)"
-                  :error-messages="formErrors[field.name]"
-                  :required="field.required"
-                  type="number"
-                  density="comfortable"
-                  class="mb-2"
-                />
-              </template>
-              
-              <v-btn 
-                class="mt-4" 
-                type="submit" 
-                block 
-                :loading="loading"
-                color="primary"
-              >
-                {{ editingId ? 'Actualizar' : 'Guardar' }}
-              </v-btn>
-            </v-form>
-          </ModalComponent>
-        </div>
+            {{ editingId ? 'Actualizar' : 'Guardar' }}
+          </v-btn>
+        </v-form>
+      </ModalComponent>
 
-        <v-data-table
-          :headers="config.headers"
-          :items="items"
-          :search="search"
-          :loading="loading"
-          class="mt-4"
-        >
-          <template v-slot:top>
-            <v-toolbar flat>
-              <v-toolbar-title>{{ config.tableTitle }}</v-toolbar-title>
-              <v-spacer />
-            </v-toolbar>
-          </template>
+      <v-data-table
+        class="mt-4"
+        :headers="config.headers"
+        :items="items"
+        :loading="loading"
+        :search="search"
+        striped="odd"
+      >
+        <template #top>
+          <v-toolbar class="encabezado" flat>
+            <v-toolbar-title>{{ config.tableTitle }}</v-toolbar-title>
+            <v-spacer />
+          </v-toolbar>
+        </template>
 
-          <template v-slot:item.actions="{ item }">
-            <v-icon 
-              size="small" 
-              class="mr-2" 
-              @click="editItem(item)"
-            >
-              mdi-pencil
-            </v-icon>
-            <v-icon 
-              size="small" 
-              @click="deleteItem(item)"
-            >
-              mdi-delete
-            </v-icon>
-          </template>
-          <template v-for="field in config.fields" :key="field.name" v-slot:[`item.${field.name}`]="{ item }">
-            <slot :name="`item.${field.name}`" :item="item">
-              {{ item[field.name] }}
-            </slot>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
+        <template #item.actions="{ item }">
+          <v-icon
+            class="edit"
+            size="large"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            class="delete"
+            size="large"
+            @click="deleteItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
+        <template v-for="field in config.fields" :key="field.name" #[`item.${field.name}`]="{ item }">
+          <slot :item="item" :name="`item.${field.name}`">
+            {{ item[field.name] }}
+          </slot>
+        </template>
+      </v-data-table>
+    </v-card-text>
+
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-import ModalComponent from "@/components/catalogos/ModalComponent.vue";
-import SearchComponent from "@/components/catalogos/SearchComponent.vue";
-import { useSearch } from "@/composables/catalogos/useSearch";
-import { useCrudGeneric } from "@/composables/catalogos/useCrudGeneric";
+  import { computed } from 'vue'
+  import ModalComponent from '@/components/catalogos/ModalComponent.vue'
+  import SearchComponent from '@/components/catalogos/SearchComponent.vue'
+  import { useCrudGeneric } from '@/composables/catalogos/useCrudGeneric'
+  import { useSearch } from '@/composables/catalogos/useSearch'
 
-interface CrudConfig {
-  entity: string;
-  title: string;
-  searchPlaceholder: string;
-  addButtonText: string;
-  modalTitle: string;
-  editModalTitle?: string;
-  tableTitle: string;
-  headers: any[];
-  fields: any[];
-  validationSchema: any;
-  apiActions: any;
-}
+  interface CrudConfig {
+    entity: string
+    title: string
+    searchPlaceholder: string
+    addButtonText: string
+    modalTitle: string
+    editModalTitle?: string
+    tableTitle: string
+    headers: any[]
+    fields: any[]
+    validationSchema: any
+    apiActions: any
+  }
 
-const props = defineProps<{
-  config: CrudConfig;
-}>();
+  const props = defineProps<{
+    config: CrudConfig
+  }>()
 
-const { search, setSearch } = useSearch();
+  const { search, setSearch } = useSearch()
 
-const {
-  items,
-  formData,
-  formErrors,
-  loading,
-  activeModal,
-  editingId,
-  toggleModal,
-  handleSubmit,
-  editItem,
-  deleteItem,
-  setFieldValue,
-} = useCrudGeneric(props.config);
+  const {
+    items,
+    formData,
+    formErrors,
+    loading,
+    activeModal,
+    editingId,
+    toggleModal,
+    handleSubmit,
+    editItem,
+    deleteItem,
+    setFieldValue,
+  } = useCrudGeneric(props.config)
 
-const visibleFields = computed(() =>
-  props.config.fields.filter((field) => !field.hidden)
-);
+  const visibleFields = computed(() =>
+    props.config.fields.filter(field => !field.hidden),
+  )
 </script>

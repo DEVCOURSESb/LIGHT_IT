@@ -1,61 +1,81 @@
-import { TipoCapturaActions } from "@/API/catalogos/tipos-captura/tipo-captura.actions";
+import { TipoCapturaActions } from '@/API/catalogos/tipos-captura/tipo-captura.actions'
 
-const actions = TipoCapturaActions();
+const actions = TipoCapturaActions()
 
 export const TiposCapturaConfig = {
-  entity: "tipos-captura",
-  title: "Tipos captura",
-  searchPlaceholder: "tipo captura...",
-  addButtonText: "Agregar tipo captura",
-  modalTitle: "Agregar nuevo tipo captura",
-  tableTitle: "Lista de Tipos captura",
+  entity: 'tipos-captura',
+  title: 'Tipos captura',
+  searchPlaceholder: 'tipo captura',
+  addButtonText: 'Agregar tipo captura',
+  modalTitle: 'Agregar nuevo tipo captura',
+  tableTitle: 'Lista de Tipos captura',
 
   headers: [
-    { title: "Clave", key: "cveTcaptura", sortable: true },
-    { title: "Descripción", key: "descTcaptura", sortable: true },
-    { title: "Activo", key: "esActivo", sortable: true },
-    { title: "Fecha de registro", key: "fechaRegistro", sortable: true },
-    { title: "Acciones", key: "actions", sortable: false },
+    { title: 'CLAVE', key: 'cveTcaptura', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'DESCRIPCIÓN', key: 'descTcaptura', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'ACCIONES', key: 'actions', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
   ],
 
   fields: [
     {
-      name: "id",
-      label: "ID",
-      type: "text",
+      name: 'id',
+      label: 'ID',
+      type: 'text',
       hidden: true,
     },
     {
-      name: "cveTcaptura",
-      label: "Clave",
-      type: "number",
+      name: 'cveTcaptura',
+      label: 'Clave',
+      type: 'number',
       required: true,
-      dataKey: "cveTcaptura",
+      dataKey: 'cveTcaptura',
       defaultValue: 0,
     },
     {
-      name: "descTcaptura",
-      label: "Descripción",
-      type: "text",
+      name: 'descTcaptura',
+      label: 'Descripción',
+      type: 'text',
       required: true,
-      dataKey: "descTcaptura",
+      dataKey: 'descTcaptura',
     },
     {
-      name: "activo",
-      label: "Activo",
-      type: "select",
-      items: ["Sí", "No"],
+      name: 'activo',
+      label: 'Activo',
+      type: 'select',
+      items: ['Sí', 'No'],
       required: true,
-      dataKey: "esActivo",
-      transformFromAPI: (value: boolean) => (value ? "Sí" : "No"),
-      transformToAPI: (value: string) => (value === "Sí"),
+      dataKey: 'esActivo',
+      transformFromAPI: (value: boolean) => (value ? 'Sí' : 'No'),
+      transformToAPI: (value: string) => (value === 'Sí'),
     },
   ],
 
   validationSchema: {
-    cveTcaptura: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
-    descTcaptura: (value: string) => value?.length > 0 || "La descripción es requerida",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
+    cveTcaptura: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor que 0',
+    descTcaptura: (value: string) => value?.length > 0 || 'La descripción es requerida',
+    esActivo: (value: string) => !!value || 'El campo activo es requerido',
   },
 
   apiActions: {
@@ -64,4 +84,4 @@ export const TiposCapturaConfig = {
     update: actions.updateTipoCaptura,
     delete: actions.deleteTipoCaptura,
   },
-};
+}

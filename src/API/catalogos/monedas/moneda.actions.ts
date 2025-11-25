@@ -1,59 +1,59 @@
-import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
-import type { Moneda } from "./moneda.interfaces";
+import type { Moneda } from './moneda.interfaces'
+import { BaseAPI } from '@/API/BaseAPI'
+import { fakeData } from '@/API/fakeData'
 
-export const MonedaActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfRr6MonedaRest/" });
+export function MonedaActions () {
+  const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfRr6MonedaRest/' })
 
   const fetchMonedas = async (): Promise<Moneda[]> => {
     try {
-      return fakeData().dataMonedas;
-      const response = await baseAPI.get<Moneda[]>("getAllRecords");
-      return response.data;
+      return fakeData().dataMonedas
+      const response = await baseAPI.get<Moneda[]>('getAllRecords')
+      return response.data
     } catch (error) {
-      console.error("Error fetching Monedas:", error);
-      throw error;
+      console.error('Error fetching Monedas:', error)
+      throw error
     }
-  };
+  }
 
   const createMoneda = async (
-    data: Partial<Moneda>
+    data: Partial<Moneda>,
   ): Promise<Moneda> => {
     try {
-      const response = await baseAPI.post<Moneda>("create", data);
-      return response.data;
+      const response = await baseAPI.post<Moneda>('create', data)
+      return response.data
     } catch (error) {
-      console.error("Error creating Moneda:", error);
-      throw error;
+      console.error('Error creating Moneda:', error)
+      throw error
     }
-  };
+  }
 
   const updateMoneda = async (
     id: number,
-    data: Partial<Moneda>
+    data: Partial<Moneda>,
   ): Promise<Moneda> => {
     try {
-      const response = await baseAPI.put<Moneda>(`update/${id}`, data);
-      return response.data;
+      const response = await baseAPI.put<Moneda>(`update/${id}`, data)
+      return response.data
     } catch (error) {
-      console.error("Error updating Moneda:", error);
-      throw error;
+      console.error('Error updating Moneda:', error)
+      throw error
     }
-  };
+  }
 
   const deleteMoneda = async (id: number): Promise<void> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      await baseAPI.delete(`delete/${id}`)
     } catch (error) {
-      console.error("Error deleting Moneda:", error);
-      throw error;
+      console.error('Error deleting Moneda:', error)
+      throw error
     }
-  };
+  }
 
   return {
     fetchMonedas,
     createMoneda,
     updateMoneda,
     deleteMoneda,
-  };
-};
+  }
+}

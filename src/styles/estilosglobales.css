@@ -72,22 +72,28 @@
     margin-right: auto;
 }
 .v-text-field {
-    color: white !important;
+    color: rgb(0, 0, 0) !important;
 }
-.v-text-field .v-label {
-    color: white!important;
+.v-text-field {
+    color: rgb(0, 0, 0)!important;
 }
-.v-text-field .v-input__control {
-    color: rgb(255, 255, 255) !important;
+.v-label {
+  color: rgb(114, 114, 114) !important;
+}
+.v-text-field {
+    color: rgb(114, 114, 114);
+}
+.v-input__control {
+  color: black !important;
 }
 .v-list{
     background-color: #003c71 !important;
 }
 .v-list-item {
-    color: white !important;
+    color: rgb(252, 252, 252) !important;
 }
 .v-list-item-title {
-    color: white !important;
+    color: rgb(255, 255, 255) !important;
 }
 .logo-container {
   max-height: 50px;
@@ -133,9 +139,14 @@
   background-color: #003c71 !important;
   color: white !important;
   font-weight: bold !important;
+  justify-content: end;
 }
 .btn-modificar {
-  background-color: #f0ad4e !important;
+  background-color: #003c71 !important;
   color: white !important;
   font-weight: bold !important;
+}
+.v-data-table{
+  font-weight: lighter;
+  text-align: justify;
 }

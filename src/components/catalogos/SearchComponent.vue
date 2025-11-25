@@ -3,11 +3,11 @@
     <v-col cols="4">
       <v-text-field
         v-model="search"
-        prepend-inner-icon="mdi-magnify"
-        :label="`Buscar ${placeholder}`"
-        variant="outlined"
-        density="comfortable"
+        density="compact"
         hide-details
+        :label="`Buscar ${placeholder}`"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
         @keyup="onKeyPress"
       />
     </v-col>
@@ -23,12 +23,13 @@
 
   const props = defineProps<{ initialValueSearch: string, placeholder: string }>()
 
-/* prop inicial */
-const search = ref(props.initialValueSearch);
-const { placeholder } = props;
+  /* prop inicial */
+  const search = ref(props.initialValueSearch)
+  const { placeholder } = props
 
   /* evento */
   function onKeyPress () {
+    // eslint-disable-next-line vue/custom-event-name-casing
     emits('onWrite', search.value)
   }
 </script>

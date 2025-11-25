@@ -1,7 +1,7 @@
 export interface Moneda {
-  id: number;
-  cveMoneda: number;
-  descMoneda: string;
-  esActivo: number;
-  fechaRegistro: string;
+  id: number
+  cveMoneda: number
+  descMoneda: string
+  esActivo: number
+  fechaRegistro: string
 }
