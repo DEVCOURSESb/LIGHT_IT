@@ -2,7 +2,6 @@
   <v-menu>
     <template #activator="{ props }">
       <v-btn v-bind="props" variant="text">
-        <v-icon start>mdi-book-open-variant</v-icon>
         Catálogos
         <v-icon end>mdi-chevron-down</v-icon>
       </v-btn>

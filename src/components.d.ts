@@ -16,13 +16,17 @@ declare module 'vue' {
     AppBarComponent: typeof import('./components/AppBar.vue')['default']
     CatalogosDropdown: typeof import('./components/catalogos/CatalogosDropdown.vue')['default']
     CatalogosDropDown: typeof import('./components/catalogos/CatalogosDropDown.vue')['default']
+    DialogComponent: typeof import('./components/DialogComponent.vue')['default']
+    FooterComponent: typeof import('./layouts/FooterComponent.vue')['default']
     MainLayout: typeof import('./components/MainLayout.vue')['default']
     MainMenu: typeof import('./components/MainMenu.vue')['default']
     MenuComponent: typeof import('./components/MenuComponent.vue')['default']
     NavigationDrawer: typeof import('./components/NavigationDrawer.vue')['default']
+    Reaseguro: typeof import('./components/reaseguro/Reaseguro.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SearchComponent: typeof import('./components/catalogos/SearchComponent.vue')['default']
     SearchInput: typeof import('./components/ui/SearchInput.vue')['default']
+    VentanaDialogo: typeof import('./components/VentanaDialogo.vue')['default']
   }
 }

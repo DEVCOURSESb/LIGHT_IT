@@ -1,14 +1,14 @@
-import { ref } from "vue";
+import { ref } from 'vue'
 
-export const useSearch = () => {
-  const search = ref("");
+export function useSearch () {
+  const search = ref('')
 
   const setSearch = (newValue: string) => {
-    search.value = newValue;
+    search.value = newValue
   }
 
   return {
     search,
-    setSearch
-  };
-};
+    setSearch,
+  }
+}

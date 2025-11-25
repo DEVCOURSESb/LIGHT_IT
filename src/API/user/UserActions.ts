@@ -1,7 +1,7 @@
-import { Usuarios } from './Users.ts'
+import type { Usuarios } from './Users.ts'
 
 // Simulación de la respuesta de la base de datos
-const mockUserList: Usuarios[] = [
+const userList: Usuarios[] = [
   {
     id: 1,
     fechaRegistro: new Date(),
@@ -13,7 +13,7 @@ const mockUserList: Usuarios[] = [
     password: 'encrypted_pass',
     esActivo: true,
     fechaSolicitud: new Date(),
-    codigoVerificacion: 'ABC',
+    codigoVerificacion: '12345678',
     fechaActualizacion: new Date(),
     correoElectronico: 'ana@latino.com',
     fechaInicioS: new Date(),
@@ -31,7 +31,7 @@ const mockUserList: Usuarios[] = [
     password: 'encrypted_pass2',
     esActivo: true,
     fechaSolicitud: new Date(),
-    codigoVerificacion: 'DEF',
+    codigoVerificacion: '12345678',
     fechaActualizacion: new Date(),
     correoElectronico: 'beto@latino.com',
     fechaInicioS: new Date(),
@@ -39,13 +39,11 @@ const mockUserList: Usuarios[] = [
     perfilClave: 'USUARIO',
   },
 ]
-// -----------------------------------------------------------------
-
 export function UserActions () {
   const fetchUsuarios = async (): Promise<Usuarios[]> => {
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve(mockUserList)
+        resolve(userList)
       }, 500)
     })
   }
@@ -53,7 +51,7 @@ export function UserActions () {
   const fetchUsuarioById = async (id: number): Promise<Usuarios | undefined> => {
     return new Promise(resolve => {
       setTimeout(() => {
-        const user = mockUserList.find(u => u.id === id)
+        const user = userList.find(u => u.id === id)
         resolve(user)
       }, 500)
     })

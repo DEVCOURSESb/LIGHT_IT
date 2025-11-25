@@ -1,42 +1,41 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title class="d-flex align-center">
-        <v-icon class="mr-2" icon="mdi-account-multiple" />
-        Intermediarios
-      </v-card-title>
+    <v-breadcrumbs :items="['Catálogos', 'Intermediarios']" />
+    <v-card-title class="d-flex align-center">
+      Intermediarios
+    </v-card-title>
 
-      <v-card-text>
-        <SearchComponent search-iniinitial-value-search="search" @on-write="setSearch" />
+    <v-card-text>
+      <SearchComponent search-iniinitial-value-search="search" @on-write="setSearch" />
 
-        <v-data-table
-          class="mt-4"
-          :headers="headers"
-          :items="intermediarios"
-          :search="search"
-          striped="odd"
-        >
-          <template #top>
-            <v-toolbar flat>
-              <v-toolbar-title>Lista de Intermediarios</v-toolbar-title>
-              <v-spacer />
-              <v-btn color="primary" prepend-icon="mdi-plus">
-                Agregar
-              </v-btn>
-            </v-toolbar>
-          </template>
+      <v-data-table
+        class="mt-4"
+        :headers="headers"
+        :items="intermediarios"
+        :search="search"
+        striped="odd"
+      >
+        <template #top>
+          <v-toolbar class="encabezado" flat>
+            <v-toolbar-title>Lista de Intermediarios</v-toolbar-title>
+            <v-spacer />
+            <v-btn class="btn-agregar" prepend-icon="mdi-plus">
+              Agregar
+            </v-btn>
+          </v-toolbar>
+          <br>
+        </template>
 
-          <template #item.actions="{ item }">
-            <v-icon class="edit" size="small" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
-            <v-icon class="delete" size="small" @click="deleteItem(item)">
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
+        <template #item.actions="{ item }">
+          <v-icon class="edit" size="small" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+          <v-icon class="delete" size="small" @click="deleteItem(item)">
+            mdi-delete
+          </v-icon>
+        </template>
+      </v-data-table>
+    </v-card-text>
   </div>
 </template>
 

@@ -1,13 +1,14 @@
 <template>
-  <v-row>
-    <v-col cols="3">
+  <v-row class="d-flex justify-end">
+    <v-col cols="4">
       <v-text-field
         v-model="search"
-        prepend-inner-icon="mdi-magnify"
-        label="Buscar intermediario"
-        variant="outlined"
-        density="comfortable"
+        class="search"
+        density="compact"
         hide-details
+        label="Buscar intermediario"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
         @keydown="onKeyPress"
       />
     </v-col>
@@ -15,21 +16,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+  import { ref } from 'vue'
 
-/* definicion de emision de evento */
-const emits = defineEmits<{
-  onWrite: [searchValue: string];
-}>();
+  const emits = defineEmits<{
+    onWrite: [searchValue: string]
+  }>()
 
-/* declaracion de props a recibir */
-const props = defineProps<{ initialValueSearch: string, placeholder: string }>();
+  const props = defineProps<{ initialValueSearch: string, placeholder: string }>()
 
-/* prop inicial */
-const search = ref(props.initialValueSearch);
+  /* prop inicial */
+  const search = ref(props.initialValueSearch)
 
-/* evento */
-const onKeyPress = () => {
-  emits("onWrite", search.value);
-};
+  /* evento */
+  function onKeyPress () {
+    emits('onWrite', search.value)
+  }
 </script>

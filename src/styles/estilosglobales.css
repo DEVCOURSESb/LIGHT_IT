@@ -9,7 +9,6 @@
     font-weight: 150;
     font-style: normal;
 }
-
 * {
   font-family: 'montserrat', sans-serif !important;
 }
@@ -76,10 +75,10 @@
     color: white !important;
 }
 .v-text-field .v-label {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: white!important;
 }
 .v-text-field .v-input__control {
-    color: white !important;
+    color: rgb(255, 255, 255) !important;
 }
 .v-list{
     background-color: #003c71 !important;
@@ -106,4 +105,37 @@
 }
 .delete {
   color: red;
+}
+.v-toolbar-title {
+  font-weight: bold;
+  color: #003c71 !important;
+}
+.search .v-input__control {
+  background-color: rgb(255, 255, 255) !important;
+  color: rgb(114, 114, 114) !important;
+  border-radius: 8px;
+}
+.search .v-label {
+  color: rgb(114, 114, 114) !important;
+}
+.encabezado {
+  background-color: white !important;
+}
+.v-card-title{
+  font-size: 25px;
+  font-weight: bold;
+  justify-content: center;
+}
+.custom-table-headers .v-data-table-header th {
+  font-weight: bold !important;
+}
+.btn-agregar {
+  background-color: #003c71 !important;
+  color: white !important;
+  font-weight: bold !important;
+}
+.btn-modificar {
+  background-color: #f0ad4e !important;
+  color: white !important;
+  font-weight: bold !important;
 }

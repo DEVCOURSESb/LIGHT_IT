@@ -5,8 +5,8 @@
     <div class="form-container text-overline">
       <v-card class="my-8" elevation="20" rounded-xl>
         <v-card-item class="card-item">
-          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="150" />
-          <v-label class="title">Inicio de sesión</v-label>
+          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="180" />
+          <v-label class="title">Bienvenido</v-label>
         </v-card-item>
         <v-card-text>
           <v-sheet class="content text-center" height="250" width="450">
@@ -14,7 +14,7 @@
               <v-text-field
                 v-model="firstName"
                 class="text-overline"
-                label="Correo electrónico"
+                label="Usuario"
                 :rules="firstNameRules"
               />
               <v-text-field
@@ -33,11 +33,13 @@
       </v-card>
     </div>
   </div>
+  <FooterComponent />
 </template>
 
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import FooterComponent from '@/layouts/FooterComponent.vue'
 
   const routes = useRouter()
   const form = ref()
@@ -46,7 +48,7 @@
   const password = ref('')
 
   const firstNameRules = ref([
-    v => !!v || 'El correo electrónico es requerido',
+    v => !!v || 'El nombre de usuario es requerido',
   ])
   const lastNameRules = ref([
     v => !!v || 'La contraseña es requerida',

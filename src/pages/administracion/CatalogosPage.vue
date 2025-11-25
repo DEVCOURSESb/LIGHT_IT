@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <v-breadcrumbs :items="['Catálogos', 'Reaseguradores']" />
-    <v-card-title class="d-flex align-center">
-      Reaseguradores
-    </v-card-title>
-
+  <v-card-text>
     <v-row class="d-flex justify-end">
       <v-col cols="4">
         <v-text-field
@@ -12,7 +7,7 @@
           class="search"
           density="compact"
           hide-details
-          label="Buscar reasegurador"
+          label="Buscar catálogo"
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
         />
@@ -23,38 +18,36 @@
       <v-data-table
         class="mt-4"
         :headers="headers"
-        :items="reaseguradores"
+        :items="catalogos"
         :search="search"
         striped="odd"
       >
         <template #top>
           <v-toolbar class="encabezado" flat>
-            <v-toolbar-title>Lista de Reaseguradores</v-toolbar-title>
-            <v-spacer />
-            <v-btn class="btn-agregar" prepend-icon="mdi-plus">
-              Agregar
-            </v-btn>
+            <v-toolbar-title>Bitácora de cátalogos</v-toolbar-title>
           </v-toolbar>
           <br>
         </template>
 
         <template #item.actions="{ item }">
-          <v-icon class="edit" size="small" @click="editItem(item)">
+          <v-icon class="mr-2" size="small" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon class="delete" size="small" @click="deleteItem(item)">
+          <v-icon size="small" @click="deleteItem(item)">
             mdi-delete
           </v-icon>
         </template>
       </v-data-table>
     </v-card-text>
-  </div>
+  </v-card-text>
 </template>
 
 <script setup>
-  import { useReaseguradores } from '@/composables/catalogos/useReaseguradores'
+  import { ref } from 'vue'
+  import { useCatalogos } from '@/composables/administracion/useCatalogos'
 
-  const { search, reaseguradores, headers } = useReaseguradores()
+  const { search, catalogos, headers } = useCatalogos()
+  const dialog = ref(false)
 
   function editItem (item) {
     console.log('Editar:', item)

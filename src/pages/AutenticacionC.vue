@@ -10,21 +10,23 @@
             src="/src/assets/logo/latino-seguros-logo-blanco.png"
             :width="120"
           />
-          <v-label class="title">Ingresa el codigo de verificacion</v-label>
+          <v-label class="title">Autenticación de usuario</v-label>
         </v-card-item>
         <v-card-text>
           <v-sheet
             class="content text-center"
-            height="220"
+            height="280"
             width="420"
           >
             <v-form fast-fail @submit.prevent="validate">
-              <v-text-field
+              <v-label class="text-subtitle-1 mb-4">Ingresa el código de verificación enviado
+                <br>
+                al correo electrónico del usuario ingresado</v-label>
+              <v-otp-input
                 v-model="codigo"
-                class="correo text-overline"
-                label="Codigo de verificacion"
+                length="8"
                 :rules="codigoRules"
-                type="number"
+                separator=""
               />
               <div class="d-flex flex-column">
                 <v-btn block class="mt-4" color="primary" @click="navigate1">Continuar</v-btn>
@@ -36,11 +38,13 @@
       </v-card>
     </div>
   </div>
+  <FooterComponent />
 </template>
 
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import FooterComponent from '@/layouts/FooterComponent.vue'
 
   const router = useRouter()
   const form = ref()
