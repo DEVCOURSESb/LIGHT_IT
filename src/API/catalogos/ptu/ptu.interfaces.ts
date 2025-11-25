@@ -2,6 +2,6 @@ export interface Ptu {
   id: number;
   cvePtu: number;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
   formulaPtu: string;
 }

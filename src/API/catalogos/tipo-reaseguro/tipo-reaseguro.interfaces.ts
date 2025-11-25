@@ -3,5 +3,5 @@ export interface TipoReaseguro {
   cveTreaseg: number;
   descTreaseg: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

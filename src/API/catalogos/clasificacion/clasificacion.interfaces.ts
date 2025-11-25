@@ -3,5 +3,5 @@ export interface Clasificacion {
   cveClasifcober: number;
   descClasifcober: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

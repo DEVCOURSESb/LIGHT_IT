@@ -3,5 +3,5 @@ export interface FormaContractual {
   cveFcontrac: number;
   descFcontrac: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

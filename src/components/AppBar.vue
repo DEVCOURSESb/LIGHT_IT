@@ -18,7 +18,7 @@
     </div>
     <v-spacer />
 
-    <v-btn v-bind="openDialog" class="mr-4" rounded="xl" :to="{ name: 'login' }" variant="text">
+    <!-- <v-btn v-bind="openDialog" class="mr-4" rounded="xl" :to="{ name: 'login' }" variant="text">
       <v-icon start>mdi-logout</v-icon>
       Salir
     </v-btn>
@@ -27,15 +27,14 @@
       content="Este es el contenido del diálogo."
       title="Título del Diálogo"
       @update:dialog-visible="false"
-    />
+    /> -->
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
   import { useRouter } from 'vue-router'
   import Administracion from './administracion/Administracion.vue'
-  import CatalogosDropdown from './catalogos/CatalogosDropdown.vue'
-  import DialogComponent from './DialogComponent.vue'
+  import CatalogosDropdown from "./menu/CatalogosDropdown.vue";
   import Reaseguro from './reaseguro/Reaseguro.vue'
 
   const router = useRouter()

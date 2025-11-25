@@ -3,5 +3,5 @@ export interface DistribucionCesion {
   cveDistrcesion: number;
   descDistrcesion: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

@@ -2,6 +2,6 @@ export interface Intermediario {
   id: number;
   cveIntermediario: number;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
   nombreIntermediario: string;
 }

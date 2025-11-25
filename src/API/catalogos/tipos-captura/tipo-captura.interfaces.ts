@@ -3,5 +3,5 @@ export interface TipoCaptura {
   cveTcaptura: number;
   descTcaptura: string;
   esActivo: boolean;
-  fechaRegistro: Date;
+  fechaRegistro: string;
 }

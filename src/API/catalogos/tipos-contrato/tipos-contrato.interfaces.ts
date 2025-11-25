@@ -4,6 +4,6 @@ export interface TipoContrato {
   cveTreaseg: number;
   descTcontrato: string;
   esActivo: number;
-  fechaRegistro: Date;
+  fechaRegistro: string;
   idTcontrato: number;
 }

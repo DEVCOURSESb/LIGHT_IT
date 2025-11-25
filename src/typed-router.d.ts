@@ -23,9 +23,22 @@ declare module 'vue-router/auto-routes' {
     '/administracion/CatalogosPage': RouteRecordInfo<'/administracion/CatalogosPage', '/administracion/CatalogosPage', Record<never, never>, Record<never, never>>,
     '/administracion/ContratosReasegPage': RouteRecordInfo<'/administracion/ContratosReasegPage', '/administracion/ContratosReasegPage', Record<never, never>, Record<never, never>>,
     '/AutenticacionC': RouteRecordInfo<'/AutenticacionC', '/AutenticacionC', Record<never, never>, Record<never, never>>,
+    '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/ExtensionPage': RouteRecordInfo<'/catalogos/ExtensionPage', '/catalogos/ExtensionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/FormaContractualPage': RouteRecordInfo<'/catalogos/FormaContractualPage', '/catalogos/FormaContractualPage', Record<never, never>, Record<never, never>>,
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/PerfilPage': RouteRecordInfo<'/catalogos/PerfilPage', '/catalogos/PerfilPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/PtuPage': RouteRecordInfo<'/catalogos/PtuPage', '/catalogos/PtuPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ReaseguradoresPage': RouteRecordInfo<'/catalogos/ReaseguradoresPage', '/catalogos/ReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TipoAsignacionPage': RouteRecordInfo<'/catalogos/TipoAsignacionPage', '/catalogos/TipoAsignacionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TipoReaseguroPage': RouteRecordInfo<'/catalogos/TipoReaseguroPage', '/catalogos/TipoReaseguroPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TiposCapturaPage': RouteRecordInfo<'/catalogos/TiposCapturaPage', '/catalogos/TiposCapturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TipoTarifaPage': RouteRecordInfo<'/catalogos/TipoTarifaPage', '/catalogos/TipoTarifaPage', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
     '/LoginC': RouteRecordInfo<'/LoginC', '/LoginC', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/ModificarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/ModificarContratosPage', '/reaseguro/Contratos/ModificarContratosPage', Record<never, never>, Record<never, never>>,
@@ -72,16 +85,68 @@ declare module 'vue-router/auto-routes' {
       routes: '/AutenticacionC'
       views: never
     }
+    'src/pages/catalogos/ClasificacionCoberturaPage.vue': {
+      routes: '/catalogos/ClasificacionCoberturaPage'
+      views: never
+    }
+    'src/pages/catalogos/CoberturaPage.vue': {
+      routes: '/catalogos/CoberturaPage'
+      views: never
+    }
+    'src/pages/catalogos/DistribucionCesionPage.vue': {
+      routes: '/catalogos/DistribucionCesionPage'
+      views: never
+    }
+    'src/pages/catalogos/ExtensionPage.vue': {
+      routes: '/catalogos/ExtensionPage'
+      views: never
+    }
+    'src/pages/catalogos/FormaContractualPage.vue': {
+      routes: '/catalogos/FormaContractualPage'
+      views: never
+    }
     'src/pages/catalogos/IntermediariosPage.vue': {
       routes: '/catalogos/IntermediariosPage'
+      views: never
+    }
+    'src/pages/catalogos/MonedaPage.vue': {
+      routes: '/catalogos/MonedaPage'
       views: never
     }
     'src/pages/catalogos/OperacionesRamosPage.vue': {
       routes: '/catalogos/OperacionesRamosPage'
       views: never
     }
+    'src/pages/catalogos/PerfilPage.vue': {
+      routes: '/catalogos/PerfilPage'
+      views: never
+    }
+    'src/pages/catalogos/PtuPage.vue': {
+      routes: '/catalogos/PtuPage'
+      views: never
+    }
     'src/pages/catalogos/ReaseguradoresPage.vue': {
       routes: '/catalogos/ReaseguradoresPage'
+      views: never
+    }
+    'src/pages/catalogos/TipoAsignacionPage.vue': {
+      routes: '/catalogos/TipoAsignacionPage'
+      views: never
+    }
+    'src/pages/catalogos/TipoReaseguroPage.vue': {
+      routes: '/catalogos/TipoReaseguroPage'
+      views: never
+    }
+    'src/pages/catalogos/TiposCapturaPage.vue': {
+      routes: '/catalogos/TiposCapturaPage'
+      views: never
+    }
+    'src/pages/catalogos/TiposContratoPage.vue': {
+      routes: '/catalogos/TiposContratoPage'
+      views: never
+    }
+    'src/pages/catalogos/TipoTarifaPage.vue': {
+      routes: '/catalogos/TipoTarifaPage'
       views: never
     }
     'src/pages/Home.vue': {
