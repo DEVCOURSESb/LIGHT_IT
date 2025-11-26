@@ -12,9 +12,9 @@
       <h2 class="text-h4 font-weight-bold">Sistema catálogos de reaseguro</h2>
       <v-carousel
         aspect-ratio="16/9"
-        height="400"
+        height="350"
         hide-delimiters
-        progress="blue"
+        progress="#003c71"
         show-arrows="hover"
         transition-duration="500"
       >
@@ -35,16 +35,16 @@
   import FooterComponent from '@/layouts/FooterComponent.vue'
   const items = [
     {
-      src: 'src/assets/logo/Torre-Latinoamericana.png',
+      src: 'src/assets/logo/la-latino-logo.png',
     },
     {
-      src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+      src: 'src/assets/logo/la-latino-seguros-opiniones.jpg',
     },
     {
-      src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+      src: 'src/assets/logo/latino-seguros-historia-torre-latinoamericana.jpg',
     },
     {
-      src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+      src: 'src/assets/logo/torreLatino.png',
     },
   ]
 </script>
