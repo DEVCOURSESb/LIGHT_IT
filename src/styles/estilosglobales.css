@@ -71,10 +71,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-.v
-.v-input__control {
-  color: rgb(0, 0, 0) !important;
-}
 .v-list{
     background-color: #003c71 !important;
 }
@@ -116,7 +112,7 @@
 .encabezado {
   background-color: white !important;
 }
-.v-card-title .v-card-text{
+.v-card-title{
   font-size: 25px;
   font-weight: bold;
   justify-content: center;
@@ -139,6 +135,14 @@
   font-weight: lighter;
   text-align: justify;
 }
-.text-overline {
-  color: white;
+.text-overlay {
+  justify-content: center;
+  align-content: center;
+  position: absolute;
+  top: 150px;
+  left: 700px;
+  color: rgb(0, 0, 0);
+  padding: 50px;
+  border-radius: 5px;
+  max-width: 80%;
 }

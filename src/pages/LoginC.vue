@@ -25,7 +25,7 @@
                 type="password"
               />
               <div class="d-flex flex-column">
-                <v-btn class="mt-4" color="primary" @click="navigate">Ingresar</v-btn>
+                <v-btn class="mt-4" color="primary" @click="validate">Ingresar</v-btn>
               </div>
             </v-form>
           </v-sheet>
@@ -39,29 +39,44 @@
 <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { UserActions } from '@/API/user/UserActions'
   import FooterComponent from '@/layouts/FooterComponent.vue'
+  import { useDialog } from '@/stores/dialogStore'
 
-  const routes = useRouter()
+  const { autenticarUsuario } = UserActions()
+  const dialog = useDialog()
+
+  const router = useRouter()
+
   const form = ref()
-
   const firstName = ref('')
   const password = ref('')
 
-  const firstNameRules = ref([
-    v => !!v || 'El nombre de usuario es requerido',
-  ])
-  const lastNameRules = ref([
-    v => !!v || 'La contraseña es requerida',
-  ])
+  const firstNameRules = ref([v => !!v || 'El nombre de usuario es requerido'])
+  const lastNameRules = ref([v => !!v || 'La contraseña es requerida'])
+
   async function validate () {
-    if (form.value) {
-      const { valid } = await form.value.validate()
-      if (valid) {
-        alert('Información incorrecta, inténtalo de nuevo')
-      }
+    if (!firstName.value || !password.value) return
+
+    const result = await autenticarUsuario(firstName.value, password.value)
+
+    if (!result.success) {
+      dialog.show({ title: 'Error de autenticación', message: result.message, type: 'error' })
+      return
     }
+
+    localStorage.setItem('tmpUser', firstName.value)
+
+    dialog.show({
+      title: 'Código enviado',
+      message: 'Se ha enviado el código de validación al correo.',
+      type: 'success',
+    })
+
+    setTimeout(() => {
+      dialog.cerrar()
+      router.push('/autenticacion')
+    }, 3200)
   }
-  function navigate () {
-    routes.push('/autenticacion')
-  }
+
 </script>

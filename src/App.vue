@@ -1,5 +1,8 @@
 <template>
   <router-view />
+  <DialogGlobal />
 </template>
 
-<script setup></script>
+<script setup>
+  import DialogGlobal from './components/DialogGlobal.vue'
+</script>

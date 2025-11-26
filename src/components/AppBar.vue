@@ -14,33 +14,22 @@
 
       <Administracion />
       <CatalogosDropdown />
-      <!--<Reaseguro />-->
+      <Reaseguro />
     </div>
     <v-spacer />
-
-    <v-btn class="mr-4" rounded="xl" :to="{ name: 'login' }" variant="text">
-      <v-icon start>mdi-logout</v-icon>
-      Salir
-    </v-btn>
-    <!--<DialogComponent
-      v-model:dialog-visible="fal"
-      content="Este es el contenido del diálogo."
-      title="Título del Diálogo"
-      @update:dialog-visible="false"
-    /> -->
   </v-app-bar>
 </template>
 
 <script lang="ts" setup>
   import { useRouter } from 'vue-router'
   import Administracion from './administracion/Administracion.vue'
-  import CatalogosDropdown from "./menu/CatalogosDropdown.vue";
+  import CatalogosDropdown from './menu/CatalogosDropdown.vue'
   import Reaseguro from './reaseguro/Reaseguro.vue'
 
   const router = useRouter()
 
-  function goHome() {
-    router.push({ name: 'home' })
+  function goHome () {
+    router.push( { name: 'home' } )
   }
 
 </script>
