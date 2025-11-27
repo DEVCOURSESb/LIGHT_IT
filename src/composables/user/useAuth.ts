@@ -1,5 +1,3 @@
-// src/composables/useAuth.js (Actualizado)
-
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { AuthActions } from '@/API/user/UserActions'
@@ -17,7 +15,7 @@ export function useAuth() {
   const isLoading = ref(false)
   const error = ref('')
 
-  const login = async (email, password) => {
+  const login = async (email: any, password: any) => {
     try {
       const user = await loginUser(email, password)
 

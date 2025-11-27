@@ -67,7 +67,7 @@
                         v-if="submenu.items.length === 0"
                         link
                         :prepend-icon="submenu.icon || undefined"
-                        :to="`/reaseguro/contratosReaseguro${submenu.name}`"
+                        :to="`/reaseguro/contratosReaseguro/${submenu.name}`"
                       >
                         <v-list-item-title>{{ submenu.title }}</v-list-item-title>
                       </v-list-item>

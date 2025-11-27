@@ -1,4 +1,3 @@
-// UserActions.ts
 import type { Usuarios } from './Users.ts'
 
 const userList: Usuarios[] = [
@@ -6,16 +5,16 @@ const userList: Usuarios[] = [
     id: 1,
     fechaRegistro: new Date(),
     clave: 'USER001',
-    nombre: 'Ana',
-    aPaterno: 'Gómez',
-    aMaterno: 'Rojas',
-    username: 'ana.gomez',
+    nombre: 'Elizabet',
+    aPaterno: 'Martinez',
+    aMaterno: 'Lorenzo',
+    username: 'eliza.mtz',
     password: '12345',
     esActivo: true,
     fechaSolicitud: new Date(),
     codigoVerificacion: '',
     fechaActualizacion: new Date(),
-    correoElectronico: 'ana@latino.com',
+    correoElectronico: 'eliza@lightit.com',
     fechaInicioS: new Date(),
     fechaFinS: '',
     perfilClave: 'ADMIN',

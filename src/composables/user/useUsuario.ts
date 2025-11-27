@@ -1,5 +1,3 @@
-// src/composables/user/useUsuario.ts
-
 import type { Usuarios } from '@/API/user/User'
 import { ref } from 'vue'
 import { UserActions } from '@/API/user/UserActions'
