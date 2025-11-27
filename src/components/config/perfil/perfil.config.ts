@@ -41,16 +41,6 @@ export const perfilConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'ACTIVO', key: 'activo', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    },
     { title: 'ACCIONES', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',

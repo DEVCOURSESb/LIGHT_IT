@@ -34,6 +34,7 @@ export function useCrudGeneric (config: CrudConfig) {
   const {
     handleSubmit: handleFormSubmit,
     resetForm,
+    handleReset,
     setFieldValue,
     values: formData,
     errors: formErrors,
@@ -101,6 +102,7 @@ export function useCrudGeneric (config: CrudConfig) {
   const toggleModal = () => {
     if (activeModal.value) {
       resetForm()
+      handleReset()
       editingId.value = null
     }
     activeModal.value = !activeModal.value

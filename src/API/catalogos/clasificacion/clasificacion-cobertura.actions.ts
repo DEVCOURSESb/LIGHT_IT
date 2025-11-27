@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { Clasificacion } from "./clasificacion.interfaces";
 
 export const ClasificacionCoberturaActions = () => {
@@ -9,8 +8,7 @@ export const ClasificacionCoberturaActions = () => {
 
   const fetchClasificaciones = async (): Promise<Clasificacion[]> => {
     try {
-      return fakeData().dataClasificacionCobertura;
-      const response = await baseAPI.get<Clasificacion[]>("getAllRecords");
+      const response = await baseAPI.post<Clasificacion[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching Clasificaciones:", error);

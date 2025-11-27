@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { Extension } from "./extensiones.interfaces";
 
 export const ExtensionesActions = () => {
@@ -7,8 +6,7 @@ export const ExtensionesActions = () => {
 
   const fetchExtensiones = async (): Promise<Extension[]> => {
     try {
-      return fakeData().dataExtensiones;
-      const response = await baseAPI.get<Extension[]>("getAllRecords");
+      const response = await baseAPI.post<Extension[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching Extensiones:", error);

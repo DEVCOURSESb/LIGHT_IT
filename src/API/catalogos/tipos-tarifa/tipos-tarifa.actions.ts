@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { TipoTarifa } from "./tipos-tarifa.interfaces";
 
 export const TipoTarifaActions = () => {
@@ -7,8 +6,7 @@ export const TipoTarifaActions = () => {
 
   const fetchTipoTarifa = async (): Promise<TipoTarifa[]> => {
     try {
-      return fakeData().dataTipoTarifa;
-      const response = await baseAPI.get<TipoTarifa[]>("getAllRecords");
+      const response = await baseAPI.post<TipoTarifa[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching TipoTarifa:", error);
