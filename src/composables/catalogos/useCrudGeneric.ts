@@ -21,10 +21,9 @@ export function useCrudGeneric (config: CrudConfig) {
   // Inicializar valores por defecto
   const getInitialValues = () => {
     const initialValues: Record<string, any> = {}
-    // eslint-disable-next-line unicorn/no-array-for-each
     config.fields.forEach((field: any) => {
       if (!field.hidden) {
-        initialValues[field.name] = field.defaultValue || ''
+        initialValues[field.name] = field.defaultValue !== undefined ? field.defaultValue : ''
       }
     })
     return initialValues
@@ -34,7 +33,6 @@ export function useCrudGeneric (config: CrudConfig) {
   const {
     handleSubmit: handleFormSubmit,
     resetForm,
-    handleReset,
     setFieldValue,
     values: formData,
     errors: formErrors,
@@ -42,6 +40,7 @@ export function useCrudGeneric (config: CrudConfig) {
   } = useForm({
     validationSchema: config.validationSchema,
     initialValues: getInitialValues(),
+    validateOnMount: false,
   })
 
   // Cargar items del API
@@ -61,7 +60,6 @@ export function useCrudGeneric (config: CrudConfig) {
   const mapAPIToForm = (item: any) => {
     const mapped: Record<string, any> = { id: item.id }
 
-    // eslint-disable-next-line unicorn/no-array-for-each
     config.fields.forEach((field: any) => {
       if (field.hidden) {
         return
@@ -84,7 +82,6 @@ export function useCrudGeneric (config: CrudConfig) {
   const mapFormToAPI = (formValues: any) => {
     const mapped: Record<string, any> = {}
 
-    // eslint-disable-next-line unicorn/no-array-for-each
     config.fields.forEach((field: any) => {
       const apiKey = field.dataKey || field.name
       let value = formValues[field.name]
@@ -101,8 +98,11 @@ export function useCrudGeneric (config: CrudConfig) {
 
   const toggleModal = () => {
     if (activeModal.value) {
-      resetForm()
-      handleReset()
+      resetForm({
+        values: getInitialValues(),
+        errors: {},
+        touched: {},
+      })
       editingId.value = null
     }
     activeModal.value = !activeModal.value
@@ -138,9 +138,12 @@ export function useCrudGeneric (config: CrudConfig) {
   const editItem = (item: any) => {
     editingId.value = item.id
     const mappedData = mapAPIToForm(item)
-
-    // Resetear el formulario con los nuevos valores
-    resetForm({ values: mappedData })
+    
+    resetForm({
+      values: mappedData,
+      errors: {},
+      touched: {},
+    })
 
     activeModal.value = true
   }
