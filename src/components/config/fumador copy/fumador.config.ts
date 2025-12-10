@@ -1,17 +1,18 @@
-import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
+import { FumadorActions } from "@/API/catalogos/fumador/fumador.actions"
 
-const actions = IntermediariosActions()
 
-export const intermediariosConfig = {
-  entity: 'intermediarios',
-  title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
+const actions = FumadorActions();
+
+export const FumadorConfig = {
+  entity: 'Fumador',
+  title: 'Fumador',
+  searchPlaceholder: 'Fumador',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo intermediario',
-  tableTitle: 'Lista de Intermediarios',
+  modalTitle: 'Agregar nuevo Fumador',
+  tableTitle: 'Lista de Fumadores',
 
   headers: [
-    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+    { title: 'CLAVE', key: 'cveFumador', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -21,7 +22,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: 'DESCRIPCIÓN', key: 'descFumador', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -46,19 +47,19 @@ export const intermediariosConfig = {
       hidden: true,
     },
     {
-      name: 'cveIntermediario',
+      name: 'cveFumador',
       label: 'Clave',
       type: 'number',
       required: true,
-      dataKey: 'cveIntermediario',
+      dataKey: 'cveFumador',
       defaultValue: 0,
     },
     {
-      name: 'nombreIntermediario',
-      label: 'Nombre',
+      name: 'descFumador',
+      label: 'Descripción',
       type: 'text',
       required: true,
-      dataKey: 'nombreIntermediario',
+      dataKey: 'descFumador',
       transformToAPI: (value: string) => (value.toUpperCase()),
     },
     {
@@ -75,16 +76,16 @@ export const intermediariosConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveFumador: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    descFumador: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {
-    fetch: actions.fetchIntermediarios,
-    create: actions.createIntermediario,
-    update: actions.updateIntermediario,
-    delete: actions.deleteIntermediario,
+    fetch: actions.fetch,
+    create: actions.create,
+    update: actions.update,
+    delete: actions.deletes,
   },
 }

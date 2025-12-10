@@ -1,17 +1,17 @@
-import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
+import { TipoEndosoActions } from '@/API/catalogos/tipo_endoso/tipo_endoso.actions'
 
-const actions = IntermediariosActions()
+const actions = TipoEndosoActions()
 
-export const intermediariosConfig = {
-  entity: 'intermediarios',
-  title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
+export const TipoEndosoConfig = {
+  entity: 'tipoEndoso',
+  title: 'Tipo endoso',
+  searchPlaceholder: 'Tipo Endoso',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo intermediario',
-  tableTitle: 'Lista de Intermediarios',
+  modalTitle: 'Agregar nuevo tipo endoso',
+  tableTitle: 'Lista de tipos de endoso',
 
   headers: [
-    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+    { title: 'CLAVE', key: 'cveTipoEndoso', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -21,7 +21,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: 'DESCRIPCIÓN', key: 'descTipoEndoso', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -46,19 +46,19 @@ export const intermediariosConfig = {
       hidden: true,
     },
     {
-      name: 'cveIntermediario',
+      name: 'cveTipoEndoso',
       label: 'Clave',
       type: 'number',
       required: true,
-      dataKey: 'cveIntermediario',
+      dataKey: 'cveTipoEndoso',
       defaultValue: 0,
     },
     {
-      name: 'nombreIntermediario',
-      label: 'Nombre',
+      name: 'descTipoEndoso',
+      label: 'Descripción',
       type: 'text',
       required: true,
-      dataKey: 'nombreIntermediario',
+      dataKey: 'descTipoEndoso',
       transformToAPI: (value: string) => (value.toUpperCase()),
     },
     {
@@ -75,16 +75,16 @@ export const intermediariosConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveTipoEndoso: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    descTipoEndoso: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {
-    fetch: actions.fetchIntermediarios,
-    create: actions.createIntermediario,
-    update: actions.updateIntermediario,
-    delete: actions.deleteIntermediario,
+    fetch: actions.fetch,
+    create: actions.create,
+    update: actions.update,
+    delete: actions.deletes,
   },
 }

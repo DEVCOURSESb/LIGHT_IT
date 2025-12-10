@@ -43,5 +43,13 @@
     { name: 'tipo_reaseguro', title: 'Tipo reaseguro' },
     { name: 'tipo_tarifa', title: 'Tipo tarifa' },
     { name: 'perfil', title: 'Perfil' },
+    { name: 'criterios_de_asignacion', title: 'Criterios de asignación' },
+    { name: 'estatus_recibo', title: 'Estatus recibo' },
+    { name: 'tipo_endoso', title: 'Tipo endoso' },
+    { name: 'forma_de_pago', title: 'Forma de pago' },
+    { name: 'sexo', title: 'Sexo' },
+    { name: 'estatus', title: 'Estatus' },
+    { name: 'fumador', title: 'Fumador' },
+    { name: 'tipo_cambio', title: 'Tipo cambio' },
   ]
 </script>

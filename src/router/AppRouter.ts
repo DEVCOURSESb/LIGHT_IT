@@ -170,6 +170,54 @@ export function AppRouter () {
               component: () => import("@/pages/catalogos/CoberturaPage.vue"),
               meta: { title: "Cobertura" },
             },
+            {
+              path: "criterios_de_asignacion",
+              name: "criterios_de_asignacion",
+              component: () => import("@/pages/catalogos/CriteriosAsignacionPage.vue"),
+              meta: { title: "Criterios de Asignación" },
+            },
+            {
+              path: "estatus_recibo",
+              name: "estatus_recibo",
+              component: () => import("@/pages/catalogos/EstatusReciboPage.vue"),
+              meta: { title: "Estatus recibo" },
+            },
+            {
+              path: "tipo_endoso",
+              name: "tipo_endoso",
+              component: () => import("@/pages/catalogos/TipoEndosoPage.vue"),
+              meta: { title: "Tipo Endoso" },
+            },
+            {
+              path: "forma_de_pago",
+              name: "forma_de_pago",
+              component: () => import("@/pages/catalogos/FormaPagoPage.vue"),
+              meta: { title: "Forma Pago" },
+            },
+            {
+              path: "sexo",
+              name: "sexo",
+              component: () => import("@/pages/catalogos/SexoPage.vue"),
+              meta: { title: "Sexo" },
+            },
+            {
+              path: "estatus",
+              name: "estatus",
+              component: () => import("@/pages/catalogos/EstatusPage.vue"),
+              meta: { title: "Estatus" },
+            },
+            {
+              path: "fumador",
+              name: "fumador",
+              component: () => import("@/pages/catalogos/FumadorPage.vue"),
+              meta: { title: "Fumador" },
+            },
+            {
+              path: "tipo_cambio",
+              name: "tipo_cambio",
+              component: () => import("@/pages/catalogos/TiposCambioPage.vue"),
+              meta: { title: "Tipo Cambio" },
+            },
           ],
     }
   ]

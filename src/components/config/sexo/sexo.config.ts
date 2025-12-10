@@ -1,17 +1,17 @@
-import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
 
-const actions = IntermediariosActions()
+import { SexoActions } from "@/API/catalogos/sexo/sexo.actions"
+const actions = SexoActions()
 
-export const intermediariosConfig = {
-  entity: 'intermediarios',
-  title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
+export const SexoConfig = {
+  entity: 'Sexo',
+  title: 'Sexo',
+  searchPlaceholder: 'Sexo',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo intermediario',
-  tableTitle: 'Lista de Intermediarios',
+  modalTitle: 'Agregar nuevo sexo',
+  tableTitle: 'Lista de sexos',
 
   headers: [
-    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+    { title: 'CLAVE', key: 'cveSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -21,7 +21,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: 'DESCRIPCIÓN', key: 'descSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -46,19 +46,19 @@ export const intermediariosConfig = {
       hidden: true,
     },
     {
-      name: 'cveIntermediario',
+      name: 'cveSexo',
       label: 'Clave',
       type: 'number',
       required: true,
-      dataKey: 'cveIntermediario',
+      dataKey: 'cveSexo',
       defaultValue: 0,
     },
     {
-      name: 'nombreIntermediario',
-      label: 'Nombre',
+      name: 'descSexo',
+      label: 'Descripción',
       type: 'text',
       required: true,
-      dataKey: 'nombreIntermediario',
+      dataKey: 'descSexo',
       transformToAPI: (value: string) => (value.toUpperCase()),
     },
     {
@@ -75,16 +75,16 @@ export const intermediariosConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveSexo: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    descSexo: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {
-    fetch: actions.fetchIntermediarios,
-    create: actions.createIntermediario,
-    update: actions.updateIntermediario,
-    delete: actions.deleteIntermediario,
+    fetch: actions.fetch,
+    create: actions.create,
+    update: actions.update,
+    delete: actions.deletes,
   },
 }

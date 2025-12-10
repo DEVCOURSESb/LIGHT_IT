@@ -1,17 +1,17 @@
-import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
+import { CriteriosAsignacionActions } from '@/API/catalogos/criterios_asignacion/criterios_asignacion.actions'
 
-const actions = IntermediariosActions()
+const actions = CriteriosAsignacionActions()
 
-export const intermediariosConfig = {
-  entity: 'intermediarios',
-  title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
+export const criteriosAsignacionConfig = {
+  entity: 'criteriosAsignacion',
+  title: 'Criterios Asignacion',
+  searchPlaceholder: 'Criterio Asignacion',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo intermediario',
-  tableTitle: 'Lista de Intermediarios',
+  modalTitle: 'Agregar nuevo criterio asignacion',
+  tableTitle: 'Lista de criterios de asignacion',
 
   headers: [
-    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+    { title: 'CLAVE CRITERIO ASIGNACION', key: 'cveCriterioAsig', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -21,7 +21,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: 'DESCRIPCIÓN', key: 'descCriterioAsig', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -46,19 +46,19 @@ export const intermediariosConfig = {
       hidden: true,
     },
     {
-      name: 'cveIntermediario',
+      name: 'cveCriterioAsig',
       label: 'Clave',
       type: 'number',
       required: true,
-      dataKey: 'cveIntermediario',
+      dataKey: 'cveCriterioAsig',
       defaultValue: 0,
     },
     {
-      name: 'nombreIntermediario',
-      label: 'Nombre',
+      name: 'descCriterioAsig',
+      label: 'Descripción',
       type: 'text',
       required: true,
-      dataKey: 'nombreIntermediario',
+      dataKey: 'descCriterioAsig',
       transformToAPI: (value: string) => (value.toUpperCase()),
     },
     {
@@ -75,16 +75,16 @@ export const intermediariosConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveCriterioAsig: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    descCriterioAsig: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {
-    fetch: actions.fetchIntermediarios,
-    create: actions.createIntermediario,
-    update: actions.updateIntermediario,
-    delete: actions.deleteIntermediario,
+    fetch: actions.fetch,
+    create: actions.create,
+    update: actions.update,
+    delete: actions.deletes,
   },
 }

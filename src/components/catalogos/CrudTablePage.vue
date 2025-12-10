@@ -1,75 +1,110 @@
 <!-- components/catalogos/CrudTablePage.vue -->
 <template>
   <div>
-    <v-breadcrumbs :items="['Catálogos', config.title ]" />
-    <v-card-title class="d-flex align-center">
-      {{ config.title }}
-    </v-card-title>
+    <v-breadcrumbs :items="['Catálogos', config.title]" />
+    <v-card-title class="d-flex align-center"> </v-card-title>
 
     <v-card-text>
-
-      <v-row class="d-flex justify-end">
-        <v-col cols="8">
+      <v-row class="w-100">
+        <v-col cols="4">
           <SearchComponent
             :initial-value-search="search"
             :placeholder="config.searchPlaceholder"
             @on-write="setSearch"
           />
         </v-col>
-      </v-row>
 
-      <ModalComponent
-        :is-active="activeModal"
-        :text-button="config.addButtonText"
-        :title="editingId ? config.editModalTitle || config.modalTitle : config.modalTitle"
-        @on-modify-active="toggleModal"
-      >
-        <v-form :id="`modal-${config.entity}`" @submit.prevent="handleSubmit">
-          <template v-for="field in visibleFields" :key="field.name">
-            <v-text-field
-              v-if="field.type === 'text'"
-              class="mb-2"
-              density="compact"
-              :error-messages="formErrors[field.name]"
-              :label="field.label"
-              :model-value="formData[field.name]"
-              :required="field.required"
-              @update:model-value="setFieldValue(field.name, $event)"
-            />
-            <v-select
-              v-else-if="field.type === 'select'"
-              class="mb-2"
-              density="compact"
-              :error-messages="formErrors[field.name]"
-              :items="field.items"
-              :label="field.label"
-              :model-value="formData[field.name]"
-              :required="field.required"
-              @update:model-value="setFieldValue(field.name, $event)"
-            />
-            <v-text-field
-              v-else-if="field.type === 'number'"
-              class="mb-2"
-              density="compact"
-              :error-messages="formErrors[field.name]"
-              :label="field.label"
-              :model-value="formData[field.name]"
-              :required="field.required"
-              type="number"
-              @update:model-value="setFieldValue(field.name, $event)"
-            />
-          </template>
+        <v-col cols="4" class="d-flex align-center justify-center">
+          <h1>{{ config.title }}</h1>
+        </v-col>
 
-          <v-btn
-            block
-            class="btn-modificar"
-            :loading="loading"
-            type="submit"
+        <v-col cols="4" class="d-flex justify-end align-center gap-2">
+          <ModalComponent
+            :is-active="activeModal"
+            :text-button="config.addButtonText"
+            :title="
+              editingId
+                ? config.editModalTitle || config.modalTitle
+                : config.modalTitle
+            "
+            @on-modify-active="toggleModal"
           >
-            {{ editingId ? 'Actualizar' : 'Guardar' }}
-          </v-btn>
-        </v-form>
-      </ModalComponent>
+            <v-form
+              :id="`modal-${config.entity}`"
+              @submit.prevent="handleSubmit"
+            >
+              <template v-for="field in visibleFields" :key="field.name">
+                <v-text-field
+                  v-if="field.type === 'text'"
+                  class="mb-2"
+                  density="compact"
+                  :error-messages="formErrors[field.name]"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  :required="field.required"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                />
+                <v-checkbox
+                  v-else-if="field.type === 'Checkbox'"
+                  class="mb-2"
+                  density="compact"
+                  :error-messages="formErrors[field.name]"
+                  :items="field.items"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  :required="field.required"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                >
+                </v-checkbox>
+                <v-select
+                  v-else-if="field.type === 'select'"
+                  class="mb-2"
+                  density="compact"
+                  :error-messages="formErrors[field.name]"
+                  :items="field.items"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  :required="field.required"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                />
+                <v-text-field
+                  v-else-if="field.type === 'number'"
+                  class="mb-2"
+                  density="compact"
+                  :error-messages="formErrors[field.name]"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  :required="field.required"
+                  type="number"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                />
+                <v-text-field
+                  v-else-if="field.type === 'decimal'"
+                  class="mb-2"
+                  density="compact"
+                  :error-messages="formErrors[field.name]"
+                  :label="field.label"
+                  :model-value="formData[field.name]"
+                  :required="field.required"
+                  type="number"
+                  step="0.1"
+                  @update:model-value="setFieldValue(field.name, $event)"
+                />
+              </template>
+
+              <v-btn
+                block
+                class="btn-modificar"
+                :loading="loading"
+                type="submit"
+              >
+                {{ editingId ? "Actualizar" : "Guardar" }}
+              </v-btn>
+            </v-form>
+          </ModalComponent>
+          <slot></slot>
+        </v-col>
+      </v-row>
 
       <v-data-table
         class="mt-4"
@@ -87,74 +122,65 @@
         </template>
 
         <template #item.actions="{ item }">
-          <v-icon
-            class="edit"
-            size="large"
-            @click="editItem(item)"
-          >
+          <v-icon class="edit" size="large" @click="editItem(item)">
             mdi-pencil
           </v-icon>
-          <v-icon
-            class="delete"
-            size="large"
-            @click="deleteItem(item)"
-          >
-            mdi-delete
-          </v-icon>
         </template>
-        <template v-for="field in config.fields" :key="field.name" #[`item.${field.name}`]="{ item }">
+        <template
+          v-for="field in config.fields"
+          :key="field.name"
+          #[`item.${field.name}`]="{ item }"
+        >
           <slot :item="item" :name="`item.${field.name}`">
             {{ item[field.name] }}
           </slot>
         </template>
       </v-data-table>
     </v-card-text>
-
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue'
-  import ModalComponent from '@/components/catalogos/ModalComponent.vue'
-  import SearchComponent from '@/components/catalogos/SearchComponent.vue'
-  import { useCrudGeneric } from '@/composables/catalogos/useCrudGeneric'
-  import { useSearch } from '@/composables/catalogos/useSearch'
+import { computed } from "vue";
+import ModalComponent from "@/components/catalogos/ModalComponent.vue";
+import SearchComponent from "@/components/catalogos/SearchComponent.vue";
+import { useCrudGeneric } from "@/composables/catalogos/useCrudGeneric";
+import { useSearch } from "@/composables/catalogos/useSearch";
 
-  interface CrudConfig {
-    entity: string
-    title: string
-    searchPlaceholder: string
-    addButtonText: string
-    modalTitle: string
-    editModalTitle?: string
-    tableTitle: string
-    headers: any[]
-    fields: any[]
-    validationSchema: any
-    apiActions: any
-  }
+interface CrudConfig {
+  entity: string;
+  title: string;
+  searchPlaceholder: string;
+  addButtonText: string;
+  modalTitle: string;
+  editModalTitle?: string;
+  tableTitle: string;
+  headers: any[];
+  fields: any[];
+  validationSchema: any;
+  apiActions: any;
+}
 
-  const props = defineProps<{
-    config: CrudConfig
-  }>()
+const props = defineProps<{
+  config: CrudConfig;
+}>();
 
-  const { search, setSearch } = useSearch()
+const { search, setSearch } = useSearch();
 
-  const {
-    items,
-    formData,
-    formErrors,
-    loading,
-    activeModal,
-    editingId,
-    toggleModal,
-    handleSubmit,
-    editItem,
-    deleteItem,
-    setFieldValue,
-  } = useCrudGeneric(props.config)
+const {
+  items,
+  formData,
+  formErrors,
+  loading,
+  activeModal,
+  editingId,
+  toggleModal,
+  handleSubmit,
+  editItem,
+  setFieldValue,
+} = useCrudGeneric(props.config);
 
-  const visibleFields = computed(() =>
-    props.config.fields.filter(field => !field.hidden),
-  )
+const visibleFields = computed(() =>
+  props.config.fields.filter((field) => !field.hidden)
+);
 </script>
