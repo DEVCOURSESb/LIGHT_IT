@@ -57,7 +57,7 @@
 
   import { useDialog } from '@/stores/dialogStore'
 
-  const { validarCodigo } = UserActions()
+  const { verificarCodigo } = UserActions()
   const dialog = useDialog()
 
   const router = useRouter()
@@ -69,41 +69,33 @@
   ]
 
   async function validate () {
-    const username = localStorage.getItem('tmpUser')
+    const correo = localStorage.getItem('tmpCorreo')
 
-    if (!username) {
-      dialog.show({
-        title: 'Sin usuario',
-        message: 'No se encontró usuario para validar.',
-        type: 'error',
-      })
-      return
-    }
+    const result = await verificarCodigo(correo, codigo.value)
 
-    const esValido = await validarCodigo(username, codigo.value)
-
-    if (!esValido) {
+    if (!result.success) {
       dialog.show({
         title: 'Código incorrecto',
-        message: 'El código no coincide.',
+        message: result.message || 'El código no coincide.',
         type: 'error',
       })
       return
     }
+
+    localStorage.removeItem('tmpCorreo')
+    localStorage.setItem('token', result.token)
 
     dialog.show({
       title: 'Validación exitosa',
-      message: 'El código es correcto.',
+      message: 'Bienvenido.',
       type: 'success',
     })
 
     setTimeout(() => {
       dialog.cerrar()
-      localStorage.removeItem('tmpUser')
       router.push('/home')
-    }, 1200)
+    }, 1000)
   }
-
   function navigate2 () {
     router.push('/')
   }

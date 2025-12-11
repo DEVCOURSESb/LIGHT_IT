@@ -28,9 +28,6 @@
           <v-btn class="btn-agregar" @click="dialog = true">
             + Nuevo
           </v-btn>
-          <v-btn class="btn-modificar" @click="dialog = true">
-            Modificar
-          </v-btn>
         </v-toolbar>
       </template>
 

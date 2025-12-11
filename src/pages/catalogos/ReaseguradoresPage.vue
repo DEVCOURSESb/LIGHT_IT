@@ -3,5 +3,5 @@
 </template>
 
 <script lang="ts" setup>
-import { reaseguradoresConfig } from "@/components/config/reaseguradores/reaseguradores.config";
+import { reaseguradoresConfig } from "@/components/config/catalogos/reaseguradores/reaseguradores.config";
 </script>

@@ -3,5 +3,5 @@
   <CrudTablePage :config="TiposCapturaConfig" />
 </template>
 <script lang="ts" setup>
-import { TiposCapturaConfig } from "@/components/config/tipos-captura/tipos-captura.config";
+import { TiposCapturaConfig } from "@/components/config/catalogos/tipos-captura/tipos-captura.config";
 </script>

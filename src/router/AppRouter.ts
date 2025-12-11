@@ -9,24 +9,28 @@ import ReaseguradoresPage from '@/pages/catalogos/ReaseguradoresPage.vue'
 import TiposCapturaPage from '@/pages/catalogos/TiposCapturaPage.vue'
 import TiposContratoPage from '@/pages/catalogos/TiposContratoPage.vue'
 import Home from '@/pages/Home.vue'
+import Login from '@/pages/Login.vue'
 import LoginC from '@/pages/LoginC.vue'
-import ModificarContratosPage from '@/pages/reaseguro/Contratos/ModificarContratosPage.vue'
-import NuevoContratoPage from '@/pages/reaseguro/Contratos/NuevoContratoPage.vue'
-import VisualizarContratosPage from '@/pages/reaseguro/Contratos/VisualizarContratosPage.vue'
+import ModificarContratosPage from '@/pages/reaseguro/Contratos/Daños/ModificarContratosPage.vue'
+import NuevoContratoPage from '@/pages/reaseguro/Contratos/Daños/NuevoContratoPage.vue'
+import VisualizarContratosPage from '@/pages/reaseguro/Contratos/Daños/VisualizarContratosPage.vue'
+import NuevoContratoVidaPage from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue'
+import ModificarContratoVidaPage from '@/pages/reaseguro/Contratos/Vida/ModificarContratosVidaPage.vue'
+import VisualizarContratosVidaPage from '@/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue'
 
 export function AppRouter () {
   const routes = [
     {
       path: '/',
       name: 'login',
-      component: LoginC,
+      component: Login,
       meta: { public: true },
     },
     {
-      path: '/autenticacion',
-      name: 'autenticacion',
-      component: AutenticacionC,
-      meta: { requiresAuth: true, requiresUnverified: true },
+      path: '/inicio',
+      name: 'loginC',
+      component: LoginC,
+      meta: { public: true },
     },
     {
       path: '/',
@@ -44,21 +48,47 @@ export function AppRouter () {
           component: AdministracionPage,
           meta: { title: 'Bitácora' },
         },
-        // reaseguro
+        // reaseguro - Daños
         {
-          path: '/reaseguro/nuevoContrato',
+          path: '/reaseguro/contratosReaseguro/nuevoContrato',
           name: 'nuevoContrato',
           component: NuevoContratoPage,
           meta: { title: 'Nuevo contrato' },
         },
         {
-          path: '/reaseguro/modificarContratos',
+          path: '/reaseguro/contratosReaseguro/modificarContrato',
           name: 'modificarContratos',
           component: ModificarContratosPage,
           meta: { title: 'Modificar contrato' },
         },
         {
-          path: '/reaseguro/visualizarContratos',
+          path: '/reaseguro/contratosReaseguro/visualizarContrato',
+          name: 'visualizarContratos',
+          component: VisualizarContratosPage,
+          meta: { title: 'Visualizar Contratos' },
+        },
+        // Vida
+        {
+          path: '/reaseguro/contratosReaseguro/nuevoContratoVida',
+          name: 'nuevoContratoVida',
+          component: NuevoContratoVidaPage,
+          meta: { title: 'Visualizar Contratos Vida' },
+        },
+        {
+          path: '/reaseguro/contratosReaseguro/modificarContratoVida',
+          name: 'modificarContratoVida',
+          component: ModificarContratoVidaPage,
+          meta: { title: 'Visualizar Contratos' },
+        },
+        {
+          path: '/reaseguro/contratosReaseguro/visualizarContratoVida',
+          name: 'visualizarContratoVida',
+          component: VisualizarContratosVidaPage,
+          meta: { title: 'Visualizar Contratos' },
+        },
+        // Autos
+        {
+          path: '/reaseguro/visualizarContrato',
           name: 'visualizarContratos',
           component: VisualizarContratosPage,
           meta: { title: 'Visualizar Contratos' },

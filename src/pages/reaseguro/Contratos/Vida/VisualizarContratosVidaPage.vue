@@ -15,4 +15,3 @@
 <script setup>
   import FooterComponent from '@/layouts/FooterComponent.vue'
 </script>
-

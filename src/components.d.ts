@@ -17,7 +17,8 @@ declare module 'vue' {
     CatalogosDropdown: typeof import('./components/menu/CatalogosDropdown.vue')['default']
     CatalogosDropDown: typeof import('./components/catalogos/CatalogosDropDown.vue')['default']
     CrudTablePage: typeof import('./components/catalogos/CrudTablePage.vue')['default']
-    DialogComponent: typeof import('./components/DialogGlobal.vue')['default']
+    DaniosNuevoContrato: typeof import('./components/config/reaseguro/Contratos/danios-nuevoContrato.config')['default']
+    DialogComponent: typeof import('./components/DialogComponent.vue')['default']
     DialogGlobal: typeof import('./components/DialogGlobal.vue')['default']
     FooterComponent: typeof import('./layouts/FooterComponent.vue')['default']
     MainLayout: typeof import('./components/MainLayout.vue')['default']
@@ -31,6 +32,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SearchComponent: typeof import('./components/catalogos/SearchComponent.vue')['default']
     SearchInput: typeof import('./components/ui/SearchInput.vue')['default']
+    TableData: typeof import('./components/catalogos/TableData.vue')['default']
     VentanaDialogo: typeof import('./components/VentanaDialogo.vue')['default']
   }
 }

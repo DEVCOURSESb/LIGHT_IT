@@ -3,5 +3,5 @@
 </template>
 
 <script lang="ts" setup>
-import { operacionesRamosConfig } from "@/components/config/operaciones-ramos/operaciones-ramos.config";
+import { operacionesRamosConfig } from "@/components/config/catalogos/operaciones-ramos/operaciones-ramos.config";
 </script>

@@ -6,26 +6,35 @@
       <v-card class="my-8" elevation="20" rounded-xl>
         <v-card-item class="card-item">
           <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="180" />
-          <v-label class="title">Bienvenido</v-label>
+          <v-label class="title">Ingrese la informacion solicitada</v-label>
         </v-card-item>
         <v-card-text>
-          <v-sheet class="content text-center" height="250" width="450">
+          <v-sheet class="content text-center" height="auto" width="450">
             <v-form fast-fail @submit.prevent="validate">
               <v-text-field
-                v-model="firstName"
+                v-model="usuario"
                 class="text-overline"
                 label="Usuario"
-                :rules="firstNameRules"
               />
               <v-text-field
                 v-model="password"
                 class="text-overline"
                 label="Contraseña"
-                :rules="lastNameRules"
                 type="password"
+              />
+              <v-label class="text-subtitle-1 mb-4">
+                Código de verificación enviado al <br>
+                correo electrónico ingresado
+              </v-label>
+
+              <v-otp-input
+                v-model="codigo"
+                length="8"
+                separator=""
               />
               <div class="d-flex flex-column">
                 <v-btn class="mt-4" color="primary" @click="validate">Ingresar</v-btn>
+                <v-btn class="mt-4" color="white" @click="retornar">Regresar</v-btn>
               </div>
             </v-form>
           </v-sheet>
@@ -43,40 +52,45 @@
   import FooterComponent from '@/layouts/FooterComponent.vue'
   import { useDialog } from '@/stores/dialogStore'
 
-  const { autenticarUsuario } = UserActions()
+  const { validarUsuario } = UserActions()
   const dialog = useDialog()
-
   const router = useRouter()
 
-  const form = ref()
-  const firstName = ref('')
+  const usuario = ref('')
   const password = ref('')
-
-  const firstNameRules = ref([v => !!v || 'El nombre de usuario es requerido'])
-  const lastNameRules = ref([v => !!v || 'La contraseña es requerida'])
+  const codigo = ref('')
 
   async function validate () {
-    if (!firstName.value || !password.value) return
+    console.log('Ejecutando', usuario.value, password.value, codigo.value)
 
-    const result = await autenticarUsuario(firstName.value, password.value)
+    if (!usuario.value || !password.value || !codigo.value) {
+      dialog.show({ title: 'Atención', message: 'Ingrese usuario, contraseña y código de verificación', type: 'warning' })
+      return
+    }
+
+    const result = await validarUsuario(usuario.value, password.value, codigo.value)
+    console.log('RESULTADO', result)
 
     if (!result.success) {
       dialog.show({ title: 'Error de autenticación', message: result.message, type: 'error' })
       return
     }
 
-    localStorage.setItem('tmpUser', firstName.value)
+    localStorage.setItem('tmpUser', result.usuario)
+    localStorage.setItem('tmpCorreo', result.correoElectronico)
 
     dialog.show({
       title: 'Código enviado',
-      message: 'Se ha enviado el código de validación al correo.',
+      message: 'Se envió el código de validación al correo registrado.',
       type: 'success',
     })
 
     setTimeout(() => {
       dialog.cerrar()
-      router.push('/autenticacion')
-    }, 3200)
+      router.push('/home')
+    }, 2000)
   }
-
+  function retornar () {
+    router.push('/')
+  }
 </script>

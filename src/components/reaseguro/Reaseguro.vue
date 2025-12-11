@@ -94,7 +94,7 @@
                             :key="subsubmenu.name"
                             link
                             :prepend-icon="subsubmenu.icon || undefined"
-                            :to="`/reaseguro/${subsubmenu.name}`"
+                            :to="`/reaseguro/contratosReaseguro/${subsubmenu.name}`"
                           >
                             <v-list-item-title>{{ subsubmenu.title }}</v-list-item-title>
                           </v-list-item>
@@ -143,6 +143,14 @@
                 { name: 'visualizarContrato', title: 'Visualizar', icon: '', items: [] },
               ],
             },
+          ],
+        },
+        {
+          name: 'vida', title: 'Vida', icon: '',
+          items: [
+            { name: 'nuevoContratoVida', title: 'Nuevo', icon: '', items: [] },
+            { name: 'modificarContratoVida', title: 'Modificar', icon: '', items: [] },
+            { name: 'visualizarContratoVida', title: 'Visualizar', icon: '', items: [] },
           ],
         },
       ],

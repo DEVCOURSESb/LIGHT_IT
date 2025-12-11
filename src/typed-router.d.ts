@@ -40,18 +40,38 @@ declare module 'vue-router/auto-routes' {
     '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoTarifaPage': RouteRecordInfo<'/catalogos/TipoTarifaPage', '/catalogos/TipoTarifaPage', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
+    '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
     '/LoginC': RouteRecordInfo<'/LoginC', '/LoginC', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/ModificarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/ModificarContratosPage', '/reaseguro/Contratos/ModificarContratosPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormCoberturasPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormCoberturasPage', '/reaseguro/Contratos/NuevoContrato/FormCoberturasPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormComisionesPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormComisionesPage', '/reaseguro/Contratos/NuevoContrato/FormComisionesPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormConfirmacionPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormConfirmacionPage', '/reaseguro/Contratos/NuevoContrato/FormConfirmacionPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormCorretajePage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormCorretajePage', '/reaseguro/Contratos/NuevoContrato/FormCorretajePage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormDetallesPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormDetallesPage', '/reaseguro/Contratos/NuevoContrato/FormDetallesPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormGeneralesPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormGeneralesPage', '/reaseguro/Contratos/NuevoContrato/FormGeneralesPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormIntermediariosPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormIntermediariosPage', '/reaseguro/Contratos/NuevoContrato/FormIntermediariosPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContrato/FormReaseguradoresPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContrato/FormReaseguradoresPage', '/reaseguro/Contratos/NuevoContrato/FormReaseguradoresPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/NuevoContratoPage': RouteRecordInfo<'/reaseguro/Contratos/NuevoContratoPage', '/reaseguro/Contratos/NuevoContratoPage', Record<never, never>, Record<never, never>>,
-    '/reaseguro/Contratos/VisualizarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/VisualizarContratosPage', '/reaseguro/Contratos/VisualizarContratosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormCoberturasPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormCoberturasPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormCoberturasPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormComisionesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormComisionesPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormComisionesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormCorretajePage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormCorretajePage', '/reaseguro/Contratos/Daños/ModificarContrato/FormCorretajePage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormDetallesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormDetallesPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormDetallesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormGeneralesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormGeneralesPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormGeneralesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormIntermediariosPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormIntermediariosPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormIntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/FormReaseguradoresPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/FormReaseguradoresPage', '/reaseguro/Contratos/Daños/ModificarContrato/FormReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContrato/ModificarContratoPag': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContrato/ModificarContratoPag', '/reaseguro/Contratos/Daños/ModificarContrato/ModificarContratoPag', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/ModificarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/ModificarContratosPage', '/reaseguro/Contratos/Daños/ModificarContratosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormCoberturasPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormCoberturasPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormCoberturasPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormComisionesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormComisionesPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormComisionesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormCorretajePage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormCorretajePage', '/reaseguro/Contratos/Daños/NuevoContrato/FormCorretajePage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormDetallesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormDetallesPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormDetallesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormGeneralesPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormGeneralesPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormGeneralesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormIntermediariosPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormIntermediariosPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormIntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContrato/FormReaseguradoresPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContrato/FormReaseguradoresPage', '/reaseguro/Contratos/Daños/NuevoContrato/FormReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/NuevoContratoPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/NuevoContratoPage', '/reaseguro/Contratos/Daños/NuevoContratoPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Daños/VisualizarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/Daños/VisualizarContratosPage', '/reaseguro/Contratos/Daños/VisualizarContratosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratosVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratosVidaPage', '/reaseguro/Contratos/Vida/ModificarContratosVidaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegPTUPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegPTUPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegPTUPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionIntermediariosPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionIntermediariosPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionIntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionReaseguradoresPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionReaseguradoresPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVidaPage', '/reaseguro/Contratos/Vida/NuevoContratoVidaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -153,52 +173,132 @@ declare module 'vue-router/auto-routes' {
       routes: '/Home'
       views: never
     }
+    'src/pages/Login.vue': {
+      routes: '/Login'
+      views: never
+    }
     'src/pages/LoginC.vue': {
       routes: '/LoginC'
       views: never
     }
-    'src/pages/reaseguro/Contratos/ModificarContratosPage.vue': {
-      routes: '/reaseguro/Contratos/ModificarContratosPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormCoberturasPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormCoberturasPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormCoberturasPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormCoberturasPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormComisionesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormComisionesPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormComisionesPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormComisionesPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormCorretajePage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormCorretajePage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormConfirmacionPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormConfirmacionPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormDetallesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormDetallesPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormCorretajePage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormCorretajePage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormGeneralesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormGeneralesPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormDetallesPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormDetallesPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormIntermediariosPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormIntermediariosPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormGeneralesPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormGeneralesPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/FormReaseguradoresPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/FormReaseguradoresPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormIntermediariosPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormIntermediariosPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContrato/ModificarContratoPag.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContrato/ModificarContratoPag'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContrato/FormReaseguradoresPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContrato/FormReaseguradoresPage'
+    'src/pages/reaseguro/Contratos/Daños/ModificarContratosPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/ModificarContratosPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/NuevoContratoPage.vue': {
-      routes: '/reaseguro/Contratos/NuevoContratoPage'
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormCoberturasPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormCoberturasPage'
       views: never
     }
-    'src/pages/reaseguro/Contratos/VisualizarContratosPage.vue': {
-      routes: '/reaseguro/Contratos/VisualizarContratosPage'
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormComisionesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormComisionesPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormCorretajePage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormCorretajePage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormDetallesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormDetallesPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormGeneralesPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormGeneralesPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormIntermediariosPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormIntermediariosPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContrato/FormReaseguradoresPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContrato/FormReaseguradoresPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/NuevoContratoPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/NuevoContratoPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Daños/VisualizarContratosPage.vue': {
+      routes: '/reaseguro/Contratos/Daños/VisualizarContratosPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratosVidaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratosVidaPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegPTUPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegPTUPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionIntermediariosPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionIntermediariosPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionReaseguradoresPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfiguracionReaseguradoresPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVidaPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage'
       views: never
     }
   }
