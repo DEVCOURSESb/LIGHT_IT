@@ -5,13 +5,13 @@ const actions = CoberturasActions()
 export const coberturaConfig = {
   entity: 'cobertura',
   title: 'Coberturas',
-  searchPlaceholder: 'cobertura',
-  addButtonText: 'Agregar cobertura',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar cobertura',
   tableTitle: 'Lista de Coberturas',
 
   headers: [
-    { title: 'ID COBERTURA', key: 'idCob', sortable: true,
+    /* { title: 'ID COBERTURA', key: 'idCob', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -20,7 +20,7 @@ export const coberturaConfig = {
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    }, */
     { title: 'DESCRIPCIÓN', key: 'descCob', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
@@ -31,12 +31,12 @@ export const coberturaConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

@@ -35,11 +35,11 @@
     { name: 'tipos_captura', title: 'Tipos captura' },
     { name: 'extensiones', title: 'Extensiones' },
     { name: 'clasificacion_cobertura', title: 'Clasificación cobertura' },
-    { name: 'cobertura', title: 'Cobertura' },
+    { name: 'coberturas', title: 'Coberturas' },
     { name: 'distribucion_cesion', title: 'Distribución cesión' },
     { name: 'forma_contractual', title: 'Forma contractual' },
     { name: 'ptu', title: 'PTU' },
-    { name: 'tipo_asignacion', title: 'Tipo asignación' },
+    { name: 'asignacion', title: 'Tipo asignación' },
     { name: 'tipo_reaseguro', title: 'Tipo reaseguro' },
     { name: 'tipo_tarifa', title: 'Tipo tarifa' },
     { name: 'perfil', title: 'Perfil' },
@@ -51,5 +51,7 @@
     { name: 'estatus', title: 'Estatus' },
     { name: 'fumador', title: 'Fumador' },
     { name: 'tipo_cambio', title: 'Tipo cambio' },
+    { name: 'entidad_federativa', title: 'Entidad federativa' },
+    { name: 'criterio_cobertura', title: 'Criterios de cobertura' },
   ]
 </script>

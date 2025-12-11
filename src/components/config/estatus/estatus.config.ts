@@ -6,23 +6,24 @@ const actions = EstatusActions()
 export const EstatusConfig = {
   entity: 'Estatus',
   title: 'Estatus',
-  searchPlaceholder: 'Estatus',
-  addButtonText: 'Registro individual',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo estatus',
   tableTitle: 'Lista de estatus',
 
   headers: [
-    { title: 'CLAVE', key: 'cveEstatus', sortable: true,
+    /* { title: 'CLAVE', key: 'cveEstatus', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    }, 
     { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
+    headerProps: {
+      style: 'font-weight: bold',
     },
-    { title: 'DESCRIPCIÓN', key: 'descEstatus', sortable: true,
+  },
+  */
+    { title: 'DESCRIPCIÓN DE ESTATUS', key: 'descEstatus', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },

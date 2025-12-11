@@ -4,19 +4,19 @@ const actions = TipoAsignacionActions()
 
 export const tipoAsignacionConfig = {
   entity: 'tipo-asignacion',
-  title: 'Tipo Asignación',
-  searchPlaceholder: 'tipo asignación',
-  addButtonText: 'Agregar tipo asignación',
+  title: 'Asignación',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo tipo asignación',
   tableTitle: 'Lista de Tipo Asignación',
 
   headers: [
-    { title: 'CLAVE', key: 'cveAsignacion', sortable: true,
+    /* { title: 'CLAVE', key: 'cveAsignacion', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descAsignacion', sortable: true,
+    }, */
+    { title: 'ASIGNACIÓN', key: 'descAsignacion', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const tipoAsignacionConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

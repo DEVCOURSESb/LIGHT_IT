@@ -26,7 +26,9 @@ declare module 'vue-router/auto-routes' {
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CriteriosAsignacionPage': RouteRecordInfo<'/catalogos/CriteriosAsignacionPage', '/catalogos/CriteriosAsignacionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CriteriosCoberturaPage': RouteRecordInfo<'/catalogos/CriteriosCoberturaPage', '/catalogos/CriteriosCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/EntidadFederativaPage': RouteRecordInfo<'/catalogos/EntidadFederativaPage', '/catalogos/EntidadFederativaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/EstatusPage': RouteRecordInfo<'/catalogos/EstatusPage', '/catalogos/EstatusPage', Record<never, never>, Record<never, never>>,
     '/catalogos/EstatusReciboPage': RouteRecordInfo<'/catalogos/EstatusReciboPage', '/catalogos/EstatusReciboPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ExtensionPage': RouteRecordInfo<'/catalogos/ExtensionPage', '/catalogos/ExtensionPage', Record<never, never>, Record<never, never>>,
@@ -105,8 +107,16 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/CriteriosAsignacionPage'
       views: never
     }
+    'src/pages/catalogos/CriteriosCoberturaPage.vue': {
+      routes: '/catalogos/CriteriosCoberturaPage'
+      views: never
+    }
     'src/pages/catalogos/DistribucionCesionPage.vue': {
       routes: '/catalogos/DistribucionCesionPage'
+      views: never
+    }
+    'src/pages/catalogos/EntidadFederativaPage.vue': {
+      routes: '/catalogos/EntidadFederativaPage'
       views: never
     }
     'src/pages/catalogos/EstatusPage.vue': {

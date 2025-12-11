@@ -139,8 +139,8 @@ export function AppRouter () {
               meta: { title: "PTU" },
             },
             {
-              path: "tipo_asignacion",
-              name: "tipo_asignacion",
+              path: "asignacion",
+              name: "asignacion",
               component: () =>
                 import("@/pages/catalogos/TipoAsignacionPage.vue"),
               meta: { title: "Tipo Asignación" },
@@ -165,10 +165,10 @@ export function AppRouter () {
               meta: { title: "Perfil" },
             },
             {
-              path: "cobertura",
-              name: "cobertura",
+              path: "coberturas",
+              name: "coberturas",
               component: () => import("@/pages/catalogos/CoberturaPage.vue"),
-              meta: { title: "Cobertura" },
+              meta: { title: "Coberturas" },
             },
             {
               path: "criterios_de_asignacion",
@@ -217,6 +217,18 @@ export function AppRouter () {
               name: "tipo_cambio",
               component: () => import("@/pages/catalogos/TiposCambioPage.vue"),
               meta: { title: "Tipo Cambio" },
+            },
+            {
+              path: "entidad_federativa",
+              name: "entidad_federativa",
+              component: () => import("@/pages/catalogos/EntidadFederativaPage.vue"),
+              meta: { title: "Entidad federativa" },
+            },
+            {
+              path: "criterio_cobertura",
+              name: "criterio_cobertura",
+              component: () => import("@/pages/catalogos/CriteriosCoberturaPage.vue"),
+              meta: { title: "Criterio cobertura" },
             },
           ],
     }

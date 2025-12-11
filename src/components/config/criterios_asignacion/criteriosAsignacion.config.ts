@@ -4,24 +4,25 @@ const actions = CriteriosAsignacionActions()
 
 export const criteriosAsignacionConfig = {
   entity: 'criteriosAsignacion',
-  title: 'Criterios Asignacion',
-  searchPlaceholder: 'Criterio Asignacion',
-  addButtonText: 'Registro individual',
+  title: 'Criterios de Asignación',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo criterio asignacion',
   tableTitle: 'Lista de criterios de asignacion',
 
   headers: [
-    { title: 'CLAVE CRITERIO ASIGNACION', key: 'cveCriterioAsig', sortable: true,
+    /* { title: 'CLAVE CRITERIO ASIGNACION', key: 'cveCriterioAsig', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
     { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
+    headerProps: {
+      style: 'font-weight: bold',
     },
-    { title: 'DESCRIPCIÓN', key: 'descCriterioAsig', sortable: true,
+  },
+  */
+    { title: 'CRITERIOS DE ASIGNACIÓN', key: 'descCriterioAsig', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },

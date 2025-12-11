@@ -1,31 +1,44 @@
+import { EntidadFederativaActions } from "@/API/catalogos/entidad-federativa/entidad_federativa.actions";
 
-import { SexoActions } from "@/API/catalogos/sexo/sexo.actions"
-const actions = SexoActions()
+const actions = EntidadFederativaActions();
 
-export const SexoConfig = {
-  entity: 'Sexo',
-  title: 'Sexo',
+export const EntidadFederativaConfig = {
+  entity: 'EntidadFederativa',
+  title: 'EntidadFederativa',
   searchPlaceholder: '',
-  addButtonText: '',
-  modalTitle: 'Agregar nuevo sexo',
-  tableTitle: 'Lista de sexos',
+  addButtonText: 'Registro individual',
+  modalTitle: 'Agregar nuevo EntidadFederativa',
+  tableTitle: 'Lista de EntidadFederativaes',
 
   headers: [
-    /* { title: 'CLAVE', key: 'cveSexo', sortable: true,
+   /*  { title: 'CLAVE', key: 'cveEntidad', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
     { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    }, */
-    { title: 'DESCRIPCIÓN DE SEXO', key: 'descSexo', sortable: true,
+    headerProps: {
+      style: 'font-weight: bold',
+    },
+  },
+  */
+    { title: 'NOMBRE ENTIDAD FEDERATIVA', key: 'nombreEntidad', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
+    /**
+    { title: 'LÍMITE INF.', key: 'limiteInfCp', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'LÍMITE SUP.', key: 'limiteSupCp', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+     */
     { title: 'ACTIVO', key: 'esActivo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
@@ -46,20 +59,36 @@ export const SexoConfig = {
       hidden: true,
     },
     {
-      name: 'cveSexo',
+      name: 'cveEntidad',
       label: 'Clave',
       type: 'number',
       required: true,
-      dataKey: 'cveSexo',
+      dataKey: 'cveEntidad',
       defaultValue: 0,
     },
     {
-      name: 'descSexo',
+      name: 'nombreEntidad',
       label: 'Descripción',
       type: 'text',
       required: true,
-      dataKey: 'descSexo',
+      dataKey: 'nombreEntidad',
       transformToAPI: (value: string) => (value.toUpperCase()),
+    },
+    {
+      name: 'limiteInfCp',
+      label: 'Límite Inf.',
+      type: 'number',
+      required: true,
+      dataKey: 'limiteInfCp',
+      defaultValue: 0,
+    },
+    {
+      name: 'limiteSupCp',
+      label: 'Límite Sup.',
+      type: 'number',
+      required: true,
+      dataKey: 'limiteSupCp',
+      defaultValue: 0,
     },
     {
       name: 'esActivo',
@@ -75,9 +104,9 @@ export const SexoConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveSexo: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveEntidad: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    descSexo: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    nombreEntidad: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 

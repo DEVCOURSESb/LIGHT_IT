@@ -1,6 +1,5 @@
 <template>
   <CrudTablePage :config="FormaPagoConfig">
-    <v-btn color="success">Cargar archivo</v-btn>
   </CrudTablePage>
 </template>
 <script lang="ts" setup>

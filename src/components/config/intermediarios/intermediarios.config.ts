@@ -5,7 +5,7 @@ const actions = IntermediariosActions()
 export const intermediariosConfig = {
   entity: 'intermediarios',
   title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
+  searchPlaceholder: '',
   addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo intermediario',
   tableTitle: 'Lista de Intermediarios',
@@ -16,12 +16,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: 'INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -31,7 +26,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -59,7 +54,7 @@ export const intermediariosConfig = {
       type: 'text',
       required: true,
       dataKey: 'nombreIntermediario',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => (value.trim().toUpperCase()),
     },
     {
       name: 'esActivo',
@@ -75,9 +70,9 @@ export const intermediariosConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveIntermediario: (value: number) => value > 0 && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    nombreIntermediario: (value: string) => value?.trim()?.length > 0 && value?.trim()?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
     esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 

@@ -11,7 +11,12 @@ export const reaseguradoresConfig = {
   tableTitle: 'Lista de reaseguradores',
 
   headers: [
-    { title: 'CLAVE REASEGURADOR', key: 'cveReasegurador', sortable: true,
+    { title: 'REGISTRO CNSF', key: 'registroCnsf', sortable: false,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    /* { title: 'CLAVE REASEGURADOR', key: 'cveReasegurador', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -20,13 +25,8 @@ export const reaseguradoresConfig = {
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'NOMBRE REASEGURADOR', key: 'nombreReasegurador', sortable: false,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    },
-    { title: 'REGISTRO CNSF', key: 'registroCnsf', sortable: false,
+    }, */
+    { title: 'REASEGURADORA', key: 'nombreReasegurador', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -36,12 +36,12 @@ export const reaseguradoresConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'EXTRANJERO', key: 'extranjero', sortable: true,
+    /* { title: 'EXTRANJERO', key: 'extranjero', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -60,7 +60,9 @@ export const reaseguradoresConfig = {
       label: 'Clave',
       type: 'number',
       required: true,
+      hidden: true,
       dataKey: 'cveReasegurador',
+      // todo: indica obtener el ultimo + 1
       defaultValue: 0,
     },
     {
@@ -70,6 +72,7 @@ export const reaseguradoresConfig = {
       required: true,
       dataKey: 'nombreReasegurador',
       defaultValue: '',
+      transformToAPI: (value: string) => (value.trim().toUpperCase()),
     },
     {
       name: 'registroCnsf',
@@ -78,37 +81,41 @@ export const reaseguradoresConfig = {
       required: true,
       dataKey: 'registroCnsf',
       defaultValue: '',
+      transformToAPI: (value: string) => (value.trim().toUpperCase()),
     },
     {
       name: 'extranjero',
       label: 'Extranjero',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
+      hidden: true,
       dataKey: 'extranjero',
-      defaultValue: 'No',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      defaultValue: true,
+      transformFromAPI: (value: number) => (value === 1),
+      transformToAPI: () => {
+        const registroCNSF = "";
+        //todo: si inicia con RGRE es extranjero
+        return registroCNSF.trim().startsWith("RGRE") ? 1 : 0
+      },
     },
     {
       name: 'esActivo',
       label: 'Activo',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-      defaultValue: 'Sí',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      defaultValue: true,
+      transformFromAPI: (value: number) => (value === 1),
+      transformToAPI: (value: boolean) => (value ? 1 : 2),
     },
   ],
 
   validationSchema: {
-    cveReasegurador: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor a 0',
-    nombreReasegurador: (value: string) => value?.length > 0 || 'El nombre es requerido',
-    registroCnsf: (value: string) => value?.length > 0 || 'El registro CNSF es requerido',
-    extranjero: (value: string) => !!value || 'El campo extranjero es requerido',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    //cveReasegurador: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor a 0',
+    nombreReasegurador: (value: string) => value?.trim()?.length > 0 && value?.trim()?.length <= 150 || 'El nombre es requerido, máximo 150 caracteres',
+    registroCnsf: (value: string) => value?.trim()?.length >= 5 && value?.trim()?.length <= 19  || 'El registro CNSF es requerido, mínimo 5 y máximo 19 caracteres',
+    //extranjero: (value: string) => value !== undefined || 'El campo extranjero es requerido',
+    esActivo: (value: string) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {

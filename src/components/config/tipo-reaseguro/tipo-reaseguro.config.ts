@@ -5,8 +5,8 @@ const actions = TipoReaseguroActions()
 export const tipoReaseguroConfig = {
   entity: 'tipo-reaseguro',
   title: 'Tipo reaseguro',
-  searchPlaceholder: 'tipo reaseguro',
-  addButtonText: 'Agregar tipo de reaseguro',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Tipo de reaseguro',
   tableTitle: 'Lista de tipos de Reaseguro',
 
@@ -16,7 +16,7 @@ export const tipoReaseguroConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'DESCRIPCIÓN', key: 'descTreaseg', sortable: true,
+    { title: 'TIPO REASEGURO', key: 'descTreaseg', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const tipoReaseguroConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

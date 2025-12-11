@@ -4,14 +4,14 @@ const actions = TipoCambioActions();
 
 export const tipoCambioConfig = {
   entity: "tipoCambio",
-  title: "Tipo Cambio",
-  searchPlaceholder: "Tipo Cambio",
-  addButtonText: "Registro individual",
+  title: "Tipo de Cambio",
+  searchPlaceholder: "",
+  addButtonText: "",
   modalTitle: "Agregar nuevo tipo cambio",
   tableTitle: "Lista de Tipo Cambio",
 
   headers: [
-    {
+    /* {
       title: "CLAVE",
       key: "cveMonedaOrigen",
       sortable: true,
@@ -27,9 +27,18 @@ export const tipoCambioConfig = {
         style: "font-weight: bold",
       },
     },
+    */
     {
       title: "FECHA",
       key: "fecha",
+      sortable: true,
+      headerProps: {
+        style: "font-weight: bold",
+      },
+    },
+    {
+      title: "DESCRIPCIÓN DE MONEDA ORIGEN",
+      key: "cveMonedaOrigen",
       sortable: true,
       headerProps: {
         style: "font-weight: bold",
@@ -52,7 +61,7 @@ export const tipoCambioConfig = {
       },
     },
     {
-      title: "ACCIONES",
+      title: "EDITAR",
       key: "actions",
       sortable: false,
       headerProps: {

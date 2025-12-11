@@ -9,7 +9,7 @@
         <v-col cols="4">
           <SearchComponent
             :initial-value-search="search"
-            :placeholder="config.searchPlaceholder"
+            :placeholder="config?.searchPlaceholder ?? ''"
             @on-write="setSearch"
           />
         </v-col>
@@ -21,7 +21,7 @@
         <v-col cols="4" class="d-flex justify-end align-center gap-2">
           <ModalComponent
             :is-active="activeModal"
-            :text-button="config.addButtonText"
+            :text-button="config?.addButtonText || 'Registro individual'"
             :title="
               editingId
                 ? config.editModalTitle || config.modalTitle

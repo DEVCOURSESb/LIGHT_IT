@@ -5,18 +5,18 @@ const actions = ClasificacionCoberturaActions()
 export const ClasificacionCoberturaConfig = {
   entity: 'clasificacion-cobertura',
   title: 'Clasificación cobertura',
-  searchPlaceholder: 'cobertura',
-  addButtonText: 'Agregar cobertura',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nueva cobertura',
   tableTitle: 'Lista de Clasificación Coberturas',
 
   headers: [
-    { title: 'CLAVE', key: 'cveClasifcober', sortable: true,
+    /* { title: 'CLAVE', key: 'cveClasifcober', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descClasifcober', sortable: true,
+    }, */
+    { title: 'CLASIFICACIÓN DE LA COBERTURA', key: 'descClasifcober', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const ClasificacionCoberturaConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

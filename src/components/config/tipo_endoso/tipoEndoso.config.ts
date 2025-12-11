@@ -4,9 +4,9 @@ const actions = TipoEndosoActions()
 
 export const TipoEndosoConfig = {
   entity: 'tipoEndoso',
-  title: 'Tipo endoso',
-  searchPlaceholder: 'Tipo Endoso',
-  addButtonText: 'Registro individual',
+  title: 'Tipo de endoso',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo tipo endoso',
   tableTitle: 'Lista de tipos de endoso',
 
@@ -16,12 +16,12 @@ export const TipoEndosoConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descTipoEndoso', sortable: true,
+    }, */
+    { title: 'DESCRIPCIÓN TIPO ENDOSO', key: 'descTipoEndoso', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },

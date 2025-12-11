@@ -4,19 +4,19 @@ const actions = PtuActions();
 
 export const ptuConfig = {
   entity: 'ptu',
-  title: 'PTU',
-  searchPlaceholder: 'PTU',
-  addButtonText: 'Agregar PTU',
+  title: 'Método cálculo PTU',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo PTU',
-  tableTitle: 'Lista de PTU',
+  tableTitle: 'Lista de métodos cálculo PTU',
 
   headers: [
-    { title: 'CLAVE', key: 'cvePtu', sortable: true,
+    /* { title: 'CLAVE', key: 'cvePtu', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'FORMULA PTU', key: 'formulaPtu', sortable: true,
+    }, */
+    { title: 'FÓRMULA PTU', key: 'formulaPtu', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const ptuConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

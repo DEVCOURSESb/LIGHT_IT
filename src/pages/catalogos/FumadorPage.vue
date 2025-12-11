@@ -1,6 +1,5 @@
 <template>
   <CrudTablePage :config="FumadorConfig">
-    <v-btn color="success">Cargar archivo</v-btn>
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
