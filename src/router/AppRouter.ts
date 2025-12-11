@@ -1,96 +1,90 @@
-import MainLayout from "@/layouts/MainLayout.vue";
-import AdministracionPage from "@/pages/administracion/AdministracionPage.vue";
-import AutenticacionC from "@/pages/AutenticacionC.vue";
-import Home from "@/pages/Home.vue";
-import Login from "@/pages/Login.vue";
-import LoginC from "@/pages/LoginC.vue";
-import ModificarContratosPage from "@/pages/reaseguro/Contratos/Daños/ModificarContratosPage.vue";
-import NuevoContratoPage from "@/pages/reaseguro/Contratos/Daños/NuevoContratoPage.vue";
-import VisualizarContratosPage from "@/pages/reaseguro/Contratos/Daños/VisualizarContratosPage.vue";
-import NuevoContratoVidaPage from "@/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue";
-import ModificarContratoVidaPage from "@/pages/reaseguro/Contratos/Vida/ModificarContratosVidaPage.vue";
-import VisualizarContratosVidaPage from "@/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue";
-
 export function AppRouter() {
   const routes = [
     {
       path: "/",
       name: "login",
-      component: Login,
+      component: () => import("@/pages/Login.vue"),
       meta: { public: true },
     },
     {
       path: "/login",
       name: "loginC",
-      component: LoginC,
+      component: () => import("@/pages/LoginC.vue"),
       meta: { public: true },
     },
     {
       path: "/",
-      component: MainLayout,
+      component: () => import("@/layouts/MainLayout.vue"),
       meta: { requiresAuth: true, requiresVerification: true },
       children: [
         {
           path: "/home",
           name: "home",
-          component: Home,
+          component: () => import("@/pages/Home.vue"),
         },
         {
           path: "administracion/bitacora",
           name: "administracion",
-          component: AdministracionPage,
+          component: () => import("@/pages/administracion/AdministracionPage.vue"),
           meta: { title: "Bitácora" },
         },
-        // reaseguro - Daños
+        // reaseguro- danios
         {
           path: "/reaseguro/contratosReaseguro/nuevoContrato",
           name: "nuevoContrato",
-          component: NuevoContratoPage,
+          component: () => import("@/pages/reaseguro/Contratos/Danios/NuevoContratoPage.vue"),
           meta: { title: "Nuevo contrato" },
         },
         {
           path: "/reaseguro/contratosReaseguro/modificarContrato",
           name: "modificarContratos",
-          component: ModificarContratosPage,
+          component: () => import("@/pages/reaseguro/Contratos/Danios/ModificarContratosPage.vue"),
           meta: { title: "Modificar contrato" },
         },
         {
+          path: "/reaseguro/contratosReaseguro/modificarContratoId",
+          name: "modificarContratosId",
+          component: () => import("@/pages/reaseguro/Contratos/Danios/ModificarContrato/ModificarContratoPag.vue"),
+          meta: { title: "Modificar contrato" },
+        },
+
+        {
           path: "/reaseguro/contratosReaseguro/visualizarContrato",
           name: "visualizarContratos",
-          component: VisualizarContratosPage,
+          component: () => import("@/pages/reaseguro/Contratos/Danios/VisualizarContratosPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
         // Vida
         {
           path: "/reaseguro/contratosReaseguro/nuevoContratoVida",
           name: "nuevoContratoVida",
-          component: NuevoContratoVidaPage,
+          component: () => import("@/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue"),
           meta: { title: "Visualizar Contratos Vida" },
         },
         {
           path: "/reaseguro/contratosReaseguro/modificarContratoVida",
           name: "modificarContratoVida",
-          component: ModificarContratoVidaPage,
+          component: () => import("@/pages/reaseguro/Contratos/Vida/ModificarContratosVidaPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
         {
           path: "/reaseguro/contratosReaseguro/visualizarContratoVida",
           name: "visualizarContratoVida",
-          component: VisualizarContratosVidaPage,
+          component: () => import("@/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
         // Autos
         {
           path: "/reaseguro/visualizarContrato",
           name: "visualizarContratos",
-          component: VisualizarContratosPage,
+          component: () => import("@/pages/reaseguro/Contratos/Danios/NuevoContratoPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
       ],
     },
     {
       path: "/catalogos",
-      component: MainLayout,
+      component: () => import("@/layouts/MainLayout.vue"),
       children: [
         {
           path: "intermediarios",

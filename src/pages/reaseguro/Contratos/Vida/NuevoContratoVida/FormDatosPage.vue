@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
 
   import FormGeneralDatosPage from './FormGeneralDatosPage.vue'

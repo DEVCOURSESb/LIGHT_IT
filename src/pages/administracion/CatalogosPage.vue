@@ -42,7 +42,7 @@
   </v-card-text>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
   import { useCatalogos } from '@/composables/administracion/useCatalogos'
 

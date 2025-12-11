@@ -9,6 +9,6 @@
   </v-app>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import AutenticacionC from '@/pages/AutenticacionC.vue'
 </script>

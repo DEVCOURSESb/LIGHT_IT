@@ -3,6 +3,6 @@
   <DialogGlobal />
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import DialogGlobal from './components/DialogGlobal.vue'
 </script>

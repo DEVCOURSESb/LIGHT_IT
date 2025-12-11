@@ -20,7 +20,6 @@
             variant="solo-filled"
           />
         </v-col>
-
         <v-col cols="12" md="3">
           <v-date-input
             v-model="finContrato"
@@ -31,7 +30,44 @@
             variant="solo-filled"
           />
         </v-col>
-
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="contratoProrrogado"
+            :items="['SI', 'NO']"
+            label="¿Contrato prorrogado?"
+            variant="solo-filled"
+          />
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-date-input
+            v-model="fechaProrroga"
+            v-if="contratoProrrogado === 'SI'"
+            label="Fecha prorroga"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            required
+            variant="solo-filled"
+          />
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="contratoCancelado"
+            :items="['SI', 'NO']"
+            label="¿Contrato cancelado?"
+            variant="solo-filled"
+          />
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-date-input
+            v-model="fechaCancelacion"
+            v-if="contratoCancelado === 'SI'"
+            label="Fecha cancelacion"
+            prepend-icon=""
+            prepend-inner-icon="$calendar"
+            required
+            variant="solo-filled"
+          />
+        </v-col>
         <v-col
           cols="12"
           md="3"
@@ -97,7 +133,16 @@
             variant="solo-filled"
           />
         </v-col>
-
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="contratoCancelado"
+            :items="['SI', 'NO']"
+            label="¿Contrato cancelado?"
+            variant="solo-filled"
+          />
+        </v-col>
+      </v-row>
+      <v-row class="d-flex justify-center align-center">
         <v-col
           cols="12"
           md="3"
@@ -167,12 +212,16 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
 
   const idContrato = ref('')
   const inicioContrato = ref('')
   const finContrato = ref('')
+  const contratoProrrogado = ref('')
+  const fechaProrroga = ref('')
+  const contratoCancelado = ref('')
+  const fechaCancelacion = ref('')
   const tipoSeguro = ref('')
   const tipoContrato = ref('')
   const formaContractual = ref('')

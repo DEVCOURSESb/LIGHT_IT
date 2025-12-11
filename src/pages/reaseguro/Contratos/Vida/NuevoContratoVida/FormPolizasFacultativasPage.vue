@@ -47,13 +47,13 @@
     </v-row>
   </div>
   <v-col class="text-center">
-    <v-btn class="btn-guardar" @click="dialog = true">
+    <v-btn class="btn-guardar" >
       Guardar pólizas
     </v-btn>
   </v-col>
 </template>
 
-<script setup>
+<script lang="ts"setup>
   import { ref } from 'vue'
   const subramo = ref('')
   const idContrato = ref('')

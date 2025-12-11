@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Daños', 'Proporcional', 'Nuevo contrato']" />
+    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Daños', 'Proporcional', 'Modificar contrato', 'ID_CONTRATO']" />
     <v-card-title class="d-flex align-center">
-      Modificar Contrato
+      Modificar Contrato [ID CONTRATO]
     </v-card-title>
     <v-spacer class="mb-4" />
     <v-tabs v-model="activeTab" align-tabs="center" color="primary">
@@ -32,49 +32,49 @@
       <v-window-item value="tab-1">
         <v-card flat>
           <v-card-text>
-            <FormGeneralesPage />
+            <FormGeneralesPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-2">
         <v-card flat>
           <v-card-text>
-            <FormDetallesPage />
+            <FormDetallesPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-3">
         <v-card flat>
           <v-card-text>
-            <FormReaseguradoresPage />
+            <FormReaseguradoresPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-4">
         <v-card flat>
           <v-card-text>
-            <FormCoberturasPage />
+            <FormCoberturasPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-5">
         <v-card flat>
           <v-card-text>
-            <FormComisionesPage />
+            <FormComisionesPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-6">
         <v-card flat>
           <v-card-text>
-            <FormIntermediariosPage />
+            <FormIntermediariosPageM />
           </v-card-text>
         </v-card>
       </v-window-item>
       <v-window-item value="tab-7">
         <v-card flat>
           <v-card-text>
-            <FormCorretajePage />
+            <FormCorretajePageM />
           </v-card-text>
         </v-card>
       </v-window-item>
@@ -83,15 +83,15 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
-  import FormCoberturasPage from './NuevoContrato/FormCoberturasPage.vue'
-  import FormComisionesPage from './NuevoContrato/FormComisionesPage.vue'
-  import FormCorretajePage from './NuevoContrato/FormCorretajePage.vue'
-  import FormDetallesPage from './NuevoContrato/FormDetallesPage.vue'
-  import FormGeneralesPage from './NuevoContrato/FormGeneralesPage.vue'
-  import FormIntermediariosPage from './NuevoContrato/FormIntermediariosPage.vue'
-  import FormReaseguradoresPage from './NuevoContrato/FormReaseguradoresPage.vue'
+  import FormCoberturasPageM from './FormCoberturasPageM.vue'
+  import FormComisionesPageM from './FormComisionesPageM.vue'
+  import FormCorretajePageM from './FormCorretajePageM.vue'
+  import FormDetallesPageM from './FormDetallesPageM.vue'
+  import FormGeneralesPageM from './FormGeneralesPageM.vue'
+  import FormIntermediariosPageM from './FormIntermediariosPageM.vue'
+  import FormReaseguradoresPageM from './FormReaseguradoresPageM.vue'
 
   const activeTab = ref('tab-1')
 </script>

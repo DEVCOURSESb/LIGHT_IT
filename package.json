@@ -36,6 +36,8 @@
     "unplugin-vue-router": "^0.15.0",
     "vite": "^7.1.5",
     "vite-plugin-vuetify": "^2.1.2",
-    "vue-tsc": "^3.0.7"
+    "vue-tsc": "^3.0.7",
+    "noImplicitAny": false,
+    "allowJs": true
   }
 }

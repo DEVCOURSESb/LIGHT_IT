@@ -245,7 +245,7 @@
   </v-col>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
 import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
   const subramo = ref('')

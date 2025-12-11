@@ -83,7 +83,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
   import FormCoberturasPage from './NuevoContrato/FormCoberturasPage.vue'
   import FormComisionesPage from './NuevoContrato/FormComisionesPage.vue'

@@ -74,7 +74,7 @@
   </form>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
   const limiteInf = ref('')
   const limiteSup = ref('')

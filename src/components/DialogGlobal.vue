@@ -39,7 +39,7 @@
   </v-dialog>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { useDialog } from '@/stores/dialogStore'
   const dialog = useDialog()
 </script>

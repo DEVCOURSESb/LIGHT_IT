@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Daños', 'Proporcional', 'Nuevo contrato']" />
+    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Daños', 'Proporcional', 'Modificar contrato']" />
     <v-card-title class="d-flex align-center">
       Modificar Contrato
     </v-card-title>
@@ -8,11 +8,13 @@
     <v-data-table>
       <v-data-table :headers="headers" hide-default-footer :items="items" />
     </v-data-table>
+    <v-btn @click="modificarConId">Modificar</v-btn>
   </div>
 </template>
 
-<script setup>
-  import { ref } from 'vue'
+<script lang="ts" setup>
+  import router from '@/router';
+import { ref } from 'vue'
 
   const headers = [
     { title: 'Fecha de creación del contrato', value: 'idContrato', align: 'center' },
@@ -27,4 +29,8 @@
     { title: 'Activo', value: 'activo', align: 'center' },
     { title: 'Editar', value: 'editar', align: 'center' },
   ]
+
+  function modificarConId() {
+    router.push('/reaseguro/contratosReaseguro/modificarContratoId')
+  }
 </script>

@@ -43,7 +43,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref } from 'vue'
   import CatalogosPage from '@/pages/administracion/CatalogosPage.vue'
   import CalculosPage from './CalculosPage.vue'

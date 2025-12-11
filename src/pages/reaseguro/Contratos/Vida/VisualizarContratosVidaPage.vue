@@ -12,6 +12,6 @@
   <FooterComponent />
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import FooterComponent from '@/layouts/FooterComponent.vue'
 </script>

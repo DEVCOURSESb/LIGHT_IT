@@ -65,7 +65,7 @@
     <v-data-table :headers="headers" hide-default-footer :items="items" />
   </div>
 </template>
-<script setup>
+<script lang="ts" setup>
   import { ref, watch } from 'vue'
 
   const asignacionCoberturas = ref('')

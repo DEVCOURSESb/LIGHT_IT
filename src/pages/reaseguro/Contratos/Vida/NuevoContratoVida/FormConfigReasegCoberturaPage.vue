@@ -210,7 +210,7 @@
   </v-col>
 </template>
 
-<script setup>
+<script lang="ts" setup>
   import { ref, watch } from 'vue'
   const agrupacionCoberturas = ref('')
   const coberturasBasi = ref('')

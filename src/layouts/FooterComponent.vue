@@ -9,5 +9,5 @@
     <v-divider />
   </v-footer>
 </template>
-<script setup>
+<script lang="ts" setup>
 </script>
