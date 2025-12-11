@@ -5,18 +5,18 @@ const actions = ClasificacionCoberturaActions()
 export const ClasificacionCoberturaConfig = {
   entity: 'clasificacion-cobertura',
   title: 'Clasificación cobertura',
-  searchPlaceholder: 'cobertura',
-  addButtonText: 'Agregar cobertura',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nueva cobertura',
   tableTitle: 'Lista de Clasificación Coberturas',
 
   headers: [
-    { title: 'CLAVE', key: 'cveClasifcober', sortable: true,
+    /* { title: 'CLAVE', key: 'cveClasifcober', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descClasifcober', sortable: true,
+    }, */
+    { title: 'CLASIFICACIÓN DE LA COBERTURA', key: 'descClasifcober', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const ClasificacionCoberturaConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -64,13 +64,12 @@ export const ClasificacionCoberturaConfig = {
     {
       name: 'activo',
       label: 'Activo',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
       defaultValue: 'Sí',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      transformFromAPI: (value: number) => (value === 1),
+      transformToAPI: (value: boolean) => (value ? 1 : 2),
     },
   ],
 

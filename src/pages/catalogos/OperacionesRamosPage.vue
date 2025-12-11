@@ -1,5 +1,7 @@
 <template>
-  <CrudTablePage :config="operacionesRamosConfig" />
+  <CrudTablePage :config="operacionesRamosConfig">
+    <v-btn color="success">Cargar archivo</v-btn>
+  </CrudTablePage>
 </template>
 
 <script lang="ts" setup>

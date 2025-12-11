@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { TipoCaptura } from "./tipo-captura.interfaces";
 
 export const TipoCapturaActions = () => {
@@ -7,8 +6,7 @@ export const TipoCapturaActions = () => {
 
   const fetchTipoCapturas = async (): Promise<TipoCaptura[]> => {
     try {
-      return fakeData().dataTiposCaptura;
-      const response = await baseAPI.get<TipoCaptura[]>("getAllRecords");
+      const response = await baseAPI.post<TipoCaptura[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching TipoCapturas:", error);

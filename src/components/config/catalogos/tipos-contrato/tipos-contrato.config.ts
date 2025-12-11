@@ -5,7 +5,7 @@ const actions = TiposContratoActions();
 export const tiposContratoConfig = {
   entity: 'tipos-contrato',
   title: 'Tipos de Contrato',
-  searchPlaceholder: 'tipo contrato',
+  searchPlaceholder: '',
   addButtonText: 'Agregar tipo de contrato',
   modalTitle: 'Agregar nuevo tipo de contrato',
   tableTitle: 'Lista de Tipos de Contrato',
@@ -16,12 +16,12 @@ export const tiposContratoConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'CLAVE TIPO REASEGURO', key: 'cveTreaseg', sortable: true,
+    { title: 'DESCRIPCIÓN TIPO DE CONTRATO', key: 'descTcontrato', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
-    { title: 'DESCRIPCIÓN TIPO DE CONTRATO', key: 'descTcontrato', sortable: true,
+    { title: 'CLAVE TIPO REASEGURO', key: 'cveTreaseg', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -31,16 +31,16 @@ export const tiposContratoConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
-    { title: 'TIPO DE CONTRATO', key: 'idTcontrato', sortable: false,
+    { title: 'TIPO DE CONTRATO', key: 'idTcontrato', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    }, */
     { title: 'ACCIONES', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',

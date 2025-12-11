@@ -1,14 +1,12 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { Perfil } from "./perfiles.interfaces";
 
 export const PerfilActions = () => {
-  const baseAPI = BaseAPI({ prefix: "perfiles/" });
+  const baseAPI = BaseAPI({ prefix: "PerfilRest/" });
 
   const fetchPerfiles = async (): Promise<Perfil[]> => {
     try {
-      return fakeData().dataPerfiles;
-      const response = await baseAPI.get<Perfil[]>("getAllRecords");
+      const response = await baseAPI.post<Perfil[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching Perfiles:", error);

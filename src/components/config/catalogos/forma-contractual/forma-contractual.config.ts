@@ -5,18 +5,18 @@ const actions = FormaContractualActions();
 export const FormaContractualConfig = {
   entity: 'forma-contractual',
   title: 'Forma contractual',
-  searchPlaceholder: 'forma contractual',
-  addButtonText: 'Agregar forma contractual',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nueva forma',
   tableTitle: 'Lista de forma contractual',
 
   headers: [
-    { title: 'CLAVE', key: 'cveFcontrac', sortable: true,
+    /* { title: 'CLAVE', key: 'cveFcontrac', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descFcontrac', sortable: true,
+    }, */
+    { title: 'FORMA CONTRACTUAL', key: 'descFcontrac', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const FormaContractualConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

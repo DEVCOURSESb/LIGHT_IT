@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { Ptu } from "./ptu.interfaces";
 
 export const PtuActions = () => {
@@ -7,8 +6,7 @@ export const PtuActions = () => {
 
   const fetchPtus = async (): Promise<Ptu[]> => {
     try {
-      return fakeData().dataPTU;
-      const response = await baseAPI.get<Ptu[]>("getAllRecords");
+      const response = await baseAPI.post<Ptu[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching Ptus:", error);

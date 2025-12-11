@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { TipoContrato } from "./tipos-contrato.interfaces";
 
 export const TiposContratoActions = () => {
@@ -7,8 +6,7 @@ export const TiposContratoActions = () => {
 
   const fetchTipoContratos = async (): Promise<TipoContrato[]> => {
     try {
-      return fakeData().dataTiposContrato;
-      const response = await baseAPI.get<TipoContrato[]>("getAllRecords");
+      const response = await baseAPI.post<TipoContrato[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching TiposContrato:", error);

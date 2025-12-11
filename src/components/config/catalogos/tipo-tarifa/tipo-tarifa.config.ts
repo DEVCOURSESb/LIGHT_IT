@@ -4,18 +4,18 @@ const actions = TipoTarifaActions()
 
 export const tipoTarifaConfig = {
   entity: 'tipo-tarifa',
-  title: 'Tipo tarifa',
-  searchPlaceholder: 'tipo tarifa',
-  addButtonText: 'Agregar tipo de tarifa',
+  title: 'Tipo de Tarifa',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Tipo de tarifa',
   tableTitle: 'Lista de tipos de tarifas',
 
   headers: [
-    { title: 'CLAVE', key: 'cveTarifa', sortable: true,
+    /* { title: 'CLAVE', key: 'cveTarifa', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    }, */
     { title: 'DESCRIPCIÓN', key: 'descTarifa', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
@@ -26,12 +26,13 @@ export const tipoTarifaConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
     },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

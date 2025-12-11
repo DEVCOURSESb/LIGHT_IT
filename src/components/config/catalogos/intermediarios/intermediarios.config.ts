@@ -5,8 +5,8 @@ const actions = IntermediariosActions()
 export const intermediariosConfig = {
   entity: 'intermediarios',
   title: 'Intermediarios',
-  searchPlaceholder: 'intermediarios',
-  addButtonText: 'Agregar intermediario',
+  searchPlaceholder: '',
+  addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo intermediario',
   tableTitle: 'Lista de Intermediarios',
 
@@ -16,12 +16,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
-      headerProps: {
-        style: 'font-weight: bold',
-      },
-    },
-    { title: 'NOMBRE INTERMEDIARIO', key: 'nombreIntermediario', sortable: false,
+    { title: 'INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -31,7 +26,7 @@ export const intermediariosConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -59,25 +54,26 @@ export const intermediariosConfig = {
       type: 'text',
       required: true,
       dataKey: 'nombreIntermediario',
+      transformToAPI: (value: string) => (value.trim().toUpperCase()),
     },
     {
       name: 'esActivo',
       label: 'Activo',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-      defaultValue: 'Sí',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      defaultValue: true,
+      transformFromAPI: (value: number) => (value === 1),
+      transformToAPI: (value: boolean) => (value ? 1 : 2),
     },
   ],
 
   validationSchema: {
-    // eslint-disable-next-line @stylistic/no-mixed-operators
-    cveIntermediario: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor a 0',
-    nombreIntermediario: (value: string) => value?.length > 0 || 'El nombre es requerido',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    // numerico, 3 digitos max,
+    cveIntermediario: (value: number) => value > 0 && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    // alfanumerico, max 100 chars.
+    nombreIntermediario: (value: string) => value?.trim()?.length > 0 && value?.trim()?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
+    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
   },
 
   apiActions: {

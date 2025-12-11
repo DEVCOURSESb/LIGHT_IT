@@ -5,22 +5,27 @@ interface BaseAPIOptions {
   prefix?: string
   isPrivate?: boolean
 }
+ const accessToken = window.localStorage.getItem("token");
+console.log(accessToken);
 
 export function BaseAPI ({ prefix, isPrivate = true }: BaseAPIOptions = {}): AxiosInstance {
-  const base = import.meta.env.VITE_API_BASE
+  const base = import.meta.env.VITE_API_BASE_CATALOGOS
   const instance = axios.create({
     baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
   })
 
-  // Si la API es privada, agrega interceptores
   if (isPrivate) {
     instance.interceptors.request.use(
       config => {
         const token = window.localStorage.getItem('token')
+        
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
-        config.headers.Accept = 'application/json'
+        
+        config.headers.Accept = 'application/json';
+        config.headers['Content-Type'] = 'application/json';
+        console.log('Request Headers:', config.headers);
         return config
       },
       error => Promise.reject(error),

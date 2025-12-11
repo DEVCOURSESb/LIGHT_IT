@@ -5,18 +5,18 @@ const actions = DistribucionCesionActions()
 export const DistribucionCesionConfig = {
   entity: 'distribucion-cesion',
   title: 'Distribución de Cesión',
-  searchPlaceholder: 'distribución...',
-  addButtonText: 'Agregar distribución',
+  searchPlaceholder: '',
+  addButtonText: '',
   modalTitle: 'Agregar nueva distribución',
   tableTitle: 'Lista de Distribuciones de Cesión',
 
   headers: [
-    { title: 'CLAVE', key: 'cveDistrcesion', sortable: true,
+    /* { title: 'CLAVE', key: 'cveDistrcesion', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'DESCRIPCIÓN', key: 'descDistrcesion', sortable: true,
+    }, */
+    { title: 'DISTRIBUCIÓN DE LA CESIÓN', key: 'descDistrcesion', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -26,12 +26,12 @@ export const DistribucionCesionConfig = {
         style: 'font-weight: bold',
       },
     },
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    }, */
+    { title: 'EDITAR', key: 'actions', sortable: false,
       headerProps: {
         style: 'font-weight: bold',
       },

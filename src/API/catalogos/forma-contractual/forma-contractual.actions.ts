@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { FormaContractual } from "./forma-contractual.interface";
 
 export const FormaContractualActions = () => {
@@ -7,8 +6,7 @@ export const FormaContractualActions = () => {
 
   const fetchFormaContractual = async (): Promise<FormaContractual[]> => {
     try {
-      return fakeData().dataFormaContractual;
-      const response = await baseAPI.get<FormaContractual[]>("getAllRecords");
+      const response = await baseAPI.post<FormaContractual[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching FormaContractual:", error);

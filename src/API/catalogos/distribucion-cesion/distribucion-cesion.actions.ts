@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { DistribucionCesion } from "./distribucion-cesion.interfaces";
 
 export const DistribucionCesionActions = () => {
@@ -9,8 +8,7 @@ export const DistribucionCesionActions = () => {
 
   const fetchDistribucionesCesion = async (): Promise<DistribucionCesion[]> => {
     try {
-      return fakeData().dataDistribucionCesion;
-      const response = await baseAPI.get<DistribucionCesion[]>("getAllRecords");
+      const response = await baseAPI.post<DistribucionCesion[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching distribuciones cesion:", error);

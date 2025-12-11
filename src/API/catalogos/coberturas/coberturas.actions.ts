@@ -1,14 +1,12 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { Cobertura } from "./coberturas.interfaces";
 
 export const CoberturasActions = () => {
-  const baseAPI = BaseAPI({ prefix: "coberturas/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatIntCoberturaRest/" });
 
   const fetchCoberturas = async (): Promise<Cobertura[]> => {
     try {
-      return fakeData().dataCoberturas;
-      const response = await baseAPI.get<Cobertura[]>("getAllRecords");
+      const response = await baseAPI.post<Cobertura[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching Coberturas:", error);

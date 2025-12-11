@@ -25,17 +25,27 @@ declare module 'vue-router/auto-routes' {
     '/AutenticacionC': RouteRecordInfo<'/AutenticacionC', '/AutenticacionC', Record<never, never>, Record<never, never>>,
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CriteriosAsignacionPage': RouteRecordInfo<'/catalogos/CriteriosAsignacionPage', '/catalogos/CriteriosAsignacionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CriteriosCoberturaPage': RouteRecordInfo<'/catalogos/CriteriosCoberturaPage', '/catalogos/CriteriosCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/EntidadFederativaPage': RouteRecordInfo<'/catalogos/EntidadFederativaPage', '/catalogos/EntidadFederativaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/EstatusPage': RouteRecordInfo<'/catalogos/EstatusPage', '/catalogos/EstatusPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/EstatusReciboPage': RouteRecordInfo<'/catalogos/EstatusReciboPage', '/catalogos/EstatusReciboPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ExtensionPage': RouteRecordInfo<'/catalogos/ExtensionPage', '/catalogos/ExtensionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/FormaContractualPage': RouteRecordInfo<'/catalogos/FormaContractualPage', '/catalogos/FormaContractualPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/FormaPagoPage': RouteRecordInfo<'/catalogos/FormaPagoPage', '/catalogos/FormaPagoPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/FumadorPage': RouteRecordInfo<'/catalogos/FumadorPage', '/catalogos/FumadorPage', Record<never, never>, Record<never, never>>,
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/PerfilPage': RouteRecordInfo<'/catalogos/PerfilPage', '/catalogos/PerfilPage', Record<never, never>, Record<never, never>>,
     '/catalogos/PtuPage': RouteRecordInfo<'/catalogos/PtuPage', '/catalogos/PtuPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ReaseguradoresPage': RouteRecordInfo<'/catalogos/ReaseguradoresPage', '/catalogos/ReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/SexoPage': RouteRecordInfo<'/catalogos/SexoPage', '/catalogos/SexoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoAsignacionPage': RouteRecordInfo<'/catalogos/TipoAsignacionPage', '/catalogos/TipoAsignacionPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TipoEndosoPage': RouteRecordInfo<'/catalogos/TipoEndosoPage', '/catalogos/TipoEndosoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoReaseguroPage': RouteRecordInfo<'/catalogos/TipoReaseguroPage', '/catalogos/TipoReaseguroPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/TiposCambioPage': RouteRecordInfo<'/catalogos/TiposCambioPage', '/catalogos/TiposCambioPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TiposCapturaPage': RouteRecordInfo<'/catalogos/TiposCapturaPage', '/catalogos/TiposCapturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoTarifaPage': RouteRecordInfo<'/catalogos/TipoTarifaPage', '/catalogos/TipoTarifaPage', Record<never, never>, Record<never, never>>,
@@ -113,8 +123,28 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/CoberturaPage'
       views: never
     }
+    'src/pages/catalogos/CriteriosAsignacionPage.vue': {
+      routes: '/catalogos/CriteriosAsignacionPage'
+      views: never
+    }
+    'src/pages/catalogos/CriteriosCoberturaPage.vue': {
+      routes: '/catalogos/CriteriosCoberturaPage'
+      views: never
+    }
     'src/pages/catalogos/DistribucionCesionPage.vue': {
       routes: '/catalogos/DistribucionCesionPage'
+      views: never
+    }
+    'src/pages/catalogos/EntidadFederativaPage.vue': {
+      routes: '/catalogos/EntidadFederativaPage'
+      views: never
+    }
+    'src/pages/catalogos/EstatusPage.vue': {
+      routes: '/catalogos/EstatusPage'
+      views: never
+    }
+    'src/pages/catalogos/EstatusReciboPage.vue': {
+      routes: '/catalogos/EstatusReciboPage'
       views: never
     }
     'src/pages/catalogos/ExtensionPage.vue': {
@@ -123,6 +153,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/catalogos/FormaContractualPage.vue': {
       routes: '/catalogos/FormaContractualPage'
+      views: never
+    }
+    'src/pages/catalogos/FormaPagoPage.vue': {
+      routes: '/catalogos/FormaPagoPage'
+      views: never
+    }
+    'src/pages/catalogos/FumadorPage.vue': {
+      routes: '/catalogos/FumadorPage'
       views: never
     }
     'src/pages/catalogos/IntermediariosPage.vue': {
@@ -149,12 +187,24 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/ReaseguradoresPage'
       views: never
     }
+    'src/pages/catalogos/SexoPage.vue': {
+      routes: '/catalogos/SexoPage'
+      views: never
+    }
     'src/pages/catalogos/TipoAsignacionPage.vue': {
       routes: '/catalogos/TipoAsignacionPage'
       views: never
     }
+    'src/pages/catalogos/TipoEndosoPage.vue': {
+      routes: '/catalogos/TipoEndosoPage'
+      views: never
+    }
     'src/pages/catalogos/TipoReaseguroPage.vue': {
       routes: '/catalogos/TipoReaseguroPage'
+      views: never
+    }
+    'src/pages/catalogos/TiposCambioPage.vue': {
+      routes: '/catalogos/TiposCambioPage'
       views: never
     }
     'src/pages/catalogos/TiposCapturaPage.vue': {

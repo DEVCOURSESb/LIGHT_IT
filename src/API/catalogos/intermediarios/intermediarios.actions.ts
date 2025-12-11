@@ -1,14 +1,12 @@
 import type { Intermediario } from './intermediario.interfaces'
 import { BaseAPI } from '@/API/BaseAPI'
-import { fakeData } from '@/API/fakeData'
 
 export function IntermediariosActions () {
   const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfIntermediarioRest/' })
 
   const fetchIntermediarios = async (): Promise<Intermediario[]> => {
     try {
-      return fakeData().dataIntermediarios
-      const response = await baseAPI.get<Intermediario[]>('getAllRecords')
+      const response = await baseAPI.post<Intermediario[]>('getAllRecords')
       return response.data
     } catch (error) {
       console.error('Error fetching intermediarios:', error)

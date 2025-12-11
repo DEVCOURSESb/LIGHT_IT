@@ -1,5 +1,4 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { fakeData } from "@/API/fakeData";
 import type { OperacionRamo } from "./operaciones-ramos.interfaces";
 
 export const OperacionesRamosActions = () => {
@@ -7,8 +6,7 @@ export const OperacionesRamosActions = () => {
 
   const fetchOperacionesRamos = async (): Promise<OperacionRamo[]> => {
     try {
-      return fakeData().dataOperacionesRamos;
-      const response = await baseAPI.get<OperacionRamo[]>("getAllRecords");
+      const response = await baseAPI.post<OperacionRamo[]>("getAllRecords");
       return response.data;
     } catch (error) {
       console.error("Error fetching operaciones ramos:", error);

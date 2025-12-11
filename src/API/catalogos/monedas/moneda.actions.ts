@@ -1,14 +1,12 @@
 import type { Moneda } from './moneda.interfaces'
 import { BaseAPI } from '@/API/BaseAPI'
-import { fakeData } from '@/API/fakeData'
 
 export function MonedaActions () {
   const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfRr6MonedaRest/' })
 
   const fetchMonedas = async (): Promise<Moneda[]> => {
     try {
-      return fakeData().dataMonedas
-      const response = await baseAPI.get<Moneda[]>('getAllRecords')
+      const response = await baseAPI.post<Moneda[]>('getAllRecords')
       return response.data
     } catch (error) {
       console.error('Error fetching Monedas:', error)
