@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts" setup>
-import { intermediariosConfig } from "@/components/config/intermediarios/intermediarios.config";
+
+import { intermediariosConfig } from "@/components/config/catalogos/intermediarios/intermediarios.config";
 import { useFiles } from "@/composables/catalogos/useFiles";
 
 const { handleCSVReader } = useFiles();
