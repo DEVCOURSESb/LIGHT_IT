@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Extension } from "./extensiones.interfaces";
 
 export const ExtensionesActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatExtensionCoberturaRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatExtensionCoberturaRest/" });
 
   const fetchExtensiones = async (): Promise<Extension[]> => {
     try {

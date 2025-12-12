@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { FormaContractual } from "./forma-contractual.interface";
 
 export const FormaContractualActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntFormaContractualRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntFormaContractualRest/" });
 
   const fetchFormaContractual = async (): Promise<FormaContractual[]> => {
     try {

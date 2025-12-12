@@ -33,6 +33,12 @@
         <v-btn block color="primary" @click="dialog.cerrar()">
           Aceptar
         </v-btn>
+        <v-btn
+          v-if="dialog.ExtraAction" block :color="dialog.ExtraAction.color || 'secondary'"
+          @click="dialog.ExtraAction.handler()"
+        >
+          {{ dialog.ExtraAction.text }}
+        </v-btn>
       </v-card-actions>
 
     </v-card>

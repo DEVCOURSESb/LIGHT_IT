@@ -28,11 +28,11 @@
     </div>
   </div>
 
-  <FooterComponent />
+  
 </template>
 
 <script lang="ts" setup>
-  import FooterComponent from '@/layouts/FooterComponent.vue'
+  
   const items = [
     {
       src: 'src/assets/logo/la-latino-logo.png',

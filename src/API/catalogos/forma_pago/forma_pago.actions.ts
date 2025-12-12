@@ -1,10 +1,10 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { FormaPago } from "./forma_pago.interfaces";
 import { fakeData } from "@/API/fakeData";
 
 
 export function FormaPagoActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntFormaPagoRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntFormaPagoRest/" });
 
   const fetch = async (): Promise<FormaPago[]> => {
     try {

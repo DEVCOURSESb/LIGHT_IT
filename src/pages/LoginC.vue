@@ -48,11 +48,11 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { UserActions } from '@/API/user/UserActions'
   import FooterComponent from '@/layouts/FooterComponent.vue'
   import { useDialog } from '@/stores/dialogStore'
+import { AuthActions } from '@/API/auth/Auth.actions'
 
-  const { validarUsuario } = UserActions()
+  const { validarUsuario } = AuthActions()
   const dialog = useDialog()
   const router = useRouter()
 

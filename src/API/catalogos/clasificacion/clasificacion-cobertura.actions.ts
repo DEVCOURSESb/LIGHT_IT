@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Clasificacion } from "./clasificacion.interfaces";
 
 export const ClasificacionCoberturaActions = () => {
-  const baseAPI = BaseAPI({
+  const baseAPI = BaseAPICatalogos({
     prefix: "ReasegCatIntClasificacionCoberturaRest/",
   });
 

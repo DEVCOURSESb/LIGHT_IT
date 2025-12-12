@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Perfil } from "./perfiles.interfaces";
 
 export const PerfilActions = () => {
-  const baseAPI = BaseAPI({ prefix: "PerfilRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "PerfilRest/" });
 
   const fetchPerfiles = async (): Promise<Perfil[]> => {
     try {

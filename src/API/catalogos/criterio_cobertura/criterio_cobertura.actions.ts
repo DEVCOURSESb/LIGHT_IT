@@ -1,10 +1,10 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import { fakeData } from "@/API/fakeData";
 import type { CriterioCobertura } from "./criterio_cobertura.interfaces";
 
 
 export function CriterioCoberturaActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntCriterioCoberturaRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntCriterioCoberturaRest/" });
 
   const fetch = async (): Promise<CriterioCobertura[]> => {
     try {

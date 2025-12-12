@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { DistribucionCesion } from "./distribucion-cesion.interfaces";
 
 export const DistribucionCesionActions = () => {
-  const baseAPI = BaseAPI({
+  const baseAPI = BaseAPICatalogos({
     prefix: "ReasegCatIntDistribucionCesionRest/",
   });
 

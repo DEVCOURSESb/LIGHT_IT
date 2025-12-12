@@ -1,10 +1,10 @@
 
-import { BaseAPI } from '@/API/BaseAPI'
+import { BaseAPICatalogos } from '@/API/BaseAPICatalogos'
 import type { CriteriosAsignacion } from './criterios_asignacion.interfaces'
 import { fakeData } from '@/API/fakeData'
 
 export function CriteriosAsignacionActions () {
-  const baseAPI = BaseAPI({ prefix: 'ReasegCatIntCriterioAsignacionRest/' })
+  const baseAPI = BaseAPICatalogos({ prefix: 'ReasegCatIntCriterioAsignacionRest/' })
 
   const fetch = async (): Promise<CriteriosAsignacion[]> => {
     try {

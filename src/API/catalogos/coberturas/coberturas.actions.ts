@@ -1,8 +1,8 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Cobertura } from "./coberturas.interfaces";
 
 export const CoberturasActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntCoberturaRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntCoberturaRest/" });
 
   const fetchCoberturas = async (): Promise<Cobertura[]> => {
     try {

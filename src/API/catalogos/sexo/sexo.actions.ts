@@ -1,10 +1,10 @@
-import { BaseAPI } from "@/API/BaseAPI";
+import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Sexo } from "./sexo.interfaces";
 import { fakeData } from "@/API/fakeData";
 
 
 export function SexoActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntSexoRest/" });
+  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntSexoRest/" });
 
   const fetch = async (): Promise<Sexo[]> => {
     try {

@@ -1,0 +1,44 @@
+// src/api/BaseAPI.ts
+import axios, { type AxiosInstance } from 'axios'
+
+interface BaseAPIOptions {
+  prefix?: string
+  isPrivate?: boolean
+}
+ const accessToken = window.localStorage.getItem("token");
+console.log(accessToken);
+
+export function BaseAPICatalogos({ prefix, isPrivate = true }: BaseAPIOptions = {}): AxiosInstance {
+  const base = import.meta.env.VITE_API_BASE_CATALOGOS
+  const instance = axios.create({
+    baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
+  })
+
+  if (isPrivate) {
+    instance.interceptors.request.use(
+      config => {
+        const token = window.localStorage.getItem('token')
+        
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`
+        }
+        
+        config.headers.Accept = 'application/json';
+        config.headers['Content-Type'] = 'application/json';
+        console.log('Request Headers:', config.headers);
+        return config
+      },
+      error => Promise.reject(error),
+    )
+
+    instance.interceptors.response.use(
+      response => response,
+      error => {
+        console.log(error)
+        return Promise.reject(error)
+      },
+    )
+  }
+
+  return instance
+}
