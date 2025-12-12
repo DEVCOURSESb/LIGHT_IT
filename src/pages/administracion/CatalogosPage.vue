@@ -30,10 +30,10 @@
         </template>
 
         <template #item.actions="{ item }">
-          <v-icon class="mr-2" size="small" @click="editItem(item)">
+          <v-icon class="mr-2" size="small">
             mdi-pencil
           </v-icon>
-          <v-icon size="small" @click="deleteItem(item)">
+          <v-icon size="small">
             mdi-delete
           </v-icon>
         </template>
@@ -49,11 +49,4 @@
   const { search, catalogos, headers } = useCatalogos()
   const dialog = ref(false)
 
-  function editItem (item) {
-    console.log('Editar:', item)
-  }
-
-  function deleteItem (item) {
-    console.log('Eliminar:', item)
-  }
-</script>
+  </script>

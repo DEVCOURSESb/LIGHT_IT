@@ -18,7 +18,6 @@
             v-model="reaseguradora"
             class="selectForm"
             :disabled="asignacionCoberturas === 'POR CONTRATO'"
-            :items="options"
             label="Reaseguradora"
             required
             variant="solo-filled"
@@ -31,7 +30,6 @@
           <v-select
             v-model="operacionRamoCober"
             class="selectForm"
-            :items="options"
             label="Operación / ramo coberturas"
             required
             variant="solo-filled"
@@ -42,7 +40,6 @@
           <v-select
             v-model="coberturas"
             class="selectForm"
-            :items="options"
             label="Coberturas"
             required
             variant="solo-filled"
@@ -55,14 +52,14 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar coberturas
         </v-btn>
       </v-col>
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -80,10 +77,10 @@
   })
 
   const headers = [
-    { title: 'Asignación de coberturas', value: 'asignacionCoberturas', align: 'center' },
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Operación / ramo coberturas', value: 'operacionRamoC', align: 'center' },
-    { title: 'Ver coberturas', value: 'verCoberturas', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: 'Asignación de coberturas',  key: 'asignacionCoberturas' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Operación / ramo coberturas',  key: 'operacionRamoC' },
+    { title: 'Ver coberturas',  key: 'verCoberturas' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

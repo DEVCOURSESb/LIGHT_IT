@@ -15,7 +15,6 @@
           <v-select
             v-model="tipoOperacionRamo"
             :disabled="detalles === 'No'"
-            :items="optionsOperacion"
             label="Tipo operación / ramo"
             required
             variant="solo-filled"
@@ -26,7 +25,6 @@
           <v-select
             v-model="operacionRamo"
             :disabled="detalles === 'No'"
-            :items="optionsRamo"
             label="Operación / ramo"
             required
             variant="solo-filled"
@@ -126,19 +124,19 @@
 
       </v-row>
       <v-col class="text-center">
-        <v-btn text="abrirAgregar" @click="dialogComponent=true">Agregar detalles</v-btn>
+        <v-btn text="abrirAgregar" >Agregar detalles</v-btn>
       </v-col>
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar detalles
         </v-btn>
       </v-col>
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 
@@ -166,17 +164,17 @@
     }
   })
   const headers = [
-    { title: '¿Detalles por operación / ramo?', value: 'detalles', align: 'center' },
-    { title: 'Tipo operación / ramo', value: 'tipoOperacion', align: 'center' },
-    { title: 'Operación / ramo', value: 'operacionRamo', align: 'center' },
-    { title: '%Retención', value: 'retencion', align: 'center' },
-    { title: '%Cesión', value: 'cesion', align: 'center' },
-    { title: 'Monto retención', value: 'montoR', align: 'center' },
-    { title: 'Monto cesión', value: 'montoC', align: 'center' },
-    { title: 'Capacidad contrato', value: 'capacidadC', align: 'center' },
-    { title: 'Base cesión', value: 'baseCesion', align: 'center' },
-    { title: 'Moneda detalles', value: 'monedaDetalles', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: '¿Detalles por operación / ramo?',  key: 'detalles' },
+    { title: 'Tipo operación / ramo',  key: 'tipoOperacion' },
+    { title: 'Operación / ramo',  key: 'operacionRamo' },
+    { title: '%Retención',  key: 'retencion' },
+    { title: '%Cesión',  key: 'cesion' },
+    { title: 'Monto retención',  key: 'montoR' },
+    { title: 'Monto cesión',  key: 'montoC' },
+    { title: 'Capacidad contrato',  key: 'capacidadC' },
+    { title: 'Base cesión',  key: 'baseCesion' },
+    { title: 'Moneda detalles',  key: 'monedaDetalles' },
+    { title: 'Activo',  key: 'activo' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

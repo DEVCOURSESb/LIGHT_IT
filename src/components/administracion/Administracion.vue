@@ -8,7 +8,7 @@
     </template>
 
     <v-list>
-      <v-list-item v-for="item in listItems" :key="item.name" :prepend-icon="item.icon" :to="`/administracion/${item.name}`">
+      <v-list-item v-for="item in listItems" :key="item.name" :to="`/administracion/${item.name}`">
         <v-list-item-title>
           {{ item.title }}
         </v-list-item-title>

@@ -28,7 +28,7 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-icon class="edit" @click="editItem(item)">
+        <v-icon class="edit" >
           mdi-pencil
         </v-icon>
       </template>
@@ -43,11 +43,4 @@
   const { search, reaseguradores, headers } = useReaseguradores()
   const dialog = ref(false)
 
-  function editItem (item) {
-    console.log('Editar:', item)
-  }
-
-  function deleteItem (item) {
-    console.log('Eliminar:', item)
-  }
-</script>
+  </script>

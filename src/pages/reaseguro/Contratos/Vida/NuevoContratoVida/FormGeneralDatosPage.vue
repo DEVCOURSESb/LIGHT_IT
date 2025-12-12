@@ -8,7 +8,6 @@
         >
           <v-select
             v-model="subramo"
-            :items="options"
             label="Subramo"
             required
             variant="solo-filled"
@@ -41,7 +40,6 @@
           <v-select
             v-model="moneda"
             class="selectForm"
-            :items="options"
             label="Moneda"
             required
             variant="solo-filled"
@@ -75,7 +73,6 @@
           <v-select
             v-model="formaContractual"
             class="selectForm"
-            :items="options"
             label="Forma contractual"
             required
             variant="solo-filled"
@@ -87,7 +84,6 @@
         >
           <v-select
             v-model="tipoReaseguro"
-            :items="options"
             label="Tipo de reaseguro"
             required
             variant="solo-filled"
@@ -112,7 +108,6 @@
           <v-select
             v-model="criterioCobertura"
             class="selectForm"
-            :items="options"
             label="Criterio de cobertura"
             required
             variant="solo-filled"
@@ -233,12 +228,12 @@
   <div>
     <v-row class="d-flex justify-center align-center">
       <v-col>
-        <v-data-table v-if="tipoContrato === 'EXCEDENTE POR CAPAS'" :headers="headers1" hide-default-footer :items="items" />
+        <v-data-table v-if="tipoContrato === 'EXCEDENTE POR CAPAS'" :headers="headers1" hide-default-footer  />
       </v-col>
     </v-row>
   </div>
   <v-col class="text-center">
-    <v-btn class="btn-guardar" @click="navegarP">
+    <v-btn class="btn-guardar">
       Guardar datos
       <br> generales
     </v-btn>
@@ -247,7 +242,6 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue'
-import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
   const subramo = ref('')
   const idContrato = ref('')
   const inicioContrato = ref('')
@@ -259,12 +253,19 @@ import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
   const negociosCubiertos = ref('')
   const moneda = ref('')
   const cesion = ref('')
+  const limiteMax = ref('')
+  const limiteMaxResCR = ref('')
+  const retencionP = ref('')
+  const piso = ref('')
+  const techo = ref('')
+  const techoCapa = ref('')
+  const retencionCapa = ref('')
 
   const headers1 = [
-    { title: 'Detalle de Capa', value: 'detalleCapa', align: 'center' },
-    { title: 'Retención Propia capa N', value: 'retencionC', align: 'center' },
-    { title: 'Techo Capa N', value: 'techoC', align: 'center' },
-    { title: 'Modificar', value: 'techoC', align: 'center' },
-    { title: 'Borrar', value: 'techoC', align: 'center' },
+    { title: 'Detalle de Capa',  key: 'detalleCapa' },
+    { title: 'Retención Propia capa N',  key: 'retencionC' },
+    { title: 'Techo Capa N',  key: 'techoC' },
+    { title: 'Modificar',  key: 'techoC' },
+    { title: 'Borrar',  key: 'techoC' },
   ]
 </script>

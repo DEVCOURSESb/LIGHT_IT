@@ -14,7 +14,6 @@
         <v-col cols="12" md="6">
           <v-select
             v-model="metodoCalPTU"
-            :items="options"
             label="Método cálculo PTU"
             required
             variant="solo-filled"
@@ -86,7 +85,7 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar reaseguradora
         </v-btn>
       </v-col>

@@ -8,7 +8,6 @@
         >
           <v-select
             v-model="poliza"
-            :items="options"
             label="Póliza"
             required
             variant="solo-filled"
@@ -21,7 +20,6 @@
           <v-select
             v-model="renovacion"
             class="selectForm"
-            :items="options"
             label="Renovación"
             required
             variant="solo-filled"
@@ -42,7 +40,7 @@
   <div>
     <v-row class="d-flex justify-center align-center">
       <v-col>
-        <v-data-table v-if="tipoContrato === 'EXCEDENTE POR CAPAS'" :headers="headers1" hide-default-footer :items="items" />
+        <v-data-table :headers="headers1" hide-default-footer  />
       </v-col>
     </v-row>
   </div>
@@ -55,23 +53,14 @@
 
 <script lang="ts"setup>
   import { ref } from 'vue'
-  const subramo = ref('')
-  const idContrato = ref('')
-  const inicioContrato = ref('')
-  const finContrato = ref('')
-  const tipoReaseguro = ref('')
-  const tipoContrato = ref('')
-  const formaContractual = ref('')
-  const criterioCobertura = ref('')
-  const negociosCubiertos = ref('')
-  const moneda = ref('')
-  const cesion = ref('')
+  const poliza = ref('')
+  const renovacion = ref('')
 
   const headers1 = [
-    { title: 'Detalle de Capa', value: 'detalleCapa', align: 'center' },
-    { title: 'Retención Propia capa N', value: 'retencionC', align: 'center' },
-    { title: 'Techo Capa N', value: 'techoC', align: 'center' },
-    { title: 'Modificar', value: 'techoC', align: 'center' },
-    { title: 'Borrar', value: 'techoC', align: 'center' },
+    { title: 'Detalle de Capa',  key: 'detalleCapa' },
+    { title: 'Retención Propia capa N',  key: 'retencionC' },
+    { title: 'Techo Capa N',  key: 'techoC' },
+    { title: 'Modificar',  key: 'techoC' },
+    { title: 'Borrar',  key: 'techoC' },
   ]
 </script>

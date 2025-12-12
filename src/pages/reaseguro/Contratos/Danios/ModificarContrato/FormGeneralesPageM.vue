@@ -74,7 +74,6 @@
         >
           <v-select
             v-model="tipoSeguro"
-            :items="options"
             label="Tipo de reaseguro"
             required
             variant="solo-filled"
@@ -87,7 +86,6 @@
         >
           <v-select
             v-model="tipoContrato"
-            :items="options"
             label="Tipo de contrato"
             required
             variant="solo-filled"
@@ -101,7 +99,6 @@
           <v-select
             v-model="formaContractual"
             class="selectForm"
-            :items="options"
             label="Forma contractual"
             required
             variant="solo-filled"
@@ -115,7 +112,6 @@
           <v-select
             v-model="criterioCobertura"
             class="selectForm"
-            :items="options"
             label="Criterio de cobertura"
             required
             variant="solo-filled"
@@ -150,7 +146,6 @@
           <v-select
             v-model="moneda"
             class="selectForm"
-            :items="options"
             label="Moneda"
             required
             variant="solo-filled"
@@ -163,7 +158,6 @@
           <v-select
             v-model="tipoOperacion"
             class="selectForm"
-            :items="options"
             label="Tipo operación / ramo"
             required
             variant="solo-filled"
@@ -177,7 +171,6 @@
           <v-select
             v-model="operacionRamo"
             class="selectForm"
-            :items="options"
             label="Operación / ramo"
             required
             variant="solo-filled"
@@ -193,7 +186,7 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar contrato
         </v-btn>
       </v-col>
@@ -202,11 +195,11 @@
   <div>
     <v-row class="d-flex justify-center align-center">
       <v-col cols="12" md="5">
-        <v-data-table :headers="headers1" hide-default-footer :items="items" />
+        <v-data-table :headers="headers1" hide-default-footer  />
       </v-col>
       <v-spacer />
       <v-col cols="12" md="5">
-        <v-data-table :headers="headers2" hide-default-footer :items="items" />
+        <v-data-table :headers="headers2" hide-default-footer  />
       </v-col>
     </v-row>
   </div>
@@ -232,12 +225,12 @@
   const operacionRamo = ref('')
 
   const headers1 = [
-    { title: 'Moneda', value: 'moneda', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
+    { title: 'Moneda',  key: 'moneda' },
+    { title: 'Activo',  key: 'activo' },
   ]
   const headers2 = [
-    { title: 'Tipo operación / ramo', value: 'tipoOperacionR', align: 'center' },
-    { title: 'Operacion /ramo', value: 'operacionRamo', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
+    { title: 'Tipo operación / ramo',  key: 'tipoOperacionR' },
+    { title: 'Operacion /ramo',  key: 'operacionRamo' },
+    { title: 'Activo',  key: 'activo' },
   ]
 </script>

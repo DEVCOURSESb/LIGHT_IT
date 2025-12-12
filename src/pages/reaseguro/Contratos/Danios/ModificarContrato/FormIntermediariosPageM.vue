@@ -33,7 +33,6 @@
             v-model="reaseguradora"
             class="selectForm"
             :disabled="intermediario === 'NO' || asignacionIntermediario === 'POR CONTRATO'"
-            :items="options"
             label="Reaseguradora"
             required
             variant="solo-filled"
@@ -45,7 +44,6 @@
             v-model="interme"
             class="selectForm"
             :disabled="intermediario === 'NO'"
-            :items="options"
             label="Intermediario"
             required
             variant="solo-filled"
@@ -120,7 +118,6 @@
             v-model="formulaLimiteCorre"
             class="selectForm"
             :disabled="intermediario === 'NO' || tipoCorretaje === 'FIJO'"
-            :items="options"
             label="Formula limite corretaje"
             required
             variant="solo-filled"
@@ -167,19 +164,19 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar intermediario
         </v-btn>
       </v-col>
       <v-col class="text-center">
-        <v-btn color="#73D7D9" @click="dialog = true">
+        <v-btn color="#73D7D9"  >
           Crear contrato
         </v-btn>
       </v-col>
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -235,18 +232,18 @@
   })
 
   const headers = [
-    { title: '¿Intermediario?', value: 'intermediario', align: 'center' },
-    { title: 'Asignación de intermediario', value: 'asignacionInterm', align: 'center' },
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Intermediario', value: 'intermediario', align: 'center' },
-    { title: '¿Corretaje?', value: 'corretaje', align: 'center' },
-    { title: 'Tipo corretaje', value: 'tipoCorretaje', align: 'center' },
-    { title: '% Corretaje fijo', value: 'corretajeFijo', align: 'center' },
-    { title: 'Monto corretaje fijo', value: 'montoCorreFijo', align: 'center' },
-    { title: 'Fórmula limite corretaje', value: 'formuLimiteC', align: 'center' },
-    { title: '% Corretaje provisional', value: 'corretajeProvisional', align: 'center' },
-    { title: 'Monto corretaje provisional', value: 'montoCorreProvi', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: '¿Intermediario?',  key: 'intermediario' },
+    { title: 'Asignación de intermediario',  key: 'asignacionInterm' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Intermediario',  key: 'intermediario' },
+    { title: '¿Corretaje?',  key: 'corretaje' },
+    { title: 'Tipo corretaje',  key: 'tipoCorretaje' },
+    { title: '% Corretaje fijo',  key: 'corretajeFijo' },
+    { title: 'Monto corretaje fijo',  key: 'montoCorreFijo' },
+    { title: 'Fórmula limite corretaje',  key: 'formuLimiteC' },
+    { title: '% Corretaje provisional',  key: 'corretajeProvisional' },
+    { title: 'Monto corretaje provisional',  key: 'montoCorreProvi' },
+    { title: 'Activo',  key: 'activo' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

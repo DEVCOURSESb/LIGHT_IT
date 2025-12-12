@@ -6,7 +6,6 @@
         <v-col cols="12" md="3">
           <v-select
             v-model="reaseguradora"
-            :items="options"
             label="Reaseguradora"
             variant="solo-filled"
           />
@@ -57,7 +56,6 @@
           <v-select
             v-model="formulaCalculoPtu"
             :disabled="otorgaPtu === 'NO'"
-            :items="optionsOperacion"
             label="Fórmula cálculo PTU"
             required
             variant="solo-filled"
@@ -161,14 +159,14 @@
       </v-col>
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar <br> reaseguradores
         </v-btn>
       </v-col>
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -210,17 +208,17 @@
   })
 
   const headers = [
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Participación', value: 'participacion', align: 'center' },
-    { title: '¿Otorga PTU?', value: 'otorgaPtu', align: 'center' },
-    { title: '%PTU', value: 'ptu', align: 'center' },
-    { title: 'Fórmula cálculo PTU', value: 'formulaPTU', align: 'center' },
-    { title: 'Años de arrastre', value: 'montoR', align: 'center' },
-    { title: '¿Comisión de reaseguro?', value: 'comisionReaseguro', align: 'center' },
-    { title: 'Tipo de comisión', value: 'tipoComision', align: 'center' },
-    { title: 'Comisión fija', value: 'comisionFija', align: 'center' },
-    { title: 'Comisión provisional detalles', value: 'comisionProvisional', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Participación',  key: 'participacion' },
+    { title: '¿Otorga PTU?',  key: 'otorgaPtu' },
+    { title: '%PTU',  key: 'ptu' },
+    { title: 'Fórmula cálculo PTU',  key: 'formulaPTU' },
+    { title: 'Años de arrastre',  key: 'montoR' },
+    { title: '¿Comisión de reaseguro?',  key: 'comisionReaseguro' },
+    { title: 'Tipo de comisión',  key: 'tipoComision' },
+    { title: 'Comisión fija',  key: 'comisionFija' },
+    { title: 'Comisión provisional detalles',  key: 'comisionProvisional' },
+    { title: 'Activo',  key: 'activo' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

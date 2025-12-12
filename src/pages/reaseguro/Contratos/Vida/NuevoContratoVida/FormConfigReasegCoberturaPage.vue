@@ -34,14 +34,13 @@
           max-width="30px"
         />
         <v-col cols="12" md="8">
-          <v-data-table :headers="headers1" hide-default-footer :items="items" />
+          <v-data-table :headers="headers1" hide-default-footer  />
         </v-col>
       </v-row>
       <v-row class="d-flex justify-center align-center">
         <v-col cols="12" md="3">
           <v-select
             v-model="coberturasBasi"
-            :items="options"
             label="Coberturas básicas"
             variant="solo-filled"
           />
@@ -53,7 +52,6 @@
           <v-select
             v-model="coberturasAdici"
             class="selectForm"
-            :items="options"
             label="Coberturas adicionales"
             required
             variant="solo-filled"
@@ -81,7 +79,6 @@
             v-if="detalleCapa === 'SI'"
             v-model="detalleC"
             class="selectForm"
-            :items="options"
             label="Detalle de capa"
             required
             variant="solo-filled"
@@ -112,7 +109,6 @@
           <v-select
             v-model="cobertura"
             class="selectForm"
-            :items="options"
             label="Cobertura"
             required
             variant="solo-filled"
@@ -122,7 +118,6 @@
           <v-select
             v-model="tipoTarifa"
             class="selectForm"
-            :items="options"
             label="Tipo de tarifa"
             required
             variant="solo-filled"
@@ -203,7 +198,7 @@
     de dicho apartado pero de manera desglosada-->
   </div>
   <v-col class="text-center">
-    <v-btn class="btn-guardar" @click="dialog = true">
+    <v-btn class="btn-guardar"  >
       Guardar
       <br> generales
     </v-btn>
@@ -241,7 +236,6 @@
   const headers = [
     {
       title: 'Coberturas',
-      align: 'center',
       key: 'name',
     },
   ]
@@ -255,23 +249,23 @@
   ]
 
   const headers1 = [
-    { title: 'Cobertura', value: 'cobertura', align: 'center' },
-    { title: 'Agrupar en:', value: 'agruparEn', align: 'center' },
-    { title: 'Modificar', value: 'modificar', align: 'center' },
-    { title: 'Borrar', value: 'borrar', align: 'center' },
+    { title: 'Cobertura',  key: 'cobertura' },
+    { title: 'Agrupar en:',  key: 'agruparEn' },
+    { title: 'Modificar',  key: 'modificar' },
+    { title: 'Borrar',  key: 'borrar' },
   ]
 
   const headers2 = [
-    { title: 'Detalle capa', value: 'detalleCapa', align: 'center' },
-    { title: 'Tipo cobertura', value: 'tipoCobertura', align: 'center' },
-    { title: 'Cobertura', value: 'cobertura', align: 'center' },
-    { title: 'Tipo de tarifa', value: 'tipoTarifa', align: 'center' },
-    { title: 'Prima de tarifa fija', value: 'primaTarifa', align: 'center' },
-    { title: '& sobre prima emitida', value: 'porSobrePrima', align: 'center' },
-    { title: 'Tarifa fija al millar', value: 'tarifaFijaM', align: 'center' },
-    { title: 'Factor tarifa propia', value: 'factorTap', align: 'center' },
-    { title: 'Tarifa propia', value: 'tarifaP', align: 'center' },
-    { title: 'Modificar', value: 'modificar', align: 'center' },
-    { title: 'Borrar', value: 'borrar', align: 'center' },
+    { title: 'Detalle capa',  key: 'detalleCapa' },
+    { title: 'Tipo cobertura',  key: 'tipoCobertura' },
+    { title: 'Cobertura',  key: 'cobertura' },
+    { title: 'Tipo de tarifa',  key: 'tipoTarifa' },
+    { title: 'Prima de tarifa fija',  key: 'primaTarifa' },
+    { title: '& sobre prima emitida',  key: 'porSobrePrima' },
+    { title: 'Tarifa fija al millar',  key: 'tarifaFijaM' },
+    { title: 'Factor tarifa propia',  key: 'factorTap' },
+    { title: 'Tarifa propia',  key: 'tarifaP' },
+    { title: 'Modificar',  key: 'modificar' },
+    { title: 'Borrar',  key: 'borrar' },
   ]
 </script>

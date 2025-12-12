@@ -5,7 +5,6 @@
         <v-col cols="12" md="3">
           <v-select
             v-model="reaseguradora"
-            :items="options"
             label="Reaseguradora"
             variant="solo-filled"
           />
@@ -61,7 +60,7 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar comisiones
         </v-btn>
       </v-col>
@@ -75,7 +74,7 @@
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -87,11 +86,11 @@
   const comisionDef = ref('')
 
   const headers = [
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Limite inferior', value: 'participacion', align: 'center' },
-    { title: 'Limite superior', value: 'otorgaPtu', align: 'center' },
-    { title: 'Comisión definitiva', value: 'ptu', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Limite inferior',  key: 'participacion' },
+    { title: 'Limite superior',  key: 'otorgaPtu' },
+    { title: 'Comisión definitiva',  key: 'ptu' },
+    { title: 'Activo',  key: 'activo' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

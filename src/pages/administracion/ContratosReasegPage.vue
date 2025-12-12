@@ -25,14 +25,14 @@
         <v-toolbar class="encabezado" flat>
           <v-toolbar-title>Bitácora de contratos de reaseguro</v-toolbar-title>
           <v-spacer />
-          <v-btn class="btn-agregar" @click="dialog = true">
+          <v-btn class="btn-agregar"  >
             + Nuevo
           </v-btn>
         </v-toolbar>
       </template>
 
       <template #item.actions="{ item }">
-        <v-icon class="edit" @click="editItem(item)">
+        <v-icon class="edit">
           mdi-pencil
         </v-icon>
       </template>
@@ -47,8 +47,5 @@
   const { search, contrato, headers } = useContratosReaseguro()
   const dialog = ref(false)
 
-  function editItem (item) {
-    console.log('Editar:', item)
-  }
 
 </script>

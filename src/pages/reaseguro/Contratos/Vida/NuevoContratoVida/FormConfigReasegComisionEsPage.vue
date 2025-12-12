@@ -51,7 +51,7 @@
     </v-row>
     <br>
     <v-col class="text-center">
-      <v-btn class="btn-guardar" @click="dialog = true">
+      <v-btn class="btn-guardar"  >
         Guardar
         <br> comisiones
       </v-btn>
@@ -81,12 +81,12 @@
   const comisionDef = ref('')
 
   const headers = [
-    { title: 'Tipo de cobertura', value: 'tipoCobertura', align: 'center' },
-    { title: 'Limite inf (% siniestralidad)', value: 'limiteInf', align: 'center' },
-    { title: 'Limite sup (% siniestralidad)', value: 'limiteSup', align: 'center' },
-    { title: '% Comisión definitiva', value: 'comisionDef', align: 'center' },
-    { title: 'Modificar', value: 'modificar', align: 'center' },
-    { title: 'Borrar', value: 'borrar', align: 'center' },
+    { title: 'Tipo de cobertura',  key: 'tipoCobertura' },
+    { title: 'Limite inf (% siniestralidad)',  key: 'limiteInf' },
+    { title: 'Limite sup (% siniestralidad)',  key: 'limiteSup' },
+    { title: '% Comisión definitiva',  key: 'comisionDef' },
+    { title: 'Modificar',  key: 'modificar' },
+    { title: 'Borrar',  key: 'borrar' },
   ]
 
 </script>

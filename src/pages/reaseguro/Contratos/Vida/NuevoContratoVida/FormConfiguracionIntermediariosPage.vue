@@ -33,7 +33,6 @@
             v-model="reaseguradora"
             class="selectForm"
             :disabled="intermediario === 'NO' || asignacionIntermediario === 'POR CONTRATO'"
-            :items="options"
             label="Reaseguradora"
             required
             variant="solo-filled"
@@ -52,7 +51,6 @@
             v-model="interme"
             class="selectForm"
             :disabled="intermediario === 'NO'"
-            :items="options"
             label="Intermediario / Broker"
             required
             variant="solo-filled"
@@ -122,19 +120,19 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Agregar intermediarios
         </v-btn>
       </v-col>
       <v-col class="text-center">
-        <v-btn color="#73D7D9" @click="dialog = true">
+        <v-btn color="#73D7D9"  >
           Guardar contrato
         </v-btn>
       </v-col>
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -189,15 +187,15 @@
   })
 
   const headers = [
-    { title: 'Intermediario', value: 'intermediario', align: 'center' },
-    { title: 'Asignación de intermediario', value: 'asignacionInterm', align: 'center' },
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Intermediario / Broker', value: 'intermediarioBroker', align: 'center' },
-    { title: '¿Corretaje?', value: 'corretaje', align: 'center' },
-    { title: 'Tipo corretaje', value: 'tipoCorretaje', align: 'center' },
-    { title: '% Corretaje fijo', value: 'corretajeFijo', align: 'center' },
-    { title: 'Monto corretaje fijo', value: 'montoCorreFijo', align: 'center' },
-    { title: 'Modificar', value: 'activo', align: 'center', icon: 'mdi mdi-pencil' },
-    { title: 'Eliminar', value: 'editar', align: 'center', icon: 'mdi mdi-delete-circle-outline' },
+    { title: 'Intermediario',  key: 'intermediario' },
+    { title: 'Asignación de intermediario',  key: 'asignacionInterm' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Intermediario / Broker',  key: 'intermediarioBroker' },
+    { title: '¿Corretaje?',  key: 'corretaje' },
+    { title: 'Tipo corretaje',  key: 'tipoCorretaje' },
+    { title: '% Corretaje fijo',  key: 'corretajeFijo' },
+    { title: 'Monto corretaje fijo',  key: 'montoCorreFijo' },
+    { title: 'Modificar',  key: 'activo' },
+    { title: 'Eliminar',  key: 'editar' },
   ]
 </script>

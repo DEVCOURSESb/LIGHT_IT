@@ -8,7 +8,6 @@
         >
           <v-select
             v-model="companiaReaseg"
-            :items="options"
             label="Compañía reaseguradora"
             required
             variant="solo-filled"
@@ -35,7 +34,6 @@
           <v-select
             v-model="indicadorDistrC"
             class="selectForm"
-            :items="options"
             label="Indicador Distr. Cesión"
             required
             variant="solo-filled"
@@ -49,7 +47,6 @@
           <v-select
             v-model="cesionCoberBasi"
             class="selectForm"
-            :items="options"
             label="¿Cesión sobre la cobertura BÁSICA?"
             required
             variant="solo-filled"
@@ -62,7 +59,6 @@
           <v-select
             v-model="comisionReaseg"
             class="selectForm"
-            :items="options"
             label="¿Comisión de reaseguro?"
             required
             variant="solo-filled"
@@ -87,7 +83,6 @@
           <v-select
             v-model="tipoComision"
             class="selectForm"
-            :items="options"
             label="Tipo de comisión"
             required
             variant="solo-filled"
@@ -155,12 +150,12 @@
   <div>
     <v-row class="d-flex justify-center align-center">
       <v-col>
-        <v-data-table :headers="headers1" hide-default-footer :items="items" />
+        <v-data-table :headers="headers1" hide-default-footer  />
       </v-col>
     </v-row>
   </div>
   <v-col class="text-center">
-    <v-btn class="btn-guardar" @click="dialog = true">
+    <v-btn class="btn-guardar" >
       Guardar
       <br> generales
     </v-btn>
@@ -190,10 +185,10 @@
   })
 
   const headers1 = [
-    { title: 'Tipo cobertura', value: 'detalleCapa', align: 'center' },
-    { title: '% Comisión primer año (Fija/Provisional)', value: 'retencionC', align: 'center' },
-    { title: '% Comisión renovación (Fija/Provisional)', value: 'techoC', align: 'center' },
-    { title: 'Modificar', value: 'techoC', align: 'center' },
-    { title: 'Borrar', value: 'techoC', align: 'center' },
+    { title: 'Tipo cobertura',  key: 'detalleCapa' },
+    { title: '% Comisión primer año (Fija/Provisional)',  key: 'retencionC' },
+    { title: '% Comisión renovación (Fija/Provisional)',  key: 'techoC' },
+    { title: 'Modificar',  key: 'techoC' },
+    { title: 'Borrar',  key: 'techoC' },
   ]
 </script>

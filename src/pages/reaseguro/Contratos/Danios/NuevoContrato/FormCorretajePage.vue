@@ -5,7 +5,6 @@
         <v-col cols="12" md="3">
           <v-select
             v-model="intermediario"
-            :items="options"
             label="Intermediario"
             variant="solo-filled"
           />
@@ -17,7 +16,6 @@
           <v-select
             v-model="reaseguradora"
             class="selectForm"
-            :items="options"
             label="Reaseguradora"
             required
             variant="solo-filled"
@@ -88,12 +86,12 @@
       <v-spacer />
       <br>
       <v-col class="text-center">
-        <v-btn class="btn-guardar" @click="dialog = true">
+        <v-btn class="btn-guardar"  >
           Guardar corretaje
         </v-btn>
       </v-col>
       <v-col class="text-center">
-        <v-btn color="#73D7D9" @click="dialog = true">
+        <v-btn color="#73D7D9"  >
           Crear contrato
         </v-btn>
       </v-col>
@@ -107,7 +105,7 @@
     </v-container>
   </form>
   <div>
-    <v-data-table :headers="headers" hide-default-footer :items="items" />
+    <v-data-table :headers="headers" hide-default-footer  />
   </div>
 </template>
 <script lang="ts" setup>
@@ -121,13 +119,13 @@
   const montoCorretajeDef = ref('')
 
   const headers = [
-    { title: 'Intermediario', value: 'intermediario', align: 'center' },
-    { title: 'Reaseguradora', value: 'reaseguradora', align: 'center' },
-    { title: 'Limite inferior', value: 'limiteInf', align: 'center' },
-    { title: 'Limite Superior', value: 'limiteSup', align: 'center' },
-    { title: '% Corretaje definitivo', value: 'corretajeDeg', align: 'center' },
-    { title: 'Monto corretaje definitivo', value: 'montoCorreDeg', align: 'center' },
-    { title: 'Activo', value: 'activo', align: 'center' },
-    { title: 'Editar', value: 'editar', align: 'center' },
+    { title: 'Intermediario',  key: 'intermediario' },
+    { title: 'Reaseguradora',  key: 'reaseguradora' },
+    { title: 'Limite inferior',  key: 'limiteInf' },
+    { title: 'Limite Superior',  key: 'limiteSup' },
+    { title: '% Corretaje definitivo',  key: 'corretajeDeg' },
+    { title: 'Monto corretaje definitivo',  key: 'montoCorreDeg' },
+    { title: 'Activo',  key: 'activo' },
+    { title: 'Editar',  key: 'editar' },
   ]
 </script>

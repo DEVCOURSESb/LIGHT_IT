@@ -16,7 +16,6 @@
         hide-delimiters
         progress="#003c71"
         show-arrows="hover"
-        transition-duration="500"
       >
         <v-carousel-item
           v-for="(item,i) in items"
@@ -28,11 +27,11 @@
     </div>
   </div>
 
-  
+
 </template>
 
 <script lang="ts" setup>
-  
+
   const items = [
     {
       src: 'src/assets/logo/la-latino-logo.png',
