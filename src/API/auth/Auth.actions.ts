@@ -1,13 +1,15 @@
-import { API, WS } from "@/plugins/axios";
 import { BaseAPI } from "../BaseAPI";
 import type { AxiosError } from "axios";
 import axios from "axios";
+import { AuthStore } from "@/stores/authStore";
 
 export function AuthActions() {
   const baseAPI = BaseAPI({
     prefix: "api_gateway_reaseguro/api/v1/AuthRest",
     isPrivate: false,
   });
+
+  const authStore = AuthStore();
 
   const sendEmail = async (
     correoElectronico: string
@@ -16,6 +18,8 @@ export function AuthActions() {
       const correo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
         correoElectronico.trim()
       );
+
+      authStore.email = correoElectronico;
 
       if (!correo) {
         return {
@@ -81,21 +85,20 @@ export function AuthActions() {
     }
   };
 
-  const validarUsuario = async (
-    usuario: string,
-    password: string,
-    codigo: string
-  ) => {
+  const sendCredentials = async ( body: {username: string, password: string, codigoVerificacion: string} ) : Promise<{ success: boolean; message: string; }> => {
     try {
-      const body = { username: usuario, password, codigoVerificacion: codigo };
       console.log("ENVIANDO:", body);
-      const response = await WS.post(`/auth/login`, body);
+      const response = await baseAPI.post(`/login/catReaseg`, body);
+
+      authStore.login({
+        email: authStore.email as string,
+        password: body.password,
+        token: response.data.token,
+      });
 
       return {
-        success: response.data.success,
-        message: response.data.message,
-        usuario,
-        correoElectronico: response.data.correoElectronico,
+        success: true,
+        message: "Usuario validado correctamente",
       };
     } catch (error: any) {
       console.error("Error en el servicio:", error.response?.data);
@@ -107,27 +110,10 @@ export function AuthActions() {
     }
   };
 
-  const verificarCodigo = async (correoElectronico: string, codigo: string) => {
-    try {
-      const body = { correoElectronico, codigoVerificacion: codigo };
-      const response = await API.post(`/auth/login`, body);
 
-      return {
-        success: response.data.success,
-        token: response.data.token,
-        expiresIn: response.data.expiresIn,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.response?.data?.message || "Código inválido",
-      };
-    }
-  };
-
-  const logoutUsuario = async (correoElectronico: string) => {
+  const logout = async () => {
     try {
-      const response = await API.post(`/AuthRest/logout/${correoElectronico}`);
+      const response = await baseAPI.post(`/logout/${authStore.getEmail}`);
       return { success: true, message: response.data.message };
     } catch (error: any) {
       return {
@@ -138,9 +124,8 @@ export function AuthActions() {
   };
 
   return {
-    validarCorreo: sendEmail,
-    validarUsuario,
-    verificarCodigo,
-    logoutUsuario,
+    sendEmail,
+    sendCredentials,
+    logout,
   };
 }

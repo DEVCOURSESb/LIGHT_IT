@@ -1,6 +1,5 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { FormaPago } from "./forma_pago.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 
 export function FormaPagoActions() {
@@ -8,7 +7,6 @@ export function FormaPagoActions() {
 
   const fetch = async (): Promise<FormaPago[]> => {
     try {
-      return fakeData().dataFormaPago;
       const response = await baseAPI.post<FormaPago[]>("getAllRecords");
       return response.data;
     } catch (error) {

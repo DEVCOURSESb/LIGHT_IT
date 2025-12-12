@@ -49,10 +49,10 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import FooterComponent from '@/layouts/FooterComponent.vue'
-  import { useDialog } from '@/stores/dialogStore'
+  import { DialogType, useDialog } from '@/stores/dialogStore'
 import { AuthActions } from '@/API/auth/Auth.actions'
 
-  const { validarUsuario } = AuthActions()
+  const { sendCredentials } = AuthActions()
   const dialog = useDialog()
   const router = useRouter()
 
@@ -61,28 +61,22 @@ import { AuthActions } from '@/API/auth/Auth.actions'
   const codigo = ref('')
 
   async function validate () {
-    console.log('Ejecutando', usuario.value, password.value, codigo.value)
-
     if (!usuario.value || !password.value || !codigo.value) {
-      dialog.show({ title: 'Atención', message: 'Ingrese usuario, contraseña y código de verificación', type: 'warning' })
+      dialog.show({ title: 'Atención', message: 'Ingrese usuario, contraseña y código de verificación', type: DialogType.ERROR });
       return
     }
 
-    const result = await validarUsuario(usuario.value, password.value, codigo.value)
-    console.log('RESULTADO', result)
+    const result = await sendCredentials({ username: usuario.value, password: password.value, codigoVerificacion: codigo.value })
 
     if (!result.success) {
-      dialog.show({ title: 'Error de autenticación', message: result.message, type: 'error' })
+      dialog.show({ title: 'Error de autenticación', message: result.message, type: DialogType.ERROR })
       return
     }
 
-    localStorage.setItem('tmpUser', result.usuario)
-    localStorage.setItem('tmpCorreo', result.correoElectronico)
-
     dialog.show({
-      title: 'Código enviado',
-      message: 'Se envió el código de validación al correo registrado.',
-      type: 'success',
+      title: 'inicio de sesión exitoso',
+      message: result.message,
+      type: DialogType.SUCCESS,
     })
 
     setTimeout(() => {

@@ -16,6 +16,7 @@ declare module 'vue' {
     CatalogosDropdown: typeof import('./components/menu/CatalogosDropdown.vue')['default']
     CrudTablePage: typeof import('./components/catalogos/CrudTablePage.vue')['default']
     DialogGlobal: typeof import('./components/DialogGlobal.vue')['default']
+    LogoutComponent: typeof import('./components/menu/LogoutComponent.vue')['default']
     ModalComponent: typeof import('./components/catalogos/ModalComponent.vue')['default']
     Reaseguro: typeof import('./components/reaseguro/Reaseguro.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

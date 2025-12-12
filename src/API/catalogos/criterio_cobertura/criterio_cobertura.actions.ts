@@ -1,5 +1,4 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
-import { fakeData } from "@/API/fakeData";
 import type { CriterioCobertura } from "./criterio_cobertura.interfaces";
 
 
@@ -8,7 +7,6 @@ export function CriterioCoberturaActions() {
 
   const fetch = async (): Promise<CriterioCobertura[]> => {
     try {
-      return fakeData().dataCriterioCobertura;
       const response = await baseAPI.post<CriterioCobertura[]>("getAllRecords");
       return response.data;
     } catch (error) {

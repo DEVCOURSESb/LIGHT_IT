@@ -1,5 +1,4 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
-import { fakeData } from "@/API/fakeData";
 import type { EntidadFederativa } from "./entidad_federativa.interfaces";
 
 
@@ -8,7 +7,6 @@ export function EntidadFederativaActions() {
 
   const fetch = async (): Promise<EntidadFederativa[]> => {
     try {
-      return fakeData().dataEntidadFederativa;
       const response = await baseAPI.post<EntidadFederativa[]>("getAllRecords");
       return response.data;
     } catch (error) {

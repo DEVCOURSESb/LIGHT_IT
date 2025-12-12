@@ -17,6 +17,8 @@
       <Reaseguro />
     </div>
     <v-spacer />
+
+    <LogoutComponent /> 
   </v-app-bar>
 </template>
 
@@ -29,7 +31,7 @@
   const router = useRouter()
 
   function goHome () {
-    router.push( { name: 'home' } )
+    router.push('/home')
   }
 
 </script>

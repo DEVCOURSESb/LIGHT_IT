@@ -1,13 +1,11 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { TipoEndoso } from "./tipo_endoso.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 export function TipoEndosoActions() {
   const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntTipoEndosoRest/" });
 
   const fetch = async (): Promise<TipoEndoso[]> => {
     try {
-      return fakeData().dataTipoEndoso;
       const response = await baseAPI.post<TipoEndoso[]>("getAllRecords");
       return response.data;
     } catch (error) {

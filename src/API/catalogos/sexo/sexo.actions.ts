@@ -1,6 +1,5 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Sexo } from "./sexo.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 
 export function SexoActions() {
@@ -8,7 +7,6 @@ export function SexoActions() {
 
   const fetch = async (): Promise<Sexo[]> => {
     try {
-      return fakeData().dataSexo;
       const response = await baseAPI.post<Sexo[]>("getAllRecords");
       return response.data;
     } catch (error) {

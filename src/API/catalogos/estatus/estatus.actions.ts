@@ -1,6 +1,5 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Estatus } from "./estatus.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 
 export function EstatusActions() {
@@ -8,7 +7,6 @@ export function EstatusActions() {
 
   const fetch = async (): Promise<Estatus[]> => {
     try {
-      return fakeData().dataEstatus;
       const response = await baseAPI.post<Estatus[]>("getAllRecords");
       return response.data;
     } catch (error) {

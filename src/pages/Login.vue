@@ -43,10 +43,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import FooterComponent from "@/layouts/FooterComponent.vue";
-import { useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/dialogStore";
 import { AuthActions } from "@/API/auth/Auth.actions";
 
-const { validarCorreo } = AuthActions();
+const { sendEmail, logout } = AuthActions();
 const dialog = useDialog();
 
 const router = useRouter();
@@ -56,29 +56,58 @@ const correo = ref("");
 async function validate() {
   if (!correo.value) return;
 
-  const result = await validarCorreo(correo.value);
+  const result = await sendEmail(correo.value);
 
   if (!result.success) {
 
     if(result.code === 423) {
-      
-    }
+      dialog.show({
+        title: "Sesión iniciada",
+        message: result.message || "Tu cuenta ha sido bloqueada. Contacta al soporte.",
+        type: DialogType.ERROR,
+        ExtraAction: {
+          text: "Cerrar sesiones",
+          handler: async () => {
+            const result = await logout();
+            if(!result.success) {
+              dialog.show({
+                title: "Error",
+                message: result.message || "No se pudieron cerrar las sesiones.",
+                type: DialogType.ERROR,
+              });
+              return;
+            }
 
+            dialog.show({
+              title: "Sesiones cerradas",
+              message: "Se han cerrado las sesiones activas. Por favor, intenta iniciar sesión de nuevo.",
+              type: DialogType.SUCCESS,
+            });
+            
+          },
+          color: "primary",
+        }
+      });
+    } else {
+      dialog.show({
+        title: "Error",
+        message: result.message || "El correo no está registrado.",
+        type: DialogType.ERROR,
+      });
+    }
    
     return;
   }
 
-  sessionStorage.setItem("tmpUser", correo.value);
-
   dialog.show({
     title: "Código enviado",
     message: "Se ha enviado el código de validación al correo.",
-    type: "success",
+    type: DialogType.SUCCESS,
   });
 
   setTimeout(() => {
     dialog.cerrar();
-    router.push("/");
-  }, 3200);
+    router.push("/login");
+  }, 2000);
 }
 </script>

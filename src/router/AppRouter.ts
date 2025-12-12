@@ -85,6 +85,7 @@ export function AppRouter() {
     {
       path: "/catalogos",
       component: () => import("@/layouts/MainLayout.vue"),
+      meta: { requiresAuth: true, requiresVerification: true },
       children: [
         {
           path: "intermediarios",

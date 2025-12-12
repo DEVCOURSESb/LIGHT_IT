@@ -29,17 +29,23 @@
         {{ dialog.message }}
       </v-card-text>
 
-      <v-card-actions>
-        <v-btn block color="primary" @click="dialog.cerrar()">
-          Aceptar
-        </v-btn>
-        <v-btn
-          v-if="dialog.ExtraAction" block :color="dialog.ExtraAction.color || 'secondary'"
-          @click="dialog.ExtraAction.handler()"
-        >
-          {{ dialog.ExtraAction.text }}
-        </v-btn>
-      </v-card-actions>
+      <v-card-actions class="flex-column pa-4">
+  <v-btn block color="primary" @click="dialog.cerrar()">
+    Aceptar
+  </v-btn>
+  <v-btn
+    v-if="dialog.ExtraAction"
+    block
+    :color="dialog.ExtraAction.color || 'secondary'"
+    class="mt-2"
+    @click="() => {
+      dialog.ExtraAction?.handler();
+      dialog.cerrar();
+    }"
+  >
+    {{ dialog.ExtraAction.text }}
+  </v-btn>
+</v-card-actions>
 
     </v-card>
   </v-dialog>

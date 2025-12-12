@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 
-enum DialogType {
+export enum DialogType {
   SUCCESS = 'success',
   ERROR = 'error',
   INFO = 'info'
@@ -26,11 +26,14 @@ export const useDialog = defineStore('dialog', () => {
   const title = ref('')
   const message = ref('')
   const type = ref<DialogType>(DialogType.INFO)
+  const ExtraAction = ref<action | undefined>(undefined)
+
 
   function show (opts: ShowProps) {
     title.value = opts.title ?? ''
     message.value = opts.message ?? ''
     type.value = opts.type ?? DialogType.INFO
+    ExtraAction.value = opts.ExtraAction
     visible.value = true
   }
 
@@ -43,6 +46,7 @@ export const useDialog = defineStore('dialog', () => {
     title,
     message,
     type,
+    ExtraAction,
     show,
     cerrar,
   }

@@ -1,6 +1,5 @@
 import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
 import type { Fumador } from "./fumador.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 
 export function FumadorActions() {
@@ -8,7 +7,6 @@ export function FumadorActions() {
 
   const fetch = async (): Promise<Fumador[]> => {
     try {
-      return fakeData().dataFumador;
       const response = await baseAPI.post<Fumador[]>("getAllRecords");
       return response.data;
     } catch (error) {
