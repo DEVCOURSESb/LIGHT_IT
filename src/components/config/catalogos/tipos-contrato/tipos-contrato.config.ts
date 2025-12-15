@@ -82,13 +82,13 @@ export const tiposContratoConfig = {
     {
       name: 'esActivo',
       label: 'Activo',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-      defaultValue: 'Sí',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      defaultValue: true,
+      displayType: 'checkbox',
+      transformFromAPI: (value: number) => (value === 1),
+      transformToAPI: (value: boolean) => (value ? 1 : 2),
     },
     {
       name: 'idTcontrato',

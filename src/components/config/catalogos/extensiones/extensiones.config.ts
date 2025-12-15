@@ -64,13 +64,14 @@ export const ExtensionesConfig = {
     {
       name: 'esActivo',
       label: 'Activo',
-      type: 'select',
+      type: 'Checkbox',
       items: ['Sí', 'No'],
       required: true,
       dataKey: 'esActivo',
-      defaultValue: 'Sí',
-      transformFromAPI: (value: number) => (value === 1 ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí' ? 1 : 0),
+      displayType: 'checkbox',
+      defaultValue: true,
+      transformFromAPI: (value: number) => !!value,
+      transformToAPI: (value: boolean) => value ? 1 : 0,
     },
   ],
 

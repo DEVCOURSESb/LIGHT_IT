@@ -4,13 +4,12 @@ import { EstatusReciboActions } from '@/API/catalogos/estatus_recibo/estatus_rec
 const actions = EstatusReciboActions()
 
 export const estatusReciboConfig = {
-  entity: 'criteriosAsignacion',
-  title: 'Criterios Asignacion',
+  entity: 'estatusRecibo',
+  title: 'Estatus Recibo',
   searchPlaceholder: '',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo criterio asignacion',
-  tableTitle: 'Lista de criterios de asignacion',
-
+  modalTitle: 'Agregar nuevo estatus recibo',
+  tableTitle: 'Lista de estatus recibo',
   headers: [
     { title: 'CLAVE', key: 'cveEstatusRec', sortable: true,
       headerProps: {
@@ -68,6 +67,7 @@ export const estatusReciboConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
+      displayType: 'checkbox',
       defaultValue: true,
       transformFromAPI: (value: number) => (value === 1),
       transformToAPI: (value: boolean) => (value ? 1 : 2),

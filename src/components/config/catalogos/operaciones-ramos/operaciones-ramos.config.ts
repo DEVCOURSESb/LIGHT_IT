@@ -138,7 +138,7 @@ export const operacionesRamosConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: "esActivo",
-      defaultValue: "Sí",
+      displayType: 'checkbox',
       transformFromAPI: (value: number) => (value === 1),
       transformToAPI: (value: boolean) => (value ? 1 : 2),
     },
