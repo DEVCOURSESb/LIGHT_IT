@@ -1,9 +1,9 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { EntidadFederativa } from "./entidad_federativa.interfaces";
 
 
 export function EntidadFederativaActions() {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatCnsfRr6EntidadFederativaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfRr6EntidadFederativaRest/" });
 
   const fetch = async (): Promise<EntidadFederativa[]> => {
     try {

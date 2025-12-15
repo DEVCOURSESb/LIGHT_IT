@@ -1,8 +1,8 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoCambio } from "./tipo_cambio.interfaces";
 
 export function TipoCambioActions() {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntTipoCambioRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatIntTipoCambioRest/" });
 
   const fetch = async (): Promise<TipoCambio[]> => {
     try {

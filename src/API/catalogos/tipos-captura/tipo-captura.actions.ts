@@ -1,8 +1,8 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoCaptura } from "./tipo-captura.interfaces";
 
 export const TipoCapturaActions = () => {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatCnsfRr6TipoCapturaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfRr6TipoCapturaRest/" });
 
   const fetchTipoCapturas = async (): Promise<TipoCaptura[]> => {
     try {

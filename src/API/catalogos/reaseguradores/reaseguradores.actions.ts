@@ -1,8 +1,8 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { Reasegurador } from "./reasegurador.interface";
 
 export const ReaseguradoresActions = () => {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatCnsfintReaseguradoraRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfintReaseguradoraRest/" });
 
   const fetchReaseguradores = async (): Promise<Reasegurador[]> => {
     try {

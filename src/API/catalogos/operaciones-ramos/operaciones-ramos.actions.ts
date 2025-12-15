@@ -1,8 +1,8 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { OperacionRamo } from "./operaciones-ramos.interfaces";
 
 export const OperacionesRamosActions = () => {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatCnsfintOperYRamosAnx3817Rest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfintOperYRamosAnx3817Rest/" });
 
   const fetchOperacionesRamos = async (): Promise<OperacionRamo[]> => {
     try {

@@ -44,9 +44,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import FooterComponent from "@/layouts/FooterComponent.vue";
 import { DialogType, useDialog } from "@/stores/dialogStore";
-import { AuthActions } from "@/API/auth/Auth.actions";
+import { useAuth } from "@/composables/auth/useAuth";
 
-const { sendEmail, logout } = AuthActions();
+const { sendEmail, logout } = useAuth();
 const dialog = useDialog();
 
 const router = useRouter();
@@ -108,6 +108,6 @@ async function validate() {
   setTimeout(() => {
     dialog.cerrar();
     router.push("/login");
-  }, 2000);
+  }, 1500);
 }
 </script>

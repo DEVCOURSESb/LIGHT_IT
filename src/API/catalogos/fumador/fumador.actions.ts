@@ -1,9 +1,9 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { Fumador } from "./fumador.interfaces";
 
 
 export function FumadorActions() {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntFumadorRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatIntFumadorRest/" });
 
   const fetch = async (): Promise<Fumador[]> => {
     try {

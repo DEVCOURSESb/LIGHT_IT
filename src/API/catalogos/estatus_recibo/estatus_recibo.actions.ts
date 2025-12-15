@@ -1,8 +1,8 @@
-import { BaseAPICatalogos } from "@/API/BaseAPICatalogos";
+import { BaseAPI } from "@/API/BaseAPI";
 import type { EstatusRecibo } from "./estatus_recibo.interfaces";
 
 export function EstatusReciboActions() {
-  const baseAPI = BaseAPICatalogos({ prefix: "ReasegCatIntEstatusReciboRest/" });
+  const baseAPI = BaseAPI({ prefix: "ReasegCatIntEstatusReciboRest/" });
 
   const fetch = async (): Promise<EstatusRecibo[]> => {
     try {

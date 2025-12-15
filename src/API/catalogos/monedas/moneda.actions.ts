@@ -1,8 +1,8 @@
 import type { Moneda } from './moneda.interfaces'
-import { BaseAPICatalogos } from '@/API/BaseAPICatalogos'
+import { BaseAPI } from '@/API/BaseAPI'
 
 export function MonedaActions () {
-  const baseAPI = BaseAPICatalogos({ prefix: 'ReasegCatCnsfRr6MonedaRest/' })
+  const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfRr6MonedaRest/' })
 
   const fetchMonedas = async (): Promise<Moneda[]> => {
     try {

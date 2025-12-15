@@ -50,9 +50,9 @@
   import { useRouter } from 'vue-router'
   import FooterComponent from '@/layouts/FooterComponent.vue'
   import { DialogType, useDialog } from '@/stores/dialogStore'
-import { AuthActions } from '@/API/auth/Auth.actions'
+import { useAuth } from '@/composables/auth/useAuth'
 
-  const { sendCredentials } = AuthActions()
+  const { sendCredentials } = useAuth()
   const dialog = useDialog()
   const router = useRouter()
 
@@ -69,13 +69,13 @@ import { AuthActions } from '@/API/auth/Auth.actions'
     const result = await sendCredentials({ username: usuario.value, password: password.value, codigoVerificacion: codigo.value })
 
     if (!result.success) {
-      dialog.show({ title: 'Error de autenticación', message: result.message, type: DialogType.ERROR })
+      dialog.show({ title: 'Error de autenticación', message: result.message || "Error al validar datos de usuario", type: DialogType.ERROR })
       return
     }
 
     dialog.show({
       title: 'inicio de sesión exitoso',
-      message: result.message,
+      message: result.message || "Usuario validado correctamente",
       type: DialogType.SUCCESS,
     })
 

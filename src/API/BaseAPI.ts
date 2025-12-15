@@ -4,14 +4,13 @@ import axios, { type AxiosInstance } from 'axios'
 import router from '@/router';
 
 interface BaseAPIOptions {
+  isBase?: boolean
   prefix?: string
   isPrivate?: boolean
 }
- const accessToken = window.localStorage.getItem("token");
-console.log(accessToken);
 
-export function BaseAPI({ prefix, isPrivate = true }: BaseAPIOptions = {}): AxiosInstance {
-  const base = import.meta.env.VITE_API_BASE
+export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOptions = {}): AxiosInstance {
+  const base =  isBase ? import.meta.env.VITE_API_BASE : import.meta.env.VITE_API_BASE_CATALOGOS;
   const instance = axios.create({
     baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
   })
@@ -30,7 +29,6 @@ export function BaseAPI({ prefix, isPrivate = true }: BaseAPIOptions = {}): Axio
         
         config.headers.Accept = 'application/json';
         config.headers['Content-Type'] = 'application/json';
-        console.log('Request Headers:', config.headers);
         return config
       },
       error => Promise.reject(error),
@@ -39,7 +37,7 @@ export function BaseAPI({ prefix, isPrivate = true }: BaseAPIOptions = {}): Axio
      // Interceptor de Response - Manejo de errores
     instance.interceptors.response.use(
       response => response,
-      error => {
+      async error => {
         
         // Verificar si hay una respuesta del servidor
         if (error.response) {
@@ -47,23 +45,11 @@ export function BaseAPI({ prefix, isPrivate = true }: BaseAPIOptions = {}): Axio
           
           // Manejar error 403 (Forbidden) - Sin permisos o sesión bloqueada
           if (status === 403) {
-            authStore.logout();
+            const { useAuth } = await import('@/composables/auth/useAuth');
             
-            dialog.show({
-              title: 'Acceso denegado',
-              message: 'Tu sesión ha sido bloqueada o no tienes permisos. Por favor, inicia sesión nuevamente.',
-              type: DialogType.ERROR,
-            });
+            const auth = useAuth();
             
-            setTimeout(() => {
-              dialog.cerrar();
-              router.push('/');
-            }, 2000);
-          }
-          
-          // Manejar error 401 (Unauthorized) - Token expirado o inválido
-          if (status === 401) {
-            authStore.logout();
+            auth.logout();
             
             dialog.show({
               title: 'Sesión expirada',

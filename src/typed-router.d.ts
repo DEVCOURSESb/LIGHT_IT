@@ -22,7 +22,6 @@ declare module 'vue-router/auto-routes' {
     '/administracion/CalculosPage': RouteRecordInfo<'/administracion/CalculosPage', '/administracion/CalculosPage', Record<never, never>, Record<never, never>>,
     '/administracion/CatalogosPage': RouteRecordInfo<'/administracion/CatalogosPage', '/administracion/CatalogosPage', Record<never, never>, Record<never, never>>,
     '/administracion/ContratosReasegPage': RouteRecordInfo<'/administracion/ContratosReasegPage', '/administracion/ContratosReasegPage', Record<never, never>, Record<never, never>>,
-    '/AutenticacionC': RouteRecordInfo<'/AutenticacionC', '/AutenticacionC', Record<never, never>, Record<never, never>>,
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CriteriosAsignacionPage': RouteRecordInfo<'/catalogos/CriteriosAsignacionPage', '/catalogos/CriteriosAsignacionPage', Record<never, never>, Record<never, never>>,
@@ -109,10 +108,6 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/administracion/ContratosReasegPage.vue': {
       routes: '/administracion/ContratosReasegPage'
-      views: never
-    }
-    'src/pages/AutenticacionC.vue': {
-      routes: '/AutenticacionC'
       views: never
     }
     'src/pages/catalogos/ClasificacionCoberturaPage.vue': {
