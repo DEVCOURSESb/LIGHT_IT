@@ -104,6 +104,7 @@ export const reaseguradoresConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
+displayType: 'checkbox',
       defaultValue: true,
       transformFromAPI: (value: number) => (value === 1),
       transformToAPI: (value: boolean) => (value ? 1 : 2),

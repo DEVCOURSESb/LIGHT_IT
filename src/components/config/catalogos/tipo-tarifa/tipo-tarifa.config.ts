@@ -65,13 +65,13 @@ export const tipoTarifaConfig = {
     {
       name: 'esActivo',
       label: 'Activo',
-      type: 'select',
-      items: ['Sí', 'No'],
+      type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-      defaultValue: 'Sí',
-      transformFromAPI: (value: boolean) => (value ? 'Sí' : 'No'),
-      transformToAPI: (value: string) => (value === 'Sí'),
+      displayType: 'checkbox',
+      defaultValue: true,
+      transformFromAPI: (value: boolean) => !!value,
+      transformToAPI: (value: boolean) => value,
     },
   ],
 

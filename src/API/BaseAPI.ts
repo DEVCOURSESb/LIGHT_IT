@@ -10,6 +10,7 @@ interface BaseAPIOptions {
 }
 
 export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOptions = {}): AxiosInstance {
+  console.log("inicio axios")
   const base =  isBase ? import.meta.env.VITE_API_BASE : import.meta.env.VITE_API_BASE_CATALOGOS;
   const instance = axios.create({
     baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
@@ -38,13 +39,9 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
     instance.interceptors.response.use(
       response => response,
       async error => {
-        
         // Verificar si hay una respuesta del servidor
-        if (error.response) {
-          const status = error.response.status;
-          
-          // Manejar error 403 (Forbidden) - Sin permisos o sesión bloqueada
-          if (status === 403) {
+        if (error.code === 'ERR_NETWORK') {
+
             const { useAuth } = await import('@/composables/auth/useAuth');
             
             const auth = useAuth();
@@ -61,7 +58,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
               dialog.cerrar();
               router.push('/');
             }, 2000);
-          }
+          
         }
         
         return Promise.reject(error)
