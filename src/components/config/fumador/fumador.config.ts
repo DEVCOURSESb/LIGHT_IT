@@ -6,7 +6,7 @@ const actions = FumadorActions();
 export const FumadorConfig = {
   entity: 'Fumador',
   title: 'Fumador',
-  searchPlaceholder: 'Fumador',
+  searchPlaceholder: '',
   addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo Fumador',
   tableTitle: 'Lista de Fumadores',

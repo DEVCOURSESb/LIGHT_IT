@@ -5,7 +5,7 @@ const actions = MonedaActions()
 export const monedaConfig = {
   entity: 'moneda',
   title: 'Moneda',
-  searchPlaceholder: 'moneda',
+  searchPlaceholder: '',
   addButtonText: 'Nueva moneda',
   modalTitle: 'Agregar moneda',
   editModalTitle: 'Editar moneda',

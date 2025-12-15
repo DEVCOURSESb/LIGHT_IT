@@ -6,7 +6,7 @@ const actions = EstatusReciboActions()
 export const estatusReciboConfig = {
   entity: 'criteriosAsignacion',
   title: 'Criterios Asignacion',
-  searchPlaceholder: 'Criterio Asignacion',
+  searchPlaceholder: '',
   addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo criterio asignacion',
   tableTitle: 'Lista de criterios de asignacion',

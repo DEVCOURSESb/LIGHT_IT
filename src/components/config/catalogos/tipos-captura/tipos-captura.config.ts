@@ -5,7 +5,7 @@ const actions = TipoCapturaActions()
 export const TiposCapturaConfig = {
   entity: 'tipos-captura',
   title: 'Tipos captura',
-  searchPlaceholder: 'tipo captura',
+  searchPlaceholder: '',
   addButtonText: 'Agregar tipo captura',
   modalTitle: 'Agregar nuevo tipo captura',
   tableTitle: 'Lista de Tipos captura',

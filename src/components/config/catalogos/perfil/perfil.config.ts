@@ -5,7 +5,7 @@ const actions = PerfilActions()
 export const perfilConfig = {
   entity: 'perfil',
   title: 'Perfiles',
-  searchPlaceholder: 'perfil',
+  searchPlaceholder: '',
   addButtonText: 'Agregar perfil',
   modalTitle: 'Agregar nuevo perfil',
   tableTitle: 'Lista de Perfiles',

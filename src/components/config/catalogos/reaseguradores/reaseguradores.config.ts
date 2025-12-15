@@ -5,7 +5,7 @@ const actions = ReaseguradoresActions()
 export const reaseguradoresConfig = {
   entity: 'reaseguradores',
   title: 'Reaseguradores',
-  searchPlaceholder: 'reasegurador',
+  searchPlaceholder: '',
   addButtonText: 'Agregar reasegurador',
   modalTitle: 'Agregar nuevo reasegurador',
   tableTitle: 'Lista de reaseguradores',
