@@ -7,8 +7,8 @@ export const CriterioCoberturaConfig = {
   title: 'Criterio de Cobertura',
   searchPlaceholder: '',
   addButtonText: '',
-  modalTitle: 'Agregar nuevo CriterioCobertura',
-  tableTitle: 'Lista de CriterioCoberturaes',
+  modalTitle: 'Agregar nuevo Criterio Cobertura',
+  tableTitle: 'Lista de Criterio Coberturas',
 
   headers: [
     /* { title: 'CLAVE', key: 'cveCriterioCob', sortable: true,
@@ -67,7 +67,7 @@ export const CriterioCoberturaConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-displayType: 'checkbox',
+      displayType: 'checkbox',
       defaultValue: true,
       transformFromAPI: (value: number) => (value === 1),
       transformToAPI: (value: boolean) => (value ? 1 : 2),

@@ -1,14 +1,4 @@
 @charset "ISO-8859-1";
-@font-face {
-    font-family: 'montserrat';
-    src: url('./font/montserrat-extralight.eot');
-    src: url('./font/montserrat-extralight.eot?#iefix') format('embedded-opentype'),
-         url('./font/montserrat-extralight.woff2') format('woff2'),
-         url('./font/montserrat-extralight.woff') format('woff'),
-         url('./font/montserrat-extralight.ttf') format('truetype');
-    font-weight: 150;
-    font-style: normal;
-}
 
 * {
   font-family: 'montserrat', sans-serif !important;

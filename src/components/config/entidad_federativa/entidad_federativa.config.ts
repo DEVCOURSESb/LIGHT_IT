@@ -4,11 +4,11 @@ const actions = EntidadFederativaActions();
 
 export const EntidadFederativaConfig = {
   entity: 'EntidadFederativa',
-  title: 'EntidadFederativa',
+  title: 'Entidad Federativa',
   searchPlaceholder: '',
   addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo EntidadFederativa',
-  tableTitle: 'Lista de EntidadFederativaes',
+  modalTitle: 'Agregar nuevo Entidad Federativa',
+  tableTitle: 'Lista de Entidad Federativas',
 
   headers: [
    /*  { title: 'CLAVE', key: 'cveEntidad', sortable: true,
