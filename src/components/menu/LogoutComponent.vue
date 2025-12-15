@@ -5,37 +5,42 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { DialogType, useDialog } from "@/stores/dialogStore";
-import { AuthActions } from "@/API/auth/Auth.actions";
-import { AuthStore } from "@/stores/authStore";
+import { useAuth } from "@/composables/auth/useAuth";
 
 const router = useRouter();
-const authActions = AuthActions();
-const authStore = AuthStore();
+const auth = useAuth();
 const dialog = useDialog();
 
 const handleLogout = async () => {
-  const result = await authActions.logout();
-
-  if (!result.success) {
-    dialog.show({
-      title: "Error al cerrar sesión",
-      message: result.message || "No se pudo cerrar sesión",
-      type: DialogType.ERROR,
-    });
-    return;
-  }
-
   dialog.show({
-    title: "Sesión cerrada",
-    message: "Has cerrado sesión correctamente",
-    type: DialogType.SUCCESS,
+    title: "Cerrar sesión",
+    message: "¿Estás seguro de que deseas cerrar sesión?",
+    type: DialogType.INFO,
+    ExtraAction: {
+      text: "Sí, cerrar sesión",
+      handler: async () => {
+        try {
+          await auth.logout();
+
+          dialog.show({
+            title: "Sesión cerrada",
+            message: "Has cerrado sesión correctamente",
+            type: DialogType.SUCCESS,
+          });
+
+          setTimeout(() => {
+            dialog.cerrar();
+            router.push("/");
+          }, 1500);
+        } catch (error) {
+          dialog.show({
+            title: "Error",
+            message: "No se pudo cerrar sesión. Inténtalo de nuevo.",
+            type: DialogType.ERROR,
+          });
+        }
+      },
+    },
   });
-  
-  authStore.logout();
-    
-  setTimeout(() => {
-    dialog.cerrar();
-    router.push("/");
-  }, 1500);
 };
 </script>
