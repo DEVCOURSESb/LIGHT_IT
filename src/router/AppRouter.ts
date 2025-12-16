@@ -3,13 +3,13 @@ export function AppRouter() {
     {
       path: "/",
       name: "login",
-      component: () => import("@/pages/Login.vue"),
+      component: () => import("@/pages/auth/Login.vue"),
       meta: { public: true },
     },
     {
       path: "/login",
       name: "loginC",
-      component: () => import("@/pages/LoginC.vue"),
+      component: () => import("@/pages/auth/LoginC.vue"),
       meta: { public: true },
     },
     {
@@ -247,6 +247,19 @@ export function AppRouter() {
           component: () =>
             import("@/pages/catalogos/CriteriosCoberturaPage.vue"),
           meta: { title: "Criterio cobertura" },
+        },
+      ],
+    },
+     {
+      path: "/insumos",
+      component: () => import("@/layouts/MainLayout.vue"),
+      meta: { requiresAuth: true, requiresVerification: true },
+      children: [
+        {
+          path: "cifras_control",
+          name: "cifras_control",
+          component: () => import("@/pages/insumos/CifrasControlPage.vue"),
+          meta: { title: "Cifras de Control" },
         },
       ],
     },

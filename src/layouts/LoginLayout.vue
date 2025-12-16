@@ -10,5 +10,5 @@
 </template>
 
 <script lang="ts" setup>
-  import LoginC from '@/pages/LoginC.vue'
+  import LoginC from '@/pages/auth/LoginC.vue'
 </script>

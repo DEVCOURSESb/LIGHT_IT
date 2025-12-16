@@ -22,6 +22,8 @@ declare module 'vue-router/auto-routes' {
     '/administracion/CalculosPage': RouteRecordInfo<'/administracion/CalculosPage', '/administracion/CalculosPage', Record<never, never>, Record<never, never>>,
     '/administracion/CatalogosPage': RouteRecordInfo<'/administracion/CatalogosPage', '/administracion/CatalogosPage', Record<never, never>, Record<never, never>>,
     '/administracion/ContratosReasegPage': RouteRecordInfo<'/administracion/ContratosReasegPage', '/administracion/ContratosReasegPage', Record<never, never>, Record<never, never>>,
+    '/auth/Login': RouteRecordInfo<'/auth/Login', '/auth/Login', Record<never, never>, Record<never, never>>,
+    '/auth/LoginC': RouteRecordInfo<'/auth/LoginC', '/auth/LoginC', Record<never, never>, Record<never, never>>,
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CriteriosAsignacionPage': RouteRecordInfo<'/catalogos/CriteriosAsignacionPage', '/catalogos/CriteriosAsignacionPage', Record<never, never>, Record<never, never>>,
@@ -49,8 +51,7 @@ declare module 'vue-router/auto-routes' {
     '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoTarifaPage': RouteRecordInfo<'/catalogos/TipoTarifaPage', '/catalogos/TipoTarifaPage', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
-    '/Login': RouteRecordInfo<'/Login', '/Login', Record<never, never>, Record<never, never>>,
-    '/LoginC': RouteRecordInfo<'/LoginC', '/LoginC', Record<never, never>, Record<never, never>>,
+    '/insumos/CifrasControlPage': RouteRecordInfo<'/insumos/CifrasControlPage', '/insumos/CifrasControlPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', Record<never, never>, Record<never, never>>,
@@ -108,6 +109,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/administracion/ContratosReasegPage.vue': {
       routes: '/administracion/ContratosReasegPage'
+      views: never
+    }
+    'src/pages/auth/Login.vue': {
+      routes: '/auth/Login'
+      views: never
+    }
+    'src/pages/auth/LoginC.vue': {
+      routes: '/auth/LoginC'
       views: never
     }
     'src/pages/catalogos/ClasificacionCoberturaPage.vue': {
@@ -218,12 +227,8 @@ declare module 'vue-router/auto-routes' {
       routes: '/Home'
       views: never
     }
-    'src/pages/Login.vue': {
-      routes: '/Login'
-      views: never
-    }
-    'src/pages/LoginC.vue': {
-      routes: '/LoginC'
+    'src/pages/insumos/CifrasControlPage.vue': {
+      routes: '/insumos/CifrasControlPage'
       views: never
     }
     'src/pages/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM.vue': {

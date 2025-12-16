@@ -30,8 +30,8 @@ const handleLogout = async () => {
 
           setTimeout(() => {
             dialog.cerrar();
-            router.push("/");
-          }, 1500);
+            router.replace({ path: "/" });
+          }, 500);
         } catch (error) {
           dialog.show({
             title: "Error",

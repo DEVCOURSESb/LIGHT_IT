@@ -55,8 +55,8 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
             
             setTimeout(() => {
               dialog.cerrar();
-              router.push('/');
-            }, 2000);
+              router.replace({ path: "/" });
+            }, 1500);
           
         }
         

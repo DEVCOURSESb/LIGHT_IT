@@ -81,10 +81,10 @@ import { useAuth } from '@/composables/auth/useAuth'
 
     setTimeout(() => {
       dialog.cerrar()
-      router.push('/home')
-    }, 2000)
+      router.replace({ path: "/home" })
+    }, 500)
   }
   function retornar () {
-    router.push('/')
+    router.replace({ path: "/" })
   }
 </script>
