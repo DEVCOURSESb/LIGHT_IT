@@ -108,6 +108,6 @@ async function validate() {
   setTimeout(() => {
     dialog.cerrar();
     router.replace({ path: "/login" });
-  }, 500);
+  }, 800);
 }
 </script>

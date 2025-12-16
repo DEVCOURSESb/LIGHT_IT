@@ -122,33 +122,33 @@
         </template>
 
         <template #item.actions="{ item }">
-  <v-icon class="edit" size="large" @click="editItem(item)">
-    mdi-pencil
-  </v-icon>
-</template>
+          <v-icon class="edit" size="large" @click="editItem(item)">
+            mdi-pencil
+          </v-icon>
+        </template>
 
-<!-- Renderizado condicional basado en displayType -->
-<template
-  v-for="field in config.fields"
-  :key="field.name"
-  #[`item.${field.name}`]="{ item }"
->
-  <slot :item="item" :name="`item.${field.name}`">
-    <!-- Checkbox disabled para campos booleanos -->
-    <v-checkbox
-      v-if="field.displayType === 'checkbox'"
-      :model-value="getFieldValue(item, field)"
-      disabled
-      hide-details
-      density="compact"
-    />
-    
-    <!-- Default: texto simple -->
-    <span v-else>
-      {{ getFieldValue(item, field) }}
-    </span>
-  </slot>
-</template>
+        <!-- Renderizado condicional basado en displayType -->
+        <template
+          v-for="field in config.fields"
+          :key="field.name"
+          #[`item.${field.name}`]="{ item }"
+        >
+          <slot :item="item" :name="`item.${field.name}`">
+            <!-- Checkbox disabled para campos booleanos -->
+            <v-checkbox
+              v-if="field.displayType === 'checkbox'"
+              :model-value="getFieldValue(item, field)"
+              disabled
+              hide-details
+              density="compact"
+            />
+
+            <!-- Default: texto simple -->
+            <span v-else>
+              {{ getFieldValue(item, field) }}
+            </span>
+          </slot>
+        </template>
       </v-data-table>
     </v-card-text>
   </div>
@@ -202,11 +202,11 @@ const visibleFields = computed(() =>
 const getFieldValue = (item: any, field: any) => {
   const apiKey = field.dataKey || field.name;
   let value = item[apiKey];
-  
+
   if (field.transformFromAPI) {
     value = field.transformFromAPI(value);
   }
-  
+
   return value;
 };
 </script>

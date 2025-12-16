@@ -82,7 +82,7 @@ import { useAuth } from '@/composables/auth/useAuth'
     setTimeout(() => {
       dialog.cerrar()
       router.replace({ path: "/home" })
-    }, 500)
+    }, 800)
   }
   function retornar () {
     router.replace({ path: "/" })

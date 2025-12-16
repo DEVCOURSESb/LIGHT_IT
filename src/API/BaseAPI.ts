@@ -45,7 +45,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
             
             const auth = useAuth();
             
-            auth.logout();
+            await auth.logout();
             
             dialog.show({
               title: 'Sesión expirada',
@@ -56,7 +56,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
             setTimeout(() => {
               dialog.cerrar();
               router.replace({ path: "/" });
-            }, 1500);
+            }, 800);
           
         }
         
