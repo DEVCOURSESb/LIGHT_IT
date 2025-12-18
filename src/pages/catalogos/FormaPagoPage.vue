@@ -3,5 +3,5 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { FormaPagoConfig } from "@/components/config/forma_pago/formaPago.config";
+import { FormaPagoConfig } from "@/components/config/catalogos/forma_pago/formaPago.config";
 </script>

@@ -3,7 +3,7 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { TipoEndosoConfig } from '@/components/config/tipo_endoso/tipoEndoso.config';
+import { TipoEndosoConfig } from '@/components/config/catalogos/tipo_endoso/tipoEndoso.config';
 
 
 

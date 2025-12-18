@@ -3,5 +3,5 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { CriterioCoberturaConfig } from "@/components/config/criterio_cobertura/criterio_cobertura.config";
+import { CriterioCoberturaConfig } from "@/components/config/catalogos/criterio_cobertura/criterio_cobertura.config";
 </script>

@@ -3,5 +3,5 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { EstatusConfig } from "@/components/config/estatus/estatus.config";
+import { EstatusConfig } from "@/components/config/catalogos/estatus/estatus.config";
 </script>
