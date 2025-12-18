@@ -3,5 +3,5 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { FumadorConfig } from "@/components/config/fumador/fumador.config";
+import { FumadorConfig } from "@/components/config/catalogos/fumador/fumador.config";
 </script>

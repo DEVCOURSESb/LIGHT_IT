@@ -4,7 +4,7 @@
   </CrudTablePage>
 </template>
 <script lang="ts" setup>
-import { estatusReciboConfig } from '@/components/config/estatus_recibo/estatusRecibo.config';
+import { estatusReciboConfig } from '@/components/config/catalogos/estatus_recibo/estatusRecibo.config';
 
 
 
