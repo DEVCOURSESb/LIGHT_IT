@@ -2,39 +2,37 @@
   <v-img class="bg-fondo" cover src="/src/assets/logo/Banner-web-Fraude-Yote-presto.png" />
 
   <div class="main-container">
-    <div class="form-container text-overline">
-      <v-card class="my-8" elevation="20" rounded-xl>
+    <div class="form-container">
+      <v-card class="my-8">
         <v-card-item class="card-item">
-          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="180" />
-          <v-label class="title">Ingrese la informacion solicitada</v-label>
+          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="100" />
+          <v-label>Ingrese la informacion solicitada</v-label>
         </v-card-item>
         <v-card-text>
-          <v-sheet class="content text-center" height="auto" width="450">
+          <v-sheet class="content text-center" width="250">
             <v-form fast-fail @submit.prevent="validate">
               <v-text-field
                 v-model="usuario"
-                class="text-overline"
                 label="Usuario"
               />
               <v-text-field
                 v-model="password"
-                class="text-overline"
                 label="Contraseña"
                 type="password"
               />
-              <v-label class="text-subtitle-1 mb-4">
+              <v-label>
                 Código de verificación enviado al <br>
                 correo electrónico ingresado
               </v-label>
-
               <v-otp-input
                 v-model="codigo"
                 length="8"
                 separator=""
               />
               <div class="d-flex flex-column">
-                <v-btn class="mt-4" color="primary" @click="validate">Ingresar</v-btn>
-                <v-btn class="mt-4" color="white" @click="retornar">Regresar</v-btn>
+                <v-btn color="primary" @click="validate">Ingresar</v-btn>
+                <br>
+                <v-btn color="white" @click="retornar">Regresar</v-btn>
               </div>
             </v-form>
           </v-sheet>
@@ -74,7 +72,7 @@ import { useAuth } from '@/composables/auth/useAuth'
     }
 
     dialog.show({
-      title: 'inicio de sesión exitoso',
+      title: 'Inicio de sesión exitoso',
       message: result.message || "Usuario validado correctamente",
       type: DialogType.SUCCESS,
     })

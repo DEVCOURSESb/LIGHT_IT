@@ -6,8 +6,8 @@
   />
 
   <div class="main-container">
-    <div class="form-container text-overline">
-      <v-card class="my-8" elevation="20" rounded-xl>
+    <div class="form-container">
+      <v-card class="loginCorreo">
         <v-card-item class="card-item">
           <v-img
             aspect-ratio="1"
@@ -18,15 +18,14 @@
           <v-label class="title">Bienvenido</v-label>
         </v-card-item>
         <v-card-text>
-          <v-sheet class="content text-center" height="auto" width="450">
+          <v-sheet class="content text-center" height="auto" width="280">
             <v-form fast-fail @submit.prevent="validate">
               <v-text-field
                 v-model="correo"
-                class="text-overline"
                 label="Correo electronico"
               />
               <div class="d-flex flex-column">
-                <v-btn class="mt-4" color="primary" @click="validate"
+                <v-btn color="primary" @click="validate"
                   >Ingresar</v-btn
                 >
               </div>
@@ -83,7 +82,7 @@ async function validate() {
               message: "Se han cerrado las sesiones activas. Por favor, intenta iniciar sesión de nuevo.",
               type: DialogType.SUCCESS,
             });
-            
+
           },
           color: "primary",
         }
@@ -95,7 +94,7 @@ async function validate() {
         type: DialogType.ERROR,
       });
     }
-   
+
     return;
   }
 

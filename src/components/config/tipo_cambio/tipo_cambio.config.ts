@@ -1,6 +1,11 @@
 import { TipoCambioActions } from "@/API/catalogos/tipo_cambio/tipo_cambio.actions";
+import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions";
+import type { Moneda } from "@/API/catalogos/monedas/moneda.interfaces";
 
+const monedaActions = MonedaActions();
 const actions = TipoCambioActions();
+
+let monedasMap: Record<number, string> = {};
 
 export const tipoCambioConfig = {
   entity: "tipoCambio",
@@ -38,7 +43,7 @@ export const tipoCambioConfig = {
     },
     {
       title: "DESCRIPCIÓN DE MONEDA ORIGEN",
-      key: "cveMonedaOrigen",
+      key: "cveMonedaOrigen", // aqui debe de traer de otra tabla (Moneda) el nombre del tipo de moneda(descMoneda) en lugar de la clave
       sortable: true,
       headerProps: {
         style: "font-weight: bold",

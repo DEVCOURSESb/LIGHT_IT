@@ -1,6 +1,5 @@
 import { FumadorActions } from "@/API/catalogos/fumador/fumador.actions"
 
-
 const actions = FumadorActions();
 
 export const FumadorConfig = {

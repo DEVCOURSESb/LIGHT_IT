@@ -55,7 +55,7 @@ export const tipoAsignacionConfig = {
     },
     {
       name: 'descAsignacion',
-      label: 'Formula PTU',
+      label: 'Fórmula PTU',
       type: 'text',
       required: true,
       dataKey: 'descAsignacion',

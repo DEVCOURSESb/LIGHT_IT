@@ -71,6 +71,16 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/Contratos/Danios/NuevoContratoPage': RouteRecordInfo<'/reaseguro/Contratos/Danios/NuevoContratoPage', '/reaseguro/Contratos/Danios/NuevoContratoPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/VisualizarContratosPage': RouteRecordInfo<'/reaseguro/Contratos/Danios/VisualizarContratosPage', '/reaseguro/Contratos/Danios/VisualizarContratosPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/ModificarContratosVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratosVidaPage', '/reaseguro/Contratos/Vida/ModificarContratosVidaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegCoberturaPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegCoberturaPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegCoberturaPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegComisionEsPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegComisionEsPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegComisionEsPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegGeneralPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegGeneralPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegGeneralPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegPTUPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegPTUPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegPTUPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionIntermediariosPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionIntermediariosPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionIntermediariosPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionReaseguradoresPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionReaseguradoresPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionReaseguradoresPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage', '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', Record<never, never>, Record<never, never>>,
@@ -82,6 +92,16 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVidaPage', '/reaseguro/Contratos/Vida/NuevoContratoVidaPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegCoberturaPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegCoberturaPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegCoberturaPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegComisionEsPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegComisionEsPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegComisionEsPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegGeneralPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegGeneralPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegGeneralPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegPTUPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegPTUPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegPTUPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionIntermediariosPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionIntermediariosPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionIntermediariosPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionReaseguradoresPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionReaseguradoresPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionReaseguradoresPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormDatosPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormDatosPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormDatosPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage', '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -307,6 +327,46 @@ declare module 'vue-router/auto-routes' {
       routes: '/reaseguro/Contratos/Vida/ModificarContratosVidaPage'
       views: never
     }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegCoberturaPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegCoberturaPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegComisionEsPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegComisionEsPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegGeneralPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegGeneralPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegPTUPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfigReasegPTUPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionIntermediariosPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionIntermediariosPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionReaseguradoresPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormConfiguracionReaseguradoresPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage'
+      views: never
+    }
     'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage.vue': {
       routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage'
       views: never
@@ -349,6 +409,46 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue': {
       routes: '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegCoberturaPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegCoberturaPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegComisionEsPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegComisionEsPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegGeneralPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegGeneralPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegPTUPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfigReasegPTUPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionIntermediariosPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionIntermediariosPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionReaseguradoresPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormConfiguracionReaseguradoresPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormDatosPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormDatosPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage.vue': {
+      routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage'
       views: never
     }
   }

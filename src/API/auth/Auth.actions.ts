@@ -8,6 +8,12 @@ export function AuthActions() {
     isPrivate: false,
     isBase: true,
   });
+  const baseAPIContratos = BaseAPI({
+    prefix: "/ws_reaseguro_contratos_vida/api/v1/auth/login",
+    isPrivate: false,
+    isBase: true,
+  });
+
 
   const sendEmail = async (correoElectronico: string): Promise<AxiosResponse | AxiosError> => {
     try {
@@ -26,6 +32,14 @@ export function AuthActions() {
     }
   };
 
+  const sendCredentialsContratos = async (body: dataCredentials) => {
+    try {
+      return await baseAPIContratos.post<loginSuccess>(`/login`, body);
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
   const logout = async (email: string) => {
     try {
       return await baseAPI.post(`/logout/${email}`);
@@ -37,6 +51,7 @@ export function AuthActions() {
   return {
     sendEmail,
     sendCredentials,
+    sendCredentialsContratos,
     logout,
   };
 }
