@@ -14,7 +14,7 @@ const rebuildString = (value: string, len: number): string => {
 
 export const operacionesRamosConfig = {
   entity: "operaciones-ramos",
-  title: "Operaciones Ramos",
+  title: "Operaciones y Ramos",
   searchPlaceholder: "",
   addButtonText: "Agregar operación ramo",
   modalTitle: "Agregar nuevo operación ramo",

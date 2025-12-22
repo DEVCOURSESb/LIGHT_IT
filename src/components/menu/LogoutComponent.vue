@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="handleLogout"> Cerrar Sesión </v-btn>
+  <v-btn @click="handleLogout"><v-icon icon="mdi mdi-logout" />Salir</v-btn>
 </template>
 
 <script setup lang="ts">

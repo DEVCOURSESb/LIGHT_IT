@@ -55,7 +55,7 @@ export const ptuConfig = {
     },
     {
       name: 'formulaPtu',
-      label: 'Formula PTU',
+      label: 'Fórmula PTU',
       type: 'text',
       required: true,
       dataKey: 'formulaPtu',

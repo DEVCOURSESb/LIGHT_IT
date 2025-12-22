@@ -22,6 +22,11 @@ export const EntidadFederativaConfig = {
     },
   },
   */
+    { title: 'CLAVE', key: 'cveEntidad', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
     { title: 'NOMBRE ENTIDAD FEDERATIVA', key: 'nombreEntidad', sortable: true,
       headerProps: {
         style: 'font-weight: bold',

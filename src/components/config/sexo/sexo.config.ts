@@ -21,6 +21,11 @@ export const SexoConfig = {
         style: 'font-weight: bold',
       },
     }, */
+    { title: 'CLAVE', key: 'cveSexo', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
     { title: 'DESCRIPCIÓN DE SEXO', key: 'descSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',

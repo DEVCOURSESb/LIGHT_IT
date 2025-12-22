@@ -3,16 +3,16 @@
     <v-img
       class="image bg-surface elevation-10"
       cover
-      height="750"
+      height="600"
       src="/src/assets/logo/Banner-web-Fraude-Yote-presto.png"
     />
 
     <div class="text-overlay">
-      <h2 class="text-h4 font-weight-bold" color="black">Sistema catálogos de reaseguro</h2>
+      <h2 class="text-h5 font-weight-bold" color="black">Sistema catálogos de reaseguro</h2>
 
       <v-carousel
         class="carousel-responsive"
-        height="350"
+        height="300"
         hide-delimiters
         progress="#003c71"
         show-arrows="hover"

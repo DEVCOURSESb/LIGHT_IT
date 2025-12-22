@@ -22,11 +22,11 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
     instance.interceptors.request.use(
       config => {
         const token = authStore.getToken;
-        
+
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
-        
+
         config.headers.Accept = 'application/json';
         config.headers['Content-Type'] = 'application/json';
         return config
@@ -42,24 +42,24 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
         if (error.code === 'ERR_NETWORK') {
 
             const { useAuth } = await import('@/composables/auth/useAuth');
-            
+
             const auth = useAuth();
-            
+
             await auth.logout();
-            
+
             dialog.show({
               title: 'Sesión expirada',
               message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
               type: DialogType.ERROR,
             });
-            
+
             setTimeout(() => {
               dialog.cerrar();
               router.replace({ path: "/" });
             }, 800);
-          
+
         }
-        
+
         return Promise.reject(error)
       },
     )
