@@ -19,7 +19,7 @@ export const monedaConfig = {
         style: "font-weight: bold",
       },
     },
-    { title: "DESCRIPCIÓN", key: "descMoneda", sortable: true,
+    { title: "DESCRIPCIÓN MONEDA", key: "descMoneda", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
@@ -50,7 +50,7 @@ export const monedaConfig = {
     },
     {
       name: "cveMoneda",
-      label: "Clave",
+      label: "Moneda",
       type: "number",
       required: true,
       dataKey: "cveMoneda",
@@ -58,7 +58,7 @@ export const monedaConfig = {
     },
     {
       name: "descMoneda",
-      label: "Descripción",
+      label: "Descripción moneda",
       type: "text",
       required: true,
       dataKey: "descMoneda",

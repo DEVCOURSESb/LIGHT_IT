@@ -11,6 +11,7 @@ export const tipoAsignacionConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo tipo asignación",
+  editModalTitle: "Editar tipo asignación",
   tableTitle: "Lista de Tipo Asignación",
 
   headers: [

@@ -11,6 +11,7 @@ export const ClasificacionCoberturaConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nueva cobertura",
+  editModalTitle: "Editar clasificación de cobertura",
   tableTitle: "Lista de Clasificación Coberturas",
 
   headers: [

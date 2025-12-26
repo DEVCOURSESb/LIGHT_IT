@@ -10,6 +10,7 @@ export const operacionesRamosConfig = {
   searchPlaceholder: "",
   addButtonText: "Agregar operación ramo",
   modalTitle: "Agregar nuevo operación ramo",
+  editModalTitle: "Editar operación ramo",
   tableTitle: "Lista de Operaciones Ramos",
 
   headers: [
@@ -96,8 +97,8 @@ export const operacionesRamosConfig = {
       type: "text",
       hidden: true,
     },
-    // todo: hoja 20, pide validar con tablas en db cobertura y extracobertura son calculados
-    {
+    // TODO: hoja 20, pide validar con tablas en db cobertura y extracobertura son calculados
+/*     {
       name: "cveCobertura",
       label: "Clave",
       type: "text",
@@ -105,8 +106,8 @@ export const operacionesRamosConfig = {
       hidden: true,
       dataKey: "cveCobertura",
       defaultValue: "",
-    },
-    {
+    }, */
+    /* {
       name: "cveExtCober",
       label: "Clave extra cobertura",
       type: "text",
@@ -114,7 +115,7 @@ export const operacionesRamosConfig = {
       hidden: true,
       dataKey: "cveExtCober",
       defaultValue: "",
-    },
+    }, */
     {
       name: "operacion",
       label: "Operación",
@@ -122,7 +123,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "operacion",
       defaultValue: "0000",
-      transformToAPI: (value: string) => fillString(value, 4, "0"),
+      transformToAPI: (value: string) => transformToUpperCase(fillString(value, 4, "0")),
     },
     {
       name: "ramo",
@@ -131,7 +132,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "ramo",
       defaultValue: "000",
-      transformToAPI: (value: string) => fillString(value, 3, "0"),
+      transformToAPI: (value: string) => transformToUpperCase(fillString(value, 3, "0")),
     },
     {
       name: "subramo",
@@ -140,7 +141,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "subramo",
       defaultValue: "000",
-      transformToAPI: (value: string) => fillString(value, 3, "0"),
+      transformToAPI: (value: string) => transformToUpperCase(fillString(value, 3, "0")),
     },
     {
       name: "subsubramo",
@@ -149,7 +150,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "subsubramo",
       defaultValue: "0000",
-      transformToAPI: (value: string) => fillString(value, 4, "0"),
+      transformToAPI: (value: string) => transformToUpperCase(fillString(value, 4, "0")),
     },
     {
       name: "descOperacionRamos",

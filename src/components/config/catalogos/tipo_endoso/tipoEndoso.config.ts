@@ -10,6 +10,7 @@ export const TipoEndosoConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo tipo endoso",
+  editModalTitle: "Editar tipo endoso",
   tableTitle: "Lista de tipos de endoso",
 
   headers: [
@@ -78,7 +79,7 @@ export const TipoEndosoConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveTipoEndoso: (value: string) => minMaxString(value, 1, 9) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
+    cveTipoEndoso: (value: string) => minMaxString(value, 1, 1) || "La clave es requerida, mínimo 1 y máximo 1 caracteres.",
     // alfanumerico, max 100 chars.
     descTipoEndoso: (value: string) => minMaxString(value, 1, 1000) || "El nombre es requerido y mínimo de 1000 caracteres.",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",

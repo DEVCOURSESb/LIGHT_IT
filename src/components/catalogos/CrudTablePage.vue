@@ -18,7 +18,7 @@
           <h1>{{ config.title }}</h1>
         </v-col>
 
-        <v-col cols="4" class="d-flex justify-end align-center gap-2">
+        <v-col cols="4" class="d-flex justify-end align-top gap-2">
           <ModalComponent
             :is-active="activeModal"
             :text-button="config?.addButtonText || 'Registro individual'"

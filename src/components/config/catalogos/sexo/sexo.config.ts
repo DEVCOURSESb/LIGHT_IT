@@ -1,6 +1,9 @@
 
-import { SexoActions } from "@/API/catalogos/sexo/sexo.actions"
-const actions = SexoActions()
+import { SexoActions } from "@/API/catalogos/sexo/sexo.actions";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
+
+const actions = SexoActions();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
 
 export const SexoConfig = {
   entity: 'Sexo',
@@ -8,6 +11,7 @@ export const SexoConfig = {
   searchPlaceholder: '',
   addButtonText: '',
   modalTitle: 'Agregar nuevo sexo',
+  editModalTitle: "Editar sexo",
   tableTitle: 'Lista de sexos',
 
   headers: [
@@ -21,11 +25,11 @@ export const SexoConfig = {
         style: 'font-weight: bold',
       },
     }, */
-    { title: 'CLAVE', key: 'cveSexo', sortable: true,
+    /* { title: 'CLAVE', key: 'cveSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    }, */
     { title: 'DESCRIPCIÓN DE SEXO', key: 'descSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
@@ -53,7 +57,7 @@ export const SexoConfig = {
     {
       name: 'cveSexo',
       label: 'Clave',
-      type: 'number',
+      type: 'text',
       required: true,
       dataKey: 'cveSexo',
       defaultValue: 0,
@@ -64,7 +68,7 @@ export const SexoConfig = {
       type: 'text',
       required: true,
       dataKey: 'descSexo',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'esActivo',
@@ -72,19 +76,19 @@ export const SexoConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-displayType: 'checkbox',
+      displayType: 'checkbox',
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveSexo: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveSexo: (value: string) => minMaxString(value, 1, 1) || 'La clave es requerida, mayor a 0 y máximo 1 dígitos.',
     // alfanumerico, max 100 chars.
-    descSexo: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    descSexo: (value: string) => minMaxString(value, 1, 1000) || 'El nombre es requerido y mínimo de 1 y máximo de 1000 caracteres.',
+    esActivo: (value: boolean) => validateBoolean(value) || 'El campo activo es requerido',
   },
 
   apiActions: {

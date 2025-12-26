@@ -1,7 +1,9 @@
-import { EstatusActions } from "@/API/catalogos/estatus/estatus.actions"
+import { EstatusActions } from "@/API/catalogos/estatus/estatus.actions";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 
-const actions = EstatusActions()
+const actions = EstatusActions();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
 
 export const EstatusConfig = {
   entity: 'Estatus',
@@ -9,6 +11,7 @@ export const EstatusConfig = {
   searchPlaceholder: '',
   addButtonText: '',
   modalTitle: 'Agregar nuevo estatus',
+  editModalTitle: 'Editar estatus',
   tableTitle: 'Lista de estatus',
 
   headers: [
@@ -61,7 +64,7 @@ export const EstatusConfig = {
       type: 'text',
       required: true,
       dataKey: 'descEstatus',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'esActivo',
@@ -71,17 +74,17 @@ export const EstatusConfig = {
       dataKey: 'esActivo',
       displayType: 'checkbox',
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveEstatus: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    // cveEstatus: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    descEstatus: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    descEstatus: (value: string) => minMaxString(value, 1, 1000) || 'El nombre es requerido y mínimo de 1 y máximo de 1000 caracteres.',
+    esActivo: (value: boolean) => validateBoolean(value) || 'El campo activo es requerido',
   },
 
   apiActions: {

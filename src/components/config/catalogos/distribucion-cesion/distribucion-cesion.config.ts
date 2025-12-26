@@ -10,6 +10,7 @@ export const DistribucionCesionConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nueva distribución",
+  editModalTitle: "Editar distribución",
   tableTitle: "Lista de Distribuciones de Cesión",
 
   headers: [

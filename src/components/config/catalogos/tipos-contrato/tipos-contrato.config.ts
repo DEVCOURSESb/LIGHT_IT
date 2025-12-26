@@ -10,6 +10,7 @@ export const tiposContratoConfig = {
   searchPlaceholder: "",
   addButtonText: "Agregar tipo de contrato",
   modalTitle: "Agregar nuevo tipo de contrato",
+  editModalTitle: "Editar tipo de contrato",
   tableTitle: "Lista de Tipos de Contrato",
 
   headers: [
@@ -43,7 +44,7 @@ export const tiposContratoConfig = {
         style: "font-weight: bold",
       },
     }, */
-    { title: "ACCIONES", key: "actions", sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
         style: "font-weight: bold",
       },

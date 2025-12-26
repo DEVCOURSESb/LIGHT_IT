@@ -1,6 +1,8 @@
 import { FormaPagoActions } from '@/API/catalogos/forma_pago/forma_pago.actions'
+import { validationsHandler } from '@/utilities/validations/validationsHandler';
 
-const actions = FormaPagoActions()
+const actions = FormaPagoActions();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
 
 export const FormaPagoConfig = {
   entity: 'formaPago',
@@ -8,6 +10,7 @@ export const FormaPagoConfig = {
   searchPlaceholder: '',
   addButtonText: '',
   modalTitle: 'Agregar nueva Forma pago',
+  editModalTitle: "Editar forma de pago",
   tableTitle: 'Lista de formas de pago',
 
   headers: [
@@ -46,21 +49,21 @@ export const FormaPagoConfig = {
       type: 'text',
       hidden: true,
     },
-    {
+    /* {
       name: 'cveFormaPago',
       label: 'Clave',
       type: 'number',
       required: true,
       dataKey: 'cveFormaPago',
       defaultValue: 0,
-    },
+    }, */
     {
       name: 'descFormaPago',
       label: 'Descripción',
       type: 'text',
       required: true,
       dataKey: 'descFormaPago',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'esActivo',
@@ -68,19 +71,17 @@ export const FormaPagoConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-displayType: 'checkbox',
+      displayType: 'checkbox',
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
-    // numerico, 3 digitos max,
-    cveFormaPago: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
     // alfanumerico, max 100 chars.
-    descFormaPago: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    descFormaPago: (value: string) => minMaxString(value, 1, 1000) || 'El nombre es requerido y mínimo de 1 y máximo de 1000 caracteres.',
+    esActivo: (value: boolean) => validateBoolean(value) || 'El campo activo es requerido',
   },
 
   apiActions: {

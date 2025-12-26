@@ -10,6 +10,7 @@ export const intermediariosConfig = {
   searchPlaceholder: "",
   addButtonText: "Registro individual",
   modalTitle: "Agregar nuevo intermediario",
+  editModalTitle: "Editar intermediario",
   tableTitle: "Lista de Intermediarios",
 
   headers: [
@@ -23,7 +24,7 @@ export const intermediariosConfig = {
         style: "font-weight: bold",
       },
     },
-    { title: "ACTIVO", key: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ", sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },

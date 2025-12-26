@@ -1,6 +1,6 @@
 <template>
   <v-btn class="btn-agregar" @click="$emit('onModifyActive')">
-    + {{ props.textButton ?? "Abrir Modal" }}
+    {{ props.textButton ?? "Abrir Modal" }} +
   </v-btn>
 
   <v-dialog v-model="props.isActive" max-width="500">

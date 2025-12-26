@@ -10,6 +10,7 @@ export const tipoTarifaConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Tipo de tarifa",
+  editModalTitle: "Editar tipo de tarifa",
   tableTitle: "Lista de tipos de tarifas",
 
   headers: [

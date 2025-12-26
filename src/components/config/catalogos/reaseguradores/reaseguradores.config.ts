@@ -10,6 +10,7 @@ export const reaseguradoresConfig = {
   searchPlaceholder: "",
   addButtonText: "Agregar reasegurador",
   modalTitle: "Agregar nuevo reasegurador",
+  editModalTitle: "Editar reasegurador",
   tableTitle: "Lista de reaseguradores",
 
   headers: [
@@ -57,7 +58,7 @@ export const reaseguradoresConfig = {
       type: "text",
       hidden: true,
     },
-    {
+   /*  {
       name: "cveReasegurador",
       label: "Clave",
       type: "number",
@@ -66,7 +67,7 @@ export const reaseguradoresConfig = {
       dataKey: "cveReasegurador",
       // TODO: indica obtener el ultimo + 1
       defaultValue: 0,
-    },
+    }, */
     {
       name: "nombreReasegurador",
       label: "Nombre",
@@ -85,7 +86,8 @@ export const reaseguradoresConfig = {
       defaultValue: "",
       transformToAPI: (value: string) => transformToUpperCase(value),
     },
-    {
+    //TODO: si inicia con RGRE es extranjero
+    /* {
       name: "extranjero",
       label: "Extranjero",
       type: "Checkbox",
@@ -96,10 +98,9 @@ export const reaseguradoresConfig = {
       transformFromAPI: (value: number) => (value === 1),
       transformToAPI: () => {
         const registroCNSF = "";
-        //TODO: si inicia con RGRE es extranjero
         return registroCNSF.trim().startsWith("RGRE") ? 1 : 0
       },
-    },
+    }, */
     {
       name: "esActivo",
       label: "Activo",

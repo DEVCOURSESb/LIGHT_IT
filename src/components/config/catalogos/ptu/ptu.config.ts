@@ -11,6 +11,7 @@ export const ptuConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo PTU",
+  editModalTitle: "Editar PTU",
   tableTitle: "Lista de métodos cálculo PTU",
 
   headers: [

@@ -3,7 +3,7 @@ import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = CriteriosAsignacionActions()
 
-const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const criteriosAsignacionConfig = {
   entity: "criteriosAsignacion",
@@ -11,6 +11,7 @@ export const criteriosAsignacionConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo criterio asignacion",
+  editModalTitle: "Editar criterio asignacion",
   tableTitle: "Lista de criterios de asignacion",
 
   headers: [
@@ -35,7 +36,7 @@ export const criteriosAsignacionConfig = {
         style: "font-weight: bold",
       },
     },
-    { title: "ACCIONES", key: "actions", sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
         style: "font-weight: bold",
       },

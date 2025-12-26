@@ -10,6 +10,7 @@ export const coberturaConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar cobertura",
+  editModalTitle: "Editar cobertura",
   tableTitle: "Lista de Coberturas",
 
   headers: [

@@ -8,8 +8,9 @@ export const ExtensionesConfig = {
   entity: "extensiones",
   title: "Extensiones",
   searchPlaceholder: "",
-  addButtonText: "",
-  modalTitle: "Registro individual",
+  addButtonText: "Agregar extensión",
+  modalTitle: "Agregar nueva extensión",
+  editModalTitle: "Editar extensión",
   tableTitle: "Lista de Extensiones",
 
   headers: [
@@ -18,7 +19,7 @@ export const ExtensionesConfig = {
         style: "font-weight: bold",
       },
     }, */
-    { title: "DESCRIPCIÓN", key: "descExtCober", sortable: true,
+    { title: "EXTENSIÓN DE LA COBERTURA", key: "descExtCober", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },

@@ -10,6 +10,7 @@ export const estatusReciboConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo estatus recibo",
+  editModalTitle: "Editar estatus recibo",
   tableTitle: "Lista de estatus recibo",
   headers: [
    /*  { title: "CLAVE", key: "cveEstatusRec", sortable: true,
@@ -71,7 +72,7 @@ export const estatusReciboConfig = {
     // numerico, 3 digitos max,
     //cveEstatusRec: (value: number) => !!value && value <= 999 || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
     // alfanumerico, max 100 chars.
-    descEstatusRec: (value: string) => minMaxString(value, 1, 1000) || "El nombre es requerido y mínimo de 1000 caracteres.",
+    descEstatusRec: (value: string) => minMaxString(value, 1, 1000) || "El nombre es requerido, mínimo 1 y máximo de 1000 caracteres.",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 

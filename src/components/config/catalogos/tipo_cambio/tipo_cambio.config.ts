@@ -1,142 +1,153 @@
+// tipo_cambio.config.ts
 import { TipoCambioActions } from "@/API/catalogos/tipo_cambio/tipo_cambio.actions";
 import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions";
 import type { Moneda } from "@/API/catalogos/monedas/moneda.interfaces";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { ref, computed } from "vue";
 
-const actions = TipoCambioActions();
-const monedaActions = MonedaActions();
+export const useTipoCambioConfig = () => {
+  const actions = TipoCambioActions();
+  const monedaActions = MonedaActions();
+  const { transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
 
-let monedaMap = new Map<number, string>();
+  const monedaMap = new Map<number, string>();
+  const monedaItems = ref<Array<{ text: string; value: number }>>([]);
+  const isLoading = ref(true);
 
-const loadMonedas = async () => {
-  if (monedaMap.size === 0) {
-    const monedas: Moneda[] = await monedaActions.fetchMonedas();
-    monedas.forEach(m =>
-      monedaMap.set(m.cveMoneda, m.descMoneda)
-    );
-  }
-};
+  const loadMonedas = async () => {
+    if (monedaMap.size === 0) {
+      const monedas: Moneda[] = await monedaActions.fetchMonedas();
+      monedas.forEach((m) => {
+        monedaMap.set(m.cveMoneda, m.descMoneda);
+      });
 
-const fetchWithMonedaDesc = async () => {
-  await loadMonedas();
+      monedaItems.value = Array.from(monedaMap.entries()).map(
+        ([key, value]) => ({
+          text: value,
+          value: key,
+        })
+      );
 
-  const data = await actions.fetch();
+      console.log("Monedas cargadas:", monedaItems.value);
+      isLoading.value = false;
+    }
+  };
 
-  return data.map((row: any) => ({
-    ...row,
-    cveMonedaOrigen:
-      monedaMap.get(row.cveMonedaOrigen) ?? row.cveMonedaOrigen,
+  loadMonedas();
+
+  const fetchWithMonedaDesc = async () => {
+    await loadMonedas();
+    const data = await actions.fetch();
+
+    return data.map((row: any) => ({
+      ...row,
+      cveMonedaOrigen:
+        monedaMap.get(row.cveMonedaOrigen) ?? row.cveMonedaOrigen,
+    }));
+  };
+
+  const tipoCambioConfig = computed(() => ({
+    entity: "tipoCambio",
+    title: "Tipo de Cambio",
+    searchPlaceholder: "",
+    addButtonText: "",
+    modalTitle: "Agregar nuevo tipo cambio",
+    editModalTitle: "Editar tipo de cambio",
+    tableTitle: "Lista de Tipo Cambio",
+
+    headers: [
+      {
+        title: "FECHA",
+        key: "fecha",
+        sortable: true,
+        headerProps: { style: "font-weight: bold" },
+      },
+      {
+        title: "DESCRIPCIÓN DE MONEDA ORIGEN",
+        key: "cveMonedaOrigen",
+        sortable: true,
+        headerProps: { style: "font-weight: bold" },
+      },
+      {
+        title: "TIPO DE CAMBIO",
+        key: "tipoCambio",
+        sortable: true,
+        headerProps: { style: "font-weight: bold" },
+      },
+      {
+        title: "ACTIVO",
+        key: "esActivo",
+        sortable: true,
+        headerProps: { style: "font-weight: bold" },
+      },
+      {
+        title: "EDITAR",
+        key: "actions",
+        sortable: false,
+        headerProps: { style: "font-weight: bold" },
+      },
+    ],
+
+    fields: [
+      {
+        name: "id",
+        label: "ID",
+        type: "text",
+        hidden: true,
+      },
+      {
+        name: "cveMonedaOrigen",
+        label: "Moneda Origen",
+        type: "select",
+        items: monedaItems.value.map((item) => (item.value + "| " + item.text)),
+        required: true,
+        dataKey: "cveMonedaOrigen",
+        defaultValue: 0,
+        transformToAPI: (value: string) => {
+          const [key] = value.split("|").map((part) => part.trim());
+          return Number(key);
+        },
+      },
+      {
+        name: "tipoCambio",
+        label: "Tipo de Cambio",
+        type: "decimal",
+        required: true,
+        dataKey: "tipoCambio",
+      },
+      {
+        name: "esActivo",
+        label: "Activo",
+        type: "Checkbox",
+        required: true,
+        dataKey: "esActivo",
+        displayType: "checkbox",
+        defaultValue: true,
+        transformFromAPI: (value: number) => transformNumberToBoolean(value),
+        transformToAPI: (value: boolean) => transformBooleanToNumber(value),
+      },
+    ],
+
+    validationSchema: {
+      cveMonedaOrigen: (value: string) => !!value || "La moneda origen es requerida.",
+      tipoCambio: (value: number) => {
+        const numValue = Number(value);
+        return numValue > 0 || "El tipo de cambio debe ser mayor a 0.";
+      },
+      esActivo: (value: boolean) =>
+        value !== undefined || "El campo activo es requerido",
+    },
+
+    apiActions: {
+      fetch: fetchWithMonedaDesc,
+      create: actions.create,
+      update: actions.update,
+      delete: actions.deletes,
+    },
   }));
-};
 
-
-export const tipoCambioConfig = {
-  entity: "tipoCambio",
-  title: "Tipo de Cambio",
-  searchPlaceholder: "",
-  addButtonText: "",
-  modalTitle: "Agregar nuevo tipo cambio",
-  tableTitle: "Lista de Tipo Cambio",
-
-  headers: [
-    /* {
-      title: "CLAVE",
-      key: "cveMonedaOrigen",
-      sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    },
-    {
-      title: "FECHA DE REGISTRO",
-      key: "fechaRegistro",
-      sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    },
-    */
-    {
-      title: "FECHA",
-      key: "fecha",
-      sortable: true,
-      headerProps: { style: "font-weight: bold" },
-    },
-    {
-      title: "DESCRIPCIÓN DE MONEDA ORIGEN",
-      key: "cveMonedaOrigen",
-      sortable: true,
-      headerProps: { style: "font-weight: bold" },
-    },
-    {
-      title: "TIPO DE CAMBIO",
-      key: "tipoCambio",
-      sortable: true,
-      headerProps: { style: "font-weight: bold" },
-    },
-    {
-      title: "ACTIVO",
-      key: "esActivo",
-      sortable: true,
-      headerProps: { style: "font-weight: bold" },
-    },
-    {
-      title: "EDITAR",
-      key: "actions",
-      sortable: false,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    },
-  ],
-
-  fields: [
-    {
-      name: "id",
-      label: "ID",
-      type: "text",
-      hidden: true,
-    },
-    {
-      name: "cveMonedaOrigen",
-      label: "Clave",
-      type: "number",
-      required: true,
-      dataKey: "cveMonedaOrigen",
-      defaultValue: 0,
-      transformToAPI: (value: string) => value.toUpperCase(),
-    },
-    {
-      name: "tipoCambio",
-      label: "Tipo de Cambio",
-      type: "decimal",
-      required: true,
-      dataKey: "tipoCambio",
-    },
-    {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
-      required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
-      defaultValue: true,
-      transformFromAPI: (value: boolean) => !!value,
-      transformToAPI: (value: boolean) => value ? 1 : 2,
-    },
-  ],
-
-  validationSchema: {
-    // numerico, 3 digitos max,
-    cveMonedaOrigen: (value: number) => (!!value && value <= 999) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
-    // alfanumerico, max 100 chars.
-    tipoCambio: (value: string) => (value?.length > 0 && value?.length <= 100) || "El nombre es requerido y mínimo de 100 caracteres.",
-    esActivo: (value: boolean) => value !== undefined || "El campo activo es requerido",
-  },
-
-  apiActions: {
-    fetch: fetchWithMonedaDesc,
-    create: actions.create,
-    update: actions.update,
-    delete: actions.deletes,
-  },
+  return {
+    tipoCambioConfig,
+    isLoading,
+  };
 };

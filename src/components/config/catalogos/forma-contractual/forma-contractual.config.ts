@@ -47,14 +47,14 @@ export const FormaContractualConfig = {
       type: "text",
       hidden: true,
     },
-    {
+    /* {
       name: "cveFcontrac",
       label: "Clave",
       type: "number",
       required: true,
       dataKey: "cveFcontrac",
       defaultValue: 0,
-    },
+    }, */
     {
       name: "descFcontrac",
       label: "Descripción",
@@ -78,7 +78,7 @@ export const FormaContractualConfig = {
   ],
 
   validationSchema: {
-    cveFcontrac: (value: number) => minMax(value, 0, 9) || "La clave es requerida y mayor que 0",
+    /* cveFcontrac: (value: number) => minMax(value, 0, 9) || "La clave es requerida y mayor que 0", */
     descFcontrac: (value: string) => minMaxString(value, 1, 20) || "La descripción es requerida",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },

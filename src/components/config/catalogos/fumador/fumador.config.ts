@@ -1,6 +1,8 @@
 import { FumadorActions } from "@/API/catalogos/fumador/fumador.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = FumadorActions();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
 
 export const FumadorConfig = {
   entity: 'Fumador',
@@ -8,6 +10,7 @@ export const FumadorConfig = {
   searchPlaceholder: '',
   addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo Fumador',
+  editModalTitle: 'Editar Fumador',
   tableTitle: 'Lista de Fumadores',
 
   headers: [
@@ -48,7 +51,7 @@ export const FumadorConfig = {
     {
       name: 'cveFumador',
       label: 'Clave',
-      type: 'number',
+      type: 'text',
       required: true,
       dataKey: 'cveFumador',
       defaultValue: 0,
@@ -59,7 +62,7 @@ export const FumadorConfig = {
       type: 'text',
       required: true,
       dataKey: 'descFumador',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'esActivo',
@@ -67,19 +70,19 @@ export const FumadorConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-displayType: 'checkbox',
+      displayType: 'checkbox',
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveFumador: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveFumador: (value: string) => minMaxString(value, 1, 1) || 'La clave es requerida, mayor a 0 y máximo 1 dígitos.',
     // alfanumerico, max 100 chars.
-    descFumador: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    descFumador: (value: string) => minMaxString(value, 1, 1000) || 'El nombre es requerido y mínimo de 1 y máximo de 1000 caracteres.',
+    esActivo: (value: boolean) => validateBoolean(value) || 'El campo activo es requerido',
   },
 
   apiActions: {

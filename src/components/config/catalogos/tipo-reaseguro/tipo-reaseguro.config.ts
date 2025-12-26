@@ -10,14 +10,15 @@ export const tipoReaseguroConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Tipo de reaseguro",
+  editModalTitle: "Editar tipo de reaseguro",
   tableTitle: "Lista de tipos de Reaseguro",
 
   headers: [
-    { title: "CLAVE", key: "cveTreaseg", sortable: true,
+    /* { title: "CLAVE", key: "cveTreaseg", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    },
+    }, */
     { title: "TIPO REASEGURO", key: "descTreaseg", sortable: true,
       headerProps: {
         style: "font-weight: bold",
@@ -47,14 +48,14 @@ export const tipoReaseguroConfig = {
       type: "text",
       hidden: true,
     },
-    {
+    /* {
       name: "cveTreaseg",
       label: "Clave",
       type: "number",
       required: true,
       dataKey: "cveTreaseg",
       defaultValue: 0,
-    },
+    }, */
     {
       name: "descTreaseg",
       label: "Descripción",
@@ -79,7 +80,7 @@ export const tipoReaseguroConfig = {
 
   validationSchema: {
     // TODO: la clave es automatica, el mayor en db +1
-    cveTreaseg: (value: number) => minMax(value, 1, 9) || "La clave es requerida y mayor a 0",
+    /* cveTreaseg: (value: number) => minMax(value, 1, 9) || "La clave es requerida y mayor a 0", */
     descTreaseg: (value: string) => minMaxString(value, 1, 20) || "La descripción es requerida",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },

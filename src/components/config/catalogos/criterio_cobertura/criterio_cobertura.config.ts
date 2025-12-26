@@ -47,14 +47,14 @@ export const CriterioCoberturaConfig = {
       type: "text",
       hidden: true,
     },
-    {
+    /* {
       name: "cveCriterioCob",
       label: "Clave",
       type: "number",
       required: true,
       dataKey: "cveCriterioCob",
       defaultValue: 0,
-    },
+    }, */
     {
       name: "descCriterioCob",
       label: "Descripción",
@@ -78,7 +78,7 @@ export const CriterioCoberturaConfig = {
 
   validationSchema: {
     // TODO: max en db +1
-    cveCriterioCob: (value: number) => minMax(value, 0, 9) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
+    // cveCriterioCob: (value: number) => minMax(value, 0, 9) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
     // alfanumerico, max 1000 chars.
     descCriterioCob: (value: string) => minMaxString(value, 1, 1000) || "El nombre es requerido y máximo de 1000 caracteres.",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",

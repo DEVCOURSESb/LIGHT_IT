@@ -1,5 +1,6 @@
 import { EntidadFederativaActions } from "@/API/catalogos/entidad-federativa/entidad_federativa.actions";
 import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { transform } from "typescript";
 
 const actions = EntidadFederativaActions();
 const { minMax, minMaxString, validateBoolean, fillString, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
@@ -10,6 +11,7 @@ export const EntidadFederativaConfig = {
   searchPlaceholder: '',
   addButtonText: 'Registro individual',
   modalTitle: 'Agregar nuevo Entidad Federativa',
+  editModalTitle: "Editar Entidad Federativa",
   tableTitle: 'Lista de Entidad Federativas',
 
   headers: [
@@ -72,7 +74,7 @@ export const EntidadFederativaConfig = {
       required: true,
       dataKey: 'cveEntidad',
       defaultValue: "",
-      transformToAPI: (value: string) => fillString(value, 2, "0"),
+      transformToAPI: (value: string) => transformToUpperCase(fillString(value, 2, '0')),
     },
     {
       name: 'nombreEntidad',
