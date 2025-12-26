@@ -1,80 +1,82 @@
-import { IntermediariosActions } from '@/API/catalogos/intermediarios/intermediarios.actions'
+import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediarios.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler"
 
 const actions = IntermediariosActions()
+const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const intermediariosConfig = {
-  entity: 'intermediarios',
-  title: 'Intermediarios',
-  searchPlaceholder: '',
-  addButtonText: 'Registro individual',
-  modalTitle: 'Agregar nuevo intermediario',
-  tableTitle: 'Lista de Intermediarios',
+  entity: "intermediarios",
+  title: "Intermediarios",
+  searchPlaceholder: "",
+  addButtonText: "Registro individual",
+  modalTitle: "Agregar nuevo intermediario",
+  tableTitle: "Lista de Intermediarios",
 
   headers: [
-    { title: 'CLAVE INTERMEDIARIO', key: 'cveIntermediario', sortable: true,
+    { title: "CLAVE INTERMEDIARIO", key: "cveIntermediario", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'INTERMEDIARIO', key: 'nombreIntermediario', sortable: true,
+    { title: "INTERMEDIARIO", key: "nombreIntermediario", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'EDITAR', key: 'actions', sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
     {
-      name: 'cveIntermediario',
-      label: 'Clave',
-      type: 'number',
+      name: "cveIntermediario",
+      label: "Clave",
+      type: "number",
       required: true,
-      dataKey: 'cveIntermediario',
+      dataKey: "cveIntermediario",
       defaultValue: 0,
     },
     {
-      name: 'nombreIntermediario',
-      label: 'Nombre',
-      type: 'text',
+      name: "nombreIntermediario",
+      label: "Nombre",
+      type: "text",
       required: true,
-      dataKey: 'nombreIntermediario',
-      transformToAPI: (value: string) => (value.trim().toUpperCase()),
+      dataKey: "nombreIntermediario",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
       required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
+      dataKey: "esActivo",
+      displayType: "checkbox",
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveIntermediario: (value: number) => value > 0 && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveIntermediario: (value: number) => minMax(value, 1, 999) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
     // alfanumerico, max 100 chars.
-    nombreIntermediario: (value: string) => value?.trim()?.length > 0 && value?.trim()?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    nombreIntermediario: (value: string) => minMaxString(value, 1, 100) || "El nombre es requerido y mínimo de 100 caracteres.",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

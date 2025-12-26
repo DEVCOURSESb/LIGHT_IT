@@ -1,79 +1,87 @@
-import { MonedaActions } from '@/API/catalogos/monedas/moneda.actions'
+import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = MonedaActions()
+const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const monedaConfig = {
-  entity: 'moneda',
-  title: 'Moneda',
-  searchPlaceholder: '',
-  addButtonText: 'Nueva moneda',
-  modalTitle: 'Agregar moneda',
-  editModalTitle: 'Editar moneda',
-  tableTitle: 'Lista de Monedas',
+  entity: "moneda",
+  title: "Moneda",
+  searchPlaceholder: "",
+  addButtonText: "",
+  modalTitle: "Agregar moneda",
+  editModalTitle: "Editar moneda",
+  tableTitle: "Lista de Monedas",
 
   headers: [
-    { title: 'CLAVE', key: 'cveMoneda', sortable: true,
+    { title: "MONEDA", key: "cveMoneda", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'DESCRIPCIÓN', key: 'descMoneda', sortable: true,
+    { title: "DESCRIPCIÓN", key: "descMoneda", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+  /*   { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
+      },
+    }, */
+    { title: "EDITAR", key: "actions", sortable: false,
+      headerProps: {
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
     {
-      name: 'cveMoneda',
-      label: 'Clave',
-      type: 'number',
+      name: "cveMoneda",
+      label: "Clave",
+      type: "number",
       required: true,
-      dataKey: 'cveMoneda',
+      dataKey: "cveMoneda",
       defaultValue: 0,
     },
     {
-      name: 'descMoneda',
-      label: 'Descripción',
-      type: 'text',
+      name: "descMoneda",
+      label: "Descripción",
+      type: "text",
       required: true,
-      dataKey: 'descMoneda',
-      defaultValue: '',
+      dataKey: "descMoneda",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'select',
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
       required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
+      dataKey: "esActivo",
+      displayType: "checkbox",
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
-    cveMoneda: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor que 0',
-    descMoneda: (value: string) => value?.length > 0 || 'La descripción es requerida',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    cveMoneda: (value: number) => minMax(value, 0, 99) || "La clave es requerida y mayor que 0",
+    descMoneda: (value: string) => minMaxString(value, 1, 100) || "La descripción es requerida, máximo 100 caracteres.",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

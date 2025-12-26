@@ -1,83 +1,87 @@
-import { PtuActions } from '@/API/catalogos/ptu/ptu.actions';
+import { PtuActions } from "@/API/catalogos/ptu/ptu.actions";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = PtuActions();
 
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+
 export const ptuConfig = {
-  entity: 'ptu',
-  title: 'Método cálculo PTU',
-  searchPlaceholder: '',
-  addButtonText: '',
-  modalTitle: 'Agregar nuevo PTU',
-  tableTitle: 'Lista de métodos cálculo PTU',
+  entity: "ptu",
+  title: "Método cálculo PTU",
+  searchPlaceholder: "",
+  addButtonText: "",
+  modalTitle: "Agregar nuevo PTU",
+  tableTitle: "Lista de métodos cálculo PTU",
 
   headers: [
-    /* { title: 'CLAVE', key: 'cvePtu', sortable: true,
+    /* { title: "CLAVE", key: "cvePtu", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'FÓRMULA PTU', key: 'formulaPtu', sortable: true,
+    { title: "FÓRMULA PTU", key: "formulaPtu", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'EDITAR', key: 'actions', sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
-    {
-      name: 'cvePtu',
-      label: 'Clave',
-      type: 'number',
+   /*  {
+      name: "cvePtu",
+      label: "Clave",
+      type: "number",
       required: true,
-      dataKey: 'cvePtu',
+      dataKey: "cvePtu",
       defaultValue: 0,
+    }, */
+    {
+      name: "formulaPtu",
+      label: "Formula PTU",
+      type: "text",
+      required: true,
+      dataKey: "formulaPtu",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'formulaPtu',
-      label: 'Fórmula PTU',
-      type: 'text',
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
       required: true,
-      dataKey: 'formulaPtu',
-      defaultValue: '',
-    },
-    {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
-      required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
+      dataKey: "esActivo",
+      displayType: "checkbox",
       defaultValue: true,
-      transformFromAPI: (value: number) => !!value,
-      transformToAPI: (value: boolean) => value ? 1 : 0,
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
-    cvePtu: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor que 0',
-    formulaPtu: (value: string) => value?.length > 0 || 'La fórmula es requerida',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    //cvePtu: (value: number) => !!value && value > 0 || "La clave es requerida y mayor que 0",
+    formulaPtu: (value: string) => minMaxString(value, 1, 1000) || "La fórmula es requerida",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

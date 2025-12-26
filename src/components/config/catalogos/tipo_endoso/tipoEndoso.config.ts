@@ -1,73 +1,75 @@
-import { TipoEndosoActions } from '@/API/catalogos/tipo_endoso/tipo_endoso.actions'
+import { TipoEndosoActions } from "@/API/catalogos/tipo_endoso/tipo_endoso.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = TipoEndosoActions()
+const { minMaxString, validateBoolean, transformToUpperCase } = validationsHandler();
 
 export const TipoEndosoConfig = {
-  entity: 'tipoEndoso',
-  title: 'Tipo de endoso',
-  searchPlaceholder: '',
-  addButtonText: '',
-  modalTitle: 'Agregar nuevo tipo endoso',
-  tableTitle: 'Lista de tipos de endoso',
+  entity: "tipoEndoso",
+  title: "Tipo de endoso",
+  searchPlaceholder: "",
+  addButtonText: "",
+  modalTitle: "Agregar nuevo tipo endoso",
+  tableTitle: "Lista de tipos de endoso",
 
   headers: [
-    { title: 'CLAVE', key: 'cveTipoEndoso', sortable: true,
+    { title: "CLAVE", key: "cveTipoEndoso", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'DESCRIPCIÓN TIPO ENDOSO', key: 'descTipoEndoso', sortable: true,
+    { title: "DESCRIPCIÓN TIPO ENDOSO", key: "descTipoEndoso", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACCIONES', key: 'actions', sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
     {
-      name: 'cveTipoEndoso',
-      label: 'Clave',
-      type: 'number',
+      name: "cveTipoEndoso",
+      label: "Clave",
+      type: "text",
       required: true,
-      dataKey: 'cveTipoEndoso',
+      dataKey: "cveTipoEndoso",
       defaultValue: 0,
     },
     {
-      name: 'descTipoEndoso',
-      label: 'Descripción',
-      type: 'text',
+      name: "descTipoEndoso",
+      label: "Descripción",
+      type: "text",
       required: true,
-      dataKey: 'descTipoEndoso',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      dataKey: "descTipoEndoso",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
       required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
+      dataKey: "esActivo",
+      displayType: "checkbox",
       defaultValue: true,
       transformFromAPI: (value: boolean) => !!value,
       transformToAPI: (value: boolean) => value ? 1 : 2,
@@ -76,10 +78,10 @@ export const TipoEndosoConfig = {
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveTipoEndoso: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveTipoEndoso: (value: string) => minMaxString(value, 1, 9) || "La clave es requerida, mayor a 0 y máximo 3 dígitos.",
     // alfanumerico, max 100 chars.
-    descTipoEndoso: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    descTipoEndoso: (value: string) => minMaxString(value, 1, 1000) || "El nombre es requerido y mínimo de 1000 caracteres.",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

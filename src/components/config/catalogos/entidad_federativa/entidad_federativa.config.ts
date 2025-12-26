@@ -1,6 +1,8 @@
 import { EntidadFederativaActions } from "@/API/catalogos/entidad-federativa/entidad_federativa.actions";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = EntidadFederativaActions();
+const { minMax, minMaxString, validateBoolean, fillString, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const EntidadFederativaConfig = {
   entity: 'EntidadFederativa',
@@ -66,10 +68,11 @@ export const EntidadFederativaConfig = {
     {
       name: 'cveEntidad',
       label: 'Clave',
-      type: 'number',
+      type: 'text',
       required: true,
       dataKey: 'cveEntidad',
-      defaultValue: 0,
+      defaultValue: "",
+      transformToAPI: (value: string) => fillString(value, 2, "0"),
     },
     {
       name: 'nombreEntidad',
@@ -77,7 +80,7 @@ export const EntidadFederativaConfig = {
       type: 'text',
       required: true,
       dataKey: 'nombreEntidad',
-      transformToAPI: (value: string) => (value.toUpperCase()),
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'limiteInfCp',
@@ -101,19 +104,22 @@ export const EntidadFederativaConfig = {
       type: 'Checkbox',
       required: true,
       dataKey: 'esActivo',
-displayType: 'checkbox',
+      displayType: 'checkbox',
       defaultValue: true,
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // numerico, 3 digitos max,
-    cveEntidad: (value: number) => !!value && value <= 999 || 'La clave es requerida, mayor a 0 y máximo 3 dígitos.',
+    cveEntidad: (value: string) => minMaxString(value, 1, 2) || 'La clave es requerida, mayor a 0 y máximo 2 dígitos.',
     // alfanumerico, max 100 chars.
-    nombreEntidad: (value: string) => value?.length > 0 && value?.length <= 100  || 'El nombre es requerido y mínimo de 100 caracteres.',
-    esActivo: (value: boolean) => value !== undefined || 'El campo activo es requerido',
+    nombreEntidad: (value: string) => minMaxString(value, 1, 100) || 'El nombre es requerido, mayor a 0 y máximo de 100 caracteres.',
+    // numerico, mayor a 0 y maximo 5 digitos.
+    limiteInfCp: (value: number) => minMax(value, 1, 99999) || 'El límite inferior es requerido y mayor a 0 y máximo 5 dígitos.',
+    limiteSupCp: (value: number) => minMax(value, 1, 99999) || 'El límite superior es requerido y mayor a 0 y máximo 5 dígitos.',
+    esActivo: (value: boolean) => validateBoolean(value) || 'El campo activo es requerido',
   },
 
   apiActions: {

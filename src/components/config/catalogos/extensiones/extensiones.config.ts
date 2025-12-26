@@ -1,84 +1,88 @@
-import { ExtensionesActions } from '@/API/catalogos/extensiones/extensiones.actions'
+import { ExtensionesActions } from "@/API/catalogos/extensiones/extensiones.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = ExtensionesActions()
+const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const ExtensionesConfig = {
-  entity: 'extensiones',
-  title: 'Extensiones',
-  searchPlaceholder: '',
-  addButtonText: '',
-  modalTitle: 'Registro individual',
-  tableTitle: 'Lista de Extensiones',
+  entity: "extensiones",
+  title: "Extensiones",
+  searchPlaceholder: "",
+  addButtonText: "",
+  modalTitle: "Registro individual",
+  tableTitle: "Lista de Extensiones",
 
   headers: [
-    /* { title: 'CLAVE', key: 'cveExtCober', sortable: true,
+    /* { title: "CLAVE", key: "cveExtCober", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'DESCRIPCIÓN', key: 'descExtCober', sortable: true,
+    { title: "DESCRIPCIÓN", key: "descExtCober", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-   /*  { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+   /*  { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'EDITAR', key: 'actions', sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
     {
-      name: 'cveExtCober',
-      label: 'Clave',
-      type: 'number',
+      name: "cveExtCober",
+      label: "Clave",
+      type: "number",
       required: true,
-      dataKey: 'cveExtCober',
+      dataKey: "cveExtCober",
       defaultValue: 0,
     },
     {
-      name: 'descExtCober',
-      label: 'Descripción',
-      type: 'text',
+      name: "descExtCober",
+      label: "Descripción",
+      type: "text",
       required: true,
-      dataKey: 'descExtCober',
-      defaultValue: '',
+      dataKey: "descExtCober",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
-      items: ['Sí', 'No'],
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
+      items: ["Sí", "No"],
       required: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
+      dataKey: "esActivo",
+      displayType: "checkbox",
       defaultValue: true,
-      transformFromAPI: (value: number) => !!value,
-      transformToAPI: (value: boolean) => value ? 1 : 0,
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
-    cveExtCober: (value: number) => !!value && value > 0 || 'La clave es requerida y mayor que 0',
-    descExtCober: (value: string) => value?.length > 0 || 'La descripción es requerida',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    //TODO: la clave es automatica, el mayor en db +1
+    cveExtCober: (value: number) => minMax(value, 1, 9) || "La clave es requerida y mayor que 0",
+    descExtCober: (value: string) => minMaxString(value, 1, 20) || "La descripción es requerida, mínimo 1 y máximo 20 caracteres.",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

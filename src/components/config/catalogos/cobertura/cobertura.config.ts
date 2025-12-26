@@ -1,86 +1,92 @@
-import { CoberturasActions } from '@/API/catalogos/coberturas/coberturas.actions'
+import { CoberturasActions } from "@/API/catalogos/coberturas/coberturas.actions"
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = CoberturasActions()
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const coberturaConfig = {
-  entity: 'cobertura',
-  title: 'Coberturas',
-  searchPlaceholder: '',
-  addButtonText: '',
-  modalTitle: 'Agregar cobertura',
-  tableTitle: 'Lista de Coberturas',
+  entity: "cobertura",
+  title: "Coberturas",
+  searchPlaceholder: "",
+  addButtonText: "",
+  modalTitle: "Agregar cobertura",
+  tableTitle: "Lista de Coberturas",
 
   headers: [
-    /* { title: 'ID COBERTURA', key: 'idCob', sortable: true,
+    /* { title: "ID COBERTURA", key: "idCob", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'CLAVE', key: 'cveCob', sortable: true,
+    { title: "CLAVE", key: "cveCob", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'DESCRIPCIÓN', key: 'descCob', sortable: true,
+    { title: "DESCRIPCIÓN", key: "descCob", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    { title: 'ACTIVO', key: 'esActivo', sortable: true,
+    { title: "ACTIVO", key: "esActivo", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
-    /* { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    /* { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     }, */
-    { title: 'EDITAR', key: 'actions', sortable: false,
+    { title: "EDITAR", key: "actions", sortable: false,
       headerProps: {
-        style: 'font-weight: bold',
+        style: "font-weight: bold",
       },
     },
   ],
 
   fields: [
     {
-      name: 'id',
-      label: 'ID',
-      type: 'text',
+      name: "id",
+      label: "ID",
+      type: "text",
       hidden: true,
     },
     {
-      name: 'cveCob',
-      label: 'Clave',
-      type: 'text',
+      name: "idCob",
+      label: "ID Cobertura",
+      type: "text",
       required: true,
-      dataKey: 'cveCob',
+      dataKey: "idCob",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'descCob',
-      label: 'Descripción',
-      type: 'text',
+      name: "descCob",
+      label: "Descripción",
+      type: "text",
       required: true,
-      dataKey: 'descCob',
+      dataKey: "descCob",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: 'esActivo',
-      label: 'Activo',
-      type: 'Checkbox',
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
       required: true,
       defaultValue: true,
-      dataKey: 'esActivo',
-      displayType: 'checkbox',
-      transformFromAPI: (value: number) => !!value,
-      transformToAPI: (value: boolean) => value ? 1 : 0,
+      dataKey: "esActivo",
+      displayType: "checkbox",
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
-    cveCob: (value: string) => value?.length >= 2 || 'La clave es requerida',
-    descCob: (value: string) => value?.length > 0 || 'La descripción es requerida',
-    esActivo: (value: string) => !!value || 'El campo activo es requerido',
+    idCob: (value: string) => minMaxString(value, 1, 10) || "el id de cobertura es requerido",
+    descCob: (value: string) => minMaxString(value, 1, 50) || "La descripción es requerida",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
 
   apiActions: {

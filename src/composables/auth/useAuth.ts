@@ -1,6 +1,6 @@
 import { AuthActions } from "@/API/auth/Auth.actions";
 import type { dataCredentials, ResponseInterinal, } from "@/API/auth/Auth.interfaces";
-import { useRegex } from "@/components/validations/useRegex";
+import { useRegex } from "@/utilities/validations/useRegex";
 import { AuthStore } from "@/stores/authStore";
 import axios from "axios";
 

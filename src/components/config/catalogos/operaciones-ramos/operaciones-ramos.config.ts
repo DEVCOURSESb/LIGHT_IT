@@ -1,16 +1,8 @@
 import { OperacionesRamosActions } from "@/API/catalogos/operaciones-ramos/operaciones-ramos.actions";
+import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = OperacionesRamosActions();
-
-const rebuildString = (value: string, len: number): string => {
-  if (value.trim().length === len) return value.trim();
-
-  const arrayCharacters: string[] = value.trim().split("");
-
-  const ar = Array.from({ length: len - arrayCharacters.length }, () => "0");
-
-  return ar.concat(arrayCharacters).toString().replaceAll(",", "");
-};
+const { minMaxString, validateBoolean, fillString, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const operacionesRamosConfig = {
   entity: "operaciones-ramos",
@@ -124,32 +116,13 @@ export const operacionesRamosConfig = {
       defaultValue: "",
     },
     {
-      name: "descOperacionRamos",
-      label: "Descripción operación ramos",
-      type: "text",
-      required: true,
-      dataKey: "descOperacionRamos",
-      defaultValue: "",
-      transformToAPI: (value: string) => (value.trim().toUpperCase()),
-    },
-    {
-      name: "esActivo",
-      label: "Activo",
-      type: 'Checkbox',
-      required: true,
-      dataKey: "esActivo",
-      displayType: 'checkbox',
-      transformFromAPI: (value: number) => (value === 1),
-      transformToAPI: (value: boolean) => (value ? 1 : 2),
-    },
-    {
       name: "operacion",
       label: "Operación",
       type: "text",
       required: true,
       dataKey: "operacion",
       defaultValue: "0000",
-      transformToAPI: (value: string) => rebuildString(value, 4),
+      transformToAPI: (value: string) => fillString(value, 4, "0"),
     },
     {
       name: "ramo",
@@ -158,7 +131,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "ramo",
       defaultValue: "000",
-      transformToAPI: (value: string) => rebuildString(value, 3),
+      transformToAPI: (value: string) => fillString(value, 3, "0"),
     },
     {
       name: "subramo",
@@ -167,7 +140,7 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "subramo",
       defaultValue: "000",
-      transformToAPI: (value: string) => rebuildString(value, 3),
+      transformToAPI: (value: string) => fillString(value, 3, "0"),
     },
     {
       name: "subsubramo",
@@ -176,19 +149,39 @@ export const operacionesRamosConfig = {
       required: true,
       dataKey: "subsubramo",
       defaultValue: "0000",
-      transformToAPI: (value: string) => rebuildString(value, 4),
+      transformToAPI: (value: string) => fillString(value, 4, "0"),
+    },
+    {
+      name: "descOperacionRamos",
+      label: "Descripción operación ramos",
+      type: "text",
+      required: true,
+      dataKey: "descOperacionRamos",
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
+    },
+    {
+      name: "esActivo",
+      label: "Activo",
+      type: "Checkbox",
+      required: true,
+      dataKey: "esActivo",
+      displayType: "checkbox",
+      defaultValue: true,
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
     // cveCobertura: (value: string) => value?.length > 0 || "La clave es requerida",
     //cveExtCober: (value: string) => value?.length > 0 || "La clave extra cobertura es requerida",
-    descOperacionRamos: (value: string) => value?.trim()?.length > 0 && value?.trim()?.length <= 100 || "La descripción es requerida",
-    esActivo: (value: string) => !!value || "El campo activo es requerido",
-    operacion: (value: string) => (value?.trim()?.length > 0 && value?.trim()?.length <= 4) || "La operación es requerida, mínimo 1 y máximo 4 caracteres.",
-    ramo: (value: string) => (value?.trim()?.length > 0 && value?.trim()?.length <= 3) || "El ramo es requerido, mínimo 1 y máximo 3 caracteres.",
-    subramo: (value: string) => (value?.trim()?.length > 0 && value?.trim()?.length <= 3) || "El subramo es requerido, mínimo 1 y máximo 3 caracteres.",
-    subsubramo: (value: string) => (value?.trim()?.length > 0 && value?.trim()?.length <= 4) || "El subsubramo es requerido, mínimo 1 y máximo 4 caracteres.",
+    descOperacionRamos: (value: string) => minMaxString(value, 1, 100) || "La descripción es requerida",
+    esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
+    operacion: (value: string) => minMaxString(value, 1, 4) || "La operación es requerida, mínimo 1 y máximo 4 caracteres.",
+    ramo: (value: string) => minMaxString(value, 1, 3) || "El ramo es requerido, mínimo 1 y máximo 3 caracteres.",
+    subramo: (value: string) => minMaxString(value, 1, 3) || "El subramo es requerido, mínimo 1 y máximo 3 caracteres.",
+    subsubramo: (value: string) => minMaxString(value, 1, 4) || "El subsubramo es requerido, mínimo 1 y máximo 4 caracteres.",
   },
 
   apiActions: {
