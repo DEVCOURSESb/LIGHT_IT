@@ -1,8 +1,8 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-select
             v-model="detalles"
             :items="['Sí', 'No']"
@@ -11,32 +11,35 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="tipoOperacionRamo"
             :disabled="detalles === 'No'"
             label="Tipo operación / ramo"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="operacionRamo"
             :disabled="detalles === 'No'"
             label="Operación / ramo"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="retencion"
             label="Retención"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -44,12 +47,13 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="cesion"
             label="Cesión"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -59,13 +63,14 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="montoRetencion"
             label="Monto retención"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-currency-usd"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -73,13 +78,14 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="montoCesion"
             label="Monto cesión"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-currency-usd"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -87,11 +93,12 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="capacidadContrato"
             label="Capacidad contrato"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             type="number"
             variant="solo-filled"
@@ -100,11 +107,12 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="baseCesion"
             label="Base cesión"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -112,11 +120,12 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="monedaDetalle"
             label="Moneda detalles"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -134,7 +143,7 @@
         </v-btn>
       </v-col>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

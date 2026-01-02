@@ -59,19 +59,31 @@ export function AppRouter() {
           path: "/reaseguro/contratosReaseguro/nuevoContratoVida",
           name: "nuevoContratoVida",
           component: () => import("@/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue"),
-          meta: { title: "Visualizar Contratos Vida" },
+          meta: { title: "Nuevo Contrato Vida" },
         },
         {
           path: "/reaseguro/contratosReaseguro/modificarContratoVida",
           name: "modificarContratoVida",
           component: () => import("@/pages/reaseguro/Contratos/Vida/ModificarContratosVidaPage.vue"),
-          meta: { title: "Visualizar Contratos" },
+          meta: { title: "Modificar Contratos Vida" },
+        },
+        {
+          path: "/reaseguro/contratosReaseguro/modificarContratoVidaId",
+          name: "modificarContratoVidaId",
+          component: () => import("@/pages/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage.vue"),
+          meta: { title: "Modificar Contratos Vida ID" },
         },
         {
           path: "/reaseguro/contratosReaseguro/visualizarContratoVida",
           name: "visualizarContratoVida",
           component: () => import("@/pages/reaseguro/Contratos/Vida/VisualizarContratosVidaPage.vue"),
-          meta: { title: "Visualizar Contratos" },
+          meta: { title: "Visualizar Contratos Vida" },
+        },
+        {
+          path: "/reaseguro/contratosReaseguro/visualizarContratoVidaId",
+          name: "visualizarContratoVidaId",
+          component: () => import("@/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage.vue"),
+          meta: { title: "Visualizar Contratos Vida" },
         },
         // Autos
         {

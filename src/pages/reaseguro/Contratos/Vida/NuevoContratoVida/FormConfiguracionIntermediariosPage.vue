@@ -1,201 +1,354 @@
 <template>
-  <form>
+  <v-form ref="form">
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row>
+        <v-col cols="12" md="4">
           <v-select
             v-model="intermediario"
-            :items="['SI', 'NO']"
+            :items="opcionesSiNo"
+            item-title="title"
+            item-value="value"
             label="¿Intermediario?"
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="3"
-        >
+
+        <v-col cols="12" md="4">
           <v-select
             v-model="asignacionIntermediario"
-            class="selectForm"
-            :disabled="intermediario === 'NO'"
-            :items="['POR CONTRATO', 'POR REASEGURADOR']"
+            :items="asignacionIntermediarioOptions"
+            :disabled="intermediario === 1"
+            item-title="title"
+            item-value="value"
             label="Asignación de intermediario"
-            required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="3"
-        >
+        <v-col cols="12" md="4">
           <v-select
             v-model="reaseguradora"
-            class="selectForm"
-            :disabled="intermediario === 'NO' || asignacionIntermediario === 'POR CONTRATO'"
+            :items="reaseguradoraOptions"
+            :disabled="intermediario === 1 || asignacionIntermediario === 1"
+            item-title="title"
+            item-value="value"
             label="Reaseguradora"
-            required
             variant="solo-filled"
           />
         </v-col>
-        <v-divider />
-        <v-btn
-          class="ma-2"
-          color="indigo"
-          icon="mdi mdi-plus"
-          max-height="30px"
-          max-width="30px"
-        />
+
+        <v-divider class="my-4" />
+
+        <v-tooltip text="Agregar nuevo intermediario">
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-plus"
+              color="indigo"
+              class="ma-2"
+              @click="agregarIntermediario"
+            />
+          </template>
+        </v-tooltip>
+
         <v-col cols="12" md="7">
           <v-select
             v-model="interme"
-            class="selectForm"
-            :disabled="intermediario === 'NO'"
+            :items="intermeOptions"
+            :disabled="intermediario === 1"
+            item-title="title"
+            item-value="value"
             label="Intermediario / Broker"
-            required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="corretajeP"
-            class="selectForm"
-            :disabled="intermediario === 'NO'"
-            :items="['SI', 'NO']"
+            :items="opcionesSiNo"
+            :disabled="intermediario === 1"
             label="¿Corretaje?"
-            required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="3"
-        >
+        <v-col cols="12" md="4">
           <v-select
             v-model="tipoCorretaje"
-            class="selectForm"
-            :disabled="intermediario === 'NO' || corretajeP === 'NO'"
-            :items="['FIJO', 'VARIABLE']"
+            :items="tipoCorretajeOptions"
+            :disabled="corretajeP === 1"
+            item-title="title"
+            item-value="value"
             label="Tipo de corretaje"
-            required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="3"
-        >
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="corretaje"
-            :disabled="intermediario === 'NO' || corretajeP === 'NO'"
-            label="Corretaje"
-            prepend-icon=""
-            prepend-inner-icon="mdi mdi-percent-outline"
-            required
-            suffix="%"
+            :disabled="corretajeP === 1 || tipoCorretaje !== 0"
+            :rules="[ValidacionesContrato.limiteSiniestralidad()]"
+            label="% Corretaje"
             type="number"
+            suffix="%"
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="3"
-        >
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="montoCorretaje"
-            :disabled="intermediario === 'NO' || corretajeP === 'NO'"
+            :disabled="corretajeP === 1 || tipoCorretaje !== 0"
+            :rules="[ValidacionesContrato.numeroC21()]"
             label="Monto corretaje"
-            prepend-icon=""
-            prepend-inner-icon="mdi mdi-currency-usd"
-            required
             type="number"
             variant="solo-filled"
           />
         </v-col>
       </v-row>
-      <v-spacer />
-      <br>
+
+      <v-divider class="my-4" />
+
+      <v-data-table
+        :headers="headers"
+        :items="intermediariosTabla"
+        hide-default-footer
+      >
+        <template #item.modificar="{ item, index }">
+          <v-btn icon="mdi-pencil" color="blue" @click="editarIntermediario(item, index)" />
+        </template>
+
+        <template #item.eliminar="{ index }">
+          <v-btn icon="mdi-delete" color="red" @click="eliminarIntermediario(index)" />
+        </template>
+      </v-data-table>
+
+      <v-divider class="my-4" />
+
       <v-col class="text-center">
-        <v-btn class="btn-guardar"  >
-          Agregar intermediarios
+        <v-btn @click="guardarDatosGenerales">
+          Guardar intermediarios
         </v-btn>
-      </v-col>
-      <v-col class="text-center">
-        <v-btn color="#73D7D9"  >
+        <v-spacer/>
+        <br>
+        <v-btn class="btn-guardar" @click="abrirModalResumen">
           Guardar contrato
         </v-btn>
+         <ModalEnviarDatos ref="modalRef" />
       </v-col>
     </v-container>
-  </form>
-  <div>
-    <v-data-table :headers="headers" hide-default-footer  />
-  </div>
+  </v-form>
 </template>
+
 <script lang="ts" setup>
-  import { ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
+import { NuevoContratoVidaConInt } from './NuevoContratoConfigInt.actions'
+import { useContratoStore } from "@/stores/contratoStore"
+import { DialogType, useDialog } from "@/stores/dialogStore"
+import ModalEnviarDatos from './ModalEnviarDatos.vue'
+import { ValidacionesContrato } from './ValidacionesContrato'
 
-  const intermediario = ref('')
-  const asignacionIntermediario = ref('')
-  const reaseguradora = ref('')
-  const interme = ref('')
-  const corretajeP = ref('')
-  const tipoCorretaje = ref('')
-  const corretaje = ref('')
-  const montoCorretaje = ref('')
-  const formulaLimiteCorre = ref('')
-  const corretajeProvi = ref('')
-  const montoCorretajeProvi = ref('')
+const modalRef = ref<any>(null)
+const form = ref<any>(null)
 
-  watch (intermediario, value => {
-    if (value === 'NO') {
-      asignacionIntermediario.value = ''
-      reaseguradora.value = ''
-      interme.value = ''
-      corretajeP.value = ''
-      tipoCorretaje.value = ''
-      corretaje.value = ''
-      montoCorretaje.value = ''
-      formulaLimiteCorre.value = ''
-      corretajeProvi.value = ''
-      montoCorretajeProvi.value = ''
+const intermediario = ref<number>(1)
+const asignacionIntermediario = ref<number>(1)
+const reaseguradora = ref<number | null>(null)
+const interme = ref<number | null>(null)
+const corretajeP = ref<number>(1)
+const tipoCorretaje = ref<number | null>(null)
+const corretaje = ref<number | null>(null)
+const montoCorretaje = ref<number | null>(null)
+
+const intermediariosTabla = ref<any[]>([])
+const indexEdicion = ref<number | null>(null)
+
+const opcionesSiNo = [
+  { title: 'SI', value: 0 },
+  { title: 'NO', value: 1 }
+]
+
+const abrirModalResumen = () => {
+  if (modalRef.value && typeof modalRef.value.abrirResumen === 'function') {
+    modalRef.value.abrirResumen()
+  }
+}
+const contratoStore = useContratoStore()
+const dialog = useDialog()
+
+const {
+  asignacionIntermediarioOptions, fetchAsignacionInt,
+  reaseguradoraOptions, fetchReasegurador,
+  intermeOptions, fetchIntermediario,
+  tipoCorretajeOptions, fetchTipoCorretaje
+} = NuevoContratoVidaConInt()
+
+const getTitle = (options: any[], value: any) => {
+  if (!options || options.length === 0 || value === null || value === undefined) return ''
+  const found = options.find(o => String(o.value) === String(value))
+  return found ? found.title : ''
+}
+
+const catalogosCargados = computed(() => {
+  return asignacionIntermediarioOptions.value.length > 0 &&
+         reaseguradoraOptions.value.length > 0 &&
+         intermeOptions.value.length > 0
+})
+
+const hidratarTablaDesdeStore = () => {
+  const cfg = contratoStore.configInt
+  if (!cfg?.intermediariosTabla || cfg.intermediariosTabla.length === 0) {
+    return
+  }
+
+  intermediariosTabla.value = cfg.intermediariosTabla.map((item: any) => {
+    const valAsignacion = item.asignacionInterm ?? item.asignacionIntermediario;
+
+    return {
+      ...item,
+      asignacionInterm: valAsignacion,
+      display: {
+        asignacion: getTitle(asignacionIntermediarioOptions.value, valAsignacion),
+        reaseguradora: getTitle(reaseguradoraOptions.value, item.reaseguradora),
+        broker: getTitle(intermeOptions.value, item.broker),
+        corretaje: item.corretaje === 0 ? 'SI' : 'NO',
+        tipo: getTitle(tipoCorretajeOptions.value, item.tipoCorretaje),
+      }
     }
   })
+}
 
-  watch (corretajeP, value => {
-    if (value === 'NO') {
-      tipoCorretaje.value = ''
-      corretaje.value = ''
-      montoCorretaje.value = ''
-      formulaLimiteCorre.value = ''
-      corretajeProvi.value = ''
-      montoCorretajeProvi.value = ''
+watch(
+  [() => contratoStore.configInt?.intermediariosTabla, catalogosCargados],
+  ([tablaStore, listos]) => {
+    if (listos && tablaStore) {
+      hidratarTablaDesdeStore()
     }
+  },
+  { immediate: true, deep: true }
+)
+
+watch(intermediario, v => { if (v === 1) limpiarFormulario() })
+watch(corretajeP, v => {
+  if (v === 1) {
+    tipoCorretaje.value = null; corretaje.value = null; montoCorretaje.value = null
+  }
+})
+watch(asignacionIntermediario, v => { if (v === 1) reaseguradora.value = null })
+
+const limpiarFormulario = () => {
+  reaseguradora.value = null
+  interme.value = null
+  corretajeP.value = 1
+  tipoCorretaje.value = null
+  corretaje.value = null
+  montoCorretaje.value = null
+}
+
+const agregarIntermediario = async () => {
+  if (corretaje.value && montoCorretaje.value) {
+    dialog.show({ title: 'ERROR', message: 'Capture % o monto, no ambos', type: DialogType.ERROR })
+    return
+  }
+
+  if (intermediario.value === 1) {
+    dialog.show({ title: 'ADVERTENCIA', message: 'El campo "Intermediario" debe ser SI', type: DialogType.INFO })
+    return
+  }
+
+  const registro = {
+    intermediario: intermediario.value,
+    asignacionInterm: asignacionIntermediario.value,
+    reaseguradora: reaseguradora.value,
+    broker: interme.value,
+    corretaje: corretajeP.value,
+    tipoCorretaje: tipoCorretaje.value,
+    corretajeFijo: corretaje.value,
+    montoCorreFijo: montoCorretaje.value,
+    display: {
+      asignacion: getTitle(asignacionIntermediarioOptions.value, asignacionIntermediario.value),
+      reaseguradora: getTitle(reaseguradoraOptions.value, reaseguradora.value),
+      broker: getTitle(intermeOptions.value, interme.value),
+      corretaje: corretajeP.value === 0 ? 'SI' : 'NO',
+      tipo: getTitle(tipoCorretajeOptions.value, tipoCorretaje.value),
+    }
+  }
+
+  if (indexEdicion.value !== null) {
+    intermediariosTabla.value[indexEdicion.value] = registro
+    indexEdicion.value = null
+  } else {
+    intermediariosTabla.value.push(registro)
+  }
+  limpiarFormulario()
+}
+
+const editarIntermediario = (item: any, index: number) => {
+  indexEdicion.value = index
+  intermediario.value = item.intermediario
+  asignacionIntermediario.value = item.asignacionInterm
+  reaseguradora.value = item.reaseguradora
+  interme.value = item.broker
+  corretajeP.value = item.corretaje
+  tipoCorretaje.value = item.tipoCorretaje
+  corretaje.value = item.corretajeFijo
+  montoCorretaje.value = item.montoCorreFijo
+}
+const eliminarIntermediario = (index: number) => {
+  intermediariosTabla.value.splice(index, 1)
+}
+
+const guardarDatosGenerales = async () => {
+  const { valid } = await form.value.validate()
+  if (!valid) {
+    dialog.show({ title: 'Atención', message: 'Complete los campos obligatorios', type: DialogType.ERROR })
+    return
+  }
+  const idContrato = contratoStore.general?.idContrato
+
+  if (!valid || !idContrato) {
+    dialog.show({
+      title: 'Atención',
+      message: 'ID de contrato no encontrado o campos incompletos',
+      type: DialogType.ERROR
+    })
+    return
+  }
+
+  contratoStore.setConfigInt({
+    idContrato,
+    intermediario: intermediario.value,
+    asignacionIntermediario: asignacionIntermediario.value,
+    reaseguradora: reaseguradora.value,
+    interme: interme.value,
+    corretajeP: corretajeP.value,
+    tipoCorretaje: tipoCorretaje.value,
+    corretaje: corretaje.value ?? 0,
+    montoCorretaje: montoCorretaje.value,
+    intermediariosTabla: intermediariosTabla.value
   })
 
-  watch (tipoCorretaje, value => {
-    if (value === 'FIJO') {
-      formulaLimiteCorre.value = ''
-      montoCorretaje.value = ''
-    } else if (value = 'VARIABLE') {
-      corretaje.value = ''
-      montoCorretaje.value = ''
-    }
-  })
+  dialog.show({ title: 'Información', message: 'Guardado correctamente', type: DialogType.SUCCESS })
+}
 
-  const headers = [
-    { title: 'Intermediario',  key: 'intermediario' },
-    { title: 'Asignación de intermediario',  key: 'asignacionInterm' },
-    { title: 'Reaseguradora',  key: 'reaseguradora' },
-    { title: 'Intermediario / Broker',  key: 'intermediarioBroker' },
-    { title: '¿Corretaje?',  key: 'corretaje' },
-    { title: 'Tipo corretaje',  key: 'tipoCorretaje' },
-    { title: '% Corretaje fijo',  key: 'corretajeFijo' },
-    { title: 'Monto corretaje fijo',  key: 'montoCorreFijo' },
-    { title: 'Modificar',  key: 'activo' },
-    { title: 'Eliminar',  key: 'editar' },
-  ]
+onMounted(() => {
+  fetchAsignacionInt()
+  fetchReasegurador()
+  fetchIntermediario()
+  fetchTipoCorretaje()
+})
+
+const headers = [
+  { title: 'Asignación', key: 'display.asignacion' },
+  { title: 'Reaseguradora', key: 'display.reaseguradora' },
+  { title: 'Broker', key: 'display.broker' },
+  { title: '¿Corretaje?', key: 'display.corretaje' },
+  { title: 'Tipo de corretaje', key: 'display.tipo' },
+  { title: '%', key: 'corretajeFijo' },
+  { title: 'Monto', key: 'montoCorreFijo' },
+  { title: 'Modificar', key: 'modificar' },
+  { title: 'Eliminar', key: 'eliminar' }
+]
 </script>

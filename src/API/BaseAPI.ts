@@ -10,7 +10,9 @@ interface BaseAPIOptions {
 }
 
 export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOptions = {}): AxiosInstance {
-  const base =  isBase ? import.meta.env.VITE_API_BASE : import.meta.env.VITE_API_BASE_CATALOGOS;
+  const base =  isBase ?
+  import.meta.env.VITE_API_BASE :
+  import.meta.env.VITE_API_BASE_CATALOGOS;
   const instance = axios.create({
     baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
   })
@@ -21,8 +23,9 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
   if (isPrivate) {
     instance.interceptors.request.use(
       config => {
-        const token = authStore.getToken;
-
+        const token = isBase
+          ? (authStore.getTokenContratos || authStore.getToken)
+          : authStore.getToken;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }
@@ -34,11 +37,9 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
       error => Promise.reject(error),
     )
 
-     // Interceptor de Response - Manejo de errores
     instance.interceptors.response.use(
       response => response,
       async error => {
-        // Verificar si hay una respuesta del servidor
         if (error.code === 'ERR_NETWORK') {
 
             const { useAuth } = await import('@/composables/auth/useAuth');
@@ -59,11 +60,9 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOpt
             }, 800);
 
         }
-
         return Promise.reject(error)
       },
     )
   }
-
   return instance
 }

@@ -1,36 +1,39 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="idContrato"
             label="Identificador del contrato"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-date-input
             v-model="inicioContrato"
             label="Fecha inicio contrato"
             prepend-icon=""
             prepend-inner-icon="$calendar"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-date-input
             v-model="finContrato"
             label="Fecha fin contrato"
             prepend-icon=""
             prepend-inner-icon="$calendar"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="contratoProrrogado"
             :items="['SI', 'NO']"
@@ -38,18 +41,19 @@
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-date-input
             v-model="fechaProrroga"
             v-if="contratoProrrogado === 'SI'"
             label="Fecha prorroga"
             prepend-icon=""
             prepend-inner-icon="$calendar"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="contratoCancelado"
             :items="['SI', 'NO']"
@@ -57,24 +61,26 @@
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-date-input
             v-model="fechaCancelacion"
             v-if="contratoCancelado === 'SI'"
             label="Fecha cancelacion"
             prepend-icon=""
             prepend-inner-icon="$calendar"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="tipoSeguro"
             label="Tipo de reaseguro"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -82,11 +88,12 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="tipoContrato"
             label="Tipo de contrato"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -94,12 +101,13 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="formaContractual"
             class="selectForm"
             label="Forma contractual"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -107,12 +115,13 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="criterioCobertura"
             class="selectForm"
             label="Criterio de cobertura"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -120,16 +129,17 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="negociosCubiertos"
             label="Negocios cubiertos"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="contratoCancelado"
             :items="['SI', 'NO']"
@@ -138,27 +148,29 @@
           />
         </v-col>
       </v-row>
-      <v-row class="d-flex justify-center align-center">
+      <v-row >
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="moneda"
             class="selectForm"
             label="Moneda"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="tipoOperacion"
             class="selectForm"
             label="Tipo operación / ramo"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -166,12 +178,13 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="operacionRamo"
             class="selectForm"
             label="Operación / ramo"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -191,9 +204,9 @@
         </v-btn>
       </v-col>
     </v-container>
-  </form>
+  </v-form>
   <div>
-    <v-row class="d-flex justify-center align-center">
+    <v-row >
       <v-col cols="12" md="5">
         <v-data-table :headers="headers1" hide-default-footer  />
       </v-col>
