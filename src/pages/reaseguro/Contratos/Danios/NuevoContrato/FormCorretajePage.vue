@@ -1,37 +1,41 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-select
             v-model="intermediario"
             label="Intermediario"
+            :rules="[v => !!v || 'Intermediario requerido']"
+            required
             variant="solo-filled"
           />
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="reaseguradora"
             class="selectForm"
             label="Reaseguradora"
+            :rules="[v => !!v || 'Reaseguradora requerida']"
             required
             variant="solo-filled"
           />
         </v-col>
       </v-row>
-      <v-row class="d-flex justify-center align-center">
+      <v-row >
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="limiteInf"
             label="Limite inferior"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Limite inferior requerido']"
             required
             suffix="%"
             type="number"
@@ -39,12 +43,13 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="limiteSup"
             label="Limite superior"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Limite superior requerido']"
             required
             suffix="%"
             type="number"
@@ -52,12 +57,13 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="corretajeDef"
             label="Corretaje definitivo"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Corretaje definitivo requerido']"
             required
             suffix="%"
             type="number"
@@ -67,13 +73,14 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="montoCorretajeDef"
             label="Monto corretaje definitivo"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-currency-usd"
+            :rules="[v => !!v || 'Monto corretaje definitivo requerido']"
             required
             variant="solo-filled"
           />
@@ -96,14 +103,19 @@
         </v-btn>
       </v-col>
       <br>
-      <v-row class="d-flex justify-center align-center">
+      <v-row >
         <v-col class="text-center" md="5">
-          <v-file-input label="Cargar archivo" />
+          <v-file-input
+            label="Cargar archivo"
+            :rules="[v => !!v || 'Archivo requerido']"
+            required
+            variant="solo-filled"
+          />
           <v-btn>Desactivar <br> tabla</v-btn>
         </v-col>
       </v-row>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

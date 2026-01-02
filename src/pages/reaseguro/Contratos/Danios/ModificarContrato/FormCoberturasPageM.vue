@@ -1,7 +1,7 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
+      <v-row >
         <v-col cols="12" md="5">
           <v-select
             v-model="asignacionCoberturas"
@@ -19,6 +19,7 @@
             class="selectForm"
             :disabled="asignacionCoberturas === 'POR CONTRATO'"
             label="Reaseguradora"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -31,6 +32,7 @@
             v-model="operacionRamoCober"
             class="selectForm"
             label="Operación / ramo coberturas"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -41,6 +43,7 @@
             v-model="coberturas"
             class="selectForm"
             label="Coberturas"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -57,7 +60,7 @@
         </v-btn>
       </v-col>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

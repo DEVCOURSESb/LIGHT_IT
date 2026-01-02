@@ -1,8 +1,8 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-select
             v-model="reaseguradora"
             label="Reaseguradora"
@@ -10,13 +10,14 @@
           />
         </v-col>
       </v-row>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="limiteInf"
             label="Limite inferior"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -24,12 +25,13 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="limiteSup"
             label="Limite superior"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -37,7 +39,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="comisionDef"
             label="Comisión definitiva"
@@ -45,6 +47,7 @@
             min="0"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -65,14 +68,14 @@
         </v-btn>
       </v-col>
       <br>
-      <v-row class="d-flex justify-center align-center">
+      <v-row >
         <v-col class="text-center" md="5">
           <v-file-input label="Cargar archivo" />
           <v-btn>Desactivar <br> tabla</v-btn>
         </v-col>
       </v-row>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

@@ -1,8 +1,8 @@
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-select
             v-model="intermediario"
             :items="['SI', 'NO']"
@@ -12,7 +12,7 @@
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="asignacionIntermediario"
@@ -20,6 +20,7 @@
             :disabled="intermediario === 'NO'"
             :items="['POR CONTRATO', 'POR REASEGURADOR']"
             label="Asignación de intermediario"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -27,36 +28,39 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="reaseguradora"
             class="selectForm"
             :disabled="intermediario === 'NO' || asignacionIntermediario === 'POR CONTRATO'"
             label="Reaseguradora"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="interme"
             class="selectForm"
             :disabled="intermediario === 'NO'"
             label="Intermediario"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="corretaje"
             class="selectForm"
             :disabled="intermediario === 'NO'"
             :items="['SI', 'NO']"
             label="Corretaje"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -64,7 +68,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="tipoCorretaje"
@@ -72,6 +76,7 @@
             :disabled="intermediario === 'NO' || corretaje === 'NO'"
             :items="['FIJO', 'VARIABLE']"
             label="Tipo de corretaje"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -79,7 +84,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="corretajeFijo"
@@ -87,6 +92,7 @@
             label="Corretaje fijo"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -96,7 +102,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="montoCorretajeFijo"
@@ -104,6 +110,7 @@
             label="Monto corretaje fijo"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-currency-usd"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             type="number"
             variant="solo-filled"
@@ -112,13 +119,14 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="formulaLimiteCorre"
             class="selectForm"
             :disabled="intermediario === 'NO' || tipoCorretaje === 'FIJO'"
-            label="Formula limite corretaje"
+            label="Fórmula limite corretaje"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -126,7 +134,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="corretajeProvi"
@@ -134,6 +142,7 @@
             label="Corretaje provisional"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -143,7 +152,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="montoCorretajeProvi"
@@ -151,6 +160,7 @@
             label="Monto corretaje provisional"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-currency-usd"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             type="number"
             variant="solo-filled"
@@ -174,7 +184,7 @@
         </v-btn>
       </v-col>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

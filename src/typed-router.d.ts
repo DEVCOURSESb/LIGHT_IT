@@ -80,6 +80,7 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormDatosPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormGeneralDatosPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/NuevoContratoVida/ModalEnviarDatos': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/ModalEnviarDatos', '/reaseguro/Contratos/Vida/NuevoContratoVida/ModalEnviarDatos', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVidaPage', '/reaseguro/Contratos/Vida/NuevoContratoVidaPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', '/reaseguro/Contratos/Vida/VisualizarContratosVidaPage', Record<never, never>, Record<never, never>>,
   }
@@ -341,6 +342,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage.vue': {
       routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/FormPolizasFacultativasPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/ModalEnviarDatos.vue': {
+      routes: '/reaseguro/Contratos/Vida/NuevoContratoVida/ModalEnviarDatos'
       views: never
     }
     'src/pages/reaseguro/Contratos/Vida/NuevoContratoVidaPage.vue': {

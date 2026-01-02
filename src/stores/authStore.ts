@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 
 interface AuthState {
   token: string | null;
+  tokenContratos: string | null;
   email: string | null;
   password: string | null;
   isAuthenticated: boolean;
@@ -15,37 +16,43 @@ interface LoginCredentials {
 }
 
 export const AuthStore = defineStore("auth", () => {
-  // Estado
   const token = ref<string | null>(localStorage.getItem("token"));
+  const tokenContratos = ref<string | null>(
+  localStorage.getItem("tokenContratos")
+  );
   const email = ref<string | null>(localStorage.getItem("email"));
   const password = ref<string | null>(null);
   const isAuthenticated = ref<boolean>(!!localStorage.getItem("token"));
 
-  // Getters
   const getToken = computed<string | null>(() => token.value);
+  const getTokenContratos = computed<string | null>(() => tokenContratos.value);
   const getEmail = computed<string | null>(() => email.value);
   const isLoggedIn = computed<boolean>(() => isAuthenticated.value);
 
-  // Actions
   const login = (credentials: LoginCredentials): void => {
     token.value = credentials.token;
     email.value = credentials.email;
     password.value = credentials.password;
     isAuthenticated.value = true;
 
-    // Guardar en localStorage (excepto password)
     localStorage.setItem("token", credentials.token);
     localStorage.setItem("email", credentials.email);
   };
+  const loginContratos = (newToken: string): void => {
+    tokenContratos.value = newToken;
+    localStorage.setItem("tokenContratos", newToken);
+  };
+
 
   const logout = (): void => {
     token.value = null;
+    tokenContratos.value = null;
     email.value = null;
     password.value = null;
     isAuthenticated.value = false;
 
-    // Limpiar localStorage
     localStorage.removeItem("token");
+    localStorage.removeItem("tokenContratos");
     localStorage.removeItem("email");
   };
 
@@ -66,17 +73,17 @@ export const AuthStore = defineStore("auth", () => {
   };
 
   return {
-    // Estado
     token,
+    tokenContratos,
     email,
     password,
     isAuthenticated,
-    // Getters
     getToken,
+    getTokenContratos,
     getEmail,
     isLoggedIn,
-    // Actions
     login,
+    loginContratos,
     logout,
     updateToken,
     checkAuth,

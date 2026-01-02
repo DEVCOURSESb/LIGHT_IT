@@ -1,9 +1,9 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <form>
+  <v-form>
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="3">
+      <v-row >
+        <v-col cols="12" md="4">
           <v-select
             v-model="reaseguradora"
             label="Reaseguradora"
@@ -11,12 +11,13 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-text-field
             v-model="participacion"
             label="Participación"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -25,7 +26,7 @@
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="otorgaPtu"
@@ -37,7 +38,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="ptu"
@@ -45,6 +46,7 @@
             label="PTU"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -52,11 +54,12 @@
           />
         </v-col>
 
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="formulaCalculoPtu"
             :disabled="otorgaPtu === 'NO'"
             label="Fórmula cálculo PTU"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             variant="solo-filled"
           />
@@ -64,7 +67,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="k"
@@ -72,6 +75,7 @@
             label="k"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -81,7 +85,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="aniosArrastre"
@@ -89,6 +93,7 @@
             label="Años de arrastre"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-calendar-clock-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             type="number"
             variant="solo-filled"
@@ -97,7 +102,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="comiReaseguro"
@@ -109,7 +114,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-select
             v-model="tipoComision"
@@ -122,7 +127,7 @@
 
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="comisionFija"
@@ -130,6 +135,7 @@
             label="Comisión fija"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -138,7 +144,7 @@
         </v-col>
         <v-col
           cols="12"
-          md="3"
+          md="4"
         >
           <v-text-field
             v-model="comisionProvisional"
@@ -146,6 +152,7 @@
             label="Comisión provisional"
             prepend-icon=""
             prepend-inner-icon="mdi mdi-percent-outline"
+            :rules="[v => !!v || 'Campo requerido']"
             required
             suffix="%"
             type="number"
@@ -164,7 +171,7 @@
         </v-btn>
       </v-col>
     </v-container>
-  </form>
+  </v-form>
   <div>
     <v-data-table :headers="headers" hide-default-footer  />
   </div>

@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-  import router from '@/router';
-import { ref } from 'vue'
+  import router from '@/router'
 
   const headers = [
     { title: 'Fecha de creación del contrato',  key: 'idContrato' },
