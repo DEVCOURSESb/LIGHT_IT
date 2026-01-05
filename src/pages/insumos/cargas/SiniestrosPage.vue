@@ -98,39 +98,40 @@ const columnasEsperadasSiniestros = [
 ];
 
 const transformarDatosSiniestros = (
-  data: SiniestroResponse[]
+  data: SiniestroResponse
 ): RegistroTabla[] => {
-  if (!data || data.length === 0) return [];
+  if (!data || !data.dataExtra || data.dataExtra.length === 0) {
+    return [];
+  }
 
-  return data.flatMap((response) =>
-    response.dataExtra.map((siniestro) => {
-      const partes = siniestro.aniomesCarga.split("-");
-      const anio = partes[0] || "";
-      const mes = partes[1] || "";
-      const meses = [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-      ];
+  // CORRECCIÓN: Acceder directamente a dataExtra sin flatMap
+  return data.dataExtra.map((siniestro) => {
+    const partes = siniestro.aniomesCarga.split("/");
+    const anio = partes[0] || "";
+    const mes = partes[1] || "";
+    const meses = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
 
-      return {
-        anio: parseInt(anio) || 0,
-        mes: meses[parseInt(mes) - 1] || "N/A",
-        nombreArchivo: siniestro.origen || "N/A",
-        numeroRegistros: siniestro.rows,
-        aniomesCarga: siniestro.aniomesCarga,
-      };
-    })
-  );
+    return {
+      anio: parseInt(anio) || 0,
+      mes: meses[parseInt(mes) - 1] || "N/A",
+      nombreArchivo: siniestro.origen || "N/A",
+      numeroRegistros: siniestro.rows,
+      aniomesCarga: siniestro.aniomesCarga,
+    };
+  });
 };
 
 // Composable para carga de archivos

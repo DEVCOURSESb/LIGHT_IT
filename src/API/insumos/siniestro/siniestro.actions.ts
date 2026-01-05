@@ -11,13 +11,13 @@ interface TransformacionResponse {
 export const SiniestrosActions = () => {
   const baseAPI = BaseAPI({
     isBase: true,
-    prefix: "ws_insumos_latino/loads/v1/",
+    prefix: "ws_insumos_latino/api/v1/",
     isPrivate: false,
   });
 
-  const fetch = async (): Promise<SiniestroResponse[]> => {
+  const fetch = async (): Promise<SiniestroResponse> => {
     try {
-      const response = await baseAPI.post<SiniestroResponse[]>(
+      const response = await baseAPI.post<SiniestroResponse>(
         "getSiniestrosCount"
       );
       return response.data;
@@ -45,13 +45,13 @@ export const SiniestrosActions = () => {
     }
   };
 
-   const transform = async (anio: number, mes: number): Promise<TransformacionResponse> => {
+  const transform = async (anio: number, mes: number): Promise<TransformacionResponse> => {
     try {
       const response = await baseAPI.post<TransformacionResponse>(
         "transformSiniestrosToContable",
         { anio, mes },
         {
-          timeout: 300000, // 5 minutos para transformaciones grandes
+          timeout: 300000,
         }
       );
       return response.data;

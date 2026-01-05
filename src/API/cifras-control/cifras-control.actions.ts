@@ -8,7 +8,7 @@ import type {
 export const CifrasControlActions = () => {
   const baseAPI = BaseAPI({
     isBase: true,
-    prefix: "ws_insumos_latino/loads/v1/",
+    prefix: "ws_insumos_latino/api/v1/",
     isPrivate: false,
   });
 

@@ -139,15 +139,16 @@ const columnasEsperadasEmision = [
   "GM_DEDUCIBLE_POR_EVENTO",
 ];
 
-const transformarDatosEmision = (data: EmisionResponse[]): RegistroTabla[] => {
-  if (!data || data.length === 0) return [];
+const transformarDatosEmision = (data: EmisionResponse): RegistroTabla[] => {
+  if (!data || !data.dataExtra || data.dataExtra.length === 0) {
+    return [];
+  }
 
-  return data.flatMap((response) =>
-    response.dataExtra.map((emision) => {
-      const partes = emision.aniomesCarga.split("-");
-      const anio = partes[0] || "";
-      const mes = partes[1] || "";
-      const meses = [
+  return data.dataExtra.map((emision) => {
+    const partes = emision.aniomesCarga.split("-");
+    const anio = partes[0] || "";
+    const mes = partes[1] || "";
+    const meses = [
         "Enero",
         "Febrero",
         "Marzo",
@@ -169,8 +170,7 @@ const transformarDatosEmision = (data: EmisionResponse[]): RegistroTabla[] => {
         numeroRegistros: emision.rows,
         aniomesCarga: emision.aniomesCarga,
       };
-    })
-  );
+    });
 };
 
 // Composable para carga de archivos

@@ -12,13 +12,13 @@ interface TransformacionResponse {
 export const EmisionActions = () => {
   const baseAPI = BaseAPI({
     isBase: true,
-    prefix: "ws_insumos_latino/loads/v1/",
+    prefix: "ws_insumos_latino/api/v1/",
     isPrivate: false,
   });
 
-  const fetch = async (): Promise<EmisionResponse[]> => {
+  const fetch = async (): Promise<EmisionResponse> => {
     try {
-      const response = await baseAPI.post<EmisionResponse[]>("getEmisionCount");
+      const response = await baseAPI.post<EmisionResponse>("getEmisionCount");
       return response.data;
     } catch (error) {
       console.error("Error fetching emisiones:", error);

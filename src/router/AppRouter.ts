@@ -265,7 +265,7 @@ export function AppRouter() {
     {
       path: "/insumos",
       component: () => import("@/layouts/MainLayout.vue"),
-      meta: { requiresAuth: true, requiresVerification: true },
+      meta: { requiresAuth: false, requiresVerification: false },
       children: [
         {
           path: "cifras_control",
