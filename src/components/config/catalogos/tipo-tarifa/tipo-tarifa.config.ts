@@ -14,11 +14,11 @@ export const tipoTarifaConfig = {
   tableTitle: "Lista de tipos de tarifas",
 
   headers: [
-    /* { title: "CLAVE", key: "cveTarifa", sortable: true,
+    { title: "CLAVE", key: "cveTarifa", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "DESCRIPCIÓN", key: "descTarifa", sortable: true,
       headerProps: {
         style: "font-weight: bold",

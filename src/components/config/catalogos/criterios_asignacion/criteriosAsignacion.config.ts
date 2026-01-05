@@ -15,17 +15,16 @@ export const criteriosAsignacionConfig = {
   tableTitle: "Lista de criterios de asignacion",
 
   headers: [
-    /* { title: "CLAVE CRITERIO ASIGNACION", key: "cveCriterioAsig", sortable: true,
+    { title: "CLAVE CRITERIO ASIGNACION", key: "cveCriterioAsig", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
     },
-    { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
+    /*{ title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
     headerProps: {
       style: "font-weight: bold",
     },
-  },
-  */
+  },*/
     { title: "CRITERIOS DE ASIGNACIÓN", key: "descCriterioAsig", sortable: true,
       headerProps: {
         style: "font-weight: bold",

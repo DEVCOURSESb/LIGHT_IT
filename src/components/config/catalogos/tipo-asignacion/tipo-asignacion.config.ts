@@ -15,11 +15,11 @@ export const tipoAsignacionConfig = {
   tableTitle: "Lista de Tipo Asignación",
 
   headers: [
-    /* { title: "CLAVE", key: "cveAsignacion", sortable: true,
+    { title: "CLAVE", key: "cveAsignacion", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "ASIGNACIÓN", key: "descAsignacion", sortable: true,
       headerProps: {
         style: "font-weight: bold",

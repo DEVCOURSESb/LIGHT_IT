@@ -15,11 +15,11 @@ export const ClasificacionCoberturaConfig = {
   tableTitle: "Lista de Clasificación Coberturas",
 
   headers: [
-    /* { title: "CLAVE", key: "cveClasifcober", sortable: true,
+    { title: "CLAVE", key: "cveClasifcober", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "CLASIFICACIÓN DE LA COBERTURA", key: "descClasifcober", sortable: true,
       headerProps: {
         style: "font-weight: bold",

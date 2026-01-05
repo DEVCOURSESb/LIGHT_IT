@@ -15,12 +15,12 @@ export const EstatusConfig = {
   tableTitle: 'Lista de estatus',
 
   headers: [
-    /* { title: 'CLAVE', key: 'cveEstatus', sortable: true,
+    { title: 'CLAVE', key: 'cveEstatus', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    }, 
-    { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+    },
+    /*{ title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
     headerProps: {
       style: 'font-weight: bold',
     },

@@ -13,12 +13,12 @@ export const CriterioCoberturaConfig = {
   tableTitle: "Lista de Criterio Coberturas",
 
   headers: [
-    /* { title: "CLAVE", key: "cveCriterioCob", sortable: true,
+    { title: "CLAVE", key: "cveCriterioCob", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
     },
-    { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
+    /*{ title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },

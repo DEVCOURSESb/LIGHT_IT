@@ -1,53 +1,90 @@
 import { TiposContratoActions } from "@/API/catalogos/tipos-contrato/tipos-contrato.actions";
 import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import type { TipoReaseguro } from "@/API/catalogos/tipo-reaseguro/tipo-reaseguro.interfaces";
+import { TipoReaseguroActions } from "@/API/catalogos/tipo-reaseguro/tipo-reaseguro.actions";
+import { ref } from "vue";
 
 const actions = TiposContratoActions();
+const tipoReasegAction = TipoReaseguroActions();
 const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+
+const tipoReaseMap = new Map<number, string>();
+const tipoReasegItems = ref<Array<{ text: string; value: number }>>([]);
+const isLoading = ref(true);
+
+const loadTipoReaseg = async () => {
+  if (tipoReaseMap.size === 0) {
+    try {
+      const dataReaseguro: TipoReaseguro[] = await tipoReasegAction.fetchTipoReaseguro();
+
+      dataReaseguro.forEach((m) => {
+        tipoReaseMap.set(m.cveTreaseg, m.descTreaseg);
+      });
+
+      tipoReasegItems.value = dataReaseguro.map((m) => ({
+        text: m.descTreaseg,
+        value: m.cveTreaseg,
+      }));
+
+    } catch (error) {
+      console.error("Error cargando catálogo de reaseguro:", error);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+};
+
+const fetchTransformado = async () => {
+  await loadTipoReaseg();
+
+  const data = await actions.fetchTipoContratos();
+
+  return data.map((row: any) => ({
+    ...row,
+    cveTreasegRaw: row.cveTreaseg,
+    cveTreaseg: tipoReaseMap.get(row.cveTreaseg) ?? `Clave: ${row.cveTreaseg}`,
+  }));
+};
 
 export const tiposContratoConfig = {
   entity: "tipos-contrato",
   title: "Tipos de Contrato",
-  searchPlaceholder: "",
+  searchPlaceholder: "Buscar tipo de contrato...",
   addButtonText: "Agregar tipo de contrato",
   modalTitle: "Agregar nuevo tipo de contrato",
   editModalTitle: "Editar tipo de contrato",
   tableTitle: "Lista de Tipos de Contrato",
 
   headers: [
-    { title: "CLAVE", key: "cveTcontrato", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
+    {
+      title: "CLAVE",
+      key: "cveTcontrato",
+      sortable: true,
+      headerProps: { style: "font-weight: bold" },
     },
-    { title: "DESCRIPCIÓN TIPO DE CONTRATO", key: "descTcontrato", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
+    {
+      title: "TIPO DE CONTRATO",
+      key: "descTcontrato",
+      sortable: true,
+      headerProps: { style: "font-weight: bold" },
     },
-    { title: "TIPO REASEGURO", key: "cveTreaseg", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
+    {
+      title: "TIPO REASEGURO",
+      key: "cveTreaseg",
+      sortable: true,
+      headerProps: { style: "font-weight: bold" },
     },
-    { title: "ACTIVO", key: "esActivo", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
+    {
+      title: "ACTIVO",
+      key: "esActivo",
+      sortable: true,
+      headerProps: { style: "font-weight: bold" },
     },
-    /* { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    },
-    { title: "TIPO DE CONTRATO", key: "idTcontrato", sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    }, */
-    { title: "EDITAR", key: "actions", sortable: false,
-      headerProps: {
-        style: "font-weight: bold",
-      },
+    {
+      title: "EDITAR",
+      key: "actions",
+      sortable: false,
+      headerProps: { style: "font-weight: bold" },
     },
   ],
 
@@ -60,7 +97,7 @@ export const tiposContratoConfig = {
     },
     {
       name: "cveTcontrato",
-      label: "Clave",
+      label: "Clave Tipo Contrato",
       type: "number",
       required: true,
       dataKey: "cveTcontrato",
@@ -68,11 +105,12 @@ export const tiposContratoConfig = {
     },
     {
       name: "cveTreaseg",
-      label: "Clave tipo reaseguro",
+      label: "Tipo de Reaseguro",
       type: "number",
       required: true,
       dataKey: "cveTreaseg",
-      defaultValue: 0,
+      defaultValue: null,
+      options: tipoReasegItems,
     },
     {
       name: "descTcontrato",
@@ -97,16 +135,14 @@ export const tiposContratoConfig = {
   ],
 
   validationSchema: {
-    cveTcontrato: (value: number) => minMax(value, 1, 99) || "La clave es requerida, mínimo 1 y máximo 2 dígitos.",
-    cveTreaseg: (value: number) =>  minMax(value, 1, 99) || "La clave tipo reaseguro es requerida y mayor que 0",
+    cveTcontrato: (value: number) => minMax(value, 1, 999) || "La clave es requerida.",
+    cveTreaseg: (value: any) => !!value || "El tipo de reaseguro es requerido",
     descTcontrato: (value: string) => minMaxString(value, 1, 100) || "La descripción es requerida",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
-    // TODO: el tipo contrato debe ser un selector sobre el catalogo de tipos de reaseguro
-    idTcontrato: (value: number) => minMax(value, 1, 2) || "El ID tipo contrato es requerido y mayor que 0",
   },
 
   apiActions: {
-    fetch: actions.fetchTipoContratos,
+    fetch: fetchTransformado,
     create: actions.createTipoContrato,
     update: actions.updateTipoContrato,
     delete: actions.deleteTipoContrato,

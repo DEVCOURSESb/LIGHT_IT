@@ -13,11 +13,11 @@ export const FormaContractualConfig = {
   tableTitle: "Lista de forma contractual",
 
   headers: [
-    /* { title: "CLAVE", key: "cveFcontrac", sortable: true,
+    { title: "CLAVE", key: "cveFcontrac", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "FORMA CONTRACTUAL", key: "descFcontrac", sortable: true,
       headerProps: {
         style: "font-weight: bold",

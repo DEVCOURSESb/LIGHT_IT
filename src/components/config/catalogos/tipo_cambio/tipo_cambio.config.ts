@@ -87,7 +87,6 @@ export const useTipoCambioConfig = () => {
         headerProps: { style: "font-weight: bold" },
       },
     ],
-
     fields: [
       {
         name: "id",

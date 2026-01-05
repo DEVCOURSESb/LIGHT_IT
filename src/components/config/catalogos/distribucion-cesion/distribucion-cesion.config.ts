@@ -14,11 +14,11 @@ export const DistribucionCesionConfig = {
   tableTitle: "Lista de Distribuciones de Cesión",
 
   headers: [
-    /* { title: "CLAVE", key: "cveDistrcesion", sortable: true,
+    { title: "CLAVE", key: "cveDistrcesion", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "DISTRIBUCIÓN DE LA CESIÓN", key: "descDistrcesion", sortable: true,
       headerProps: {
         style: "font-weight: bold",

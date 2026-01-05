@@ -18,12 +18,12 @@ export const coberturaConfig = {
       headerProps: {
         style: "font-weight: bold",
       },
-    },
+    },*/
     { title: "CLAVE", key: "cveCob", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "DESCRIPCIÓN", key: "descCob", sortable: true,
       headerProps: {
         style: "font-weight: bold",

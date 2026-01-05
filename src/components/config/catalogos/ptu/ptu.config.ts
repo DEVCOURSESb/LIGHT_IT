@@ -15,11 +15,11 @@ export const ptuConfig = {
   tableTitle: "Lista de métodos cálculo PTU",
 
   headers: [
-    /* { title: "CLAVE", key: "cvePtu", sortable: true,
+    { title: "CLAVE", key: "cvePtu", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "FÓRMULA PTU", key: "formulaPtu", sortable: true,
       headerProps: {
         style: "font-weight: bold",

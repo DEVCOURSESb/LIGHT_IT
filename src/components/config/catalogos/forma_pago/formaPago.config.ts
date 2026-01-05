@@ -14,17 +14,16 @@ export const FormaPagoConfig = {
   tableTitle: 'Lista de formas de pago',
 
   headers: [
-    /* { title: 'CLAVE', key: 'cveFormaPago', sortable: true,
+    { title: 'CLAVE', key: 'cveFormaPago', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-      }, 
-      { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
+      },
+      /*{ title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
-    */
+    },*/
     { title: 'DESCRIPCIÓN DE FORMA DE PAGO', key: 'descFormaPago', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
