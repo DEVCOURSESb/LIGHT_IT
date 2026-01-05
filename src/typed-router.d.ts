@@ -51,6 +51,9 @@ declare module 'vue-router/auto-routes' {
     '/catalogos/TiposContratoPage': RouteRecordInfo<'/catalogos/TiposContratoPage', '/catalogos/TiposContratoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoTarifaPage': RouteRecordInfo<'/catalogos/TipoTarifaPage', '/catalogos/TipoTarifaPage', Record<never, never>, Record<never, never>>,
     '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
+    '/insumos/cargas/CargarArchivosPage': RouteRecordInfo<'/insumos/cargas/CargarArchivosPage', '/insumos/cargas/CargarArchivosPage', Record<never, never>, Record<never, never>>,
+    '/insumos/cargas/EmisionPage': RouteRecordInfo<'/insumos/cargas/EmisionPage', '/insumos/cargas/EmisionPage', Record<never, never>, Record<never, never>>,
+    '/insumos/cargas/SiniestrosPage': RouteRecordInfo<'/insumos/cargas/SiniestrosPage', '/insumos/cargas/SiniestrosPage', Record<never, never>, Record<never, never>>,
     '/insumos/CifrasControlPage': RouteRecordInfo<'/insumos/CifrasControlPage', '/insumos/CifrasControlPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', Record<never, never>, Record<never, never>>,
@@ -246,6 +249,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/Home.vue': {
       routes: '/Home'
+      views: never
+    }
+    'src/pages/insumos/cargas/CargarArchivosPage.vue': {
+      routes: '/insumos/cargas/CargarArchivosPage'
+      views: never
+    }
+    'src/pages/insumos/cargas/EmisionPage.vue': {
+      routes: '/insumos/cargas/EmisionPage'
+      views: never
+    }
+    'src/pages/insumos/cargas/SiniestrosPage.vue': {
+      routes: '/insumos/cargas/SiniestrosPage'
       views: never
     }
     'src/pages/insumos/CifrasControlPage.vue': {
