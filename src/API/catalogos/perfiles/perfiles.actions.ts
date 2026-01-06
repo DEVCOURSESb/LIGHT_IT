@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { Perfil } from "./perfiles.interfaces";
 
 export const PerfilActions = () => {
-  const baseAPI = BaseAPI({ prefix: "PerfilRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/PerfilRest/" });
 
   const fetchPerfiles = async (): Promise<Perfil[]> => {
     try {

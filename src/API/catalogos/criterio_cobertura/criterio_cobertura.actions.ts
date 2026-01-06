@@ -3,7 +3,7 @@ import type { CriterioCobertura } from "./criterio_cobertura.interfaces";
 
 
 export function CriterioCoberturaActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntCriterioCoberturaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCriterioCoberturaRest/" });
 
   const fetch = async (): Promise<CriterioCobertura[]> => {
     try {

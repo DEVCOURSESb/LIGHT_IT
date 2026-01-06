@@ -2,7 +2,7 @@ import type { Moneda } from './moneda.interfaces'
 import { BaseAPI } from '@/API/BaseAPI'
 
 export function MonedaActions () {
-  const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfRr6MonedaRest/' })
+  const baseAPI = BaseAPI({ prefix: 'ws_catalogos_reaseguro/api/v1/ReasegCatCnsfRr6MonedaRest/' })
 
   const fetchMonedas = async (): Promise<Moneda[]> => {
     try {

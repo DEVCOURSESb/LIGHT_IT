@@ -3,7 +3,7 @@ import type { Fumador } from "./fumador.interfaces";
 
 
 export function FumadorActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntFumadorRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntFumadorRest/" });
 
   const fetch = async (): Promise<Fumador[]> => {
     try {

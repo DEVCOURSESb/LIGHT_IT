@@ -3,7 +3,7 @@ import type { FormaPago } from "./forma_pago.interfaces";
 
 
 export function FormaPagoActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntFormaPagoRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntFormaPagoRest/" });
 
   const fetch = async (): Promise<FormaPago[]> => {
     try {

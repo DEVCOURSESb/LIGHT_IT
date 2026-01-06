@@ -3,7 +3,7 @@ import type { Sexo } from "./sexo.interfaces";
 
 
 export function SexoActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntSexoRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntSexoRest/" });
 
   const fetch = async (): Promise<Sexo[]> => {
     try {

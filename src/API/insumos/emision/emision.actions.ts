@@ -11,7 +11,7 @@ interface TransformacionResponse {
 
 export const EmisionActions = () => {
   const baseAPI = BaseAPI({
-    isBase: true,
+    isBase: false,
     prefix: "ws_insumos_latino/api/v1/",
     isPrivate: false,
   });

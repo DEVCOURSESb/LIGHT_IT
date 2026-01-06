@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { Ptu } from "./ptu.interfaces";
 
 export const PtuActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntPtuRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntPtuRest/" });
 
   const fetchPtus = async (): Promise<Ptu[]> => {
     try {

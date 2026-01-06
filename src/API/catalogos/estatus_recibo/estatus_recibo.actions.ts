@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { EstatusRecibo } from "./estatus_recibo.interfaces";
 
 export function EstatusReciboActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntEstatusReciboRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntEstatusReciboRest/" });
 
   const fetch = async (): Promise<EstatusRecibo[]> => {
     try {

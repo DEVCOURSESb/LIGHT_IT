@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoContrato } from "./tipos-contrato.interfaces";
 
 export const TiposContratoActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfintTipoContratoRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintTipoContratoRest/" });
 
   const fetchTipoContratos = async (): Promise<TipoContrato[]> => {
     try {

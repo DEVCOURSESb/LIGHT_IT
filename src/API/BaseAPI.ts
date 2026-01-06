@@ -9,10 +9,10 @@ interface BaseAPIOptions {
   isPrivate?: boolean
 }
 
-export function BaseAPI({ prefix, isPrivate = true, isBase = false }: BaseAPIOptions = {}): AxiosInstance {
+export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOptions = {}): AxiosInstance {
   const base =  isBase ?
   import.meta.env.VITE_API_BASE :
-  import.meta.env.VITE_API_BASE_CATALOGOS;
+  import.meta.env.VITE_API_BASE_8;
   const instance = axios.create({
     baseURL: `${base}${prefix ? `/${prefix}` : ''}`,
   })

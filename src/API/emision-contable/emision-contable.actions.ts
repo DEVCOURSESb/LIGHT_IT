@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type {EmisionContable} from "./emision-contable.interfaces";
 
 export const EmisionContableActions = () => {
-  const baseAPI = BaseAPI({ prefix: "EmisionContableRest/getRecordsBetween/2025-01-01/2025-12-31"});
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/EmisionContableRest/getRecordsBetween/2025-01-01/2025-12-31"});
 
   const fetchEmisionContables = async (): Promise<EmisionContable[]> => {
     try {

@@ -3,7 +3,7 @@ import type { Estatus } from "./estatus.interfaces";
 
 
 export function EstatusActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntEstatusRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntEstatusRest/" });
 
   const fetch = async (): Promise<Estatus[]> => {
     try {

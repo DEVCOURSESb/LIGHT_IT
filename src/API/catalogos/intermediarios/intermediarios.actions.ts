@@ -2,7 +2,7 @@ import type { Intermediario } from './intermediario.interfaces'
 import { BaseAPI } from '@/API/BaseAPI'
 
 export function IntermediariosActions () {
-  const baseAPI = BaseAPI({ prefix: 'ReasegCatCnsfIntermediarioRest/' })
+  const baseAPI = BaseAPI({ prefix: 'ws_catalogos_reaseguro/api/v1/ReasegCatCnsfIntermediarioRest/' })
 
   const fetchIntermediarios = async (): Promise<Intermediario[]> => {
     try {

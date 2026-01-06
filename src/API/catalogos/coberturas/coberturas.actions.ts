@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { Cobertura } from "./coberturas.interfaces";
 
 export const CoberturasActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntCoberturaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturaRest/" });
 
   const fetchCoberturas = async (): Promise<Cobertura[]> => {
     try {

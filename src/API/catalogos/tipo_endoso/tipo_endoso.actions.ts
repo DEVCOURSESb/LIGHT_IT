@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoEndoso } from "./tipo_endoso.interfaces";
 
 export function TipoEndosoActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatIntTipoEndosoRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoEndosoRest/" });
 
   const fetch = async (): Promise<TipoEndoso[]> => {
     try {

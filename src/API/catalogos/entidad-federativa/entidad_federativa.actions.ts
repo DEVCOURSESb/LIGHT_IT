@@ -3,7 +3,7 @@ import type { EntidadFederativa } from "./entidad_federativa.interfaces";
 
 
 export function EntidadFederativaActions() {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfRr6EntidadFederativaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfRr6EntidadFederativaRest/" });
 
   const fetch = async (): Promise<EntidadFederativa[]> => {
     try {

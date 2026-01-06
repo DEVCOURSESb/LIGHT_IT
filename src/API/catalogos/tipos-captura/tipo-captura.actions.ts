@@ -2,7 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoCaptura } from "./tipo-captura.interfaces";
 
 export const TipoCapturaActions = () => {
-  const baseAPI = BaseAPI({ prefix: "ReasegCatCnsfRr6TipoCapturaRest/" });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfRr6TipoCapturaRest/" });
 
   const fetchTipoCapturas = async (): Promise<TipoCaptura[]> => {
     try {
