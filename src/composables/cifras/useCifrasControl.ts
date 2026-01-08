@@ -24,15 +24,10 @@ export const useCifrasControl = () => {
   const cargarCifrasEmision = async () => {
     loadingEmision.value = true;
     try {
-      console.log("Cargando cifras control de emisión...");
       const response = await cifrasControlAPI.fetchCifrasEmision();
       
-      console.log("Respuesta cifras emisión:", response);
-      cifrasEmision.value = response.dataExtra || [];
-      
-      console.log(`Cifras de emisión cargadas: ${cifrasEmision.value.length} registros`);
+      cifrasEmision.value = response.dataExtra || [];      
     } catch (error) {
-      console.error("Error al cargar cifras de emisión:", error);
       mostrarMensaje("Error al cargar cifras de emisión", "error");
     } finally {
       loadingEmision.value = false;
@@ -43,15 +38,11 @@ export const useCifrasControl = () => {
   const cargarCifrasSiniestros = async () => {
     loadingSiniestros.value = true;
     try {
-      console.log("Cargando cifras control de siniestros...");
       const response = await cifrasControlAPI.fetchCifrasSiniestros();
       
-      console.log("Respuesta cifras siniestros:", response);
       cifrasSiniestros.value = response.dataExtra || [];
       
-      console.log(`Cifras de siniestros cargadas: ${cifrasSiniestros.value.length} registros`);
     } catch (error) {
-      console.error("Error al cargar cifras de siniestros:", error);
       mostrarMensaje("Error al cargar cifras de siniestros", "error");
     } finally {
       loadingSiniestros.value = false;

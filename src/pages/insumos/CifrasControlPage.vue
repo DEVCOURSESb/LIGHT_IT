@@ -40,27 +40,26 @@
             </div>
           </template>
 
-          <template #item.aniomesCarga="{ item }">
-            <span class="font-weight-medium">{{ formatearPeriodo(item.aniomesCarga) }}</span>
+          <template #item.anio="{ item }">
+            <span class="font-weight-medium">{{ formatearPeriodo(`${item.anio}\\${item.mes}`) }}</span>
           </template>
 
-          <template #item.rows="{ item }">
+          <template #item.ramo="{ item }">
+            <span class="font-weight-medium">{{ item.ramo }}</span>
+          </template>
+
+          <template #item.registros="{ item }">
             <v-chip size="small" color="primary" variant="tonal">
-              {{ formatearNumero(item.rows) }}
+              {{ formatearNumero(item.registros) }}
             </v-chip>
           </template>
 
-          <template #item.primaEmitida="{ item }">
+          <template #item.primaNetaEmitida="{ item }">
             <span class="text-success font-weight-bold">
-              {{ formatearMoneda(item.primaEmitida) }}
+              {{ formatearMoneda(item.primaNetaEmitida) }}
             </span>
           </template>
 
-          <template #item.sumaAsegurada="{ item }">
-            <span class="text-info font-weight-bold">
-              {{ formatearMoneda(item.sumaAsegurada) }}
-            </span>
-          </template>
         </v-data-table>
       </v-card>
 
@@ -151,22 +150,22 @@ const breadcrumbs = ["Insumos", "Cifras Control"];
 
 // Headers de la tabla de emisión
 const headersEmision = [
-  { title: "Periodo", key: "aniomesCarga", align: "start" as const },
-  { title: "Registros", key: "rows", align: "center" as const },
-  { title: "Prima Emitida", key: "primaEmitida", align: "end" as const },
-  { title: "Suma Asegurada", key: "sumaAsegurada", align: "end" as const },
+  { title: "Periodo", key: "anio", align: "start" as const },
+  { title: "Registros", key: "registros", align: "center" as const },
+  { title: "ramo", key: "ramo", align: "start" as const },
+  { title: "Prima Emitida", key: "primaNetaEmitida", align: "end" as const },
 ];
 
 // Headers de la tabla de siniestros
 const headersSiniestros = [
   { title: "Periodo", key: "aniomesCarga", align: "start" as const },
   { title: "Registros", key: "rows", align: "center" as const },
+  { title: "Monto Siniestro", key: "montoSiniestro", align: "end" as const },
   {
     title: "Indemnización Pagada",
     key: "indemnizacionPagada",
     align: "end" as const,
   },
-  { title: "Monto Siniestro", key: "montoSiniestro", align: "end" as const },
 ];
 
 // Función para formatear periodo (2025\\03 -> Mar 2025)
@@ -246,7 +245,6 @@ const formatearMoneda = (num: number): string => {
 
 // Cargar datos al montar el componente
 onMounted(() => {
-  console.log("=== CifrasControlPage montado ===");
   cargarTodasLasCifras();
 });
 </script>

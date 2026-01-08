@@ -8,10 +8,11 @@ export interface CifrasControlSiniestroDTO {
 }
 
 export interface CifrasControlEmisionDTO {
-  aniomesCarga: string;
-  rows: number;
-  primaEmitida: number;
-  sumaAsegurada: number;
+  primaNetaEmitida: number;
+  ramo: string;
+  registros: number;
+  anio: number;
+  mes: number;
 }
 
 export interface CifrasControlSiniestroResponse {

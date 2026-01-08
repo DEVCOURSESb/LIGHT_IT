@@ -15,7 +15,6 @@ declare module 'vue' {
     AppBar: typeof import('./components/AppBar.vue')['default']
     CatalogosDropdown: typeof import('./components/menu/CatalogosDropdown.vue')['default']
     CrudTablePage: typeof import('./components/catalogos/CrudTablePage.vue')['default']
-    DialogConfirm: typeof import('./components/DialogConfirm.vue')['default']
     DialogGlobal: typeof import('./components/DialogGlobal.vue')['default']
     InsumosDropdown: typeof import('./components/menu/InsumosDropdown.vue')['default']
     LogoutComponent: typeof import('./components/menu/LogoutComponent.vue')['default']
