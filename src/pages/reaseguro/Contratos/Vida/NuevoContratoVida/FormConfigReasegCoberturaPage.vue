@@ -1,595 +1,427 @@
 <template>
-  <v-form ref="form">
+  <v-form ref="formRef">
     <v-container>
       <v-row class="d-flex justify-center align-center">
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="4">
           <v-select
             v-model="agrupacionCoberturas"
             :items="siNoOptions"
             label="¿Agrupación de coberturas?"
-            required
+            chips
             variant="solo-filled"
           />
         </v-col>
       </v-row>
+
       <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
         <v-col cols="12" md="5">
+          <p class="text-subtitle-2 mb-2">Coberturas para agrupar:</p>
           <v-data-table
-            v-model="coberturasSeleccionadas"
-            :headers="[{ title: 'Coberturas', key: 'title' }]"
-            :items="coberturasDisponibles"
+            v-model="coberturasParaAgrupar"
+            :headers="[{ title: 'Coberturas Disponibles', key: 'title' }]"
+            :items="coberturasDisponiblesParaAgrupar"
             show-select
             item-value="value"
             return-object
+            density="compact"
+            max-height="300px"
           />
         </v-col>
         <v-col cols="12" md="3">
           <v-select
-            v-model="coberturaMadre"
-            :items="coberturasDisponibles"
+            v-model="coberturaMadreObj"
+            :items="coberturasDisponiblesParaAgrupar"
             item-title="title"
-            item-value="value"
+            chips
             return-object
-            label="Agrupar en:"
+            label="Agrupar en (Cobertura Madre):"
             variant="solo-filled"
           />
         </v-col>
         <v-col cols="12" md="1">
-          <v-btn
-            color="indigo"
-            icon="mdi-plus"
-            title="Agregar agrupación de coberturas"
-            @click="agregarAgrupacion"
-          />
+          <v-btn color="indigo" icon @click="agregarAgrupacion">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="top">Agregar agrupación de coberturas</v-tooltip>
+          </v-btn>
         </v-col>
-        <v-col cols="12" md="8">
-          <v-data-table
-            v-model="agrupaciones"
-            :headers="headers1"
-            :items="agrupaciones"
-            hide-default-footer
-          >
-            <template v-slot:item.cobertura="{ item }">
-              {{ item?.coberturas?.map(c => c.title).join(', ') || '' }}
+
+        <v-col cols="12" md="10" v-if="agrupaciones.length > 0">
+          <v-data-table :headers="headersAgrupacion" :items="agrupaciones" hide-default-footer>
+            <template v-slot:item.coberturas="{ item }">
+              {{ item.coberturas.map((c: any) => c.title).join(', ') }}
             </template>
-            <template v-slot:item.agruparEn="{ item }">
-              <span>
-                {{ item.madre ? item.madre.title : 'Sin asignar' }}
-              </span>
+            <template v-slot:item.madre="{ item }">
+              <v-chip color="primary" label>{{ item.madre?.title }}</v-chip>
             </template>
-            <template v-slot:item.modificar="{ item }">
-              <v-btn icon @click="editarAgrupacion(item)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-            </template>
-            <template v-slot:item.borrar="{ item }">
-              <v-btn icon @click="eliminarAgrupacion(item)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+            <template v-slot:item.acciones="{ item, index }">
+              <v-btn icon color="blue" variant="text" @click="editarAgrupacion(item, index)"><v-icon>mdi-pencil</v-icon></v-btn>
+              <v-btn icon color="red" variant="text" @click="eliminarAgrupacion(index)"><v-icon>mdi-delete</v-icon></v-btn>
             </template>
           </v-data-table>
         </v-col>
       </v-row>
-      <v-row >
+
+      <v-divider class="my-6" />
+
+      <v-row>
         <v-col cols="12" md="4">
           <v-select
-            v-model="coberturasBasi"
+            v-model="coberturasBasiObj"
             :items="coberturasBasiOptions"
             label="Coberturas básicas"
             item-title="title"
-            item-value="value"
-            required
-            multiple
-            variant="solo-filled"
-          />
-        </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-select
-            v-model="coberturasAdici"
-            :items="coberturasAdiciOptions"
-            item-title="title"
-            item-value="value"
             return-object
             multiple
-            label="Coberturas adicionales"
+            chips
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="coberturasAdiciObj"
+            :items="coberturasAdiciOptions"
+            label="Coberturas adicionales"
+            item-title="title"
+            return-object
+            multiple
+            chips
+            variant="solo-filled"
+          />
+        </v-col>
+        <v-col cols="12" md="4">
           <v-select
             v-model="detalleCapa"
             :items="siNoOptions"
-            label="¿Detalles por capa?"
-            :rules="[ValidacionesContrato.detalleCapa(() => idTContrato)]"
-            required
+            label="¿Detalle por capa?"
+            chips
+            :disabled="!esExcedentePorCapas"
             variant="solo-filled"
           />
         </v-col>
       </v-row>
-      <v-divider />
-      <br>
-      <v-row >
-        <v-col cols="12" md="4">
+
+      <v-divider class="my-6" />
+
+      <v-row>
+        <v-col cols="12" md="4" v-if="detalleCapa === 1">
           <v-select
-            v-if="detalleCapa === 1"
-            v-model="detalleC"
+            v-model="capaSeleccionada"
             :items="detalleCOptions"
-            item-title="title"
-            item-value="value"
+            chips
             label="Detalle de capa"
-            :rules="[v => !!v || 'Detalle por capa requerido']"
-            required
             variant="solo-filled"
           />
         </v-col>
         <v-col cols="12" md="4">
           <v-select
             v-model="detalleCobertura"
-            class="selectForm"
             :items="siNoOptions"
+            chips
             label="¿Detalle por cobertura?"
-            required
             variant="solo-filled"
           />
         </v-col>
       </v-row>
-      <v-row >
+
+      <v-row v-if="detalleCobertura === 1 || detalleCapa === 1">
         <v-col cols="12" md="4">
           <v-select
-            v-model="cobertura"
-            class="selectForm"
+            v-model="coberturaTarifaObj"
             label="Cobertura"
-            :rules="[v => !!v || 'Cobertura requerido']"
-            required
+            :items="coberturasPermitidasParaTarifa"
+            item-title="title"
+            chips
+            return-object
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3">
           <v-select
-            v-model="tipoTarifa"
+            v-model="tipoTarifaObj"
             :items="tipoTarifaOptions"
             label="Tipo de tarifa"
-            required
+            item-title="title"
+            chips
+            return-object
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-if="tipoTarifa === 0"
-            v-model="primaTarFi"
-            label="Prima de tarifa fija"
-            :rules="[ValidacionesContrato.primaTarifaFija(() => tipoTarifa)]"
-            required
-            type="number"
-            variant="solo-filled"
-          />
+
+        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 0">
+          <v-text-field v-model.number="primaTarFi" label="Monto Fijo" type="number" variant="solo-filled" />
         </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-if="tipoTarifa === 1"
-            v-model="porSobrePrimaE"
-            label="% sobre prima emitida"
-            :rules="[ValidacionesContrato.porSobrePrima(() => tipoTarifa)]"
-            suffix="%"
-            required
-            type="number"
-            variant="solo-filled"
-          />
+        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 1">
+          <v-text-field v-model.number="porSobrePrimaE" label="% s/ Prima" suffix="%" type="number" variant="solo-filled" />
         </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-if="tipoTarifa === 3"
-            v-model="tarifaFijaM"
-            label="Tarifa fija al millar"
-            :rules="[ValidacionesContrato.tarifaFijaMillar(() => tipoTarifa)]"
-            type="number"
-            variant="solo-filled"
-          />
+        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 3">
+          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" />
         </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-if="tipoTarifa === 2"
-            v-model="factorTarifaP"
-            label="Factor tarifa propia"
-            :rules="[ValidacionesContrato.factorTarifaPropia(() => tipoTarifa)]"
-            required
-            type="number"
-            variant="solo-filled"
-          />
+        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 2">
+          <v-text-field v-model.number="factorTarifaP" label="Factor %" type="number" variant="solo-filled" />
         </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-if="tipoTarifa === 2"
-            v-model="tarifaPropia"
-            label="Tarifa propia (CSV)"
-            :rules="[ValidacionesContrato.tarifaPropia(() => tipoTarifa)]"
-            required
-            variant="solo-filled"
-          />
+        <v-col cols="12" md="3" v-if="tipoTarifaObj?.value === 2">
+          <v-file-input v-model="tarifaPropiaFile" label="Archivo CSV" accept=".csv" variant="solo-filled" />
         </v-col>
-        <v-btn
-          class="ma-2"
-          color="indigo"
-          icon="mdi-plus"
-          max-height="30px"
-          max-width="30px"
-          @click="agregarTarifa"
-        />
+
+        <v-col cols="12" md="1" class="d-flex align-center">
+          <v-btn color="indigo" icon @click="agregarTarifa">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="top">Agregar detalle de tarifas</v-tooltip>
+          </v-btn>
+        </v-col>
+      </v-row>
+
+      <v-row v-if="itemsTablaTarifas.length > 0">
+        <v-col cols="12">
+          <v-data-table
+            :headers="headers2"
+            :items="itemsTablaTarifas"
+            class="elevation-1"
+          >
+            <template #item.tipoTarifa="{ item }">
+              {{ item.tipoTarifa?.title }}
+            </template>
+
+            <template #item.primaTarifa="{ item }">
+              <span v-if="item.tipoTarifa?.value === 0">$ {{ item.primaTarifa }}</span>
+              <span v-else class="text-grey">-</span>
+            </template>
+
+            <template #item.porSobrePrima="{ item }">
+              <span v-if="item.tipoTarifa?.value === 1">{{ item.porSobrePrima }}%</span>
+              <span v-else class="text-grey">-</span>
+            </template>
+
+            <template #item.tarifaFijaM="{ item }">
+              <span v-if="item.tipoTarifa?.value === 3">{{ item.tarifaFijaM }}</span>
+              <span v-else class="text-grey">-</span>
+            </template>
+
+            <template #item.factorTap="{ item }">
+              <span v-if="item.tipoTarifa?.value === 2">{{ item.factorTap }}%</span>
+              <span v-else class="text-grey">-</span>
+            </template>
+
+            <template #item.tarifaP="{ item }">
+              <div v-if="item.tipoTarifa?.value === 2 && item.nombreArchivo">
+                <v-icon size="small" color="green" class="mr-1">mdi-file-csv</v-icon>
+                <small>{{ item.nombreArchivo }}</small>
+              </div>
+              <span v-else class="text-grey">-</span>
+            </template>
+
+            <template #item.acciones="{ item, index }">
+              <v-btn icon color="blue" variant="text" size="small" @click="editarTarifa(item, index)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon color="red" variant="text" size="small" @click="eliminarTarifa(index)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+
+      <v-row class="mt-8">
+        <v-col class="text-center">
+          <v-btn class="btn-guardar" @click="guardarTodoEnStore">
+            GUARDAR COBERTURAS
+          </v-btn>
+        </v-col>
       </v-row>
     </v-container>
   </v-form>
-  <v-divider />
-  <br>
-  <div>
-    <v-row >
-      <v-col>
-        <v-data-table
-          :headers="headers2"
-          :items="itemsTablaTarifas"
-          hide-default-footer
-        >
-          <template #item.tipoTarifa="{ item }">
-            {{ tipoTarifaOptions.find(o => o.value === item.tipoTarifa)?.title || item.tipoTarifa }}
-          </template>
-
-          <template #item.modificar="{ item, index }">
-            <v-btn icon color="blue" variant="text" @click="editarTarifa(item, index)">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-          </template>
-
-          <template #item.borrar="{ index }">
-            <v-btn icon color="red" variant="text" @click="eliminarTarifa(index)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </template>
-        </v-data-table>
-      </v-col>
-    </v-row>
-  </div>
-  <v-col class="text-center">
-    <v-btn class="btn-guardar" @click="guardarDatosGenerales">
-      Guardar
-      <br> coberturas
-    </v-btn>
-  </v-col>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
-import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
-import { useContratoStore, type CapaExPC } from "@/stores/contratoStore"
+import { ref, computed, onMounted, watch } from 'vue'
+import { useContratoStore, type ContratoGeneralReasegCobertura } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
-import { ValidacionesContrato } from './ValidacionesContrato'
+import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 
 const contratoStore = useContratoStore()
-const idTContrato = computed(() => contratoStore.general?.idTContrato ?? null)
 const dialog = useDialog()
+const formRef = ref()
 
-const form = ref()
-const siNoOptions = [
-  { title: 'SI', value: 1 },
-  { title: 'NO', value: 0 }
-]
+const {
+  coberturasOptions, fetchCoberturas,
+  coberturasBasiOptions, fetchCoberturasBasicas,
+  coberturasAdiciOptions, fetchCoberturasAdicionales,
+  tipoTarifaOptions, fetchTipoTarifa
+} = NuevoContratoVidaConR()
+
+const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
+
+const agrupacionCoberturas = ref(0)
+const coberturasParaAgrupar = ref<any[]>([])
+const coberturaMadreObj = ref<any>(null)
+const agrupaciones = ref<any[]>([])
+
+const coberturasBasiObj = ref<any[]>([])
+const coberturasAdiciObj = ref<any[]>([])
+const detalleCapa = ref(0)
+const capaSeleccionada = ref<string | null>(null)
+
+const detalleCobertura = ref(0)
+const coberturaTarifaObj = ref<any>(null)
+const tipoTarifaObj = ref<any>(null)
+const primaTarFi = ref<number | null>(null)
+const porSobrePrimaE = ref<number>(100)
+const tarifaFijaM = ref<number | null>(null)
+const factorTarifaP = ref<number>(100)
+const tarifaPropiaFile = ref<File | null>(null)
+const itemsTablaTarifas = ref<any[]>([])
+const editandoIndex = ref(-1)
+
+const getID = (item: any) => {
+  if (item === null || item === undefined) return null;
+  return (typeof item === 'object' && 'value' in item) ? item.value : item;
+}
 
 const esExcedentePorCapas = computed(() => {
-  return contratoStore.general?.idTContrato === 3
+  const id = getID(contratoStore.general?.idTContrato);
+  return Number(id) === 3;
 })
 
-const detalleCOptions = computed(() => {
-  return contratoStore.expc?.capas.map(c => ({
-    title: c.detalleCapa,
-    value: c.detalleCapa
-  })) || []
-})
-
-
-const { coberturasOptions, fetchCoberturas } = NuevoContratoVidaConR()
-const { coberturasBasiOptions, fetchCoberturasBasicas } = NuevoContratoVidaConR()
-const { coberturasAdiciOptions, fetchCoberturasAdicionales } = NuevoContratoVidaConR()
-const { tipoTarifaOptions, fetchTipoTarifa } = NuevoContratoVidaConR()
-
-onMounted(() => {
-  fetchCoberturas()
-  fetchCoberturasBasicas()
-  fetchCoberturasAdicionales()
-  fetchTipoTarifa()
-})
-
-interface Cobertura {
-  title: string
-  value: number
-}
-
-interface Agrupacion {
-  coberturas: Cobertura[]
-  madre: Cobertura | null
-}
-
-const coberturasSeleccionadas = ref<Cobertura[]>([])
-const coberturaMadre = ref<Cobertura | null>(null)
-const agrupaciones = ref<Agrupacion[]>([])
-
-const coberturasDisponibles = computed(() => {
-  const usadas = agrupaciones.value.flatMap(a => a.coberturas.map(c => c.value))
-  return coberturasOptions.value.filter(c => !usadas.includes(c.value))
-})
-
-
-const agregarAgrupacion = () => {
-  if (coberturasSeleccionadas.value.length === 0 || !coberturaMadre.value) {
-    dialog.show({
-      type: DialogType.ERROR,
-      message: 'Seleccione coberturas y una cobertura madre para agrupar',
-      title: 'Error'
-    })
-    return
+watch(esExcedentePorCapas, (valido) => {
+  if (!valido) {
+    detalleCapa.value = 0;
   }
+})
 
-  agrupaciones.value.push({
-    coberturas: [...coberturasSeleccionadas.value],
-    madre: { ...coberturaMadre.value }
-  })
 
-  coberturasSeleccionadas.value = []
-  coberturaMadre.value = null
-}
+const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || [])
 
-const eliminarAgrupacion = (item: Agrupacion) => {
-  agrupaciones.value = agrupaciones.value.filter(a => a !== item)
-}
+const coberturasDisponiblesParaAgrupar = computed(() => {
+  const idsAgrupados = agrupaciones.value.flatMap(a => a.coberturas.map((c: any) => c.value))
+  return coberturasOptions.value.filter(c => !idsAgrupados.includes(c.value))
+})
 
-const editarAgrupacion = (item: Agrupacion) => {
-  coberturasSeleccionadas.value = [...item.coberturas]
-  coberturaMadre.value = item.madre
-  eliminarAgrupacion(item)
-}
-const agrupacionCoberturas = ref<number>(0)
-const coberturasBasi = ref<number[]>([])
-const coberturasAdici = ref<number[]>([])
-const detalleCapa = ref<number>(0)
-const detalleC = ref<number | null>(null)
-const detalleCobertura = ref<number>(0)
-const cobertura = ref<string>('FALLECIMIENTO')
-const tipoTarifa = ref<number | null>(null)
-const primaTarFi = ref<number | null>(null)
-const porSobrePrimaE = ref<number | null>(null)
-const tarifaFijaM = ref<number | null>(null)
-const factorTarifaP = ref<number | null>(null)
-const tarifaPropia = ref<number | null>(null)
-
-const itemsTablaTarifas = ref<any[]>([])
-
+const coberturasPermitidasParaTarifa = computed(() => {
+  const idsPermitidos = [...coberturasBasiObj.value.map(c => c.value), ...coberturasAdiciObj.value.map(c => c.value)]
+  return coberturasOptions.value.filter(c => idsPermitidos.includes(c.value))
+})
 
 const hidratarDesdeStore = () => {
   const data = contratoStore.configReasegCob
-  if (!data) return
-  agrupacionCoberturas.value = data.agrupacionCoberturas
-  agrupaciones.value = data.agrupaciones
-  coberturasBasi.value = data.coberturasBasi
-  coberturasAdici.value = data.coberturasAdici
-  detalleCapa.value = data.detalleCapa
-  itemsTablaTarifas.value = data.tarifas.map(t => ({
-    detalleCapa: t.detalleCapa,
-    tipoCobertura: t.tipoCobertura,
-    cobertura: t.cobertura,
-    tipoTarifa: Number(t.tipoTarifa),
-    primaTarifa: t.primaTarifa,
-    porSobrePrima: t.porSobrePrima,
-    tarifaFijaM: t.tarifaFijaM,
-    factorTap: t.factorTap,
-    tarifaP: t.tarifaP
-  }))
+  if (!data || Object.keys(data).length === 0) return
+  agrupacionCoberturas.value = data.agrupacionCoberturas ?? 0
+  agrupaciones.value = data.agrupaciones || []
+  coberturasBasiObj.value = data.coberturasBasi || []
+  coberturasAdiciObj.value = data.coberturasAdici || []
+  detalleCapa.value = data.detalleCapa ?? 0
+  detalleCobertura.value = data.detalleCobertura ?? 0
+  itemsTablaTarifas.value = data.tarifas ? [...data.tarifas] : []
 }
 
-watch(
-  [
-    () => contratoStore.configReasegCob,
-    () => coberturasOptions.value,
-    () => coberturasBasiOptions.value,
-    () => coberturasAdiciOptions.value,
-    () => tipoTarifaOptions.value,
-  ],
-  hidratarDesdeStore,
-  { immediate: true }
-)
+watch([() => coberturasOptions.value, () => tipoTarifaOptions.value], ([c, t]) => {
+  if (c.length > 0 && t.length > 0) hidratarDesdeStore()
+}, { immediate: true })
 
-watch(esExcedentePorCapas, (habilitado) => {
-  if (!habilitado) {
-    detalleCapa.value = 1
-  }
+onMounted(async () => {
+  await Promise.all([fetchCoberturas(), fetchCoberturasBasicas(), fetchCoberturasAdicionales(), fetchTipoTarifa()])
 })
 
-watch(detalleCapa, value => {
-  if (value === 0) { // NO
-    factorTarifaP.value = null
-    tarifaPropia.value = null
-  } else if (value === 1) { // SI
-    primaTarFi.value = null
-    porSobrePrimaE.value = null
-    tarifaFijaM.value = null
+const agregarAgrupacion = () => {
+  if (coberturasParaAgrupar.value.length === 0 || !coberturaMadreObj.value) {
+    dialog.show({ type: DialogType.ERROR, message: 'Faltan datos de agrupación', title: 'Error' }); return
   }
-})
-
-const agregarDetalleTarifa = () => {
-  itemsTablaTarifas.value.push({
-    detalleCapa: detalleCapa.value === 1 ? 'SI' : 'NO',
-    tipoCobertura: 'ADICIONAL',
-    cobertura: cobertura.value,
-    tipoTarifa: tipoTarifa.value,
-    primaTarifa: primaTarFi.value,
-    porSobrePrima: porSobrePrimaE.value,
-    tarifaFijaM: tarifaFijaM.value,
-    factorTap: factorTarifaP.value,
-    tarifaP: tarifaPropia.value
-  })
+  agrupaciones.value.push({ coberturas: [...coberturasParaAgrupar.value], madre: { ...coberturaMadreObj.value } })
+  coberturasParaAgrupar.value = []; coberturaMadreObj.value = null
 }
 
-const mostrarModalTarifa = ref(false)
-const detalleTarifaSeleccionada = ref<any>(null)
+const eliminarAgrupacion = (index: number) => agrupaciones.value.splice(index, 1)
 
-const verDetalleTarifa = (item: any) => {
-  detalleTarifaSeleccionada.value = item
-  mostrarModalTarifa.value = true
-}
-
-const editandoIndex = ref<number>(-1)
-
-const limpiarCamposDetalle = () => {
-  cobertura.value = 'FALLECIMIENTO'
-  tipoTarifa.value = null
-  primaTarFi.value = null
-  porSobrePrimaE.value = null
-  tarifaFijaM.value = null
-  factorTarifaP.value = 100
-  tarifaPropia.value = null
-  editandoIndex.value = -1
+const editarAgrupacion = (item: any, index: number) => {
+  coberturasParaAgrupar.value = [...item.coberturas]; coberturaMadreObj.value = item.madre; eliminarAgrupacion(index)
 }
 
 const agregarTarifa = () => {
-  if (tipoTarifa.value === null) {
-    dialog.show({ title: 'Error', message: 'Debe seleccionar un tipo de tarifa', type: DialogType.ERROR })
+  if (tipoTarifaObj.value === null || coberturaTarifaObj.value === null) {
+    dialog.show({ type: DialogType.ERROR, message: 'Seleccione cobertura y tipo de tarifa', title: 'Error' });
     return
   }
 
-  const tipoCoberturaStore = computed(() =>
-    contratoStore.configReaseg?.tipoCobertura ?? 0
-  )
-
-  const tipoCoberturaTexto = computed(() => {
-    switch (tipoCoberturaStore.value) {
-      case 0: return 'BÁSICA'
-      case 1: return 'ADICIONAL'
-      default: return 'N/A'
-    }
-  })
-
-
-  const nuevaFila = {
-    detalleCapa: detalleCapa.value === 1 ? (detalleC.value || 'SI') : 'NO',
-    tipoCobertura: tipoCoberturaTexto.value,
-    cobertura: cobertura.value,
-    tipoTarifa: tipoTarifa.value,
-
-    primaTarifa: tipoTarifa.value === 0 ? primaTarFi.value : null,
-    porSobrePrima: tipoTarifa.value === 1 ? porSobrePrimaE.value : null,
-    tarifaFijaM: tipoTarifa.value === 3 ? tarifaFijaM.value : null,
-    factorTap: tipoTarifa.value === 2 ? factorTarifaP.value : null,
-    tarifaP: tipoTarifa.value === 2 ? tarifaPropia.value : null
+  if (detalleCapa.value === 1 && !capaSeleccionada.value) {
+    dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa específica del listado', title: 'Error' });
+    return
   }
 
 
+  const nuevaFila = {
+    detalleCapa: detalleCapa.value === 1 ? capaSeleccionada.value : 'NO',
+    cobertura: coberturaTarifaObj.value.title,
+    cveCob: coberturaTarifaObj.value.value,
+    tipoTarifa: { ...tipoTarifaObj.value },
+    primaTarifa: primaTarFi.value || 0,
+    porSobrePrima: porSobrePrimaE.value || 0,
+    tarifaFijaM: tarifaFijaM.value || 0,
+    factorTap: factorTarifaP.value || 0,
+    nombreArchivo: tarifaPropiaFile.value?.name || '',
+    tarifaP: tarifaPropiaFile.value
+  }
+
   if (editandoIndex.value > -1) {
     itemsTablaTarifas.value[editandoIndex.value] = nuevaFila
+    editandoIndex.value = -1
   } else {
     itemsTablaTarifas.value.push(nuevaFila)
   }
 
-  limpiarCamposDetalle()
+  limpiarTarifa()
+}
+
+const limpiarTarifa = () => {
+  coberturaTarifaObj.value = null; tipoTarifaObj.value = null; primaTarFi.value = null;
+  porSobrePrimaE.value = 100; tarifaFijaM.value = null; factorTarifaP.value = 100; tarifaPropiaFile.value = null
 }
 
 const editarTarifa = (item: any, index: number) => {
   editandoIndex.value = index
-
-  detalleCapa.value = item.detalleCapa === 'NO' ? 0 : 1
-  if (item.detalleCapa !== 'SI' && item.detalleCapa !== 'NO') {
-    detalleC.value = item.detalleCapa
-  }
-
-  cobertura.value = item.cobertura
-  tipoTarifa.value = item.tipoTarifa
-  primaTarFi.value = item.primaTarifa
-  porSobrePrimaE.value = item.porSobrePrima
-  tarifaFijaM.value = item.tarifaFijaM
-  factorTarifaP.value = item.factorTap
-  tarifaPropia.value = item.tarifaP
-
-  window.scrollTo({ top: 400, behavior: 'smooth' })
+  coberturaTarifaObj.value = coberturasOptions.value.find(c => c.value === item.cveCob)
+  tipoTarifaObj.value = item.tipoTarifa
+  primaTarFi.value = item.primaTarifa; porSobrePrimaE.value = item.porSobrePrima
+  tarifaFijaM.value = item.tarifaFijaM; factorTarifaP.value = item.factorTap
 }
 
-const eliminarTarifa = (index: number) => {
-  itemsTablaTarifas.value.splice(index, 1)
-}
+const eliminarTarifa = (index: number) => itemsTablaTarifas.value.splice(index, 1)
 
-
-const guardarDatosGenerales = async () => {
-  const { valid } = await form.value.validate()
+const guardarTodoEnStore = async () => {
+  const { valid } = await formRef.value.validate()
   if (!valid) return
 
   const idContrato = contratoStore.general?.idContrato
-  if (!idContrato) {
-    dialog.show({ title: 'Error', message: 'No existe contrato activo', type: DialogType.ERROR })
-    return
-  }
+  if (!idContrato) { dialog.show({ type: DialogType.ERROR, message: 'No hay contrato activo', title: 'Error' }); return }
 
-  let primaTarFiG = 0
-  let porSobrePrimaEG = 0
-  let tarifaFijaMG = 0
-  let factorTarifaPG = 0
-  let tarifaPropiaG = 0
-
-  switch (tipoTarifa.value) {
-    case 0:
-      primaTarFiG = primaTarFi.value ?? 0
-      break
-
-    case 1:
-      porSobrePrimaEG = porSobrePrimaE.value ?? 0
-      break
-
-    case 2:
-      factorTarifaPG = factorTarifaP.value ?? 0
-      tarifaPropiaG = tarifaPropia.value ?? 0
-      break
-
-    case 3:
-      tarifaFijaMG = tarifaFijaM.value ?? 0
-      break
-  }
-
-  contratoStore.setConfigReasCob({
+  const payload: any = {
     idContrato,
     agrupacionCoberturas: agrupacionCoberturas.value,
     agrupaciones: agrupaciones.value,
-    coberturasBasi: coberturasBasi.value,
-    coberturasAdici: coberturasAdici.value,
+    coberturasBasi: coberturasBasiObj.value,
+    coberturasAdici: coberturasAdiciObj.value,
     detalleCapa: detalleCapa.value,
     detalleC: contratoStore.expc?.capas || [],
     detalleCobertura: detalleCobertura.value,
     tarifas: itemsTablaTarifas.value
-  })
+  }
 
-
-  dialog.show({ title: 'Información', message: 'Configuración guardada', type: DialogType.SUCCESS })
+  contratoStore.setConfigReasCob(payload)
+  dialog.show({ type: DialogType.SUCCESS, message: 'Configuración de coberturas guardada', title: 'Éxito' })
 }
 
-const headers1 = [
-  { title: 'Cobertura', key: 'cobertura' },
-  { title: 'Agrupar en:', key: 'agruparEn' },
-  { title: 'Modificar', key: 'modificar' },
-  { title: 'Borrar', key: 'borrar' }
+const headersAgrupacion = [
+  { title: 'Coberturas', key: 'coberturas' }, { title: 'Agrupar en:', key: 'madre' }, { title: 'Acciones', key: 'acciones', sortable: false }
 ]
-
 const headers2 = [
   { title: 'Detalle capa', key: 'detalleCapa' },
   { title: 'Tipo cobertura', key: 'tipoCobertura' },
   { title: 'Cobertura', key: 'cobertura' },
   { title: 'Tipo de tarifa', key: 'tipoTarifa' },
-  { title: 'Prima de tarifa fija', key: 'primaTarifa' },
-  { title: '& sobre prima emitida', key: 'porSobrePrima' },
-  { title: 'Tarifa fija al millar', key: 'tarifaFijaM' },
-  { title: 'Factor tarifa propia', key: 'factorTap' },
-  { title: 'Tarifa propia', key: 'tarifaP' },
-  { title: 'Modificar', key: 'modificar' },
-  { title: 'Borrar', key: 'borrar' }
+  { title: 'Prima Fija', key: 'primaTarifa' },
+  { title: '% Prima Em.', key: 'porSobrePrima' },
+  { title: 'Tarifa al Millar', key: 'tarifaFijaM' },
+  { title: 'Factor Propio', key: 'factorTap' },
+  { title: 'Tarifa Propia', key: 'tarifaP' },
+  { title: 'Acciones', key: 'acciones', sortable: false }
 ]
 </script>

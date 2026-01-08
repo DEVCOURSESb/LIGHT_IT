@@ -34,16 +34,16 @@ export const NuevoContratoVidaConInt = () => {
   const tipoCorretajeOptions = ref<SelectOption<number>[]>([])
 
   const baseAPIAsigInt = BaseAPI({
-    prefix: "ReasegCatIntCriterioAsignacionRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCriterioAsignacionRest/"
   })
   const baseAPIReaseg = BaseAPI({
-    prefix: "ReasegCatCnsfintReaseguradoraRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintReaseguradoraRest/"
   })
   const baseAPIInter = BaseAPI({
-    prefix: "ReasegCatCnsfIntermediarioRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfIntermediarioRest/"
   })
   const baseAPITipoCorr = BaseAPI({
-    prefix: "ReasegCatIntTipoAsignacionRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoAsignacionRest/"
   })
 
   //General

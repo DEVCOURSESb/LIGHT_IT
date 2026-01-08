@@ -5,6 +5,22 @@
       Nuevo Contrato Vida
     </v-card-title>
     <v-spacer class="mb-4" />
+    <!--<div class="d-flex ga-2 align-center">
+        <v-progress-linear
+          v-model="value"
+          chunk-count="5"
+          chunk-gap="9"
+          color="blue"
+          height="25"
+          rounded="sm"
+          clickable
+        >
+          <small class="text-white">{{ value.toFixed() }}%</small>
+        </v-progress-linear>
+        <v-btn icon="mdi-skip-previous" size="x-small" @click="value = 0"></v-btn>
+        <v-btn icon="$complete" size="x-small" @click="value = 100"></v-btn>
+    </div>-->
+    <br>
     <div>
       <v-expansion-panels>
         <v-expansion-panel>
@@ -60,6 +76,8 @@
 
 <script lang="ts" setup>
   import { ref } from 'vue'
+  import { shallowRef } from 'vue'
+  const value = shallowRef(0)
 
   import FormConfiguracionIntermediariosPage from './NuevoContratoVida/FormConfiguracionIntermediariosPage.vue'
   import FormConfiguracionReaseguradoresPage from './NuevoContratoVida/FormConfiguracionReaseguradoresPage.vue'

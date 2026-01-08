@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import FormGeneralDatosPage from './FormGeneralDatosPage.vue'
 import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
 
@@ -39,5 +39,11 @@ const esFacultativo = ref(false)
 const actualizarFormaContractual = (valor: number) => {
   esFacultativo.value = valor === 1
 }
+
+watch(esFacultativo, (val) => {
+  if (!val && activeTab.value === 'tab-2') {
+    activeTab.value = 'tab-1'
+  }
+})
 
 </script>

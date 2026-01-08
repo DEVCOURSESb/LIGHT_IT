@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 
+/* DATOS GENERALES */
 export interface ContratoGeneralDatos {
   idContrato: string
   idRamo?: string
-  subramo: string[]
+  subramo: any[]
   fechaInicio: string
   fechaFin: string
   contratoProrrogado?: null
@@ -11,11 +12,11 @@ export interface ContratoGeneralDatos {
   contratoCancelado?: null
   fechaCancelacion?: null
   negociosCubiertos: string
-  cveMoneda: number[]
-  cveFormaContractual: string
-  cveTReaseguro: string
-  idTContrato: number | null
-  criterioCobertura: number
+  cveMoneda: any
+  cveFormaContractual: any
+  cveTReaseguro: any
+  idTContrato: any
+  criterioCobertura: any
   limiteMax: string
   limiteMaxResCR: string
   montoRetencion: string
@@ -31,50 +32,26 @@ export interface ContratoGeneralPol {
     renovacion: number
   }[]
 }
-
-
-export interface ContratoGeneralDatosM {
-  ramo: string;
-  subramo: string[];
-  contratoProrrogado: boolean;
-  fechaFinProrro: string;
-  contratoCancelado: boolean;
-  fechaCancelacion: string;
-  idContrato: string;
-  negociosCubiertos: string;
-  fechaInicio: string;
-  fechaFin: string;
-  cveMoneda: string[];
-  cveFormaContractual: string;
-  limiteMax: string;
-  limiteMaxResCR: string;
-  cveTReaseguro: string;
-  idTContrato: number;
-  criterioCobertura: string;
-  retencionP: string;
-  piso: string;
-  techo: string;
-  porcentajeCesion: string;
-}
-
+/* CONFIGURACION GENERAL */
 export interface ReaseguradorParticipacion {
   cveReasegurador: string | number
-  participacion: number
+  nombreReasegurador?: string
 }
 
 export interface ContratoGeneralConfReaseg {
   idContrato: string | number
   reaseguradores: ReaseguradorParticipacion[]
-  indicadorDistrC: number | null
-  cesionCoberBasi: number
-  comisionReaseg: number
-  detalleCobertura: number
-  tipoComision: number | null
-  tipoCobertura: number | null
+  indicadorDistrC: any
+  cesionCoberBasi: any
+  comisionReaseg: any
+  detalleCobertura: any
+  tipoComision: any
+  tipoCobertura: any
   comisionPrimerAnio: number | null
   comisionRenovacion: number | null
 }
 
+/* EXCEDENTE POR CAPAS*/
 export interface CapaExPC {
   detalleCapa: string
   retencionC: string
@@ -86,6 +63,7 @@ export interface ContratoDatosExPC {
   capas: CapaExPC[]
 }
 
+/* COBERTURAS */
 export interface Cobertura {
   value: number
   title: string
@@ -105,7 +83,7 @@ export interface DetalleTarifa {
   porSobrePrima: number | null
   tarifaFijaM: number | null
   factorTap: number | null
-  tarifaP: number | null
+  tarifaP: File | null
 }
 
 export interface ContratoGeneralReasegCobertura {
@@ -120,21 +98,22 @@ export interface ContratoGeneralReasegCobertura {
   tarifas: DetalleTarifa[]
 }
 
+/* INTERMEDIARIOS */
 export interface IntermediarioRegistro {
   intermediario: number
-  asignacionInterm: number
-  reaseguradora: number | null
+  asignacionInterm: any
+  reaseguradora: any
   broker: number | null
   corretaje: number
   tipoCorretaje: number | null
   corretajeFijo: number | null
   montoCorreFijo: number | null
   display: {
-    asignacion: string
-    reaseguradora: string
+    asignacion: any
+    reaseguradora: any
     broker: string
     corretaje: string
-    tipo: string
+    tipo: any
   }
 }
 
@@ -143,7 +122,7 @@ export interface ContratoConfigInt {
   intermediariosTabla?: IntermediarioRegistro[]
   intermediario: number
   asignacionIntermediario: number
-  reaseguradora: number | null
+  reaseguradora: any[]
   interme: number | null
   corretajeP: number
   tipoCorretaje: number | null
@@ -185,44 +164,17 @@ export interface ContratoCompletoDTO {
   configInt: ContratoConfigInt | null
 }
 
-
-export const  useContratoStore = defineStore("contrato", {
+export const useContratoStore = defineStore("contrato", {
   state: () => ({
-    general: JSON.parse(
-      localStorage.getItem("contrato_general_datos") || "null"
-    ) as ContratoGeneralDatos | null,
-
-    expc: JSON.parse(
-      localStorage.getItem("contrato_general_expc_datos") || "null"
-    ) as ContratoDatosExPC | null,
-
-    poli: JSON.parse(
-      localStorage.getItem("contrato_general_polizas") || "null"
-    ) as ContratoGeneralPol | null,
-
-    configReaseg: JSON.parse(
-      localStorage.getItem("contrato_general_configReaseg_G") || "null"
-    ) as ContratoGeneralConfReaseg | null,
-
-    configReasegCob: JSON.parse(
-      localStorage.getItem("contrato_general_configReaseg_ Cob") || "null"
-    ) as ContratoGeneralReasegCobertura | null,
-
-    configReasegCom: JSON.parse(
-      localStorage.getItem("contrato_general_configReaseg_Com") || "null"
-    ) as ContratoConfigReasCom | null,
-
-    configReasegPTU: JSON.parse(
-      localStorage.getItem("contrato_general_configReaseg_PTU") || "null"
-    ) as ContratoReasePTU | null,
-
-    configInt: JSON.parse(
-      localStorage.getItem("contrato_general_configInt") || "null"
-    ) as ContratoConfigInt | null,
-
-    completo: JSON.parse(
-      localStorage.getItem("contrato_completo") || "false"
-    ) as boolean,
+    general: JSON.parse(localStorage.getItem("contrato_general_datos") || "null") as ContratoGeneralDatos | null,
+    expc: JSON.parse(localStorage.getItem("contrato_general_expc_datos") || "null") as ContratoDatosExPC | null,
+    poli: JSON.parse(localStorage.getItem("contrato_general_polizas") || "null") as ContratoGeneralPol | null,
+    configReaseg: JSON.parse(localStorage.getItem("contrato_general_configReaseg_G") || "null") as ContratoGeneralConfReaseg | null,
+    configReasegCob: JSON.parse(localStorage.getItem("contrato_general_configReaseg_Cob") || "null") as ContratoGeneralReasegCobertura | null,
+    configReasegCom: JSON.parse(localStorage.getItem("contrato_general_configReaseg_Com") || "null") as ContratoConfigReasCom | null,
+    configReasegPTU: JSON.parse(localStorage.getItem("contrato_general_configReaseg_PTU") || "null") as ContratoReasePTU | null,
+    configInt: JSON.parse(localStorage.getItem("contrato_general_configInt") || "null") as ContratoConfigInt | null,
+    completo: JSON.parse(localStorage.getItem("contrato_completo") || "false") as boolean,
   }),
 
   actions: {
@@ -274,6 +226,12 @@ export const  useContratoStore = defineStore("contrato", {
     reset() {
       this.general = null;
       this.expc = null;
+      this.poli = null;
+      this.configReaseg = null;
+      this.configReasegCob = null;
+      this.configReasegCom = null;
+      this.configReasegPTU = null;
+      this.configInt = null;
       this.completo = false;
 
       localStorage.removeItem("contrato_general_datos");

@@ -55,31 +55,31 @@ export const NuevoContratoVida = () => {
   const renovacionOptions = ref<SelectOption<number>[]>([])
 
   const baseAPIOperacion = BaseAPI({
-    prefix: "ReasegCatCnsfintOperYRamosAnx3817Rest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintOperYRamosAnx3817Rest/"
   })
 
   const baseAPIMoneda = BaseAPI({
-    prefix: "ReasegCatCnsfRr6MonedaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfRr6MonedaRest/"
   })
 
   const baseAPIFormaContractual = BaseAPI({
-    prefix: "ReasegCatIntFormaContractualRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntFormaContractualRest/"
   })
 
   const baseAPITipoReaseguro = BaseAPI({
-    prefix: "ReasegCatIntTipoReaseguroRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoReaseguroRest/"
   })
 
   const baseAPITipoContrato = BaseAPI({
-    prefix: "ReasegCatCnsfintTipoContratoRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintTipoContratoRest/"
   })
 
   const baseAPICriterioCobertura = BaseAPI({
-    prefix: "ReasegCatIntCriterioCoberturaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCriterioCoberturaRest/"
   })
 
   const baseAPIPolizas = BaseAPI({
-    prefix: "EmisionContableRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/EmisionContableRest/"
   })
 
 

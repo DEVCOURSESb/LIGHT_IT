@@ -66,35 +66,35 @@ export const NuevoContratoVidaConR = () => {
   const tipoTarifaOptions = ref<SelectOption<number>[]>([])
 
   const baseAPIReaseg = BaseAPI({
-    prefix: "ReasegCatCnsfintReaseguradoraRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintReaseguradoraRest/"
   })
   const baseAPIIndiDis = BaseAPI({
-    prefix: "ReasegCatIntDistribucionCesionRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntDistribucionCesionRest/"
   })
   const baseAPITipoComision = BaseAPI({
-    prefix: "ReasegCatIntTipoAsignacionRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoAsignacionRest/"
   })
   const baseAPITipoCobertura = BaseAPI({
-    prefix: "ReasegCatIntClasificacionCoberturaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntClasificacionCoberturaRest/"
   })
 //coberturas
   const baseAPICoberturas = BaseAPI({
-    prefix: "ReasegCatIntCoberturaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturaRest/"
   })
   const baseAPICoberturasBas = BaseAPI({
-    prefix: "ReasegCatIntCoberturaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturaRest/"
   })
   const baseAPICoberturasAdi = BaseAPI({
-    prefix: "ReasegCatIntCoberturaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturaRest/"
   })
 
   const baseAPITipoTarifa = BaseAPI({
-    prefix: "ReasegCatIntTipoTarifaRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoTarifaRest/"
   })
   // ptu
 
   const baseAPIPtu = BaseAPI({
-    prefix: "ReasegCatIntPtuRest/"
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntPtuRest/"
   })
 
   //General
