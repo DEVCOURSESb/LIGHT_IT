@@ -201,8 +201,6 @@ const archivoError = vueRef<string | null>(null);
 
 // Función mejorada para manejar cambios en el archivo
 const onFileChange = (files: File | File[] | null) => {
-  console.log('=== onFileChange ===');
-  console.log('Archivos recibidos:', files);
   
   archivoError.value = null;
   
@@ -277,7 +275,6 @@ const onFileChange = (files: File | File[] | null) => {
 
 // Función para limpiar el archivo
 const onFileClear = () => {
-  console.log('=== onFileClear ===');
   setArchivoSeleccionado(null);
   archivoInfo.value = null;
   archivoError.value = null;
@@ -300,7 +297,6 @@ const headers = [
 ];
 
 onMounted(() => {
-  console.log('=== Componente montado ===');
   form.value = formRef.value;
   cargarDatos();
 });

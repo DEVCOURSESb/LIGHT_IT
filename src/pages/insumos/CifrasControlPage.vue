@@ -130,6 +130,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useCifrasControl } from "@/composables/cifras/useCifrasControl";
+import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 
 // Composable
 const {
@@ -181,20 +182,7 @@ const formatearPeriodo = (periodo: string): string => {
     const anio = partes[0];
     const mes = parseInt(partes[1] || "0");
 
-    const meses = [
-      "Ene",
-      "Feb",
-      "Mar",
-      "Abr",
-      "May",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dic",
-    ];
+    const {mesesShort: meses} = mesesAnio();
 
     const nombreMes = meses[mes - 1] || mes;
     return `${nombreMes} ${anio}`;
@@ -206,20 +194,7 @@ const formatearPeriodo = (periodo: string): string => {
     const anio = parteGuion[0];
     const mes = parseInt(parteGuion[1] || "0");
 
-    const meses = [
-      "Ene",
-      "Feb",
-      "Mar",
-      "Abr",
-      "May",
-      "Jun",
-      "Jul",
-      "Ago",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dic",
-    ];
+    const {mesesShort: meses} = mesesAnio();
 
     const nombreMes = meses[mes - 1] || mes;
     return `${nombreMes} ${anio}`;

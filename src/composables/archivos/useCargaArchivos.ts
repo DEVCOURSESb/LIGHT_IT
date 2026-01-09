@@ -6,6 +6,7 @@ import type {
   ValidacionCSV,
 } from "@/API/generic/carga-archivos";
 import { validarCSV } from "@/utils/validateCSV";
+import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 
 
 interface UseCargaArchivosOptions<T> {
@@ -50,20 +51,10 @@ export const useCargaArchivos = <T>({
     Array.from({ length: 10 }, (_, i) => anioActual - i)
   );
 
-  const meses = ref([
-    { nombre: "Enero", valor: 1 },
-    { nombre: "Febrero", valor: 2 },
-    { nombre: "Marzo", valor: 3 },
-    { nombre: "Abril", valor: 4 },
-    { nombre: "Mayo", valor: 5 },
-    { nombre: "Junio", valor: 6 },
-    { nombre: "Julio", valor: 7 },
-    { nombre: "Agosto", valor: 8 },
-    { nombre: "Septiembre", valor: 9 },
-    { nombre: "Octubre", valor: 10 },
-    { nombre: "Noviembre", valor: 11 },
-    { nombre: "Diciembre", valor: 12 },
-  ]);
+  const { mesesWithValue: mesess} = mesesAnio();
+
+
+  const meses = ref(mesess);
 
   // Función auxiliar para establecer el archivo
   const setArchivoSeleccionado = (file: File | null) => {

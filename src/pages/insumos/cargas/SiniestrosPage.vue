@@ -30,72 +30,12 @@ import { useCargaArchivos } from "@/composables/archivos/useCargaArchivos";
 import { useTransformacionInsumos } from "@/composables/archivos/useTransformacionInsumos";
 import CargarArchivosPage from "./CargarArchivosPage.vue";
 import TransformacionInsumoCard from "@/components/TransformacionInsumoCard.vue";
+import { columnsValidationsFiles } from "@/utils/catalogos/columsValidationsFiles";
+import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 
 const siniestrosAPI = SiniestrosActions();
 
-// Columnas esperadas del CSV de siniestros
-const columnasEsperadasSiniestros = [
-  "MOT_SIT_RECL",
-  "ANIO_REPORTE",
-  "NUM_RECLAMACION",
-  "FH_REGISTRO",
-  "NUM_COMPLEM_RECL",
-  "CVE_T_MOVTO_SIN",
-  "NUM_POLIZA",
-  "NUM_RENOV_POL",
-  "ID_INCISO",
-  "F_NACIMIENTO",
-  "CVE_T_REASEGURO",
-  "ESTADO_EMISION",
-  "ESTADO_SINIESTRO",
-  "AAAAMMCONTAB",
-  "F_CONTAB",
-  "FH_OCURRIDO",
-  "FH_REPORTADO",
-  "F_PRIMER_PAGO",
-  "SIT_RECLAM",
-  "CVEL_DIR_REEMB",
-  "ID_CAUSA_SIN",
-  "RVAINI",
-  "TOTAL_AJUSTERES",
-  "AJUSTE_MENOS",
-  "AJUSTE_MAS",
-  "OCURRIDO",
-  "RECLAMADO",
-  "PAGAUTORIZADO",
-  "DEDUCIBLE",
-  "COASEGURO",
-  "PAGIVA",
-  "PAGAUTYDEDYCOAS",
-  "TOTALCHEQUE",
-  "ID_MOVTO_RECL",
-  "ID_COBERTURA",
-  "ID_LIN_NEGOCIO",
-  "ID_REPORTE_SIN",
-  "ID_SIN_UNICO",
-  "ID_MONEDA",
-  "NUM_ASEGURADO",
-  "NOM_LINEA_NEG",
-  "CVE_DIVISION",
-  "CVE_T_OPERACION",
-  "NUM_CERTIFICADO",
-  "F_FIRMA_CONSENT",
-  "F_INI_VIGENCIA",
-  "NOM_COBERTURA",
-  "AGENTE",
-  "PROMOTORIA",
-  "NOM_OFICINA",
-  "F_POL_INI_VIG",
-  "F_POL_FIN_VIG",
-  "CAUSA_SINIESTRO",
-  "ID_ICD",
-  "ID_RAMO_CONTABLE",
-  "ID_SUBR_CONTABLE",
-  "ID_FILIAL",
-  "SA_AMPARADA",
-  "CVE_T_ASEG",
-  "DESCPOBLACION",
-];
+const {columnasEsperadasSiniestros} = columnsValidationsFiles();
 
 const transformarDatosSiniestros = (
   data: SiniestroResponse
@@ -109,20 +49,7 @@ const transformarDatosSiniestros = (
     const partes = siniestro.aniomesCarga.split("/");
     const anio = partes[0] || "";
     const mes = partes[1] || "";
-    const meses = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ];
+    const {meses} = mesesAnio();
 
     return {
       anio: parseInt(anio) || 0,
