@@ -144,7 +144,7 @@
               Si la comisión es igual para el primer año y sus renovaciones, se deberá colocar el mismo dato en ambos campos.
             </v-tooltip>
           </div>
-          <v-slider v-model="comisionPrimerAnio" min="0" max="100" step="0.01" thumb-label color="orange">
+          <v-slider v-model="comisionPrimerAnio" min="0" max="100" step="0.01" thumb-label color="orange" :disabled="getID(tipoComisionObj) === 2">
             <template v-slot:append>
               <v-text-field
                 v-model.number="comisionPrimerAnio"
@@ -154,14 +154,14 @@
           </v-slider>
         </v-col>
 
-        <v-col cols="12" md="6">
+        <v-col cols="12" md="6" >
           <div class="text-subtitle-2 d-flex align-center mb-2">
             % Comisión renovación (Fija/Provisional)
             <v-tooltip activator="parent" location="top" max-width="350">
               Si la comisión es igual para el primer año y sus renovaciones, se deberá colocar el mismo dato en ambos campos.
             </v-tooltip>
           </div>
-          <v-slider v-model="comisionRenovacion" min="0" max="100" step="0.01" thumb-label color="orange">
+          <v-slider v-model="comisionRenovacion" min="0" max="100" step="0.01" thumb-label color="orange" :disabled="getID(tipoComisionObj) === 2">
             <template v-slot:append>
               <v-text-field
                 v-model.number="comisionRenovacion"
@@ -171,7 +171,6 @@
           </v-slider>
         </v-col>
       </v-row>
-
       <v-col class="text-center mt-10">
         <v-btn class="btn-guardar" elevation="4" @click="guardarConfigReaseguro">
           GUARDAR CONFIGURACIÓN GENERAL
@@ -271,11 +270,43 @@ watch(() => getID(detalleCoberturaObj.value), (val) => {
   }
 })
 
-watch(comisionPrimerAnio, (newVal) => {
-  if (comisionRenovacion.value === 0 || comisionRenovacion.value === null) {
-    comisionRenovacion.value = newVal
+const actualizarStoreEnTiempoReal = () => {
+  const idContrato = contratoStore.general?.idContrato;
+  if (!idContrato) return;
+
+  const payload: any = {
+    idContrato,
+    reaseguradores: reaseguradores.value,
+    indicadorDistrC: indicadorDistrCObj.value,
+    cesionCoberBasi: cesionCoberBasiObj.value,
+    comisionReaseg: comisionReasegObj.value,
+    detalleCobertura: detalleCoberturaObj.value,
+    tipoComision: tipoComisionObj.value,
+    tipoCobertura: tipoCoberturaObj.value,
+    comisionPrimerAnio: comisionPrimerAnio.value,
+    comisionRenovacion: comisionRenovacion.value
+  };
+  contratoStore.setConfigReasG(payload);
+}
+
+watch(tipoComisionObj, (newVal) => {
+  if (getID(newVal) === 2) {
+    comisionPrimerAnio.value = 0;
+    comisionRenovacion.value = 0;
   }
-})
+  actualizarStoreEnTiempoReal();
+});
+
+watch(comisionPrimerAnio, (newVal) => {
+  if (getID(tipoComisionObj.value) !== 2) {
+    comisionRenovacion.value = newVal;
+  }
+  actualizarStoreEnTiempoReal();
+});
+
+watch(comisionRenovacion, () => {
+  actualizarStoreEnTiempoReal();
+});
 
 const agregarReaseguradora = async () => {
   const cErrors = await companiaReasegRef.value.validate()

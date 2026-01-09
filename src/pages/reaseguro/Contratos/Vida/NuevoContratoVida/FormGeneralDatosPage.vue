@@ -1,13 +1,13 @@
 <template>
   <v-form ref="formRef">
-    <v-container>
+    <v-container fluid>
       <v-row>
         <v-col cols="12" md="4">
           <v-select
             v-model="subramoObj"
             :items="subramoOptions"
             label="Subramo"
-            :rules="[v => (v && v.length > 0) || 'Subramo requerido']"
+            :rules="[ValidacionesContrato.subramo()]"
             required
             variant="solo-filled"
             multiple
@@ -104,7 +104,7 @@
             label="Tipo de contrato"
             variant="solo-filled"
             chips
-            :rules="[v => !!v || 'Requerido']"
+            :rules="[ValidacionesContrato.tipoContrato()]"
             return-object
           />
         </v-col>
@@ -123,49 +123,87 @@
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-text-field v-model="limiteMax" label="Limite máximo del contrato" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
+          <v-text-field
+            v-model="limiteMax"
+            label="Limite máximo del contrato"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.numeroC21()]"
+          />
         </v-col>
 
         <v-col cols="12" md="4">
-          <v-text-field v-model="limiteMaxResCR" label="Limite máximo de responsabilidad" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
+          <v-text-field
+            v-model="limiteMaxResCR"
+            label="Limite máximo de responsabilidad"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.numeroC21()]"
+          />
         </v-col>
 
         <v-col cols="12" md="4">
           <v-text-field
             v-model="retencionP"
-            :disabled="tipoContratoObj?.value === 3"
+            :disabled="Number(getID(tipoContratoObj)) === 3"
             label="Retención propia"
             variant="solo-filled"
+            :rules="[ValidacionesContrato.numeroC21()]"
           />
         </v-col>
 
-        <template v-if="tipoContratoObj?.value !== 3">
-          <v-col cols="12" md="4">
-            <v-text-field v-model="cesion" label="Cesión" suffix="%" variant="solo-filled" />
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field v-model="piso" label="Piso" type="number" variant="solo-filled" />
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-text-field v-model="techo" label="Techo" type="number" variant="solo-filled" />
-          </v-col>
-        </template>
+        <v-col cols="12" md="4" v-if="[1, 7, 9].includes(Number(getID(tipoContratoObj)))">
+          <v-text-field
+            v-model="cesion"
+            label="Cesión"
+            suffix="%"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.cesion(() => Number(getID(tipoContratoObj)))]"
+          />
+        </v-col>
 
-        <v-divider v-if="tipoContratoObj?.value === 3" />
-        <v-col cols="12" md="4" v-if="tipoContratoObj?.value === 3">
-          <v-text-field v-model="retencionCapa" label="Retención propia capa N" type="number" variant="solo-filled" />
+        <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+          <v-text-field
+            v-model="piso"
+            label="Piso"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.piso(() => Number(getID(tipoContratoObj)))]"
+          />
         </v-col>
-        <v-col cols="12" md="4" v-if="tipoContratoObj?.value === 3">
-          <v-text-field v-model="techoCapa" label="Techo capa N" type="number" variant="solo-filled" />
+
+        <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+          <v-text-field
+            v-model="techo"
+            label="Techo"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.techo(() => Number(getID(tipoContratoObj)))]"
+          />
         </v-col>
-        <v-col cols="12" md="1" v-if="tipoContratoObj?.value === 3" class="d-flex align-center">
+
+        <v-divider v-if="Number(getID(tipoContratoObj)) === 3" class="my-4" />
+
+        <v-col cols="12" md="4" v-if="Number(getID(tipoContratoObj)) === 3">
+          <v-text-field
+            v-model="retencionCapa"
+            label="Retención propia capa N"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.retencionCapa(() => Number(getID(tipoContratoObj)))]"
+          />
+        </v-col>
+        <v-col cols="12" md="4" v-if="Number(getID(tipoContratoObj)) === 3">
+          <v-text-field
+            v-model="techoCapa"
+            label="Techo capa N"
+            variant="solo-filled"
+            :rules="[ValidacionesContrato.techoCapa(() => Number(getID(tipoContratoObj)))]"
+          />
+        </v-col>
+        <v-col cols="12" md="1" v-if="Number(getID(tipoContratoObj)) === 3" class="d-flex align-center">
           <v-btn color="indigo" icon="mdi-plus" @click="agregarCapa" />
         </v-col>
       </v-row>
     </v-container>
 
-    <v-container v-if="tipoContratoObj?.value === 3">
-      <v-data-table :headers="headers1" :items="capas" hide-default-footer>
+    <v-container v-if="Number(getID(tipoContratoObj)) === 3">
+      <v-data-table :headers="headers1" :items="capas" hide-default-footer class="elevation-1">
         <template v-slot:item.acciones="{ item, index }">
           <v-btn icon color="blue" variant="text" @click="editarCapa(item, index)"><v-icon>mdi-pencil</v-icon></v-btn>
           <v-btn icon color="red" variant="text" @click="eliminarCapa(index)"><v-icon>mdi-delete</v-icon></v-btn>
@@ -173,8 +211,8 @@
       </v-data-table>
     </v-container>
 
-    <v-col class="text-center">
-      <v-btn class="btn-guardar" @click="guardarDatosGenerales">
+    <v-col class="text-center mt-4">
+      <v-btn color="primary" size="large" @click="guardarDatosGenerales">
         Guardar datos generales
       </v-btn>
     </v-col>
@@ -280,7 +318,7 @@ const hidratarDesdeStore = () => {
   if (tipoReaseguroOptions.value.length > 0) {
     tipoReaseguroObj.value = tipoReaseguroOptions.value.find(o => o.value === getID(g.cveTReaseguro))
   }
-  
+
   if (tipoContratoOptions.value.length > 0) {
     const targetId = getID(g.idTContrato);
     tipoContratoObj.value = tipoContratoOptions.value.find(o => Number(o.value) === Number(targetId));

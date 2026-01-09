@@ -73,22 +73,22 @@ const dialog = useDialog()
 
 const getID = (item: any): any => {
   if (item === null || item === undefined) return null;
-  if (Array.isArray(item)) return item.map(i => getID(i)).join('-');
-  return (item && typeof item === 'object' && 'value' in item) ? item.value : item;
+  if (typeof item === 'object' && 'value' in item) return item.value;
+  return item;
 };
 
 const getTX = (item: any): string => {
-  if (item === null || item === undefined || item === '') return '-';
-  if (Array.isArray(item)) return item.map(i => getTX(i)).join(', ');
-  if (typeof item === 'object') {
-    return item.title || item.nombre || item.label || String(item.value ?? '-');
-  }
+  if (item === null || item === undefined) return 'NULL';
+  if (typeof item === 'object') return item.title || item.label || item.nombre || 'NULL';
   return String(item);
 };
 
+const joinByDash = (arr: any[]) =>
+  Array.isArray(arr) ? arr.map(a => getID(a)).join('-') : getID(arr);
+
 const formatSiNo = (val: any) => {
   const v = getID(val);
-  if (v === 1 || v === '1' || v === true || String(v).toUpperCase() === 'SI') return 'SÍ';
+  if (v === 1 || v === '1' || v === true || String(v).toUpperCase() === 'SI' || String(v).toUpperCase() === 'SÍ') return 'SÍ';
   if (v === 0 || v === '0' || v === false || String(v).toUpperCase() === 'NO') return 'NO';
   return '-';
 };
@@ -98,7 +98,7 @@ const cleanN = (val: any) => {
   return parseFloat(val.toString().replace('%', '').replace(',', '')) || 0.0;
 };
 
-const formatF = (f: string) => {
+const formatF = (f: string | Date) => {
   if (!f) return "";
   const d = new Date(f);
   return d.toISOString().split('T')[0] + " 00:00:00.0";
@@ -171,12 +171,10 @@ const reaseguradoresTablaCompleta = computed(() => {
 const tarifasTablaCompleta = computed(() => {
   const cob = contratoStore.configReasegCob;
   if (!cob || !cob.tarifas) return [];
-
   return cob.tarifas.map((t: any) => {
     const esHija = cob.agrupaciones?.find(a =>
-      a.coberturas.some((c: any) => Number(getID(c)) === Number(t.cveCob))
+      a.coberturas.some((c: any) => String(getID(c)) === String(getID(t.cveCob)))
     );
-
     return {
       idContrato: cob.idContrato,
       cveReasegurador: (t.cveReasegurador && getTX(t.cveReasegurador) !== '-') ? getTX(t.cveReasegurador) : 'TODAS',
@@ -212,7 +210,6 @@ const comisionEscalonadaTabla = computed(() => {
   const conf = contratoStore.configReaseg;
   const comEsc = contratoStore.configReasegCom;
   if (!comEsc || !comEsc.comisiones || comEsc.comisiones.length === 0) return [];
-
   return comEsc.comisiones.map(c => ({
     idContrato: contratoStore.general?.idContrato,
     cveReasegurador: 'TODAS',
@@ -286,7 +283,6 @@ const headersIntermediarios = [
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];
 
-
 const guardarEnBD = async () => {
   const authStore = AuthStore();
   if (!authStore.getToken) return;
@@ -294,81 +290,121 @@ const guardarEnBD = async () => {
   try {
     dialog.show({ title: 'Procesando', message: 'Guardando información...', type: DialogType.INFO });
 
-    if (!contratoStore.general) {
-      dialog.show({ title: 'Atención', message: 'Faltan los Datos Generales del contrato.', type: DialogType.ERROR });
-      return;
-    }
-
     const gen = contratoStore.general;
     const conf = contratoStore.configReaseg;
-    const ptu = contratoStore.configReasegPTU;
     const cob = contratoStore.configReasegCob;
     const int = contratoStore.configInt;
+    const ptu = contratoStore.configReasegPTU;
+
+    if (!gen) return;
 
     const payloadGen = {
-      idRamo: "010", subRamo: getID(gen.subramo), idContrato: gen.idContrato, negocioCubiertos: gen.negociosCubiertos,
-      fechaInicioContrato: formatF(gen.fechaInicio), fechaFinContrato: formatF(gen.fechaFin),
-      cveMoneda: getID(gen.cveMoneda), cveFContrac: String(getID(gen.cveFormaContractual)),
-      limiteMaximoContrato: cleanN(gen.limiteMax), limiteMaximoPorContrato: cleanN(gen.limiteMaxResCR),
-      cveTReaseg: String(getID(gen.cveTReaseguro)), idTContrato: String(getID(gen.idTContrato)),
-      criterioCobertura: String(getID(gen.criterioCobertura)), montoRetencion: cleanN(gen.montoRetencion),
-      piso: cleanN(gen.piso), techo: cleanN(gen.techo), porcentajeCesion: cleanN(gen.porcentajeCesion)
+      idRamo: "010",
+      subRamo: getTX(gen.subramo),
+      idContrato: gen.idContrato,
+      negocioCubiertos: gen.negociosCubiertos,
+      fechaInicioContrato: formatF(gen.fechaInicio),
+      fechaFinContrato: formatF(gen.fechaFin),
+      cveMoneda: getID(gen.cveMoneda),
+      cveFContrac: getID(gen.cveFormaContractual),
+      idTContrato: getID(gen.idTContrato),
+      criterioCobertura: getID(gen.criterioCobertura),
+      limiteMaximoContrato: cleanN(gen.limiteMax),
+      limiteMaximoPorContrato: cleanN(gen.limiteMaxResCR),
+      cveTReaseg: getID(gen.cveTReaseguro),
+      montoRetencion: cleanN(gen.montoRetencion),
+      piso: cleanN(gen.piso),
+      techo: cleanN(gen.techo),
+      porcentajeCesion: cleanN(gen.porcentajeCesion)
     };
     await apiDatosContrato.post('register', payloadGen);
 
-    const promsReas = (conf && conf.reaseguradores) ? conf.reaseguradores.map((r: any) => ({
-      idContrato: String(gen.idContrato), cveReasegurador: getID(r.cveReasegurador), participacion: cleanN(r.participacion),
-      cveDistrCesion: String(getID(conf.indicadorDistrC) ?? '0'), indCesionBasica: getID(conf.cesionCoberBasi) ?? 1,
-      indComisionReaseguro: getID(conf.comisionReaseg) ?? 0, indDetalleCobertura: getID(conf.detalleCobertura) ?? 0,
-      cveAsignacion: String(getID(conf.tipoComision) ?? (getID(conf.comisionReaseg) === 1 ? '0' : '')),
-      otrogaPtu: getID(ptu?.otorgaPtu) ?? 0, cvePtu: String(getID(ptu?.metodoCalPTU) ?? '0'),
-      porcentajePtu: cleanN(ptu?.ptu), porcentajeK: cleanN(ptu?.kPor), aniosArrastre: parseInt(ptu?.aniosArrastre?.toString() || "0")
-    })).map(item => apiReaseguradoras.post('register', item)) : [];
+    const listaReaseguradoresContrato = conf?.reaseguradores || [];
 
-    const promsCob = (cob && cob.tarifas) ? cob.tarifas.map((t: any) => {
-      const agrup = cob.agrupaciones?.find(a => a.coberturas.some((c: any) => Number(getID(c)) === Number(t.cveCob)));
-      return {
-        idContrato: String(gen.idContrato), cveReasegurador: getID(t.cveReasegurador) || 'TODAS',
-        detalleCapa: String(t.detalleCapa || 'NO'), cveCob: t.cveCob !== undefined ? Number(t.cveCob) : 0,
-        descClasifCober: String (t.descClasifCober),
-        cveAgrupCob: agrup ? getID(agrup.madre) : null,
-        descAgrupCob: String(t.descAgrupCob),
-        cveTarifa: String(getID(t.tipoTarifa)), primaTarifaFija: cleanN(t.primaTarifa),
-        porcentajePrimaEmitida: cleanN(t.porSobrePrima), tarifaFija: cleanN(t.tarifaFijaM), factorTarifaPropia: cleanN(t.factorTap)
-      };
-    }).map(item => apiCoberturas.post('register', item)) : [];
+    const promsReas = listaReaseguradoresContrato.map((r: any) =>
+      apiReaseguradoras.post('register', {
+        idContrato: gen.idContrato,
+        cveReasegurador: String(r.clave || getID(r.cveReasegurador)), // Usar clave (S0061) si existe
+        participacion: cleanN(r.participacion),
+        cveDistrCesion: getID(conf?.indicadorDistrC),
+        indCesionBasica: getID(conf?.cesionCoberBasi),
+        indComisionReaseguro: getID(conf?.comisionReaseg),
+        indDetalleCobertura: getID(conf?.detalleCobertura),
+        cveAsignacion: getID(conf?.tipoComision),
+        otrogaPtu: getID(ptu?.otorgaPtu),
+        cvePtu: getID(ptu?.metodoCalPTU),
+        porcentajePtu: cleanN(ptu?.ptu),
+        porcentajeK: cleanN(ptu?.kPor),
+        aniosArrastre: cleanN(ptu?.aniosArrastre)
+      })
+    );
 
-    const promsComNormal = (conf && getID(conf.comisionReaseg) === 1) ? [{
-      idContrato: String(gen.idContrato), cveReasegurador: 'TODAS',
-      descClasifCober: String(getID(conf.tipoCobertura) ?? '0'),
-      comisionPrimerAnioFijaProv: cleanN(conf.comisionPrimerAnio),
-      comisionRenovacionFijaProv: cleanN(conf.comisionRenovacion)
-    }].map(item => apiComision.post('register', item)) : [];
+    const promsCob: any[] = [];
+    if (cob?.tarifas && cob.tarifas.length > 0) {
+      cob.tarifas.forEach((t: any) => {
+        let reasFila: any[] = [];
+        if (getID(t.cveReasegurador)) {
+          reasFila = Array.isArray(t.cveReasegurador) ? t.cveReasegurador : [t.cveReasegurador];
+        } else {
+          reasFila = listaReaseguradoresContrato;
+        }
 
-    const promsInt = (int && int.intermediariosTabla) ? int.intermediariosTabla.map(i => apiIntermediarios.post('register', {
-      idContrato: gen.idContrato, cveReasegurador: getID(i.reaseguradora), indIntermediario: getID(int.intermediario),
-      cveCriterioAsig: getID(i.asignacionInterm), cveIntermediario: getID(i.broker), indCorretaje: getID(i.corretaje),
-      cveAsignacion: getID(i.tipoCorretaje), porcentajeCorretaje: cleanN(i.corretajeFijo), montoCorretaje: cleanN(i.montoCorreFijo)
-    })) : [];
+        const agrup = cob.agrupaciones?.find(a =>
+          a.coberturas?.some((c: any) => String(getID(c)) === String(getID(t.cveCob)))
+        );
+
+        reasFila.forEach((r: any) => {
+          const idR = String(r.clave || getID(r.cveReasegurador) || getID(r));
+
+          if (idR && idR !== 'null' && idR !== 'undefined') {
+            promsCob.push(apiCoberturas.post('register', {
+              idContrato: gen.idContrato,
+              cveReasegurador: idR,
+              detalleCapa: (t.detalleCapa === 'SÍ' || t.detalleCapa === true) ? "SI" : "",
+              descClasifCober: getTX(t.tipoCobertura || cob.detalleCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+              cveCob: String(getID(t.cveCob)),
+              descCob: getTX(t.cobertura),
+              cveAgrupCob: agrup ? Number(getID(agrup.madre)) : 0,
+              descAgrupCob: agrup ? getTX(agrup.madre) : "",
+              cveTarifa: Number(getID(t.tipoTarifa)),
+              primaTarifaFija: cleanN(t.primaTarifa),
+              porcentajePrimaEmitida: cleanN(t.porSobrePrima),
+              tarifaFija: cleanN(t.tarifaFijaM),
+              factorTarifaPropia: cleanN(t.factorTap),
+              tarifaPropia: t.nombreArchivo || "0.0"
+            }));
+          }
+        });
+      });
+    }
+
+    const promsComNormal = (conf && getID(conf.comisionReaseg) == 1)
+      ? listaReaseguradoresContrato.map((r: any) => apiComision.post('register', {
+          idContrato: gen.idContrato,
+          cveReasegurador: String(r.clave || getID(r.cveReasegurador)),
+          descClasifCober: getTX(conf?.tipoCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+          comisionPrimerAnioFijaProv: cleanN(conf?.comisionPrimerAnio),
+          comisionRenovacionFijaProv: cleanN(conf?.comisionRenovacion)
+        })) : [];
 
     const promsCapas = (contratoStore.expc?.capas || []).map(c => apiCapas.post('register', { idContrato: gen.idContrato, detalleCapa: c.detalleCapa, montoRetencionCapa: cleanN(c.retencionC), techoCapa: cleanN(c.techoC) }));
     const promsPolizas = (contratoStore.poli?.polizas || []).map(p => apiPolizas.post('register', { idContrato: gen.idContrato, numPoliza: p.poliza, numRenovPol: p.renovacion }));
 
-    const comisionesEscStore = contratoStore.configReasegCom?.comisiones || [];
-    const promsComEsc = comisionesEscStore.map(c => apiComisionEsc.post('register', {
-      idContrato: gen.idContrato,
-      cveReasegurador: 'TODAS',
-      desClasifCober: getTX(conf?.tipoCobertura),
-      limiteInf: cleanN(c.limiteInf),
-      limiteSup: cleanN(c.limiteSup),
-      comisionDefinitiva: cleanN(c.comisionDefinitiva)
-    }));
+    const promsComEsc = (contratoStore.configReasegCom?.comisiones || []).flatMap(c =>
+      listaReaseguradoresContrato.map((r: any) => apiComisionEsc.post('register', {
+        idContrato: gen.idContrato,
+        cveReasegurador: String(r.clave || getID(r.cveReasegurador)),
+        descClasifCober: getTX(conf?.tipoCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+        limiteInf: cleanN(c.limiteInf),
+        limiteSup: cleanN(c.limiteSup),
+        comisionDefinitiva: cleanN(c.comisionDefinitiva)
+      }))
+    );
 
     await Promise.all([
       ...promsReas,
       ...promsCob,
       ...promsComNormal,
-      ...promsInt,
       ...promsCapas,
       ...promsPolizas,
       ...promsComEsc
@@ -379,8 +415,8 @@ const guardarEnBD = async () => {
     contratoStore.reset();
 
   } catch (error: any) {
-    console.error("Error al guardar:", error);
-    dialog.show({ title: 'ERROR', message: 'Fallo al guardar: ' + error.message, type: DialogType.ERROR });
+    console.error("ERROR:", error);
+    dialog.show({ title: 'ERROR', message: `Error al guardar: ${error.message || error}`, type: DialogType.ERROR });
   }
 };
 

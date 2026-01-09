@@ -268,7 +268,7 @@ const guardarDatos = () => {
     comisiones: JSON.parse(JSON.stringify(comisiones.value)),
   })
 
-  dialog.show({ title: 'Éxito', message: 'Las comisiones escalonadas se han guardado temporalmente.', type: DialogType.SUCCESS })
+  dialog.show({ title: 'Éxito', message: 'Comisiones escalonadas guardadas.', type: DialogType.SUCCESS })
 }
 </script>
 

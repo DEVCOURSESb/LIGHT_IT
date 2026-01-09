@@ -347,9 +347,12 @@ const agregarTarifa = () => {
     return
   }
 
+  const esBasica = coberturasBasiObj.value.some(c => c.value === coberturaTarifaObj.value.value);
+  const tipoCoberturaTexto = esBasica ? 'BÁSICA' : 'ADICIONAL';
 
   const nuevaFila = {
     detalleCapa: detalleCapa.value === 1 ? capaSeleccionada.value : 'NO',
+    tipoCobertura: tipoCoberturaTexto,
     cobertura: coberturaTarifaObj.value.title,
     cveCob: coberturaTarifaObj.value.value,
     tipoTarifa: { ...tipoTarifaObj.value },
@@ -370,7 +373,6 @@ const agregarTarifa = () => {
 
   limpiarTarifa()
 }
-
 const limpiarTarifa = () => {
   coberturaTarifaObj.value = null; tipoTarifaObj.value = null; primaTarFi.value = null;
   porSobrePrimaE.value = 100; tarifaFijaM.value = null; factorTarifaP.value = 100; tarifaPropiaFile.value = null

@@ -34,9 +34,14 @@ export class ValidacionesContrato {
 
   // SUBRAMO
   static subramo() {
-    return (v: string[]) =>
-      Array.isArray(v) && v.length > 0 && v.every(s => s.length <= 3)
-        || 'Subramo requerido'
+    return (v: any[]) => {
+      if (!Array.isArray(v) || v.length === 0) return 'Subramo requerido';
+
+      return v.every(s => {
+        const val = (typeof s === 'object' && s !== null) ? s.value : s;
+        return String(val).length <= 3;
+      }) || 'Verificar longitud de subramo';
+    }
   }
 
   // IDENTIFICADOR DE CONTRATO
