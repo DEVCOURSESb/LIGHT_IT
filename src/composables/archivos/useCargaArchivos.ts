@@ -86,7 +86,7 @@ export const useCargaArchivos = <T>({
       if (!resultado.valido) {
         console.error("Errores de validación CSV:", resultado.errores);
       } else {
-        console.log("✓ Archivo CSV validado correctamente");
+        console.log("CSV validado");
       }
       
       return resultado;
@@ -125,11 +125,6 @@ export const useCargaArchivos = <T>({
 
       if (!file.name.toLowerCase().endsWith(".csv")) {
         return "El archivo debe ser formato CSV";
-      }
-
-      const maxSize = 100 * 1024 * 1024;
-      if (file.size > maxSize) {
-        return "El archivo no debe superar 100MB";
       }
 
       if (file.size === 0) {

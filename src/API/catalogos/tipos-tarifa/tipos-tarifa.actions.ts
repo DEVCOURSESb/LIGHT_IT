@@ -1,5 +1,6 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoTarifa } from "./tipos-tarifa.interfaces";
+import type { AxiosResponse } from "axios";
 
 export const TipoTarifaActions = () => {
   const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoTarifaRest/" });
@@ -14,11 +15,9 @@ export const TipoTarifaActions = () => {
     }
   };
 
-  const createTipoTarifa = async (
-    data: Partial<TipoTarifa>
-  ): Promise<TipoTarifa> => {
+  const createTipoTarifa = async ( data: Partial<TipoTarifa> ): Promise<TipoTarifa[]> => {
     try {
-      const response = await baseAPI.post<TipoTarifa>("create", data);
+      const response = await baseAPI.post<TipoTarifa[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoTarifa:", error);
@@ -26,12 +25,9 @@ export const TipoTarifaActions = () => {
     }
   };
 
-  const updateTipoTarifa = async (
-    id: number,
-    data: Partial<TipoTarifa>
-  ): Promise<TipoTarifa> => {
+  const updateTipoTarifa = async (data: Partial<TipoTarifa>): Promise<TipoTarifa[]> => {
     try {
-      const response = await baseAPI.put<TipoTarifa>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoTarifa[]>(`updateRecord`, data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoTarifa:", error);
@@ -39,9 +35,10 @@ export const TipoTarifaActions = () => {
     }
   };
 
-  const deleteTipoTarifa = async (id: number): Promise<void> => {
+  const deleteTipoTarifa = async (id: number): Promise<TipoTarifa[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const data = await baseAPI.delete(`deleteRecord/${id}`);
+      return data.data;
     } catch (error) {
       console.error("Error deleting TipoTarifa:", error);
       throw error;

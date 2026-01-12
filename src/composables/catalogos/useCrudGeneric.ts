@@ -1,33 +1,36 @@
-import { useForm } from 'vee-validate'
-import { onMounted, ref } from 'vue'
+import { DialogType, useDialog } from "@/stores/dialogStore";
+import { useForm } from "vee-validate";
+import { onMounted, ref } from "vue";
 
 interface CrudConfig {
-  fields: any[]
-  validationSchema: any
+  fields: any[];
+  validationSchema: any;
   apiActions: {
-    fetch: () => Promise<any[]>
-    create: (data: any) => Promise<any>
-    update: (id: number, data: any) => Promise<any>
-    delete: (id: number) => Promise<void>
-  }
+    fetch: () => Promise<any[]>;
+    create: (data: any) => Promise<any>;
+    update: (data: any) => Promise<any>;
+    delete: (id: number) => Promise<any>;
+  };
 }
 
-export function useCrudGeneric (config: CrudConfig) {
-  const items = ref<any[]>([])
-  const loading = ref(false)
-  const activeModal = ref(false)
-  const editingId = ref<number | null>(null)
+export function useCrudGeneric(config: CrudConfig) {
+  const items = ref<any[]>([]);
+  const loading = ref(false);
+  const activeModal = ref(false);
+  const editingId = ref<number | null>(null);
+  const dialog = useDialog();
 
   // Inicializar valores por defecto
   const getInitialValues = () => {
-    const initialValues: Record<string, any> = {}
+    const initialValues: Record<string, any> = {};
     config.fields.forEach((field: any) => {
       if (!field.hidden) {
-        initialValues[field.name] = field.defaultValue !== undefined ? field.defaultValue : ''
+        initialValues[field.name] =
+          field.defaultValue !== undefined ? field.defaultValue : "";
       }
-    })
-    return initialValues
-  }
+    });
+    return initialValues;
+  };
 
   // useForm con valores iniciales y esquema de validación
   const {
@@ -41,60 +44,60 @@ export function useCrudGeneric (config: CrudConfig) {
     validationSchema: config.validationSchema,
     initialValues: getInitialValues(),
     validateOnMount: false,
-  })
+  });
 
   // Cargar items del API
   const loadItems = async () => {
-    loading.value = true
+    loading.value = true;
     try {
-      const response = await config.apiActions.fetch()
-      items.value = response
+      const response = await config.apiActions.fetch();
+      items.value = response;
     } catch (error) {
-      console.error('Error cargando items:', error)
+      console.error("Error cargando items:", error);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   // Mapear datos del API al formulario
   const mapAPIToForm = (item: any) => {
-    const mapped: Record<string, any> = { id: item.id }
+    const mapped: Record<string, any> = { id: item.id };
 
     config.fields.forEach((field: any) => {
       if (field.hidden) {
-        return
+        return;
       }
 
-      const apiKey = field.dataKey || field.name
-      let value = item[apiKey]
+      const apiKey = field.dataKey || field.name;
+      let value = item[apiKey];
 
       if (field.transformFromAPI) {
-        value = field.transformFromAPI(value)
+        value = field.transformFromAPI(value);
       }
 
-      mapped[field.name] = value ?? field.defaultValue ?? ''
-    })
+      mapped[field.name] = value ?? field.defaultValue ?? "";
+    });
 
-    return mapped
-  }
+    return mapped;
+  };
 
   // Mapear datos del formulario al API
   const mapFormToAPI = (formValues: any) => {
-    const mapped: Record<string, any> = {}
+    const mapped: Record<string, any> = {};
 
     config.fields.forEach((field: any) => {
-      const apiKey = field.dataKey || field.name
-      let value = formValues[field.name]
+      const apiKey = field.dataKey || field.name;
+      let value = formValues[field.name];
 
       if (field.transformToAPI) {
-        value = field.transformToAPI(value)
+        value = field.transformToAPI(value);
       }
 
-      mapped[apiKey] = value
-    })
+      mapped[apiKey] = value;
+    });
 
-    return mapped
-  }
+    return mapped;
+  };
 
   const toggleModal = () => {
     if (activeModal.value) {
@@ -102,70 +105,79 @@ export function useCrudGeneric (config: CrudConfig) {
         values: getInitialValues(),
         errors: {},
         touched: {},
-      })
-      editingId.value = null
+      });
+      editingId.value = null;
     }
-    activeModal.value = !activeModal.value
-  }
+    activeModal.value = !activeModal.value;
+  };
 
   const handleSubmit = handleFormSubmit(async (values) => {
-    loading.value = true
+    loading.value = true;
     try {
-      const apiData = mapFormToAPI(values)
-
+      const apiData = mapFormToAPI(values);
+      let data;
       if (editingId.value) {
-        await config.apiActions.update(editingId.value, apiData)
+        data = await config.apiActions.update(apiData);
       } else {
-        await config.apiActions.create(apiData)
+        data = await config.apiActions.create(apiData);
       }
 
-      await loadItems()
-      toggleModal()
+      items.value = data;
+      toggleModal();
     } catch (error: any) {
-      console.error("Error guardando:", error)
+      console.error("Error guardando:", error);
 
       // Manejar errores de validación del servidor
       if (error.response?.data?.errors) {
-        setErrors(error.response.data.errors)
+        setErrors(error.response.data.errors);
       } else {
-        alert("Error al guardar. Por favor intenta nuevamente.")
+        alert("Error al guardar. Por favor intenta nuevamente.");
       }
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  })
+  });
 
   const editItem = (item: any) => {
-    editingId.value = item.id
-    const mappedData = mapAPIToForm(item)
-    
+    editingId.value = item.id;
+    const mappedData = mapAPIToForm(item);
+
     resetForm({
       values: mappedData,
       errors: {},
       touched: {},
-    })
+    });
 
-    activeModal.value = true
-  }
+    activeModal.value = true;
+  };
 
   const deleteItem = async (item: any) => {
-    if (confirm("¿Estás seguro de eliminar este registro?")) {
-      loading.value = true
-      try {
-        await config.apiActions.delete(item.id)
-        await loadItems()
-      } catch (error) {
-        console.error("Error eliminando:", error)
-        alert("Error al eliminar. Por favor intenta nuevamente.")
-      } finally {
-        loading.value = false
-      }
-    }
-  }
+    dialog.show({
+      title: "Eliminar registro",
+      message:
+        "¿Está seguro de que desea eliminar este registro?. Esta acción no se podrá deshacer.",
+      type: DialogType.ERROR,
+      ExtraAction: {
+        text: "Confirmar eliminación",
+        handler: async () => {
+          loading.value = true;
+          try {
+            items.value = await config.apiActions.delete(item.id);
+          } catch (error) {
+            console.error("Error eliminando:", error);
+            alert("Error al eliminar. Por favor intenta nuevamente.");
+          } finally {
+            loading.value = false;
+          }
+        },
+        color: "primary",
+      },
+    });
+  };
 
   onMounted(() => {
-    loadItems()
-  })
+    loadItems();
+  });
 
   return {
     items,
@@ -180,5 +192,5 @@ export function useCrudGeneric (config: CrudConfig) {
     editItem,
     deleteItem,
     loadItems,
-  }
+  };
 }

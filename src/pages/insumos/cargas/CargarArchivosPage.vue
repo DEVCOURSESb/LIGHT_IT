@@ -97,8 +97,6 @@
                 <v-btn
                   block
                   class="btn-modificar"
-                  :disabled="!puedeCargar"
-                  :loading="loading"
                   @click="cargarArchivo"
                 >
                   <v-icon start>mdi-upload</v-icon>
@@ -238,13 +236,6 @@ const onFileChange = (files: File | File[] | null) => {
         return;
       }
 
-      const maxSize = 100 * 1024 * 1024; // 100MB
-      if (file.size > maxSize) {
-        archivoError.value = 'El archivo no debe superar 100MB';
-        setArchivoSeleccionado(null);
-        return;
-      }
-
       if (file.size === 0) {
         archivoError.value = 'El archivo está vacío';
         setArchivoSeleccionado(null);
@@ -261,7 +252,6 @@ const onFileChange = (files: File | File[] | null) => {
         tamano: `${sizeMB} MB`
       };
       
-      console.log('✓ Archivo establecido correctamente');
     } catch (error) {
       console.error('Error procesando archivo:', error);
       archivoError.value = 'Error al procesar el archivo';

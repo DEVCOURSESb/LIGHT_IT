@@ -125,6 +125,9 @@
           <v-icon class="edit" size="large" @click="editItem(item)">
             mdi-pencil
           </v-icon>
+          <v-icon class="delete" size="large" @click="deleteItem(item)">
+              mdi-delete
+            </v-icon>
         </template>
 
         <!-- Renderizado condicional basado en displayType -->
@@ -143,6 +146,10 @@
               density="compact"
             />
 
+             <span v-else-if="field.displayType === 'date'">
+              {{ formatDate(getFieldValue(item, field)) }}
+            </span>
+
             <!-- Default: texto simple -->
             <span v-else>
               {{ getFieldValue(item, field) }}
@@ -160,6 +167,7 @@ import ModalComponent from "@/components/catalogos/ModalComponent.vue";
 import SearchComponent from "@/components/catalogos/SearchComponent.vue";
 import { useCrudGeneric } from "@/composables/catalogos/useCrudGeneric";
 import { useSearch } from "@/composables/catalogos/useSearch";
+import { formatDate } from "@/utils/formatDate";
 
 interface CrudConfig {
   entity: string;
@@ -191,6 +199,7 @@ const {
   toggleModal,
   handleSubmit,
   editItem,
+  deleteItem,
   setFieldValue,
 } = useCrudGeneric(props.config);
 
