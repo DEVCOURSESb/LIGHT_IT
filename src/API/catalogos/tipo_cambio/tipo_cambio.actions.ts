@@ -39,7 +39,7 @@ export function TipoCambioActions() {
   const deletes = async (id: number): Promise<TipoCambio[]> => {
     try {
       const response = await baseAPI.delete<TipoCambio[]>(`deleteRcord/${id}`);
-      return response.data;e
+      return response.data;
     } catch (error) {
       console.error("Error deleting TipoCambio:", error);
       throw error;
