@@ -14,9 +14,9 @@ export const PerfilActions = () => {
     }
   };
 
-  const createPerfil = async (data: Partial<Perfil>): Promise<Perfil> => {
+  const createPerfil = async (data: Partial<Perfil>): Promise<Perfil[]> => {
     try {
-      const response = await baseAPI.post<Perfil>("create", data);
+      const response = await baseAPI.post<Perfil[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Perfil:", error);
@@ -24,12 +24,9 @@ export const PerfilActions = () => {
     }
   };
 
-  const updatePerfil = async (
-    id: number,
-    data: Partial<Perfil>
-  ): Promise<Perfil> => {
+  const updatePerfil = async (data: Partial<Perfil>): Promise<Perfil[]> => {
     try {
-      const response = await baseAPI.put<Perfil>(`update/${id}`, data);
+      const response = await baseAPI.put<Perfil[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Perfil:", error);
@@ -37,9 +34,10 @@ export const PerfilActions = () => {
     }
   };
 
-  const deletePerfil = async (id: number): Promise<void> => {
+  const deletePerfil = async (id: number): Promise<Perfil[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Perfil[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Perfil:", error);
       throw error;

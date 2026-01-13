@@ -14,11 +14,9 @@ export function IntermediariosActions () {
     }
   }
 
-  const createIntermediario = async (
-    data: Partial<Intermediario>,
-  ): Promise<Intermediario> => {
+  const createIntermediario = async (data: Partial<Intermediario>): Promise<Intermediario[]> => {
     try {
-      const response = await baseAPI.post<Intermediario>('create', data)
+      const response = await baseAPI.post<Intermediario[]>('insertRecord', data)
       return response.data
     } catch (error) {
       console.error('Error creating intermediario:', error)
@@ -26,12 +24,9 @@ export function IntermediariosActions () {
     }
   }
 
-  const updateIntermediario = async (
-    id: number,
-    data: Partial<Intermediario>,
-  ): Promise<Intermediario> => {
+  const updateIntermediario = async (data: Partial<Intermediario>): Promise<Intermediario[]> => {
     try {
-      const response = await baseAPI.put<Intermediario>(`update/${id}`, data)
+      const response = await baseAPI.put<Intermediario[]>("updateRecord", data)
       return response.data
     } catch (error) {
       console.error('Error updating intermediario:', error)
@@ -39,9 +34,10 @@ export function IntermediariosActions () {
     }
   }
 
-  const deleteIntermediario = async (id: number): Promise<void> => {
+  const deleteIntermediario = async (id: number): Promise<Intermediario[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`)
+      const response = await baseAPI.delete<Intermediario[]>(`deleteRecord/${id}`)
+      return response.data
     } catch (error) {
       console.error('Error deleting intermediario:', error)
       throw error

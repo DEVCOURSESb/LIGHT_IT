@@ -39,6 +39,7 @@
                   class="mb-2"
                   density="compact"
                   :error-messages="formErrors[field.name]"
+                  :disabled="field.disabled"
                   :label="field.label"
                   :model-value="formData[field.name]"
                   :required="field.required"
@@ -49,6 +50,7 @@
                   class="mb-2"
                   density="compact"
                   :error-messages="formErrors[field.name]"
+                  :disabled="field.disabled"
                   :items="field.items"
                   :label="field.label"
                   :model-value="formData[field.name]"
@@ -61,6 +63,7 @@
                   class="mb-2"
                   density="compact"
                   :error-messages="formErrors[field.name]"
+                  :disabled="field.disabled"
                   :items="field.items"
                   :label="field.label"
                   :model-value="formData[field.name]"
@@ -72,6 +75,7 @@
                   class="mb-2"
                   density="compact"
                   :error-messages="formErrors[field.name]"
+                  :disabled="field.disabled"
                   :label="field.label"
                   :model-value="formData[field.name]"
                   :required="field.required"
@@ -83,6 +87,7 @@
                   class="mb-2"
                   density="compact"
                   :error-messages="formErrors[field.name]"
+                  :disabled="field.disabled"
                   :label="field.label"
                   :model-value="formData[field.name]"
                   :required="field.required"
@@ -98,7 +103,7 @@
                 :loading="loading"
                 type="submit"
               >
-                {{ editingId ? "Actualizar" : "Guardar" }}
+                {{ editingId ? "Actualizar" : "Guardar" }}  
               </v-btn>
             </v-form>
           </ModalComponent>

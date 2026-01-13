@@ -15,11 +15,9 @@ export function EntidadFederativaActions() {
     }
   };
 
-  const create = async (
-    data: Partial<EntidadFederativa>
-  ): Promise<EntidadFederativa> => {
+  const create = async (data: Partial<EntidadFederativa>): Promise<EntidadFederativa[]> => {
     try {
-      const response = await baseAPI.post<EntidadFederativa>("create", data);
+      const response = await baseAPI.post<EntidadFederativa[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating EntidadFederativa:", error);
@@ -27,12 +25,9 @@ export function EntidadFederativaActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<EntidadFederativa>
-  ): Promise<EntidadFederativa> => {
+  const update = async (data: Partial<EntidadFederativa>): Promise<EntidadFederativa[]> => {
     try {
-      const response = await baseAPI.put<EntidadFederativa>(`update/${id}`, data);
+      const response = await baseAPI.put<EntidadFederativa[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating EntidadFederativa:", error);
@@ -40,9 +35,10 @@ export function EntidadFederativaActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<EntidadFederativa[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<EntidadFederativa[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting EntidadFederativa:", error);
       throw error;

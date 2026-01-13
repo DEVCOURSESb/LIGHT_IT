@@ -14,11 +14,9 @@ export const ExtensionesActions = () => {
     }
   };
 
-  const createExtension = async (
-    data: Partial<Extension>
-  ): Promise<Extension> => {
+  const createExtension = async (data: Partial<Extension>): Promise<Extension[]> => {
     try {
-      const response = await baseAPI.post<Extension>("create", data);
+      const response = await baseAPI.post<Extension[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Extension:", error);
@@ -26,12 +24,9 @@ export const ExtensionesActions = () => {
     }
   };
 
-  const updateExtension = async (
-    id: number,
-    data: Partial<Extension>
-  ): Promise<Extension> => {
+  const updateExtension = async (data: Partial<Extension>): Promise<Extension[]> => {
     try {
-      const response = await baseAPI.put<Extension>(`update/${id}`, data);
+      const response = await baseAPI.put<Extension[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Extension:", error);
@@ -39,9 +34,10 @@ export const ExtensionesActions = () => {
     }
   };
 
-  const deleteExtension = async (id: number): Promise<void> => {
+  const deleteExtension = async (id: number): Promise<Extension[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Extension[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Extension:", error);
       throw error;

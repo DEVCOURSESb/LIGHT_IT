@@ -16,9 +16,9 @@ export function TipoCambioActions() {
     }
   };
 
-  const create = async (data: Partial<TipoCambio>): Promise<TipoCambio> => {
+  const create = async (data: Partial<TipoCambio>): Promise<TipoCambio[]> => {
     try {
-      const response = await baseAPI.post<TipoCambio>("create", data);
+      const response = await baseAPI.post<TipoCambio[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoCambio:", error);
@@ -26,12 +26,9 @@ export function TipoCambioActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<TipoCambio>
-  ): Promise<TipoCambio> => {
+  const update = async (data: Partial<TipoCambio>): Promise<TipoCambio[]> => {
     try {
-      const response = await baseAPI.put<TipoCambio>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoCambio[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoCambio:", error);
@@ -39,9 +36,10 @@ export function TipoCambioActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<TipoCambio[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<TipoCambio[]>(`deleteRcord/${id}`);
+      return response.data;e
     } catch (error) {
       console.error("Error deleting TipoCambio:", error);
       throw error;

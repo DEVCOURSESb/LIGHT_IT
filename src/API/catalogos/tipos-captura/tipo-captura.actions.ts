@@ -14,11 +14,9 @@ export const TipoCapturaActions = () => {
     }
   };
 
-  const createTipoCaptura = async (
-    data: Partial<TipoCaptura>
-  ): Promise<TipoCaptura> => {
+  const createTipoCaptura = async (data: Partial<TipoCaptura>): Promise<TipoCaptura[]> => {
     try {
-      const response = await baseAPI.post<TipoCaptura>("create", data);
+      const response = await baseAPI.post<TipoCaptura[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoCaptura:", error);
@@ -26,12 +24,9 @@ export const TipoCapturaActions = () => {
     }
   };
 
-  const updateTipoCaptura = async (
-    id: number,
-    data: Partial<TipoCaptura>
-  ): Promise<TipoCaptura> => {
+  const updateTipoCaptura = async (data: Partial<TipoCaptura>): Promise<TipoCaptura[]> => {
     try {
-      const response = await baseAPI.put<TipoCaptura>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoCaptura[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoCaptura:", error);
@@ -39,9 +34,10 @@ export const TipoCapturaActions = () => {
     }
   };
 
-  const deleteTipoCaptura = async (id: number): Promise<void> => {
+  const deleteTipoCaptura = async (id: number): Promise<TipoCaptura[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<TipoCaptura[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting TipoCaptura:", error);
       throw error;

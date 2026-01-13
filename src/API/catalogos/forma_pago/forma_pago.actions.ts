@@ -15,11 +15,9 @@ export function FormaPagoActions() {
     }
   };
 
-  const create = async (
-    data: Partial<FormaPago>
-  ): Promise<FormaPago> => {
+  const create = async (data: Partial<FormaPago>): Promise<FormaPago[]> => {
     try {
-      const response = await baseAPI.post<FormaPago>("create", data);
+      const response = await baseAPI.post<FormaPago[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating FormaPago:", error);
@@ -27,12 +25,9 @@ export function FormaPagoActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<FormaPago>
-  ): Promise<FormaPago> => {
+  const update = async (data: Partial<FormaPago>): Promise<FormaPago[]> => {
     try {
-      const response = await baseAPI.put<FormaPago>(`update/${id}`, data);
+      const response = await baseAPI.put<FormaPago[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating FormaPago:", error);
@@ -40,9 +35,10 @@ export function FormaPagoActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<FormaPago[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<FormaPago[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting FormaPago:", error);
       throw error;

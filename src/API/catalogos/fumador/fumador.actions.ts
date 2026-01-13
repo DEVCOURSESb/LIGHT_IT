@@ -15,11 +15,9 @@ export function FumadorActions() {
     }
   };
 
-  const create = async (
-    data: Partial<Fumador>
-  ): Promise<Fumador> => {
+  const create = async (data: Partial<Fumador>): Promise<Fumador[]> => {
     try {
-      const response = await baseAPI.post<Fumador>("create", data);
+      const response = await baseAPI.post<Fumador[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Fumador:", error);
@@ -27,12 +25,9 @@ export function FumadorActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<Fumador>
-  ): Promise<Fumador> => {
+  const update = async (data: Partial<Fumador>): Promise<Fumador[]> => {
     try {
-      const response = await baseAPI.put<Fumador>(`update/${id}`, data);
+      const response = await baseAPI.put<Fumador[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Fumador:", error);
@@ -40,9 +35,10 @@ export function FumadorActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<Fumador[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Fumador[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Fumador:", error);
       throw error;

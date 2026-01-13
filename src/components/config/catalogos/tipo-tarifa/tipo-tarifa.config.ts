@@ -49,11 +49,12 @@ export const tipoTarifaConfig = {
       type: "text",
       hidden: true,
     },
-     {
+    {
       name: "cveTarifa",
       label: "Clave",
       type: "number",
       required: true,
+      disabled: true,
       dataKey: "cveTarifa",
       defaultValue: 0,
       transformToAPI: (value: string) => Number(value),
@@ -90,7 +91,7 @@ export const tipoTarifaConfig = {
   ],
 
   validationSchema: {
-    cveTarifa: (value: number) => minMaxString(value.toString(), 1, 10) || "La clave es requerida",
+    //cveTarifa: (value: number) => minMaxString(value.toString(), 1, 10) || "La clave es requerida",
     descTarifa: (value: string) => minMaxString(value, 1, 50) || "La descripción es requerida",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },

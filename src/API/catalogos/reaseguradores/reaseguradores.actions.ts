@@ -14,11 +14,9 @@ export const ReaseguradoresActions = () => {
     }
   };
 
-  const createReasegurador = async (
-    data: Partial<Reasegurador>
-  ): Promise<Reasegurador> => {
+  const createReasegurador = async (data: Partial<Reasegurador>): Promise<Reasegurador[]> => {
     try {
-      const response = await baseAPI.post<Reasegurador>("create", data);
+      const response = await baseAPI.post<Reasegurador[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating intermediario:", error);
@@ -26,12 +24,9 @@ export const ReaseguradoresActions = () => {
     }
   };
 
-  const updateReasegurador = async (
-    id: number,
-    data: Partial<Reasegurador>
-  ): Promise<Reasegurador> => {
+  const updateReasegurador = async (data: Partial<Reasegurador>): Promise<Reasegurador[]> => {
     try {
-      const response = await baseAPI.put<Reasegurador>(`update/${id}`, data);
+      const response = await baseAPI.put<Reasegurador[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating intermediario:", error);
@@ -39,9 +34,10 @@ export const ReaseguradoresActions = () => {
     }
   };
 
-  const deleteReasegurador = async (id: number): Promise<void> => {
+  const deleteReasegurador = async (id: number): Promise<Reasegurador[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Reasegurador[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting reasegurador:", error);
       throw error;

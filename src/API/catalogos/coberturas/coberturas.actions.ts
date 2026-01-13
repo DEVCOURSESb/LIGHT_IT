@@ -14,11 +14,9 @@ export const CoberturasActions = () => {
     }
   };
 
-  const createCobertura = async (
-    data: Partial<Cobertura>
-  ): Promise<Cobertura> => {
+  const createCobertura = async ( data: Partial<Cobertura> ): Promise<Cobertura[]> => {
     try {
-      const response = await baseAPI.post<Cobertura>("create", data);
+      const response = await baseAPI.post<Cobertura[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Cobertura:", error);
@@ -26,12 +24,9 @@ export const CoberturasActions = () => {
     }
   };
 
-  const updateCobertura = async (
-    id: number,
-    data: Partial<Cobertura>
-  ): Promise<Cobertura> => {
+  const updateCobertura = async ( data: Partial<Cobertura> ): Promise<Cobertura[]> => {
     try {
-      const response = await baseAPI.put<Cobertura>(`update/${id}`, data);
+      const response = await baseAPI.put<Cobertura[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Cobertura:", error);
@@ -39,9 +34,10 @@ export const CoberturasActions = () => {
     }
   };
 
-  const deleteCobertura = async (id: number): Promise<void> => {
+  const deleteCobertura = async (id: number): Promise<Cobertura[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Cobertura[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Cobertura:", error);
       throw error;

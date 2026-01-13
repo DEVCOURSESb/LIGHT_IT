@@ -14,11 +14,9 @@ export function MonedaActions () {
     }
   }
 
-  const createMoneda = async (
-    data: Partial<Moneda>,
-  ): Promise<Moneda> => {
+  const createMoneda = async (data: Partial<Moneda>): Promise<Moneda[]> => {
     try {
-      const response = await baseAPI.post<Moneda>('create', data)
+      const response = await baseAPI.post<Moneda[]>('insertRecord', data)
       return response.data
     } catch (error) {
       console.error('Error creating Moneda:', error)
@@ -26,12 +24,9 @@ export function MonedaActions () {
     }
   }
 
-  const updateMoneda = async (
-    id: number,
-    data: Partial<Moneda>,
-  ): Promise<Moneda> => {
+  const updateMoneda = async (data: Partial<Moneda>): Promise<Moneda[]> => {
     try {
-      const response = await baseAPI.put<Moneda>(`update/${id}`, data)
+      const response = await baseAPI.put<Moneda[]>("updateRecord", data)
       return response.data
     } catch (error) {
       console.error('Error updating Moneda:', error)
@@ -39,9 +34,10 @@ export function MonedaActions () {
     }
   }
 
-  const deleteMoneda = async (id: number): Promise<void> => {
+  const deleteMoneda = async (id: number): Promise<Moneda[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`)
+      const data = await baseAPI.delete<Moneda[]>(`deleteRecord/${id}`)
+      return data.data
     } catch (error) {
       console.error('Error deleting Moneda:', error)
       throw error

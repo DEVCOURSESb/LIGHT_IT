@@ -3,7 +3,7 @@ import type { Clasificacion } from "./clasificacion.interfaces";
 
 export const ClasificacionCoberturaActions = () => {
   const baseAPI = BaseAPI({
-    prefix: "ReasegCatIntClasificacionCoberturaRest/",
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntClasificacionCoberturaRest/",
   });
 
   const fetchClasificaciones = async (): Promise<Clasificacion[]> => {
@@ -16,11 +16,9 @@ export const ClasificacionCoberturaActions = () => {
     }
   };
 
-  const createClasificacion = async (
-    data: Partial<Clasificacion>
-  ): Promise<Clasificacion> => {
+  const createClasificacion = async ( data: Partial<Clasificacion> ): Promise<Clasificacion[]> => {
     try {
-      const response = await baseAPI.post<Clasificacion>("create", data);
+      const response = await baseAPI.post<Clasificacion[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Clasificacion:", error);
@@ -28,12 +26,9 @@ export const ClasificacionCoberturaActions = () => {
     }
   };
 
-  const updateClasificacion = async (
-    id: number,
-    data: Partial<Clasificacion>
-  ): Promise<Clasificacion> => {
+  const updateClasificacion = async ( data: Partial<Clasificacion> ): Promise<Clasificacion[]> => {
     try {
-      const response = await baseAPI.put<Clasificacion>(`update/${id}`, data);
+      const response = await baseAPI.put<Clasificacion[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Clasificacion:", error);
@@ -41,9 +36,10 @@ export const ClasificacionCoberturaActions = () => {
     }
   };
 
-  const deleteClasificacion = async (id: number): Promise<void> => {
+  const deleteClasificacion = async (id: number): Promise<Clasificacion[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const data = await baseAPI.delete<Clasificacion[]>(`deleteRecord/${id}`);
+      return data.data;
     } catch (error) {
       console.error("Error deleting Clasificacion:", error);
       throw error;

@@ -14,11 +14,9 @@ export const TiposContratoActions = () => {
     }
   };
 
-  const createTipoContrato = async (
-    data: Partial<TipoContrato>
-  ): Promise<TipoContrato> => {
+  const createTipoContrato = async (data: Partial<TipoContrato>): Promise<TipoContrato[]> => {
     try {
-      const response = await baseAPI.post<TipoContrato>("create", data);
+      const response = await baseAPI.post<TipoContrato[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoContrato:", error);
@@ -26,12 +24,9 @@ export const TiposContratoActions = () => {
     }
   };
 
-  const updateTipoContrato = async (
-    id: number,
-    data: Partial<TipoContrato>
-  ): Promise<TipoContrato> => {
+  const updateTipoContrato = async (data: Partial<TipoContrato>): Promise<TipoContrato[]> => {
     try {
-      const response = await baseAPI.put<TipoContrato>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoContrato[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoContrato:", error);
@@ -39,9 +34,10 @@ export const TiposContratoActions = () => {
     }
   };
 
-  const deleteTipoContrato = async (id: number): Promise<void> => {
+  const deleteTipoContrato = async (id: number): Promise<TipoContrato[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<TipoContrato[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting TipoContrato:", error);
       throw error;
