@@ -1,12 +1,14 @@
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useForm } from "vee-validate";
-import { onMounted, ref } from "vue";
+import { computed, ref } from "vue";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
 
 interface CrudConfig {
+  entity: string;
   fields: any[];
   validationSchema: any;
   apiActions: {
-    fetch: () => Promise<any[]>;
+    fetch: () => Promise<any>;
     create: (data: any) => Promise<any>;
     update: (data: any) => Promise<any>;
     delete: (id: number) => Promise<any>;
@@ -14,25 +16,43 @@ interface CrudConfig {
 }
 
 export function useCrudGeneric(config: CrudConfig) {
-  const items = ref<any[]>([]);
-  const loading = ref(false);
+  const queryClient = useQueryClient();
   const activeModal = ref(false);
   const editingId = ref<number | null>(null);
   const dialog = useDialog();
+  const isSubmitting = ref(false);
+
+  // query key
+  const queryKey = [config.entity, "list"];
+
+  // query para obtener datos
+  const {
+    data: items,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey,
+    queryFn: config.apiActions.fetch
+  });
+
+  const itemsArray = computed(() => items.value || []);
+  const loading = computed(() => isLoading.value || isSubmitting.value);
 
   // Inicializar valores por defecto
   const getInitialValues = () => {
     const initialValues: Record<string, any> = {};
     config.fields.forEach((field: any) => {
       if (!field.hidden) {
-        initialValues[field.name] =
-          field.defaultValue !== undefined ? field.defaultValue : "";
+        initialValues[field.name] = field.defaultValue !== undefined 
+          ? field.defaultValue 
+          : "";
       }
     });
     return initialValues;
   };
 
-  // useForm con valores iniciales y esquema de validación
   const {
     handleSubmit: handleFormSubmit,
     resetForm,
@@ -46,28 +66,12 @@ export function useCrudGeneric(config: CrudConfig) {
     validateOnMount: false,
   });
 
-  // Cargar items del API
-  const loadItems = async () => {
-    loading.value = true;
-    try {
-      const response = await config.apiActions.fetch();
-      items.value = response;
-    } catch (error) {
-      console.error("Error cargando items:", error);
-    } finally {
-      loading.value = false;
-    }
-  };
-
   // Mapear datos del API al formulario
   const mapAPIToForm = (item: any) => {
     const mapped: Record<string, any> = { id: item.id };
-
     config.fields.forEach((field: any) => {
-      if (field.hidden) {
-        return;
-      }
-
+      if (field.hidden) return;
+      
       const apiKey = field.dataKey || field.name;
       let value = item[apiKey];
 
@@ -77,14 +81,12 @@ export function useCrudGeneric(config: CrudConfig) {
 
       mapped[field.name] = value ?? field.defaultValue ?? "";
     });
-
     return mapped;
   };
 
   // Mapear datos del formulario al API
   const mapFormToAPI = (formValues: any) => {
     const mapped: Record<string, any> = {};
-
     config.fields.forEach((field: any) => {
       const apiKey = field.dataKey || field.name;
       let value = formValues[field.name];
@@ -95,7 +97,6 @@ export function useCrudGeneric(config: CrudConfig) {
 
       mapped[apiKey] = value;
     });
-
     return mapped;
   };
 
@@ -112,62 +113,57 @@ export function useCrudGeneric(config: CrudConfig) {
   };
 
   const handleSubmit = handleFormSubmit(async (values) => {
-    loading.value = true;
+    isSubmitting.value = true;
     try {
       const apiData = mapFormToAPI(values);
       let data;
+      
       if (editingId.value) {
         data = await config.apiActions.update(apiData);
       } else {
         data = await config.apiActions.create(apiData);
       }
-
-      items.value = data;
+      
+      // actualizar cache
+      queryClient.setQueryData(queryKey, data);
       toggleModal();
     } catch (error: any) {
       console.error("Error guardando:", error);
-
-      // Manejar errores de validación del servidor
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
-      } else {
-        alert("Error al guardar. Por favor intenta nuevamente.");
       }
     } finally {
-      loading.value = false;
+      isSubmitting.value = false;
     }
   });
 
   const editItem = (item: any) => {
     editingId.value = item.id;
     const mappedData = mapAPIToForm(item);
-
     resetForm({
       values: mappedData,
       errors: {},
       touched: {},
     });
-
     activeModal.value = true;
   };
 
   const deleteItem = async (item: any) => {
     dialog.show({
       title: "Eliminar registro",
-      message:
-        "¿Está seguro de que desea eliminar este registro?. Esta acción no se podrá deshacer.",
+      message: "¿Está seguro de que desea eliminar este registro? Esta acción no se podrá deshacer.",
       type: DialogType.ERROR,
       ExtraAction: {
         text: "Confirmar eliminación",
         handler: async () => {
-          loading.value = true;
+          isSubmitting.value = true;
           try {
-            items.value = await config.apiActions.delete(item.id);
+            const data = await config.apiActions.delete(item.id);
+            queryClient.setQueryData(queryKey, data);
           } catch (error) {
             console.error("Error eliminando:", error);
-            alert("Error al eliminar. Por favor intenta nuevamente.");
           } finally {
-            loading.value = false;
+            isSubmitting.value = false;
           }
         },
         color: "primary",
@@ -175,22 +171,20 @@ export function useCrudGeneric(config: CrudConfig) {
     });
   };
 
-  onMounted(() => {
-    loadItems();
-  });
-
   return {
-    items,
+    items: itemsArray,
     formData,
     formErrors,
     loading,
     activeModal,
     editingId,
+    isError,
+    error,
     setFieldValue,
     toggleModal,
     handleSubmit,
     editItem,
     deleteItem,
-    loadItems,
+    loadItems: refetch,
   };
 }

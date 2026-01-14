@@ -1,27 +1,31 @@
-/**
- * main.ts
- *
- * Bootstraps Vuetify and other plugins then mounts the App`
- */
+import { createPinia } from "pinia";
+import { createApp } from "vue";
+import { registerPlugins } from "@/plugins";
+import App from "./App.vue";
+import "unfonts.css";
+import "./styles/estilosglobales.css";
+import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 
-import { createPinia } from 'pinia'
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000 * 30, // 30 minutos
+      gcTime: 5 * 60 * 1000, // (5 minutos)
+      retry: 2, // Reintentar 2 veces
+      refetchOnWindowFocus: true, // Refetch al enfocar la ventana
+      refetchOnReconnect: true, // Refetch al reconectar
+    },
+  },
+})
 
-// Composables
-import { createApp } from 'vue'
+const app = createApp(App);
 
-// Plugins
-import { registerPlugins } from '@/plugins'
-// Components
-import App from './App.vue'
+app.use(createPinia());
 
-// Styles
-import 'unfonts.css'
+app.use(VueQueryPlugin, {
+  queryClient,
+})
 
-import './styles/estilosglobales.css'
+registerPlugins(app);
 
-const app = createApp(App)
-app.use(createPinia())
-
-registerPlugins(app)
-
-app.mount('#app')
+app.mount("#app");
