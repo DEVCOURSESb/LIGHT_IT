@@ -81,7 +81,7 @@ export const tiposContratoConfig = {
       headerProps: { style: "font-weight: bold" },
     },
     {
-      title: "EDITAR",
+      title: "ACCIONES",
       key: "actions",
       sortable: false,
       headerProps: { style: "font-weight: bold" },

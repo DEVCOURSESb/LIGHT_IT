@@ -2,6 +2,7 @@ import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useForm } from "vee-validate";
 import { computed, ref } from "vue";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useSnackbar } from "@/stores/useSnackbar";
 
 interface CrudConfig {
   entity: string;
@@ -21,6 +22,7 @@ export function useCrudGeneric(config: CrudConfig) {
   const editingId = ref<number | null>(null);
   const dialog = useDialog();
   const isSubmitting = ref(false);
+  const snackbar = useSnackbar();
 
   // query key
   const queryKey = [config.entity, "list"];
@@ -126,9 +128,10 @@ export function useCrudGeneric(config: CrudConfig) {
       
       // actualizar cache
       queryClient.setQueryData(queryKey, data);
+      snackbar.mostrarMensajeSnackbar(`${config.entity} guardado / actualizado exitosamente`, "success");
       toggleModal();
     } catch (error: any) {
-      console.error("Error guardando:", error);
+      snackbar.mostrarMensajeSnackbar(`Error guardando ${config.entity}`, "error");
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
       }
@@ -160,8 +163,9 @@ export function useCrudGeneric(config: CrudConfig) {
           try {
             const data = await config.apiActions.delete(item.id);
             queryClient.setQueryData(queryKey, data);
+            snackbar.mostrarMensajeSnackbar(`${config.entity} eliminado exitosamente`, "success");
           } catch (error) {
-            console.error("Error eliminando:", error);
+            snackbar.mostrarMensajeSnackbar(`Error eliminando ${config.entity}`, "error");
           } finally {
             isSubmitting.value = false;
           }

@@ -35,7 +35,7 @@ export const ptuConfig = {
         style: "font-weight: bold",
       },
     }, */
-    { title: "EDITAR", key: "actions", sortable: false,
+    { title: "ACCIONES", key: "actions", sortable: false,
       headerProps: {
         style: "font-weight: bold",
       },

@@ -7,6 +7,7 @@ import type {
 } from "@/API/generic/carga-archivos";
 import { validarCSV } from "@/utils/validateCSV";
 import { mesesAnio } from "@/utils/catalogos/mesesAnio";
+import { useSnackbar } from "@/stores/useSnackbar";
 
 
 interface UseCargaArchivosOptions<T> {
@@ -26,6 +27,8 @@ export const useCargaArchivos = <T>({
   const form = ref<any>(null);
   const valid = ref(false);
 
+  const snackbar = useSnackbar();
+
   // Estado del archivo
   const archivo = ref<File | File[] | null>(null);
   const archivoSeleccionado = ref<File | null>(null);
@@ -39,11 +42,6 @@ export const useCargaArchivos = <T>({
   // Estados
   const loading = ref(false);
   const registros = ref<RegistroTabla[]>([]);
-
-  // Snackbar
-  const snackbar = ref(false);
-  const snackbarText = ref("");
-  const snackbarColor = ref<"success" | "error" | "info">("success");
 
   // Opciones de año y mes
   const anioActual = new Date().getFullYear();
@@ -169,19 +167,19 @@ export const useCargaArchivos = <T>({
       
       if (!formValid) {
         console.error("Formulario no válido");
-        mostrarMensaje("Por favor complete todos los campos correctamente", "error");
+        snackbar.mostrarMensajeSnackbar("Por favor complete todos los campos correctamente", "error");
         return;
       }
     }
 
     if (!archivoSeleccionado.value || !anioSeleccionado.value || !mesSeleccionado.value) {
-      mostrarMensaje("Faltan datos por completar", "error");
+      snackbar.mostrarMensajeSnackbar("Faltan datos por completar", "error");
       return;
     }
 
     if (validacionArchivo.value && !validacionArchivo.value.valido) {
       console.error("Archivo no válido:", validacionArchivo.value.errores);
-      mostrarMensaje(
+      snackbar.mostrarMensajeSnackbar(
         `Error en el archivo: ${validacionArchivo.value.errores.join(", ")}`,
         "error"
       );
@@ -189,7 +187,7 @@ export const useCargaArchivos = <T>({
     }
 
     loading.value = true;
-    mostrarMensaje("Procesando archivo, por favor espere...", "info");
+    snackbar.mostrarMensajeSnackbar("Procesando archivo, por favor espere...", "info");
 
     try {
       const formData = new FormData();
@@ -209,7 +207,7 @@ export const useCargaArchivos = <T>({
       await cargarDatos();
       limpiarFormulario();
 
-      mostrarMensaje(
+      snackbar.mostrarMensajeSnackbar(
         response.mensaje || "Archivo cargado exitosamente",
         "success"
       );
@@ -223,7 +221,7 @@ export const useCargaArchivos = <T>({
         mensajeError = error.message;
       }
       
-      mostrarMensaje(mensajeError, "error");
+      snackbar.mostrarMensajeSnackbar(mensajeError, "error");
     } finally {
       loading.value = false;
     }
@@ -239,20 +237,12 @@ export const useCargaArchivos = <T>({
       registros.value = transformarDatos(data);
     } catch (error) {
       console.error("Error al cargar datos:", error);
-      mostrarMensaje("Error al cargar los registros", "error");
+      snackbar.mostrarMensajeSnackbar("Error al cargar los registros", "error");
     } finally {
       loading.value = false;
     }
   };
 
-  const mostrarMensaje = (
-    texto: string,
-    color: "success" | "error" | "info"
-  ) => {
-    snackbarText.value = texto;
-    snackbarColor.value = color;
-    snackbar.value = true;
-  };
 
   const limpiarFormulario = () => {
     archivo.value = null;
@@ -277,9 +267,6 @@ export const useCargaArchivos = <T>({
     loading,
     registros,
     validacionEnProgreso,
-    snackbar,
-    snackbarText,
-    snackbarColor,
     archivoRules,
     anioRules,
     mesRules,
