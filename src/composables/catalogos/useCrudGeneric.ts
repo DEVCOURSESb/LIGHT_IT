@@ -122,13 +122,14 @@ export function useCrudGeneric(config: CrudConfig) {
       
       if (editingId.value) {
         data = await config.apiActions.update(apiData);
+        snackbar.mostrarMensajeSnackbar(`operación ejecutada con éxito, verifique la información`, "info");
       } else {
         data = await config.apiActions.create(apiData);
+        snackbar.mostrarMensajeSnackbar(`${config.entity} creado exitosamente`, "success");
       }
       
       // actualizar cache
       queryClient.setQueryData(queryKey, data);
-      snackbar.mostrarMensajeSnackbar(`${config.entity} guardado / actualizado exitosamente`, "success");
       toggleModal();
     } catch (error: any) {
       snackbar.mostrarMensajeSnackbar(`Error guardando ${config.entity}`, "error");

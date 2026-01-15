@@ -38,30 +38,40 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
     )
 
     instance.interceptors.response.use(
-      response => response,
-      async error => {
-        console.log(error)
-        if (error.code === 'ERR_NETWORK') {
+      async response => {
 
-            const { useAuth } = await import('@/composables/auth/useAuth');
+        console.log(response)
 
-            const auth = useAuth();
-
-            await auth.logout();
-
-            dialog.show({
-              title: 'Sesión expirada',
-              message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-              type: DialogType.ERROR,
-            });
-
-            setTimeout(() => {
-              dialog.cerrar();
-              router.replace({ path: "/" });
-            }, 800);
-
+        if (response.status === 208) {
+          const { showModalExistRow } = await import("@/utilities/catalogos/showModalExistRow");
+          showModalExistRow();
         }
-        return Promise.reject(error)
+      
+        return response;
+      },
+      async error => {
+      console.log(error)
+      if (error.code === 'ERR_NETWORK') {
+
+        const { useAuth } = await import('@/composables/auth/useAuth');
+
+        const auth = useAuth();
+
+        await auth.logout();
+
+        dialog.show({
+          title: 'Sesión expirada',
+          message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          type: DialogType.ERROR,
+        });
+
+        setTimeout(() => {
+          dialog.cerrar();
+          router.replace({ path: "/" });
+        }, 800);
+
+      }
+      return Promise.reject(error)
       },
     )
   }
