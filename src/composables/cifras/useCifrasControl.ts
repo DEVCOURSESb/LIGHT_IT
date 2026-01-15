@@ -9,7 +9,7 @@ import { useSnackbar } from "@/stores/useSnackbar";
 
 export const useCifrasControl = () => {
   const cifrasControlAPI = CifrasControlActions();
-  const { snackbar.mostrarMensajeSnackbar } = useSnackbar();
+  const snackbar = useSnackbar();
 
   // Estados
   const cifrasEmision = ref<CifrasControlEmisionDTO[]>([]);

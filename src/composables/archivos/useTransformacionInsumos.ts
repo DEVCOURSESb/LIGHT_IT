@@ -18,7 +18,7 @@ export const useTransformacionInsumos = ({
   transformAction,
   nombreInsumo,
 }: UseTransformacionOptions) => {
-  const { snackbar.mostrarMensajeSnackbar } = useSnackbar();
+  const snackbar = useSnackbar();
   // Form reference
   const formTransformacion = ref<any>(null);
   const validTransformacion = ref(false);
