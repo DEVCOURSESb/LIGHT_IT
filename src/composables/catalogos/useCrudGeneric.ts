@@ -1,35 +1,60 @@
-import { useForm } from 'vee-validate'
-import { onMounted, ref } from 'vue'
+import { DialogType, useDialog } from "@/stores/dialogStore";
+import { useForm } from "vee-validate";
+import { computed, ref } from "vue";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useSnackbar } from "@/stores/useSnackbar";
 
 interface CrudConfig {
-  fields: any[]
-  validationSchema: any
+  entity: string;
+  fields: any[];
+  validationSchema: any;
   apiActions: {
-    fetch: () => Promise<any[]>
-    create: (data: any) => Promise<any>
-    update: (id: number, data: any) => Promise<any>
-    delete: (id: number) => Promise<void>
-  }
+    fetch: () => Promise<any>;
+    create: (data: any) => Promise<any>;
+    update: (data: any) => Promise<any>;
+    delete: (id: number) => Promise<any>;
+  };
 }
 
-export function useCrudGeneric (config: CrudConfig) {
-  const items = ref<any[]>([])
-  const loading = ref(false)
-  const activeModal = ref(false)
-  const editingId = ref<number | null>(null)
+export function useCrudGeneric(config: CrudConfig) {
+  const queryClient = useQueryClient();
+  const activeModal = ref(false);
+  const editingId = ref<number | null>(null);
+  const dialog = useDialog();
+  const isSubmitting = ref(false);
+  const snackbar = useSnackbar();
+
+  // query key
+  const queryKey = [config.entity, "list"];
+
+  // query para obtener datos
+  const {
+    data: items,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey,
+    queryFn: config.apiActions.fetch
+  });
+
+  const itemsArray = computed(() => items.value || []);
+  const loading = computed(() => isLoading.value || isSubmitting.value);
 
   // Inicializar valores por defecto
   const getInitialValues = () => {
-    const initialValues: Record<string, any> = {}
+    const initialValues: Record<string, any> = {};
     config.fields.forEach((field: any) => {
       if (!field.hidden) {
-        initialValues[field.name] = field.defaultValue !== undefined ? field.defaultValue : ''
+        initialValues[field.name] = field.defaultValue !== undefined 
+          ? field.defaultValue 
+          : "";
       }
-    })
-    return initialValues
-  }
+    });
+    return initialValues;
+  };
 
-  // useForm con valores iniciales y esquema de validación
   const {
     handleSubmit: handleFormSubmit,
     resetForm,
@@ -41,60 +66,41 @@ export function useCrudGeneric (config: CrudConfig) {
     validationSchema: config.validationSchema,
     initialValues: getInitialValues(),
     validateOnMount: false,
-  })
-
-  // Cargar items del API
-  const loadItems = async () => {
-    loading.value = true
-    try {
-      const response = await config.apiActions.fetch()
-      items.value = response
-    } catch (error) {
-      console.error('Error cargando items:', error)
-    } finally {
-      loading.value = false
-    }
-  }
+  });
 
   // Mapear datos del API al formulario
   const mapAPIToForm = (item: any) => {
-    const mapped: Record<string, any> = { id: item.id }
-
+    const mapped: Record<string, any> = { id: item.id };
     config.fields.forEach((field: any) => {
-      if (field.hidden) {
-        return
-      }
-
-      const apiKey = field.dataKey || field.name
-      let value = item[apiKey]
+      if (field.hidden) return;
+      
+      const apiKey = field.dataKey || field.name;
+      let value = item[apiKey];
 
       if (field.transformFromAPI) {
-        value = field.transformFromAPI(value)
+        value = field.transformFromAPI(value);
       }
 
-      mapped[field.name] = value ?? field.defaultValue ?? ''
-    })
-
-    return mapped
-  }
+      mapped[field.name] = value ?? field.defaultValue ?? "";
+    });
+    return mapped;
+  };
 
   // Mapear datos del formulario al API
   const mapFormToAPI = (formValues: any) => {
-    const mapped: Record<string, any> = {}
-
+    const mapped: Record<string, any> = {};
     config.fields.forEach((field: any) => {
-      const apiKey = field.dataKey || field.name
-      let value = formValues[field.name]
+      const apiKey = field.dataKey || field.name;
+      let value = formValues[field.name];
 
       if (field.transformToAPI) {
-        value = field.transformToAPI(value)
+        value = field.transformToAPI(value);
       }
 
-      mapped[apiKey] = value
-    })
-
-    return mapped
-  }
+      mapped[apiKey] = value;
+    });
+    return mapped;
+  };
 
   const toggleModal = () => {
     if (activeModal.value) {
@@ -102,83 +108,87 @@ export function useCrudGeneric (config: CrudConfig) {
         values: getInitialValues(),
         errors: {},
         touched: {},
-      })
-      editingId.value = null
+      });
+      editingId.value = null;
     }
-    activeModal.value = !activeModal.value
-  }
+    activeModal.value = !activeModal.value;
+  };
 
   const handleSubmit = handleFormSubmit(async (values) => {
-    loading.value = true
+    isSubmitting.value = true;
     try {
-      const apiData = mapFormToAPI(values)
-
+      const apiData = mapFormToAPI(values);
+      let data;
+      
       if (editingId.value) {
-        await config.apiActions.update(editingId.value, apiData)
+        data = await config.apiActions.update(apiData);
       } else {
-        await config.apiActions.create(apiData)
+        data = await config.apiActions.create(apiData);
       }
-
-      await loadItems()
-      toggleModal()
+      
+      // actualizar cache
+      queryClient.setQueryData(queryKey, data);
+      snackbar.mostrarMensajeSnackbar(`${config.entity} guardado / actualizado exitosamente`, "success");
+      toggleModal();
     } catch (error: any) {
-      console.error("Error guardando:", error)
-
-      // Manejar errores de validación del servidor
+      snackbar.mostrarMensajeSnackbar(`Error guardando ${config.entity}`, "error");
       if (error.response?.data?.errors) {
-        setErrors(error.response.data.errors)
-      } else {
-        alert("Error al guardar. Por favor intenta nuevamente.")
+        setErrors(error.response.data.errors);
       }
     } finally {
-      loading.value = false
+      isSubmitting.value = false;
     }
-  })
+  });
 
   const editItem = (item: any) => {
-    editingId.value = item.id
-    const mappedData = mapAPIToForm(item)
-    
+    editingId.value = item.id;
+    const mappedData = mapAPIToForm(item);
     resetForm({
       values: mappedData,
       errors: {},
       touched: {},
-    })
-
-    activeModal.value = true
-  }
+    });
+    activeModal.value = true;
+  };
 
   const deleteItem = async (item: any) => {
-    if (confirm("¿Estás seguro de eliminar este registro?")) {
-      loading.value = true
-      try {
-        await config.apiActions.delete(item.id)
-        await loadItems()
-      } catch (error) {
-        console.error("Error eliminando:", error)
-        alert("Error al eliminar. Por favor intenta nuevamente.")
-      } finally {
-        loading.value = false
-      }
-    }
-  }
-
-  onMounted(() => {
-    loadItems()
-  })
+    dialog.show({
+      title: "Eliminar registro",
+      message: "¿Está seguro de que desea eliminar este registro? Esta acción no se podrá deshacer.",
+      type: DialogType.ERROR,
+      ExtraAction: {
+        text: "Confirmar eliminación",
+        handler: async () => {
+          isSubmitting.value = true;
+          try {
+            const data = await config.apiActions.delete(item.id);
+            queryClient.setQueryData(queryKey, data);
+            snackbar.mostrarMensajeSnackbar(`${config.entity} eliminado exitosamente`, "success");
+          } catch (error) {
+            snackbar.mostrarMensajeSnackbar(`Error eliminando ${config.entity}`, "error");
+          } finally {
+            isSubmitting.value = false;
+          }
+        },
+        color: "primary",
+      },
+    });
+  };
 
   return {
-    items,
+    items: itemsArray,
     formData,
     formErrors,
     loading,
     activeModal,
     editingId,
+    isError,
+    error,
     setFieldValue,
     toggleModal,
     handleSubmit,
     editItem,
     deleteItem,
-    loadItems,
-  }
+    loadItems: refetch,
+  };
 }

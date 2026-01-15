@@ -14,11 +14,9 @@ export const PtuActions = () => {
     }
   };
 
-  const createPtu = async (
-    data: Partial<Ptu>
-  ): Promise<Ptu> => {
+  const createPtu = async (data: Partial<Ptu>): Promise<Ptu[]> => {
     try {
-      const response = await baseAPI.post<Ptu>("create", data);
+      const response = await baseAPI.post<Ptu[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Ptu:", error);
@@ -26,12 +24,9 @@ export const PtuActions = () => {
     }
   };
 
-  const updatePtu = async (
-    id: number,
-    data: Partial<Ptu>
-  ): Promise<Ptu> => {
+  const updatePtu = async (data: Partial<Ptu>): Promise<Ptu[]> => {
     try {
-      const response = await baseAPI.put<Ptu>(`update/${id}`, data);
+      const response = await baseAPI.put<Ptu[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Ptu:", error);
@@ -39,9 +34,10 @@ export const PtuActions = () => {
     }
   };
 
-  const deletePtu = async (id: number): Promise<void> => {
+  const deletePtu = async (id: number): Promise<Ptu[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Ptu[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Ptu:", error);
       throw error;

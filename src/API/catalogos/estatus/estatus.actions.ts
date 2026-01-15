@@ -15,11 +15,9 @@ export function EstatusActions() {
     }
   };
 
-  const create = async (
-    data: Partial<Estatus>
-  ): Promise<Estatus> => {
+  const create = async (data: Partial<Estatus>): Promise<Estatus[]> => {
     try {
-      const response = await baseAPI.post<Estatus>("create", data);
+      const response = await baseAPI.post<Estatus[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Estatus:", error);
@@ -27,12 +25,9 @@ export function EstatusActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<Estatus>
-  ): Promise<Estatus> => {
+  const update = async (data: Partial<Estatus>): Promise<Estatus[]> => {
     try {
-      const response = await baseAPI.put<Estatus>(`update/${id}`, data);
+      const response = await baseAPI.put<Estatus[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Estatus:", error);
@@ -40,9 +35,10 @@ export function EstatusActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<Estatus[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Estatus[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Estatus:", error);
       throw error;

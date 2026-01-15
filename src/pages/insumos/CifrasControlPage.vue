@@ -116,14 +116,6 @@
         </v-data-table>
       </v-card>
     </v-card-text>
-
-    <!-- Snackbar para notificaciones -->
-    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="3000">
-      {{ snackbarText }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbar = false"> Cerrar </v-btn>
-      </template>
-    </v-snackbar>
   </div>
 </template>
 
@@ -138,9 +130,6 @@ const {
   cifrasSiniestros,
   loadingEmision,
   loadingSiniestros,
-  snackbar,
-  snackbarText,
-  snackbarColor,
   cargarCifrasEmision,
   cargarCifrasSiniestros,
   cargarTodasLasCifras,

@@ -81,7 +81,7 @@ export const operacionesRamosConfig = {
     },
      */
     {
-      title: "EDITAR",
+      title: "ACCIONES",
       key: "actions",
       sortable: false,
       headerProps: {

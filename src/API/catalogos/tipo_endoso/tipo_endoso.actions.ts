@@ -14,11 +14,9 @@ export function TipoEndosoActions() {
     }
   };
 
-  const create = async (
-    data: Partial<TipoEndoso>
-  ): Promise<TipoEndoso> => {
+  const create = async (data: Partial<TipoEndoso>): Promise<TipoEndoso[]> => {
     try {
-      const response = await baseAPI.post<TipoEndoso>("create", data);
+      const response = await baseAPI.post<TipoEndoso[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoEndoso:", error);
@@ -26,12 +24,9 @@ export function TipoEndosoActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<TipoEndoso>
-  ): Promise<TipoEndoso> => {
+  const update = async (data: Partial<TipoEndoso>): Promise<TipoEndoso[]> => {
     try {
-      const response = await baseAPI.put<TipoEndoso>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoEndoso[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoEndoso:", error);
@@ -39,9 +34,10 @@ export function TipoEndosoActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<TipoEndoso[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<TipoEndoso[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting TipoEndoso:", error);
       throw error;

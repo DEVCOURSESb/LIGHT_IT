@@ -2,9 +2,7 @@ import { BaseAPI } from "@/API/BaseAPI";
 import type { DistribucionCesion } from "./distribucion-cesion.interfaces";
 
 export const DistribucionCesionActions = () => {
-  const baseAPI = BaseAPI({
-    prefix: "ReasegCatIntDistribucionCesionRest/",
-  });
+  const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntDistribucionCesionRest/", });
 
   const fetchDistribucionesCesion = async (): Promise<DistribucionCesion[]> => {
     try {
@@ -16,11 +14,9 @@ export const DistribucionCesionActions = () => {
     }
   };
 
-  const createDistribucionCesion = async (
-    data: Partial<DistribucionCesion>
-  ): Promise<DistribucionCesion> => {
+  const createDistribucionCesion = async (data: Partial<DistribucionCesion>): Promise<DistribucionCesion[]> => {
     try {
-      const response = await baseAPI.post<DistribucionCesion>("create", data);
+      const response = await baseAPI.post<DistribucionCesion[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating DistribucionCesion:", error);
@@ -28,15 +24,9 @@ export const DistribucionCesionActions = () => {
     }
   };
 
-  const updateDistribucionCesion = async (
-    id: number,
-    data: Partial<DistribucionCesion>
-  ): Promise<DistribucionCesion> => {
+  const updateDistribucionCesion = async (data: Partial<DistribucionCesion>): Promise<DistribucionCesion[]> => {
     try {
-      const response = await baseAPI.put<DistribucionCesion>(
-        `update/${id}`,
-        data
-      );
+      const response = await baseAPI.put<DistribucionCesion[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating DistribucionCesion:", error);
@@ -44,9 +34,10 @@ export const DistribucionCesionActions = () => {
     }
   };
 
-  const deleteDistribucionCesion = async (id: number): Promise<void> => {
+  const deleteDistribucionCesion = async (id: number): Promise<DistribucionCesion[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<DistribucionCesion[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting DistribucionCesion:", error);
       throw error;

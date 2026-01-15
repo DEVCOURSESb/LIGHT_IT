@@ -15,34 +15,30 @@ export function CriteriosAsignacionActions () {
     }
   }
 
-  const create = async (
-    data: Partial<CriteriosAsignacion>,
-  ): Promise<CriteriosAsignacion> => {
+  const create = async (data: Partial<CriteriosAsignacion>): Promise<CriteriosAsignacion[]> => {
     try {
-      const response = await baseAPI.post<CriteriosAsignacion>('create', data)
-      return response.data
+      const response = await baseAPI.post<CriteriosAsignacion[]>("insertRecord", data);
+      return response.data;
     } catch (error) {
       console.error('Error creating CriteriosAsignacion:', error)
       throw error
     }
   }
 
-  const update = async (
-    id: number,
-    data: Partial<CriteriosAsignacion>,
-  ): Promise<CriteriosAsignacion> => {
+  const update = async (data: Partial<CriteriosAsignacion>): Promise<CriteriosAsignacion[]> => {
     try {
-      const response = await baseAPI.put<CriteriosAsignacion>(`update/${id}`, data)
-      return response.data
+      const response = await baseAPI.put<CriteriosAsignacion[]>("updateRecord", data);
+      return response.data;
     } catch (error) {
       console.error('Error updating CriteriosAsignacion:', error)
       throw error
     }
   }
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<CriteriosAsignacion[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`)
+      const data = await baseAPI.delete<CriteriosAsignacion[]>(`deleteRecord/${id}`);
+      return data.data;
     } catch (error) {
       console.error('Error deleting CriteriosAsignacion:', error)
       throw error

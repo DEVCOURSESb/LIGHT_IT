@@ -15,11 +15,9 @@ export function CriterioCoberturaActions() {
     }
   };
 
-  const create = async (
-    data: Partial<CriterioCobertura>
-  ): Promise<CriterioCobertura> => {
+  const create = async ( data: Partial<CriterioCobertura> ): Promise<CriterioCobertura[]> => {
     try {
-      const response = await baseAPI.post<CriterioCobertura>("create", data);
+      const response = await baseAPI.post<CriterioCobertura[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating CriterioCobertura:", error);
@@ -27,12 +25,9 @@ export function CriterioCoberturaActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<CriterioCobertura>
-  ): Promise<CriterioCobertura> => {
+  const update = async ( data: Partial<CriterioCobertura> ): Promise<CriterioCobertura[]> => {
     try {
-      const response = await baseAPI.put<CriterioCobertura>(`update/${id}`, data);
+      const response = await baseAPI.put<CriterioCobertura[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating CriterioCobertura:", error);
@@ -40,9 +35,10 @@ export function CriterioCoberturaActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<CriterioCobertura[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<CriterioCobertura[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting CriterioCobertura:", error);
       throw error;

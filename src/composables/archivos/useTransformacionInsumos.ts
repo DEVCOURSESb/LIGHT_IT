@@ -1,4 +1,5 @@
 // composables/archivos/useTransformacionInsumos.ts
+import { useSnackbar } from "@/stores/useSnackbar";
 import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 import { ref, computed } from "vue";
 
@@ -17,6 +18,7 @@ export const useTransformacionInsumos = ({
   transformAction,
   nombreInsumo,
 }: UseTransformacionOptions) => {
+  const snackbar = useSnackbar();
   // Form reference
   const formTransformacion = ref<any>(null);
   const validTransformacion = ref(false);
@@ -27,11 +29,6 @@ export const useTransformacionInsumos = ({
 
   // Estados
   const loadingTransformacion = ref(false);
-
-  // Snackbar
-  const snackbarTransformacion = ref(false);
-  const snackbarTextTransformacion = ref("");
-  const snackbarColorTransformacion = ref<"success" | "error" | "info">("success");
 
   // Opciones de año y mes
   const anioActual = new Date().getFullYear();
@@ -82,7 +79,7 @@ export const useTransformacionInsumos = ({
 
       if (!formValid) {
         console.error("Formulario no válido");
-        mostrarMensajeTransformacion(
+        snackbar.mostrarMensajeSnackbar(
           "Por favor seleccione año y mes",
           "error"
         );
@@ -96,12 +93,12 @@ export const useTransformacionInsumos = ({
         anio: anioTransformacion.value,
         mes: mesTransformacion.value,
       });
-      mostrarMensajeTransformacion("Debe seleccionar año y mes", "error");
+      snackbar.mostrarMensajeSnackbar("Debe seleccionar año y mes", "error");
       return;
     }
 
     loadingTransformacion.value = true;
-    mostrarMensajeTransformacion(
+    snackbar.mostrarMensajeSnackbar(
       `Transformando insumo de ${nombreInsumo}, por favor espere...`,
       "info"
     );
@@ -122,7 +119,7 @@ export const useTransformacionInsumos = ({
       // Limpiar formulario si fue exitoso
       limpiarFormularioTransformacion();
 
-      mostrarMensajeTransformacion(
+      snackbar.mostrarMensajeSnackbar(
         response.mensaje || `Insumo de ${nombreInsumo} transformado exitosamente`,
         "success"
       );
@@ -138,20 +135,10 @@ export const useTransformacionInsumos = ({
         mensajeError = error.message;
       }
 
-      mostrarMensajeTransformacion(mensajeError, "error");
+      snackbar.mostrarMensajeSnackbar(mensajeError, "error");
     } finally {
       loadingTransformacion.value = false;
     }
-  };
-
-  // Función auxiliar para mostrar mensajes
-  const mostrarMensajeTransformacion = (
-    texto: string,
-    color: "success" | "error" | "info"
-  ) => {
-    snackbarTextTransformacion.value = texto;
-    snackbarColorTransformacion.value = color;
-    snackbarTransformacion.value = true;
   };
 
   // Función para limpiar el formulario
@@ -175,11 +162,6 @@ export const useTransformacionInsumos = ({
     mesTransformacion,
     loadingTransformacion,
 
-    // Snackbar
-    snackbarTransformacion,
-    snackbarTextTransformacion,
-    snackbarColorTransformacion,
-
     // Validaciones
     anioTransformacionRules,
     mesTransformacionRules,
@@ -192,6 +174,5 @@ export const useTransformacionInsumos = ({
     transformarInsumo,
     puedeTransformar,
     limpiarFormularioTransformacion,
-    mostrarMensajeTransformacion,
   };
 };

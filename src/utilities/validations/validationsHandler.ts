@@ -24,7 +24,7 @@ export const validationsHandler = () => {
   }
 
   const transformBooleanToNumber = ( value: boolean ): number => {
-    return value ? 1 : 2;
+    return value ? 1 : 0;
   }
 
   const transformNumberToBoolean = ( value: number ): boolean => {

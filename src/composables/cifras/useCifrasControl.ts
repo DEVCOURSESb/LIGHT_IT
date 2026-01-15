@@ -5,9 +5,11 @@ import type {
   CifrasControlSiniestroDTO,
 } from "@/API/generic/cifras-control";
 import { CifrasControlActions } from "@/API/cifras-control/cifras-control.actions";
+import { useSnackbar } from "@/stores/useSnackbar";
 
 export const useCifrasControl = () => {
   const cifrasControlAPI = CifrasControlActions();
+  const snackbar = useSnackbar();
 
   // Estados
   const cifrasEmision = ref<CifrasControlEmisionDTO[]>([]);
@@ -15,11 +17,7 @@ export const useCifrasControl = () => {
   const loadingEmision = ref(false);
   const loadingSiniestros = ref(false);
 
-  // Snackbar
-  const snackbar = ref(false);
-  const snackbarText = ref("");
-  const snackbarColor = ref<"success" | "error">("success");
-
+  
   // Función para cargar cifras de emisión
   const cargarCifrasEmision = async () => {
     loadingEmision.value = true;
@@ -28,7 +26,7 @@ export const useCifrasControl = () => {
       
       cifrasEmision.value = response.dataExtra || [];      
     } catch (error) {
-      mostrarMensaje("Error al cargar cifras de emisión", "error");
+        snackbar.mostrarMensajeSnackbar("Error al cargar cifras de emisión", "error");
     } finally {
       loadingEmision.value = false;
     }
@@ -43,7 +41,7 @@ export const useCifrasControl = () => {
       cifrasSiniestros.value = response.dataExtra || [];
       
     } catch (error) {
-      mostrarMensaje("Error al cargar cifras de siniestros", "error");
+      snackbar.mostrarMensajeSnackbar("Error al cargar cifras de siniestros", "error");
     } finally {
       loadingSiniestros.value = false;
     }
@@ -54,24 +52,12 @@ export const useCifrasControl = () => {
     await Promise.all([cargarCifrasEmision(), cargarCifrasSiniestros()]);
   };
 
-  // Función auxiliar para mostrar mensajes
-  const mostrarMensaje = (texto: string, color: "success" | "error") => {
-    snackbarText.value = texto;
-    snackbarColor.value = color;
-    snackbar.value = true;
-  };
-
   return {
     // Estados
     cifrasEmision,
     cifrasSiniestros,
     loadingEmision,
     loadingSiniestros,
-
-    // Snackbar
-    snackbar,
-    snackbarText,
-    snackbarColor,
 
     // Métodos
     cargarCifrasEmision,

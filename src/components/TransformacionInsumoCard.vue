@@ -66,20 +66,6 @@
         </v-row>
       </v-form>
     </v-card-text>
-
-    <!-- Snackbar para notificaciones -->
-    <v-snackbar
-      v-model="snackbarTransformacion"
-      :color="snackbarColorTransformacion"
-      :timeout="snackbarColorTransformacion === 'info' ? -1 : 3000"
-    >
-      {{ snackbarTextTransformacion }}
-      <template v-slot:actions>
-        <v-btn variant="text" @click="snackbarTransformacion = false">
-          Cerrar
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-card>
 </template>
 
@@ -106,9 +92,6 @@ const {
   anioTransformacion,
   mesTransformacion,
   loadingTransformacion,
-  snackbarTransformacion,
-  snackbarTextTransformacion,
-  snackbarColorTransformacion,
   anioTransformacionRules,
   mesTransformacionRules,
   aniosTransformacion,

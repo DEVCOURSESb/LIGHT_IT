@@ -14,11 +14,9 @@ export const TipoReaseguroActions = () => {
     }
   };
 
-  const createTipoReaseguro = async (
-    data: Partial<TipoReaseguro>
-  ): Promise<TipoReaseguro> => {
+  const createTipoReaseguro = async (data: Partial<TipoReaseguro>): Promise<TipoReaseguro[]> => {
     try {
-      const response = await baseAPI.post<TipoReaseguro>("create", data);
+      const response = await baseAPI.post<TipoReaseguro[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating TipoReaseguro:", error);
@@ -26,12 +24,9 @@ export const TipoReaseguroActions = () => {
     }
   };
 
-  const updateTipoReaseguro = async (
-    id: number,
-    data: Partial<TipoReaseguro>
-  ): Promise<TipoReaseguro> => {
+  const updateTipoReaseguro = async (data: Partial<TipoReaseguro>): Promise<TipoReaseguro[]> => {
     try {
-      const response = await baseAPI.put<TipoReaseguro>(`update/${id}`, data);
+      const response = await baseAPI.put<TipoReaseguro[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating TipoReaseguro:", error);
@@ -39,9 +34,10 @@ export const TipoReaseguroActions = () => {
     }
   };
 
-  const deleteTipoReaseguro = async (id: number): Promise<void> => {
+  const deleteTipoReaseguro = async (id: number): Promise<TipoReaseguro[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<TipoReaseguro[]>(`deleteRecord/${id}`);
+    return response.data;
     } catch (error) {
       console.error("Error deleting TipoReaseguro:", error);
       throw error;

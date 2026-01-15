@@ -2,7 +2,7 @@ import { TipoTarifaActions } from "@/API/catalogos/tipos-tarifa/tipos-tarifa.act
 import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = TipoTarifaActions()
-const { minMaxString, validateBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber } = validationsHandler();
 
 export const tipoTarifaConfig = {
   entity: "tipo-tarifa",
@@ -29,13 +29,13 @@ export const tipoTarifaConfig = {
         style: "font-weight: bold",
       },
     },
-    /* { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
+    { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
     },
-    */
-    { title: "EDITAR", key: "actions", sortable: false,
+   
+    { title: "ACCIONES", key: "actions", sortable: false,
       headerProps: {
         style: "font-weight: bold",
       },
@@ -50,6 +50,16 @@ export const tipoTarifaConfig = {
       hidden: true,
     },
     {
+      name: "cveTarifa",
+      label: "Clave",
+      type: "number",
+      required: true,
+      disabled: true,
+      dataKey: "cveTarifa",
+      defaultValue: 0,
+      transformToAPI: (value: string) => Number(value),
+    },
+    {
       name: "descTarifa",
       label: "Descripción",
       type: "text",
@@ -57,6 +67,15 @@ export const tipoTarifaConfig = {
       dataKey: "descTarifa",
       defaultValue: "",
       transformToAPI: (value: string) => transformToUpperCase(value),
+    },
+     {
+      name: "fechaRegistro",
+      label: "Fecha de Registro",
+      type: "text",
+      hidden: true,
+      dataKey: "fechaRegistro",
+      defaultValue: "",
+      displayType: "date",
     },
     {
       name: "esActivo",
@@ -67,11 +86,12 @@ export const tipoTarifaConfig = {
       displayType: "checkbox",
       defaultValue: true,
       transformFromAPI: (value: boolean) => !!value,
-      transformToAPI: (value: boolean) => value,
+      transformToAPI: (value: boolean) => transformBooleanToNumber(value),
     },
   ],
 
   validationSchema: {
+    //cveTarifa: (value: number) => minMaxString(value.toString(), 1, 10) || "La clave es requerida",
     descTarifa: (value: string) => minMaxString(value, 1, 50) || "La descripción es requerida",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
@@ -83,3 +103,4 @@ export const tipoTarifaConfig = {
     delete: actions.deleteTipoTarifa,
   },
 }
+  

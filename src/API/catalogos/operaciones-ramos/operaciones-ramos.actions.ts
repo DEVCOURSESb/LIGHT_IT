@@ -14,11 +14,9 @@ export const OperacionesRamosActions = () => {
     }
   };
 
-  const createOperacionRamo = async (
-    data: Partial<OperacionRamo>
-  ): Promise<OperacionRamo> => {
+  const createOperacionRamo = async (data: Partial<OperacionRamo>): Promise<OperacionRamo[]> => {
     try {
-      const response = await baseAPI.post<OperacionRamo>("create", data);
+      const response = await baseAPI.post<OperacionRamo[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating operacion ramo:", error);
@@ -26,12 +24,9 @@ export const OperacionesRamosActions = () => {
     }
   };
 
-  const updateOperacionRamo = async (
-    id: number,
-    data: Partial<OperacionRamo>
-  ): Promise<OperacionRamo> => {
+  const updateOperacionRamo = async (data: Partial<OperacionRamo>): Promise<OperacionRamo[]> => {
     try {
-      const response = await baseAPI.put<OperacionRamo>(`update/${id}`, data);
+      const response = await baseAPI.put<OperacionRamo[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating operacion ramo:", error);
@@ -39,9 +34,10 @@ export const OperacionesRamosActions = () => {
     }
   };
 
-  const deleteOperacionRamo = async (id: number): Promise<void> => {
+  const deleteOperacionRamo = async (id: number): Promise<OperacionRamo[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<OperacionRamo[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting operacion ramo:", error);
       throw error;

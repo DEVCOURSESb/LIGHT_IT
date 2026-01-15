@@ -40,6 +40,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
     instance.interceptors.response.use(
       response => response,
       async error => {
+        console.log(error)
         if (error.code === 'ERR_NETWORK') {
 
             const { useAuth } = await import('@/composables/auth/useAuth');

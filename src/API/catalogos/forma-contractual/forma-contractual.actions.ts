@@ -14,11 +14,9 @@ export const FormaContractualActions = () => {
     }
   };
 
-  const createFormaContractual = async (
-    data: Partial<FormaContractual>
-  ): Promise<FormaContractual> => {
+  const createFormaContractual = async (data: Partial<FormaContractual>): Promise<FormaContractual[]> => {
     try {
-      const response = await baseAPI.post<FormaContractual>("create", data);
+      const response = await baseAPI.post<FormaContractual[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating FormaContractual:", error);
@@ -26,12 +24,9 @@ export const FormaContractualActions = () => {
     }
   };
 
-  const updateFormaContractual = async (
-    id: number,
-    data: Partial<FormaContractual>
-  ): Promise<FormaContractual> => {
+  const updateFormaContractual = async (data: Partial<FormaContractual>): Promise<FormaContractual[]> => {
     try {
-      const response = await baseAPI.put<FormaContractual>(`update/${id}`, data);
+      const response = await baseAPI.put<FormaContractual[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating FormaContractual:", error);
@@ -39,9 +34,10 @@ export const FormaContractualActions = () => {
     }
   };
 
-  const deleteFormaContractual = async (id: number): Promise<void> => {
+  const deleteFormaContractual = async (id: number): Promise<FormaContractual[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<FormaContractual[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting FormaContractual:", error);
       throw error;

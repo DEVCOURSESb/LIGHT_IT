@@ -15,11 +15,9 @@ export function SexoActions() {
     }
   };
 
-  const create = async (
-    data: Partial<Sexo>
-  ): Promise<Sexo> => {
+  const create = async (data: Partial<Sexo>): Promise<Sexo[]> => {
     try {
-      const response = await baseAPI.post<Sexo>("create", data);
+      const response = await baseAPI.post<Sexo[]>("insertRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error creating Sexo:", error);
@@ -27,12 +25,9 @@ export function SexoActions() {
     }
   };
 
-  const update = async (
-    id: number,
-    data: Partial<Sexo>
-  ): Promise<Sexo> => {
+  const update = async (data: Partial<Sexo>): Promise<Sexo[]> => {
     try {
-      const response = await baseAPI.put<Sexo>(`update/${id}`, data);
+      const response = await baseAPI.put<Sexo[]>("updateRecord", data);
       return response.data;
     } catch (error) {
       console.error("Error updating Sexo:", error);
@@ -40,9 +35,10 @@ export function SexoActions() {
     }
   };
 
-  const deletes = async (id: number): Promise<void> => {
+  const deletes = async (id: number): Promise<Sexo[]> => {
     try {
-      await baseAPI.delete(`delete/${id}`);
+      const response = await baseAPI.delete<Sexo[]>(`deleteRecord/${id}`);
+      return response.data;
     } catch (error) {
       console.error("Error deleting Sexo:", error);
       throw error;
