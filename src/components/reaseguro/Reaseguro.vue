@@ -155,6 +155,7 @@
         },
       ],
     },
+    { name: 'configuracion_tarifas', title: 'Configuración de tarifas', icon: '', items:[]},
     { name: 'bordereaux', title: 'Bordereaux reaseguro', icon: '', items: [] },
     { name: 'estadosCuentaReaseg', title: 'Estados de cuenta reaseguro', icon: '', items: [] },
     { name: 'reportesReaseguro', title: 'Reportes de reaseguro', icon: '', items: [] },

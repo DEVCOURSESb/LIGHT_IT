@@ -1,3 +1,5 @@
+import Papa from 'papaparse'
+
 // Validaciones para el formulario de nuevo contrato de vida
 export class ValidacionesContrato {
 
@@ -31,7 +33,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // SUBRAMO
   static subramo() {
     return (v: any[]) => {
@@ -43,7 +44,6 @@ export class ValidacionesContrato {
       }) || 'Verificar longitud de subramo';
     }
   }
-
   // IDENTIFICADOR DE CONTRATO
   static idContrato() {
     return [
@@ -54,7 +54,6 @@ export class ValidacionesContrato {
       )
     ]
   }
-
   // NEGOCIOS CUBIERTOS
   static negociosCubiertos() {
     return [
@@ -63,7 +62,6 @@ export class ValidacionesContrato {
       this.noCaracteresExceptoComa('Solo se permiten letras, números y comas')
     ]
   }
-
   // MONEDA
   static moneda() {
     return (v: any) => {
@@ -77,7 +75,6 @@ export class ValidacionesContrato {
   static fechaInicio() {
     return this.required('Fecha inicio contrato requerida')
   }
-
   static fechaFin(fechaInicio: () => string) {
     return (v: string) => {
       if (!v) return 'Fecha fin contrato requerida'
@@ -86,20 +83,17 @@ export class ValidacionesContrato {
         || 'La fecha fin debe ser mayor o igual a la fecha inicio'
     }
   }
-
     // TIPO DE CONTRATO
   static tipoContrato() {
     return (v: number | null) =>
       v !== null || 'Tipo de contrato requerido'
   }
-
   // 21 dígitos: 19 enteros + 2 decimales
   static numeroC21() {
     const regex = /^\d{1,19}(\.\d{1,2})?$/
     return (v: string) =>
       !v || regex.test(v) || 'Formato numérico inválido'
   }
-
   //CESION
   static cesion(tipoContrato: () => number | null) {
     const permitidos = [1, 7, 9]
@@ -115,7 +109,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // Piso (SEGUNDO, TERCER, CUARTO EXCEDENTE)
   static piso(tipoContrato: () => number | null) {
     const permitidos = [4, 5, 6]
@@ -126,7 +119,6 @@ export class ValidacionesContrato {
       return this.numeroC21()(v)
     }
   }
-
   // Techo
   static techo(tipoContrato: () => number | null) {
     const permitidos = [4, 5, 6] // SEGUNDO, TERCER, CUARTO EXCEDENTE
@@ -230,7 +222,6 @@ export class ValidacionesContrato {
       return true;
     };
   }
-
   // Prima de tarifa fija
   static primaTarifaFija(tipoTarifa: () => number | null) {
     const regex = /^\d{1,13}(\.\d{1,2})?$/
@@ -241,7 +232,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // % sobre prima emitida
   static porSobrePrima(tipoTarifa: () => number | null) {
     const regex = /^\d{1,3}(\.\d{1,2})?$/
@@ -252,7 +242,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // Tarifa fija al millar
   static tarifaFijaMillar(tipoTarifa: () => number | null) {
     const regex = /^\d{0,0}(\.\d{1,10})?$/
@@ -263,7 +252,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // Factor tarifa propia
   static factorTarifaPropia(tipoTarifa: () => number | null) {
     const regex = /^\d{1,3}(\.\d{1,2})?$/
@@ -274,7 +262,6 @@ export class ValidacionesContrato {
       return true
     }
   }
-
   // Tarifa propia
   static tarifaPropia(tipoTarifa: () => number | null) {
     return (v: string | null) => {
@@ -284,7 +271,7 @@ export class ValidacionesContrato {
       return true
     }
   }
-
+  // Limite siniestralidad
   static limiteSiniestralidad() {
     return (value: number | string | null) => {
       if (value === null || value === undefined || value === '') {

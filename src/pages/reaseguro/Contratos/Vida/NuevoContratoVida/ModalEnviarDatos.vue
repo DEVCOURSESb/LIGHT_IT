@@ -40,7 +40,7 @@
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">COMISIONES (FIJA Y ESCALONADA)</v-card-title>
             <v-data-table v-if="comisionFijaTabla.length" :headers="headersComisionContrato" :items="comisionFijaTabla" density="compact" hide-default-footer class="mb-2" />
 
-            <v-card-title v-if="comisionEscalonadaTabla.length" class="text-caption">Escalonamiento por Siniestralidad</v-card-title>
+            <v-card-title v-if="comisionEscalonadaTabla.length" class="text-caption">ESCALONADA</v-card-title>
             <v-data-table v-if="comisionEscalonadaTabla.length" :headers="headersComisionEscalonada" :items="comisionEscalonadaTabla" density="compact" hide-default-footer />
           </v-card>
 
@@ -108,7 +108,7 @@ const datosContratoResumen = computed(() => {
   const g = contratoStore.general; if (!g) return [];
   return [{
     idRamo: '010',
-    subRamo: getTX(g.subramo),
+    subRamo: joinByDash(g.subramo),
     idContrato: g.idContrato,
     negocioCubiertos: g.negociosCubiertos || '-',
     fechaInicioContrato: g.fechaInicio,
@@ -170,27 +170,30 @@ const reaseguradoresTablaCompleta = computed(() => {
 
 const tarifasTablaCompleta = computed(() => {
   const cob = contratoStore.configReasegCob;
-  if (!cob || !cob.tarifas) return [];
+  if (!cob || !cob.tarifas || cob.tarifas.length === 0) return [];
+
   return cob.tarifas.map((t: any) => {
-    const esHija = cob.agrupaciones?.find(a =>
-      a.coberturas.some((c: any) => String(getID(c)) === String(getID(t.cveCob)))
+    const agrup = cob.agrupaciones?.find((a: any) =>
+      a.coberturas?.some((c: any) => String(getID(c)) === String(t.cveCob))
     );
+
     return {
-      idContrato: cob.idContrato,
+      idContrato: cob.idContrato || 'N/A',
       cveReasegurador: (t.cveReasegurador && getTX(t.cveReasegurador) !== '-') ? getTX(t.cveReasegurador) : 'TODAS',
       detalleCapa: t.detalleCapa || 'NO',
-      descClasifCober: getTX(cob.detalleCobertura),
-      cveCob: String(t.cveCob ?? '-'),
-      descCob: getTX(t.cobertura),
-      cveAgrupCob: esHija ? String(getID(esHija.madre)) : '-',
-      descAgrupCob: esHija ? getID(esHija.madre) : '-',
+      descClasifCober: t.tipoCobertura || '0 (BASICA)',
+      cveCob: String(t.cveCob),
+      descCob: t.cobertura,
+      cveAgrupCob: agrup ? String(getID(agrup.madre)) : '-',
+      descAgrupCob: agrup ? getTX(agrup.madre) : '-',
+
       cveTarifa: getTX(t.tipoTarifa),
       primaTarifaFija: '$ ' + cleanN(t.primaTarifa).toLocaleString(),
       porcentajePrimaEmitida: cleanN(t.porSobrePrima) + '%',
       tarifaFija: cleanN(t.tarifaFijaM).toFixed(4),
       factorTarifaPropia: cleanN(t.factorTap) + '%',
-      tarifaPropia: t.nombreArchivo || 'N/A'
-    }
+      tarifaPropia: t.nombreArchivo || '-'
+    };
   });
 });
 
@@ -199,7 +202,7 @@ const comisionFijaTabla = computed(() => {
   if (!conf || getID(conf.comisionReaseg) != 1) return [];
   return [{
     idContrato: conf.idContrato,
-    cveReasegurador: 'TODAS',
+    cveReasegurador: 'TODAS', // aqui deben ir todas las reaseguradoras y no esa palabra
     descClasifCober: getTX(conf.tipoCobertura),
     comisionPrimerAnioFijaProv: (conf.comisionPrimerAnio || 0) + '%',
     comisionRenovacionFijaProv: (conf.comisionRenovacion || 0) + '%'
@@ -264,7 +267,7 @@ const headersCoberturas = [
   { title: 'TIPO COBERTURA', key: 'descClasifCober' }, { title: 'CLAVE COB', key: 'cveCob' }, { title: 'COBERTURA', key: 'descCob' },
   { title: 'CVE AGRUPAR', key: 'cveAgrupCob' }, { title: 'AGRUPAR EN', key: 'descAgrupCob' }, { title: 'TIPO TARIFA', key: 'cveTarifa' },
   { title: 'PRIMA FIJA', key: 'primaTarifaFija' }, { title: '% SOBRE PRIMA', key: 'porcentajePrimaEmitida' }, { title: 'TARIFA MILLAR', key: 'tarifaFija' },
-  { title: 'FACTOR PROPIA', key: 'factorTarifaPropia' }, { title: 'ARCHIVO', key: 'tarifaPropia' }
+  { title: 'FACTOR PROPIA', key: 'factorTarifaPropia' }, { title: 'TARIFA PROPIA', key: 'tarifaPropia' }
 ];
 
 const headersComisionContrato = [
@@ -300,7 +303,7 @@ const guardarEnBD = async () => {
 
     const payloadGen = {
       idRamo: "010",
-      subRamo: getTX(gen.subramo),
+      subRamo: joinByDash(gen.subramo),
       idContrato: gen.idContrato,
       negocioCubiertos: gen.negociosCubiertos,
       fechaInicioContrato: formatF(gen.fechaInicio),
@@ -324,7 +327,7 @@ const guardarEnBD = async () => {
     const promsReas = listaReaseguradoresContrato.map((r: any) =>
       apiReaseguradoras.post('register', {
         idContrato: gen.idContrato,
-        cveReasegurador: String(r.clave || getID(r.cveReasegurador)), // Usar clave (S0061) si existe
+        cveReasegurador: String(r.clave || getID(r.cveReasegurador)),
         participacion: cleanN(r.participacion),
         cveDistrCesion: getID(conf?.indicadorDistrC),
         indCesionBasica: getID(conf?.cesionCoberBasi),
@@ -340,6 +343,85 @@ const guardarEnBD = async () => {
     );
 
     const promsCob: any[] = [];
+      if (cob?.tarifas) {
+        const cvesEnTarifas = new Set(cob.tarifas.map((t: any) => String(getID(t.cveCob))));
+
+        cob.tarifas.forEach((t: any) => {
+          let reasFila: any[] = [];
+          if (getID(t.cveReasegurador)) {
+            reasFila = Array.isArray(t.cveReasegurador) ? t.cveReasegurador : [t.cveReasegurador];
+          } else {
+            reasFila = listaReaseguradoresContrato;
+          }
+
+          const agrup = cob.agrupaciones?.find(a =>
+            a.coberturas?.some((c: any) => String(getID(c)) === String(getID(t.cveCob)))
+          );
+
+          const currentCve = String(getID(t.cveCob));
+          const motherCve = agrup ? String(getID(agrup.madre)) : null;
+
+          const esMadre = currentCve === motherCve;
+
+          reasFila.forEach((r: any) => {
+            const idR = String(r.clave || getID(r.cveReasegurador) || getID(r));
+
+            if (idR && idR !== 'null' && idR !== 'undefined') {
+              promsCob.push(apiCoberturas.post('register', {
+                idContrato: gen.idContrato,
+                cveReasegurador: idR,
+                detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "",
+                descClasifCober: getTX(t.tipoCobertura || "0 (BASICA)").normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                cveCob: String(getID(t.cveCob)),
+                descCob: getTX(t.cobertura),
+
+                cveAgrupCob: (agrup && !esMadre) ? Number(getID(agrup.madre)) : 0,
+                descAgrupCob: (agrup && !esMadre) ? getTX(agrup.madre) : "",
+
+                cveTarifa: Number(getID(t.tipoTarifa)),
+                primaTarifaFija: cleanN(t.primaTarifa),
+                porcentajePrimaEmitida: cleanN(t.porSobrePrima),
+                tarifaFija: cleanN(t.tarifaFijaM),
+                factorTarifaPropia: cleanN(t.factorTap),
+                tarifaPropia: t.nombreArchivo || "0"
+              }));
+            }
+          });
+        });
+
+        cob.agrupaciones?.forEach(ag => {
+          ag.coberturas?.forEach((c: any) => {
+            const cveC = String(getID(c));
+
+            if (!cvesEnTarifas.has(cveC)) {
+              const motherCve = String(getID(ag.madre));
+              const esMadre = cveC === motherCve;
+
+              listaReaseguradoresContrato.forEach((r: any) => {
+                const idR = String(r.clave || getID(r.cveReasegurador));
+                promsCob.push(apiCoberturas.post('register', {
+                  idContrato: gen.idContrato,
+                  cveReasegurador: idR,
+                  detalleCapa: r.detalleCapa ? String(r.detalleCapa).toUpperCase() : "",
+                  descClasifCober: getTX(r.tipoCobertura || cob.detalleCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                  cveCob: cveC,
+                  descCob: getTX(c),
+                  cveAgrupCob: !esMadre ? Number(getID(ag.madre)) : 0,
+                  descAgrupCob: !esMadre ? getTX(ag.madre) : "",
+                  cveTarifa: Number(getID(r.tipoTarifa)),
+                  primaTarifaFija: cleanN(r.primaTarifa),
+                  porcentajePrimaEmitida: cleanN(r.porSobrePrima),
+                  tarifaFija: cleanN(r.tarifaFijaM),
+                  factorTarifaPropia: cleanN(r.factorTap),
+                  tarifaPropia: r.nombreArchivo || 0.0
+                }));
+              });
+            }
+          });
+        });
+      }
+
+    /*const promsCob: any[] = [];
     if (cob?.tarifas && cob.tarifas.length > 0) {
       cob.tarifas.forEach((t: any) => {
         let reasFila: any[] = [];
@@ -360,7 +442,7 @@ const guardarEnBD = async () => {
             promsCob.push(apiCoberturas.post('register', {
               idContrato: gen.idContrato,
               cveReasegurador: idR,
-              detalleCapa: (t.detalleCapa === 'SÍ' || t.detalleCapa === true) ? "SI" : "",
+              detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "",
               descClasifCober: getTX(t.tipoCobertura || cob.detalleCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
               cveCob: String(getID(t.cveCob)),
               descCob: getTX(t.cobertura),
@@ -371,12 +453,12 @@ const guardarEnBD = async () => {
               porcentajePrimaEmitida: cleanN(t.porSobrePrima),
               tarifaFija: cleanN(t.tarifaFijaM),
               factorTarifaPropia: cleanN(t.factorTap),
-              tarifaPropia: t.nombreArchivo || "0.0"
+              tarifaPropia: t.nombreArchivo || 0.0 // aqui se supone
             }));
           }
         });
       });
-    }
+    }*/
 
     const promsComNormal = (conf && getID(conf.comisionReaseg) == 1)
       ? listaReaseguradoresContrato.map((r: any) => apiComision.post('register', {
@@ -401,13 +483,44 @@ const guardarEnBD = async () => {
       }))
     );
 
+    const promsInter = (contratoStore.configInt?.intermediariosTabla || []).flatMap(filaInter => {
+      const reaseguradorValor = getID(filaInter.reaseguradora);
+
+      let reaseguradorasAAplicar: string[] = [];
+      if (!reaseguradorValor || reaseguradorValor === 'TODAS' || reaseguradorValor === '0' || reaseguradorValor === 0) {
+        reaseguradorasAAplicar = listaReaseguradoresContrato.map((r: any) => {
+          const id = r.clave || r.cveReasegurador;
+          return String(getID(id));
+        });
+      } else {
+        reaseguradorasAAplicar = [String(reaseguradorValor)];
+      }
+
+      return reaseguradorasAAplicar.map((idReasegurador) => {
+        if (idReasegurador.includes('[object')) return null;
+
+        return apiIntermediarios.post('register', {
+          idContrato: String(gen.idContrato),
+          cveReasegurador: idReasegurador,
+          indIntermediario: String(getID(contratoStore.configInt?.intermediario) ?? "0"),
+          cveCriterioAsig: Number(getID(filaInter.asignacionInterm) ?? 0),
+          cveIntermediario: String(getID(filaInter.broker) ?? ""),
+          indCorretaje: Number(getID(filaInter.corretaje) ?? 0),
+          cveAsignacion: Number(getID(filaInter.tipoCorretaje) ?? 0),
+          porcentajeCorretaje: cleanN(filaInter.corretajeFijo),
+          montoCorretaje: cleanN(filaInter.montoCorreFijo)
+        });
+      }).filter(p => p !== null);
+    });
+
     await Promise.all([
       ...promsReas,
       ...promsCob,
       ...promsComNormal,
       ...promsCapas,
       ...promsPolizas,
-      ...promsComEsc
+      ...promsComEsc,
+      ...promsInter
     ]);
 
     dialog.show({ title: 'ÉXITO', message: 'Contrato guardado correctamente.', type: DialogType.SUCCESS });

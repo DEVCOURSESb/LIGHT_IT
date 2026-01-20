@@ -55,6 +55,8 @@ declare module 'vue-router/auto-routes' {
     '/insumos/cargas/EmisionPage': RouteRecordInfo<'/insumos/cargas/EmisionPage', '/insumos/cargas/EmisionPage', Record<never, never>, Record<never, never>>,
     '/insumos/cargas/SiniestrosPage': RouteRecordInfo<'/insumos/cargas/SiniestrosPage', '/insumos/cargas/SiniestrosPage', Record<never, never>, Record<never, never>>,
     '/insumos/CifrasControlPage': RouteRecordInfo<'/insumos/CifrasControlPage', '/insumos/CifrasControlPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', Record<never, never>, Record<never, never>>,
@@ -265,6 +267,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/insumos/CifrasControlPage.vue': {
       routes: '/insumos/CifrasControlPage'
+      views: never
+    }
+    'src/pages/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage.vue': {
+      routes: '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage'
+      views: never
+    }
+    'src/pages/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage.vue': {
+      routes: '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage'
       views: never
     }
     'src/pages/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM.vue': {

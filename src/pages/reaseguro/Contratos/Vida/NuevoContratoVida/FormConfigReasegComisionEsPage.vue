@@ -99,7 +99,18 @@
           </v-btn>
         </v-row>
 
-        <!-- TABLA DE RESULTADOS -->
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-file-input
+              v-model="cargarComisiones"
+              label="Cargar comisiones (CSV)"
+              accept=".csv"
+              variant="solo-filled"
+              @update:model-value="alCambiarArchivo"
+            />
+          </v-col>
+        </v-row>
+
         <v-row class="mt-6">
           <v-col cols="12">
             <v-data-table
@@ -107,8 +118,11 @@
               :items="comisiones"
               density="compact"
               class="elevation-1"
-              hide-default-footer
             >
+              <template #item.cveReasegurador="{ item }">
+                <span class="font-weight-bold">{{ item.cveReasegurador }}</span>
+              </template>
+
               <template #item.limiteInf="{ item }"> {{ Number(item.limiteInf).toFixed(2) }}% </template>
               <template #item.limiteSup="{ item }"> {{ Number(item.limiteSup).toFixed(2) }}% </template>
               <template #item.comisionDefinitiva="{ item }"> {{ Number(item.comisionDefinitiva).toFixed(2) }}% </template>
@@ -130,7 +144,6 @@
             <v-btn
               class="btn-guardar"
               elevation="4"
-              color="primary"
               @click="guardarDatos"
             >
               Guardar comisiones escalonadas
@@ -155,6 +168,7 @@ import { useContratoStore } from '@/stores/contratoStore'
 import { useDialog, DialogType } from '@/stores/dialogStore'
 
 interface ComisionReaseguro {
+  cveReasegurador?: string
   limiteInf: number
   limiteSup: number
   comisionDefinitiva: number
@@ -169,6 +183,7 @@ const limiteInf = ref<number>(0)
 const limiteSup = ref<number>(0)
 const comisionDef = ref<number>(0)
 const comisiones = ref<ComisionReaseguro[]>([])
+const cargarComisiones = ref<File | null>(null)
 const editIndex = ref<number | null>(null)
 
 // --- LÓGICA DE VISIBILIDAD ---
@@ -177,10 +192,66 @@ const getID = (item: any) => (item && typeof item === 'object' ? item.value : it
 const estaHabilitado = computed(() => {
   const tipo = contratoStore.configReaseg?.tipoComision
   const id = getID(tipo)
-  return id == 2 // 2 = VARIABLE / ESCALONADA
+  return id == 2
 })
 
-// --- CONFIGURACIÓN TABLA ---
+const alCambiarArchivo = (file: File | File[] | null) => {
+  const selectedFile = Array.isArray(file) ? file[0] : file;
+  if (selectedFile) procesarArchivoCSV(selectedFile);
+};
+
+const procesarArchivoCSV = (file: File) => {
+  const reader = new FileReader();
+  reader.onload = (e: ProgressEvent<FileReader>) => {
+    const target = e.target as FileReader;
+    if (!target) return;
+    const content = target.result as string;
+
+
+    const lineas = content.split(/\r?\n/).filter(l => l.trim() !== '');
+
+    if (lineas.length < 2) {
+      dialog.show({ type: DialogType.ERROR, message: 'Archivo sin registros o sin encabezados', title: 'Error' });
+      return;
+    }
+    const primeraLinea = lineas[0];
+    if (!primeraLinea) {
+      dialog.show({ type: DialogType.ERROR, message: 'No se pudo leer el encabezado', title: 'Error' });
+      return;
+    }
+
+    const encabezados = primeraLinea.toUpperCase().split(',').map(h => h.trim());
+    const idxReas = encabezados.indexOf('REASEGURADOR');
+    const idxInf = encabezados.indexOf('LIMITE_INF');
+    const idxSup = encabezados.indexOf('LIMITE_SUP');
+    const idxCom = encabezados.indexOf('COMISION');
+
+    if (idxInf === -1 || idxSup === -1 || idxCom === -1) {
+      dialog.show({
+        type: DialogType.ERROR,
+        message: 'El CSV debe tener las columnas: Reasegurador, Limite_inf, Limite_sup, Comision',
+        title: 'Formato Incorrecto'
+      });
+      return;
+    }
+
+    const nuevosRegistros: ComisionReaseguro[] = lineas.slice(1).map(linea => {
+      const col = linea.split(',').map(c => c.trim());
+      return {
+        cveReasegurador: col[idxReas] || 'N/A',
+        limiteInf: parseFloat(col[idxInf] || '0'),
+        limiteSup: parseFloat(col[idxSup] || '0'),
+        comisionDefinitiva: parseFloat(col[idxCom] || '0')
+      };
+    });
+
+    comisiones.value = [...comisiones.value, ...nuevosRegistros];
+    dialog.show({ type: DialogType.SUCCESS, message: 'Datos cargados en la tabla', title: 'Éxito' });
+    cargarComisiones.value = null;
+  };
+  reader.readAsText(file);
+};
+
 const headers = [
   { title: 'Límite inf (%)', key: 'limiteInf' },
   { title: 'Límite sup (%)', key: 'limiteSup' },
@@ -212,25 +283,29 @@ const agregarComision = async () => {
       title: 'Validación',
       message: 'El límite superior debe ser mayor al límite inferior.',
       type: DialogType.ERROR
-    })
-    return
+    });
+    return;
   }
 
   const nueva: ComisionReaseguro = {
-    limiteInf: Number(limiteInf.value.toFixed(2)),
-    limiteSup: Number(limiteSup.value.toFixed(2)),
-    comisionDefinitiva: Number(comisionDef.value.toFixed(2)),
-  }
+    cveReasegurador: 'MANUAL',
+    limiteInf: Number(limiteInf.value),
+    limiteSup: Number(limiteSup.value),
+    comisionDefinitiva: Number(comisionDef.value),
+  };
 
   if (editIndex.value !== null) {
-    comisiones.value[editIndex.value] = nueva
-    editIndex.value = null
+    const original = comisiones.value[editIndex.value];
+    if (original) {
+      nueva.cveReasegurador = original.cveReasegurador;
+    }
+    comisiones.value[editIndex.value] = nueva;
   } else {
-    comisiones.value.push(nueva)
+    comisiones.value.push(nueva);
   }
 
-  limpiarFormulario()
-}
+  limpiarFormulario();
+};
 
 const editarComision = (item: ComisionReaseguro, index: number) => {
   limiteInf.value = item.limiteInf
@@ -271,14 +346,3 @@ const guardarDatos = () => {
   dialog.show({ title: 'Éxito', message: 'Comisiones escalonadas guardadas.', type: DialogType.SUCCESS })
 }
 </script>
-
-<style scoped>
-.elevation-1 {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-}
-.btn-guardar {
-  background-color: #1a237e !important;
-  color: white !important;
-}
-</style>

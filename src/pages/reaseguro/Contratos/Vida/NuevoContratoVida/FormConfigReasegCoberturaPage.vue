@@ -40,8 +40,10 @@
         </v-col>
         <v-col cols="12" md="1">
           <v-btn color="indigo" icon @click="agregarAgrupacion">
-            <v-icon>mdi-plus</v-icon>
-            <v-tooltip activator="parent" location="top">Agregar agrupación de coberturas</v-tooltip>
+            <v-icon>{{ editandoAgrupacionIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ editandoAgrupacionIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
           </v-btn>
         </v-col>
 
@@ -121,10 +123,7 @@
             variant="solo-filled"
           />
         </v-col>
-      </v-row>
-
-      <v-row v-if="detalleCobertura === 1 || detalleCapa === 1">
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" v-if="detalleCobertura === 1 || detalleCapa === 1">
           <v-select
             v-model="coberturaTarifaObj"
             label="Cobertura"
@@ -132,10 +131,11 @@
             item-title="title"
             chips
             return-object
+            hide-selected
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="3">
+        <v-col cols="12" md="4">
           <v-select
             v-model="tipoTarifaObj"
             :items="tipoTarifaOptions"
@@ -147,26 +147,39 @@
           />
         </v-col>
 
-        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 0">
-          <v-text-field v-model.number="primaTarFi" label="Monto Fijo" type="number" variant="solo-filled" />
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 0">
+          <v-text-field v-model.number="primaTarFi" label="Monto Fijo" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
         </v-col>
-        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 1">
-          <v-text-field v-model.number="porSobrePrimaE" label="% s/ Prima" suffix="%" type="number" variant="solo-filled" />
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 1">
+          <v-text-field v-model.number="porSobrePrimaE" label="% Prima" suffix="%" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
-        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 3">
-          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" />
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 3">
+          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]"/>
         </v-col>
-        <v-col cols="12" md="2" v-if="tipoTarifaObj?.value === 2">
-          <v-text-field v-model.number="factorTarifaP" label="Factor %" type="number" variant="solo-filled" />
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
+          <v-text-field v-model.number="factorTarifaP" label="Factor %" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
-        <v-col cols="12" md="3" v-if="tipoTarifaObj?.value === 2">
-          <v-file-input v-model="tarifaPropiaFile" label="Archivo CSV" accept=".csv" variant="solo-filled" />
+
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
+          <v-select
+            v-model="tarifaPropiaObj"
+            :items="tarifasPropiasOptions"
+            item-title="title"
+            return-object
+            label="Tarifa propia"
+            chips
+            multiple
+            variant="solo-filled"
+            :rules="[v => !!v || 'Debe seleccionar una tarifa propia']"
+          />
         </v-col>
 
         <v-col cols="12" md="1" class="d-flex align-center">
           <v-btn color="indigo" icon @click="agregarTarifa">
-            <v-icon>mdi-plus</v-icon>
-            <v-tooltip activator="parent" location="top">Agregar detalle de tarifas</v-tooltip>
+            <v-icon>{{ editandoIndex !== -1 ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ editandoIndex !== -1 ? 'Actualizar registro' : 'Agregar detalle tarifa' }}
+            </v-tooltip>
           </v-btn>
         </v-col>
       </v-row>
@@ -238,16 +251,19 @@ import { ref, computed, onMounted, watch } from 'vue'
 import { useContratoStore, type ContratoGeneralReasegCobertura } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
+import { ValidacionesContrato } from './ValidacionesContrato'
 
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref()
+const isHydrating = ref(true)
 
 const {
   coberturasOptions, fetchCoberturas,
   coberturasBasiOptions, fetchCoberturasBasicas,
   coberturasAdiciOptions, fetchCoberturasAdicionales,
-  tipoTarifaOptions, fetchTipoTarifa
+  tipoTarifaOptions, fetchTipoTarifa,
+  tarifasPropiasOptions, fetchTarifaPropia
 } = NuevoContratoVidaConR()
 
 const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
@@ -269,14 +285,43 @@ const primaTarFi = ref<number | null>(null)
 const porSobrePrimaE = ref<number>(100)
 const tarifaFijaM = ref<number | null>(null)
 const factorTarifaP = ref<number>(100)
-const tarifaPropiaFile = ref<File | null>(null)
+const tarifaPropiaObj = ref<any>(null)
 const itemsTablaTarifas = ref<any[]>([])
 const editandoIndex = ref(-1)
+const editandoAgrupacionIndex = ref<number | null>(null)
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
   return (typeof item === 'object' && 'value' in item) ? item.value : item;
 }
+
+watch(() => tipoTarifaObj.value, tipo => {
+  if (isHydrating.value) return
+
+  primaTarFi.value = 0
+  porSobrePrimaE.value = 0
+  tarifaFijaM.value = 0
+  factorTarifaP.value = 0
+  tarifaPropiaObj.value = null
+
+  if (!tipo) return
+
+  if (tipo.value === 1) porSobrePrimaE.value = 100
+  if (tipo.value === 2) factorTarifaP.value = 100
+})
+
+watch(
+  [() => getID(tipoTarifaObj.value), () => coberturaTarifaObj.value],
+  ([tipo, cobertura]) => {
+    if (tipo !== 2) {
+      tarifaPropiaObj.value = ''
+      return
+    }
+    if (!tarifaPropiaObj.value && cobertura?.title) {
+      tarifaPropiaObj.value = cobertura.title
+    }
+  }
+)
 
 const esExcedentePorCapas = computed(() => {
   const id = getID(contratoStore.general?.idTContrato);
@@ -289,7 +334,6 @@ watch(esExcedentePorCapas, (valido) => {
   }
 })
 
-
 const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || [])
 
 const coberturasDisponiblesParaAgrupar = computed(() => {
@@ -301,6 +345,7 @@ const coberturasPermitidasParaTarifa = computed(() => {
   const idsPermitidos = [...coberturasBasiObj.value.map(c => c.value), ...coberturasAdiciObj.value.map(c => c.value)]
   return coberturasOptions.value.filter(c => idsPermitidos.includes(c.value))
 })
+
 
 const hidratarDesdeStore = () => {
   const data = contratoStore.configReasegCob
@@ -319,7 +364,7 @@ watch([() => coberturasOptions.value, () => tipoTarifaOptions.value], ([c, t]) =
 }, { immediate: true })
 
 onMounted(async () => {
-  await Promise.all([fetchCoberturas(), fetchCoberturasBasicas(), fetchCoberturasAdicionales(), fetchTipoTarifa()])
+  await Promise.all([fetchCoberturas(), fetchCoberturasBasicas(), fetchCoberturasAdicionales(), fetchTipoTarifa(), fetchTarifaPropia()])
 })
 
 const agregarAgrupacion = () => {
@@ -347,8 +392,36 @@ const agregarTarifa = () => {
     return
   }
 
+  const nuevaCob = coberturaTarifaObj.value.value;
+  const nuevaTarifaTipo = tipoTarifaObj.value.value;
+
+  const tarifaExistenteIndex = itemsTablaTarifas.value.findIndex(t => t.cveCob === nuevaCob);
+  if (tarifaExistenteIndex !== -1 && tarifaExistenteIndex !== editandoIndex.value) {
+    dialog.show({ type: DialogType.ERROR, message: 'Ya existe una tarifa para la cobertura seleccionada', title: 'Error' });
+    return
+  }
+
+  const tarifaTipoExistenteIndex = itemsTablaTarifas.value.findIndex(t => t.cveCob === nuevaCob && t.tipoTarifa.value === nuevaTarifaTipo);
+  if (tarifaTipoExistenteIndex !== -1 && tarifaTipoExistenteIndex !== editandoIndex.value) {
+    dialog.show({ type: DialogType.ERROR, message: 'Ya existe una tarifa con el mismo tipo para la cobertura seleccionada', title: 'Error' });
+    return
+  }
+
+  const tipoGlobalExistente = itemsTablaTarifas.value.find((t, index) =>
+    t.tipoTarifa.value === nuevaTarifaTipo && index !== editandoIndex.value
+  );
+
+  if (tipoGlobalExistente) {
+    dialog.show({
+      type: DialogType.ERROR,
+      message: `El tipo de tarifa "${tipoTarifaObj.value.title}" ya ha sido asignado a la cobertura "${tipoGlobalExistente.cobertura}". No se puede duplicar en otra cobertura.`,
+      title: 'Error'
+    });
+    return
+  }
+
   const esBasica = coberturasBasiObj.value.some(c => c.value === coberturaTarifaObj.value.value);
-  const tipoCoberturaTexto = esBasica ? 'BÁSICA' : 'ADICIONAL';
+  const tipoCoberturaTexto = esBasica ? 'BÁSICA' : 'BADI';
 
   const nuevaFila = {
     detalleCapa: detalleCapa.value === 1 ? capaSeleccionada.value : 'NO',
@@ -360,8 +433,7 @@ const agregarTarifa = () => {
     porSobrePrima: porSobrePrimaE.value || 0,
     tarifaFijaM: tarifaFijaM.value || 0,
     factorTap: factorTarifaP.value || 0,
-    nombreArchivo: tarifaPropiaFile.value?.name || '',
-    tarifaP: tarifaPropiaFile.value
+    tarifaPropia: tarifaPropiaObj.value?.title ?? (typeof tarifaPropiaObj.value === 'string' ? tarifaPropiaObj.value : '')
   }
 
   if (editandoIndex.value > -1) {
@@ -374,8 +446,13 @@ const agregarTarifa = () => {
   limpiarTarifa()
 }
 const limpiarTarifa = () => {
-  coberturaTarifaObj.value = null; tipoTarifaObj.value = null; primaTarFi.value = null;
-  porSobrePrimaE.value = 100; tarifaFijaM.value = null; factorTarifaP.value = 100; tarifaPropiaFile.value = null
+  coberturaTarifaObj.value = null;
+  tipoTarifaObj.value = null;
+  primaTarFi.value = 0;
+  porSobrePrimaE.value = 0;
+  tarifaFijaM.value = 0;
+  factorTarifaP.value = 0;
+  tarifaPropiaObj.value = null
 }
 
 const editarTarifa = (item: any, index: number) => {
@@ -423,7 +500,7 @@ const headers2 = [
   { title: '% Prima Em.', key: 'porSobrePrima' },
   { title: 'Tarifa al Millar', key: 'tarifaFijaM' },
   { title: 'Factor Propio', key: 'factorTap' },
-  { title: 'Tarifa Propia', key: 'tarifaP' },
+  { title: 'Tarifa Propia', key: 'tarifaPropia' },
   { title: 'Acciones', key: 'acciones', sortable: false }
 ]
 </script>

@@ -37,11 +37,14 @@ interface CriterioCobertura {
   descCriterioCob: string
 }
 
-interface EmisionContable {
-  id: number;
-  NUM_POLIZA: string;
-  NUM_RENOV_POL: number;
+export interface EmisionContable {
+  id: number
+  numPoliza: string
+  numRenovPol: number
+  fintVigPol: string
+  ffinVigPol: string
 }
+
 
 export const NuevoContratoVida = () => {
 
@@ -79,7 +82,7 @@ export const NuevoContratoVida = () => {
   })
 
   const baseAPIPolizas = BaseAPI({
-    prefix: "ws_catalogos_reaseguro/api/v1/EmisionContableRest/"
+    prefix: "ws_reaseguro_contratos_vida/api/v1/EmisionContableRest/"
   })
 
 
@@ -139,20 +142,14 @@ export const NuevoContratoVida = () => {
     }))
   }
 
-  const fetchEmisionContable = async () => {
+  const fetchEmisionContable = async (
+    fechaInicio: string,
+    fechaFin: string
+  ): Promise<EmisionContable[]> => {
     const { data } = await baseAPIPolizas.post<EmisionContable[]>(
-      "getRecordsBetween/2025-01-01/2025-12-31"
+      `getRecordsBetween/${fechaInicio}/${fechaFin}`
     )
-    console.log("Datos API:", data)
-    polizaOptions.value = data.map(i => ({
-      title: i.NUM_POLIZA,
-      value: i.NUM_POLIZA
-    }))
-
-    renovacionOptions.value = data.map(i => ({
-      title: i.NUM_RENOV_POL.toString(),
-      value: i.NUM_RENOV_POL
-    }))
+    return data
   }
 
   return {
@@ -168,8 +165,7 @@ export const NuevoContratoVida = () => {
     fetchTipoContrato,
     criterioCoberturaOptions,
     fetchCriterioCobertura,
-    polizaOptions,
     fetchEmisionContable,
-    renovacionOptions,
   }
+
 }

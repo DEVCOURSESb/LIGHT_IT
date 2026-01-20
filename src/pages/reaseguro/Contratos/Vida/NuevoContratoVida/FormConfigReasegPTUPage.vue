@@ -57,7 +57,7 @@
           </v-slider>
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" v-if="[2, 7].includes(getID(metodoCalPTUObj))">
           <div class="text-caption grey--text mb-1">Factor k (%)</div>
           <v-slider
             v-model="kPor"
@@ -83,7 +83,7 @@
           </v-slider>
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" v-if="[0,3,5,6].includes(getID(metodoCalPTUObj))">
            <v-text-field
             v-model.number="aniosArrastre"
             type="number"

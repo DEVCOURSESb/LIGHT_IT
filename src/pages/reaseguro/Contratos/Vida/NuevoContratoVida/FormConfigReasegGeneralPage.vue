@@ -3,7 +3,7 @@
     <v-container>
       <v-row class="align-center">
         <v-col cols="12" md="6">
-          <v-select
+          <v-autocomplete
             ref="companiaReasegRef"
             v-model="companiaReasegObj"
             :items="compaReasegOptions"
@@ -34,7 +34,12 @@
           </v-slider>
         </v-col>
         <v-col cols="12" md="1" class="d-flex justify-center">
-          <v-btn color="indigo" icon="mdi-plus" size="small" elevation="2" @click="agregarReaseguradora" />
+          <v-btn color="indigo" icon="mdi-plus" size="small" elevation="2" @click="agregarReaseguradora">
+            <v-icon>{{ editIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ editIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
+          </v-btn>
         </v-col>
       </v-row>
 
@@ -61,6 +66,18 @@
       <v-row>
         <v-col cols="12" md="4">
           <v-select
+            v-model="cesionCoberBasiObj"
+            :items="siNoOptions"
+            label="¿Cesión sobre la cobertura BÁSICA?"
+            item-title="title"
+            chips
+            return-object
+            variant="solo-filled"
+          />
+        </v-col>
+
+        <v-col cols="12" md="4" v-if="getID(cesionCoberBasiObj) === 1">
+          <v-select
             v-model="indicadorDistrCObj"
             :items="indicadorDistrCOptions"
             label="Indicador Distr. Cesión"
@@ -69,18 +86,6 @@
             return-object
             variant="solo-filled"
             :rules="[v => !!v || 'Requerido']"
-          />
-        </v-col>
-
-        <v-col cols="12" md="4">
-          <v-select
-            v-model="cesionCoberBasiObj"
-            :items="siNoOptions"
-            label="¿Cesión sobre la cobertura BÁSICA?"
-            item-title="title"
-            chips
-            return-object
-            variant="solo-filled"
           />
         </v-col>
 
@@ -98,9 +103,9 @@
 
         <v-col cols="12" md="4">
           <v-select
-            v-model="detalleCoberturaObj"
-            :items="siNoOptions"
-            label="¿Detalle por cobertura?"
+            v-model="tipoComisionObj"
+            :items="tipoComisionOptions"
+            label="Tipo de comisión"
             :disabled="getID(comisionReasegObj) !== 1"
             item-title="title"
             chips
@@ -111,9 +116,9 @@
 
         <v-col cols="12" md="4">
           <v-select
-            v-model="tipoComisionObj"
-            :items="tipoComisionOptions"
-            label="Tipo de comisión"
+            v-model="detalleCoberturaObj"
+            :items="siNoOptions"
+            label="¿Detalle por cobertura?"
             :disabled="getID(comisionReasegObj) !== 1"
             item-title="title"
             chips
@@ -144,7 +149,7 @@
               Si la comisión es igual para el primer año y sus renovaciones, se deberá colocar el mismo dato en ambos campos.
             </v-tooltip>
           </div>
-          <v-slider v-model="comisionPrimerAnio" min="0" max="100" step="0.01" thumb-label color="orange" :disabled="getID(tipoComisionObj) === 2">
+          <v-slider v-model="comisionPrimerAnio" min="0" max="100" step="0.01" thumb-label color="orange">
             <template v-slot:append>
               <v-text-field
                 v-model.number="comisionPrimerAnio"
@@ -161,7 +166,7 @@
               Si la comisión es igual para el primer año y sus renovaciones, se deberá colocar el mismo dato en ambos campos.
             </v-tooltip>
           </div>
-          <v-slider v-model="comisionRenovacion" min="0" max="100" step="0.01" thumb-label color="orange" :disabled="getID(tipoComisionObj) === 2">
+          <v-slider v-model="comisionRenovacion" min="0" max="100" step="0.01" thumb-label color="orange" >
             <template v-slot:append>
               <v-text-field
                 v-model.number="comisionRenovacion"
@@ -180,7 +185,7 @@
   </v-form>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, watch, nextTick } from 'vue'
+import { onMounted, ref, watch, nextTick, computed } from 'vue'
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 import { useContratoStore, type ContratoGeneralConfReaseg } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
@@ -206,7 +211,7 @@ const cesionCoberBasiObj = ref<any>(null)
 const comisionReasegObj = ref<any>(null)
 const detalleCoberturaObj = ref<any>(null)
 const tipoComisionObj = ref<any>(null)
-const tipoCoberturaObj = ref<any>(null)
+const tipoCoberturaObj = ref<any>(null) // como quito la opcion de general si detalleCobertura es igual a Si
 const comisionPrimerAnio = ref<number>(0)
 const comisionRenovacion = ref<number>(0)
 const reaseguradores = ref<any[]>([])
@@ -217,8 +222,48 @@ const participacionRef = ref()
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
-  return (typeof item === 'object' && 'value' in item) ? item.value : item;
+  if (typeof item === 'object' && 'value' in item) return item.value;
+  return item;
 }
+
+const opcionesFiltradasTipoCobertura = computed(() => {
+  return tipoCoberturaOptions.value.filter(o => [0, 1].includes(Number(o.value)))
+})
+
+watch(
+  [() => getID(comisionReasegObj.value), () => getID(detalleCoberturaObj.value)],
+  ([comision, detalle]) => {
+    if (comision !== 1 || detalle !== 1) {
+      tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
+      return
+    } // segun yo aqui debe ir la logica para filtrar las opciones de tipoCobertura si detalle es igual a 1 debera solo mostrar basica y badi que es 0 y 1
+
+    if (detalle === 1) {
+      const yaExisteBasicaEnTarifas = contratoStore.configReasegCob?.tarifas?.some(
+        (t: any) => getID(t.tipoCobertura) === 0
+      )
+
+      if (yaExisteBasicaEnTarifas) {
+        tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 1)
+      } else {
+        tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 0)
+      }
+    }
+  },
+  { immediate: false }
+)
+
+watch(() => getID(comisionReasegObj.value), (val) => {
+  if (val === 1) {
+    if (!detalleCoberturaObj.value) detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
+    if (!tipoComisionObj.value) tipoComisionObj.value = tipoComisionOptions.value.find(o => Number(o.value) === 0)
+  } else {
+    detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
+    tipoComisionObj.value = null
+    comisionPrimerAnio.value = 0
+    comisionRenovacion.value = 0
+  }
+})
 
 const editarReaseg = (item: any, index: number) => {
   companiaReasegObj.value = compaReasegOptions.value.find(o => o.value === item.cveReasegurador)
@@ -229,84 +274,6 @@ const editarReaseg = (item: any, index: number) => {
 const eliminarReaseg = (index: number) => {
   reaseguradores.value.splice(index, 1)
 }
-
-onMounted(async () => {
-  await Promise.all([
-    fetchReaseguradores(),
-    fetchIndicadorDistriC(),
-    fetchTipoComision(),
-    fetchTipoCobertura()
-  ])
-
-  if (!contratoStore.configReaseg) {
-    indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => Number(o.value) === 0) || indicadorDistrCOptions.value[0]
-    cesionCoberBasiObj.value = siNoOptions.find(o => o.value === 1)
-    comisionReasegObj.value = siNoOptions.find(o => o.value === 0)
-    detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
-    tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
-  } else {
-    hidratar()
-  }
-})
-
-watch(() => getID(comisionReasegObj.value), (val) => {
-  if (val === 1) { // SI
-    if (!detalleCoberturaObj.value) detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
-    if (!tipoComisionObj.value) tipoComisionObj.value = tipoComisionOptions.value.find(o => Number(o.value) === 0)
-  } else { // NO
-    detalleCoberturaObj.value = null
-    tipoComisionObj.value = null
-    tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
-    comisionPrimerAnio.value = 0
-    comisionRenovacion.value = 0
-  }
-})
-
-watch(() => getID(detalleCoberturaObj.value), (val) => {
-  if (val === 1) {
-    tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 0)
-  } else if (getID(comisionReasegObj.value) === 1) {
-    tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
-  }
-})
-
-const actualizarStoreEnTiempoReal = () => {
-  const idContrato = contratoStore.general?.idContrato;
-  if (!idContrato) return;
-
-  const payload: any = {
-    idContrato,
-    reaseguradores: reaseguradores.value,
-    indicadorDistrC: indicadorDistrCObj.value,
-    cesionCoberBasi: cesionCoberBasiObj.value,
-    comisionReaseg: comisionReasegObj.value,
-    detalleCobertura: detalleCoberturaObj.value,
-    tipoComision: tipoComisionObj.value,
-    tipoCobertura: tipoCoberturaObj.value,
-    comisionPrimerAnio: comisionPrimerAnio.value,
-    comisionRenovacion: comisionRenovacion.value
-  };
-  contratoStore.setConfigReasG(payload);
-}
-
-watch(tipoComisionObj, (newVal) => {
-  if (getID(newVal) === 2) {
-    comisionPrimerAnio.value = 0;
-    comisionRenovacion.value = 0;
-  }
-  actualizarStoreEnTiempoReal();
-});
-
-watch(comisionPrimerAnio, (newVal) => {
-  if (getID(tipoComisionObj.value) !== 2) {
-    comisionRenovacion.value = newVal;
-  }
-  actualizarStoreEnTiempoReal();
-});
-
-watch(comisionRenovacion, () => {
-  actualizarStoreEnTiempoReal();
-});
 
 const agregarReaseguradora = async () => {
   const cErrors = await companiaReasegRef.value.validate()
@@ -343,6 +310,24 @@ const agregarReaseguradora = async () => {
   } else { procesarGuardado() }
 }
 
+const hidratar = () => {
+  const cfg = contratoStore.configReaseg
+  if (!cfg) return
+
+  reaseguradores.value = cfg.reaseguradores || []
+
+  indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => Number(o.value) === Number(getID(cfg.indicadorDistrC)))
+  cesionCoberBasiObj.value = siNoOptions.find(o => o.value === getID(cfg.cesionCoberBasi))
+  comisionReasegObj.value = siNoOptions.find(o => o.value === getID(cfg.comisionReaseg))
+  detalleCoberturaObj.value = siNoOptions.find(o => o.value === getID(cfg.detalleCobertura))
+  tipoComisionObj.value = tipoComisionOptions.value.find(o => Number(o.value) === Number(getID(cfg.tipoComision)))
+
+  tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === Number(getID(cfg.tipoCobertura)))
+
+  comisionPrimerAnio.value = cfg.comisionPrimerAnio || 0
+  comisionRenovacion.value = cfg.comisionRenovacion || 0
+}
+
 const guardarConfigReaseguro = async () => {
   const { valid } = await formRef.value.validate()
   if (!valid) return
@@ -367,22 +352,27 @@ const guardarConfigReaseguro = async () => {
   }
 
   contratoStore.setConfigReasG(payload)
-  dialog.show({ title: 'Éxito', message: 'Configuración guardada.', type: DialogType.SUCCESS })
+  dialog.show({ title: 'Éxito', message: 'Configuración guardada correctamente.', type: DialogType.SUCCESS })
 }
 
-const hidratar = () => {
-  const cfg = contratoStore.configReaseg
-  if (!cfg) return
-  reaseguradores.value = cfg.reaseguradores || []
-  indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => o.value === getID(cfg.indicadorDistrC))
-  cesionCoberBasiObj.value = siNoOptions.find(o => o.value === getID(cfg.cesionCoberBasi))
-  comisionReasegObj.value = siNoOptions.find(o => o.value === getID(cfg.comisionReaseg))
-  detalleCoberturaObj.value = siNoOptions.find(o => o.value === getID(cfg.detalleCobertura))
-  tipoComisionObj.value = tipoComisionOptions.value.find(o => o.value === getID(cfg.tipoComision))
-  tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => o.value === getID(cfg.tipoCobertura))
-  comisionPrimerAnio.value = cfg.comisionPrimerAnio || 0
-  comisionRenovacion.value = cfg.comisionRenovacion || 0
-}
+onMounted(async () => {
+  await Promise.all([
+    fetchReaseguradores(),
+    fetchIndicadorDistriC(),
+    fetchTipoComision(),
+    fetchTipoCobertura()
+  ])
+
+  if (!contratoStore.configReaseg) {
+    indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => Number(o.value) === 0)
+    cesionCoberBasiObj.value = siNoOptions.find(o => o.value === 1)
+    comisionReasegObj.value = siNoOptions.find(o => o.value === 0)
+    detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
+    tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
+  } else {
+    hidratar()
+  }
+})
 
 const headersReaseg = [
   { title: 'Reaseguradora', key: 'nombreReasegurador' },

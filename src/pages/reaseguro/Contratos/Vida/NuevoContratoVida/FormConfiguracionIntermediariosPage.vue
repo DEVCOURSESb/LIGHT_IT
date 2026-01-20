@@ -20,7 +20,7 @@
           <v-select
             v-model="asignacionIntermObj"
             :items="asignacionIntermediarioOptions"
-            :disabled="getID(intermediarioObj) != 0"
+            :disabled="getID(intermediarioObj) != 1"
             label="Asignación de intermediario"
             variant="solo-filled"
             chips
@@ -34,7 +34,7 @@
           <v-select
             v-model="reaseguradoraObj"
             :items="reaseguradorasDisponibles"
-            :disabled="getID(intermediarioObj) != 0 || getID(asignacionIntermObj) != 0"
+            :disabled="getID(intermediarioObj) != 1 || getID(asignacionIntermObj) != 0"
             label="Reaseguradora"
             variant="solo-filled"
             chips
@@ -50,10 +50,10 @@
       <v-row class="align-center">
         <!-- Intermediario / Bróker (Captura temporal) -->
         <v-col cols="12" md="7">
-          <v-select
+          <v-autocomplete
             v-model="brokerObj"
             :items="intermeOptions"
-            :disabled="getID(intermediarioObj) != 0"
+            :disabled="getID(intermediarioObj) != 1"
             label="Intermediario / Bróker"
             variant="solo-filled"
             chips
@@ -66,7 +66,7 @@
           <v-select
             v-model="corretajePObj"
             :items="opcionesSiNo"
-            :disabled="!brokerObj || getID(intermediarioObj) != 0"
+            :disabled="!brokerObj || getID(intermediarioObj) != 1"
             label="¿Corretaje?"
             variant="solo-filled"
             chips
@@ -75,21 +75,42 @@
         </v-col>
 
         <v-col cols="12" md="1" class="d-flex justify-center">
-          <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 0" @click="agregarIntermediario">
+          <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
             <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ indexEdicion !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
           </v-btn>
         </v-col>
       </v-row>
 
-      <v-row v-if="getID(corretajePObj) == 0" >
+      <v-row v-if="getID(corretajePObj) == 1" >
         <v-col cols="12" md="4">
-          <v-select v-model="tipoCorretajeObj" :items="tipoCorretajeOptions" :disabled="getID(intermediarioObj) != 0" label="Tipo de corretaje" variant="solo-filled" chips return-object />
+          <v-select v-model="tipoCorretajeObj" :items="tipoCorretajeOptions" :disabled="getID(intermediarioObj) != 1" label="Tipo de corretaje" variant="solo-filled" chips return-object/>
         </v-col>
         <v-col cols="12" md="4" v-if="getID(tipoCorretajeObj) == 0">
-          <v-text-field v-model.number="corretajePorc" label="% Corretaje" type="number" variant="solo-filled" suffix="%" />
+          <!--<v-text-field v-model.number="corretajePorc" label="% Corretaje" type="number" variant="solo-filled" suffix="%" />
         </v-col>
+        <v-col cols="12" md="4">-->
+          <div class="text-caption grey--text">Corretaje (%)</div>
+          <v-slider v-model="corretajePorc" min="0" max="100" step="0.01" thumb-label color="indigo" hide-details>
+            <template v-slot:append>
+              <v-text-field
+                v-model.number="corretajePorc"
+                type="number"
+                style="width: 110px"
+                variant="solo-filled"
+                density="compact"
+                hide-details
+                suffix="%"
+                :rules="[ValidacionesContrato.participacion()]"
+              />
+            </template>
+          </v-slider>
+        </v-col>
+
         <v-col cols="12" md="4" v-if="getID(tipoCorretajeObj) == 0">
-          <v-text-field v-model.number="montoCorretaje" label="Monto corretaje" type="number" variant="solo-filled" />
+          <v-text-field v-model.number="montoCorretaje" label="Monto corretaje" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
         </v-col>
       </v-row>
 
@@ -104,7 +125,7 @@
 
       <v-row class="text-center mt-10">
         <v-col>
-          <v-btn color="primary" @click="guardarIntermediarios">Guardar intermediarios</v-btn>
+          <v-btn class="btn-guardar" @click="guardarIntermediarios">Guardar intermediarios</v-btn>
           <v-btn color="success" class="mx-2" @click="abrirModalResumen">Guardar contrato</v-btn>
         </v-col>
       </v-row>
@@ -114,11 +135,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed, nextTick } from 'vue'
 import { NuevoContratoVidaConInt } from './NuevoContratoConfigInt.actions'
 import { useContratoStore } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import ModalEnviarDatos from './ModalEnviarDatos.vue'
+import { ValidacionesContrato } from './ValidacionesContrato'
 
 const contratoStore = useContratoStore()
 const dialog = useDialog()
@@ -134,21 +156,25 @@ const {
   tipoCorretajeOptions, fetchTipoCorretaje
 } = NuevoContratoVidaConInt()
 
-const intermediarioObj = ref<any>(null)
+const intermediarioObj = ref<any>(0)
 const asignacionIntermObj = ref<any>(null)
 const reaseguradoraObj = ref<any>(null)
 const brokerObj = ref<any>(null)
 const corretajePObj = ref<any>(null)
 const tipoCorretajeObj = ref<any>(null)
 const corretajePorc = ref<number>(0)
-const montoCorretaje = ref<number>(0)
+const montoCorretaje = ref<number | null>(null)
 const intermediariosTabla = ref<any[]>([])
 const indexEdicion = ref<number | null>(null)
+const isHydrating = ref(false)
 
 const errorBroker = ref('')
 const errorReaseguradora = ref('')
 
-const opcionesSiNo = [{ title: 'SI', value: 0 }, { title: 'NO', value: 1 }]
+const opcionesSiNo = [
+  { title: 'SI', value: 1 },
+  { title: 'NO', value: 0 }
+]
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
@@ -160,6 +186,41 @@ const findInOptions = (options: any[], value: any) => {
   if (id === null) return null;
   return options.find(o => getID(o) == id) || null;
 }
+
+const isCorretajeFijo = computed(() => {
+  return getID(corretajePObj.value) === 0 && getID(tipoCorretajeObj.value) === 0
+})
+
+watch(corretajePorc, (newVal) => {
+  if (isHydrating.value) return
+
+  if (newVal > 0 && (montoCorretaje.value ?? 0) > 0) {
+    dialog.show({
+      title: 'Atención',
+      message: 'Solo se debe llenar uno de los campos (Porcentaje o Monto), no ambos.',
+      type: DialogType.ERROR
+    })
+    nextTick(() => { corretajePorc.value = 0 })
+  }
+})
+
+watch(montoCorretaje, (newVal) => {
+  if (isHydrating.value) return
+
+  if ((newVal ?? 0) > 0 && corretajePorc.value > 0) {
+    dialog.show({
+      title: 'Atención',
+      message: 'Solo se debe llenar uno de los campos (Porcentaje o Monto), no ambos.',
+      type: DialogType.ERROR
+    })
+    nextTick(() => { montoCorretaje.value = 0 })
+  }
+})
+
+watch(intermediarioObj, value => {
+  if (isHydrating.value) return
+  limpiarCamposCaptura()
+})
 
 const reaseguradorasDelContrato = computed(() => {
   return contratoStore.configReaseg?.reaseguradores.map(r => ({
@@ -177,7 +238,7 @@ const reaseguradorasDisponibles = computed(() => {
 })
 
 const agregarIntermediario = () => {
-  errorBroker.value = !brokerObj.value ? 'Seleccione un bróker' : ''
+  errorBroker.value = !brokerObj.value ? 'Seleccione un al menos un intermediario' : ''
   errorReaseguradora.value = (getID(asignacionIntermObj.value) == 0 && !reaseguradoraObj.value) ? 'Seleccione reaseguradora' : ''
 
   if (errorBroker.value || errorReaseguradora.value) return
@@ -186,7 +247,7 @@ const agregarIntermediario = () => {
 }
 
 const procesarGuardado = () => {
-  const esPorReaseguradora = getID(asignacionIntermObj.value) == 0;
+  const esPorReaseguradora = getID(asignacionIntermObj.value) == 1;
 
   const registro = {
     asignacionInterm: asignacionIntermObj.value,
@@ -214,13 +275,23 @@ const procesarGuardado = () => {
 }
 
 const limpiarCamposCaptura = () => {
-  brokerObj.value = null; reaseguradoraObj.value = null;
-  tipoCorretajeObj.value = null;
-  corretajePorc.value = 0; montoCorretaje.value = 0
-  errorBroker.value = ''; errorReaseguradora.value = ''
+  isHydrating.value = true
+  intermediarioObj.value = 0
+  asignacionIntermObj.value = null
+  brokerObj.value = null
+  reaseguradoraObj.value = null
+  tipoCorretajeObj.value = null
+  corretajePorc.value = 0
+  montoCorretaje.value = 0
+  errorBroker.value = ''
+  errorReaseguradora.value = ''
+
+  setTimeout(() => { isHydrating.value = false }, 100)
 }
 
 const editarIntermediario = (item: any, index: number) => {
+  isHydrating.value = true
+
   indexEdicion.value = index
   asignacionIntermObj.value = findInOptions(asignacionIntermediarioOptions.value, item.asignacionInterm)
   reaseguradoraObj.value = item.reaseguradora
@@ -229,6 +300,8 @@ const editarIntermediario = (item: any, index: number) => {
   tipoCorretajeObj.value = findInOptions(tipoCorretajeOptions.value, item.tipoCorretaje)
   corretajePorc.value = item.corretajeFijo || 0
   montoCorretaje.value = item.montoCorreFijo || 0
+
+  setTimeout(() => { isHydrating.value = false }, 100)
 }
 
 const eliminarIntermediario = (index: number) => intermediariosTabla.value.splice(index, 1)
@@ -267,6 +340,8 @@ const hidratar = () => {
   const cfg = contratoStore.configInt
   if (!cfg || intermeOptions.value.length === 0) return
 
+  isHydrating.value = true
+
   intermediarioObj.value = findInOptions(opcionesSiNo, cfg.intermediario)
   corretajePObj.value = findInOptions(opcionesSiNo, cfg.corretajeP)
   asignacionIntermObj.value = findInOptions(asignacionIntermediarioOptions.value, cfg.asignacionIntermediario)
@@ -287,6 +362,8 @@ const hidratar = () => {
       }
     })
   }
+
+  setTimeout(() => { isHydrating.value = false }, 100)
 }
 
 watch([() => contratoStore.configInt, intermeOptions, reaseguradorasDelContrato], hidratar, { immediate: true })

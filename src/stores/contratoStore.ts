@@ -98,7 +98,6 @@ export interface ContratoGeneralReasegCobertura {
   tarifas: DetalleTarifa[]
 }
 
-/* INTERMEDIARIOS */
 export interface IntermediarioRegistro {
   intermediario: number
   asignacionInterm: any
@@ -133,8 +132,8 @@ export interface ContratoConfigInt {
   montoCorretajeProvi?: string
 }
 
-
 export interface ComisionReaseguro {
+  cveReasegurador: string
   limiteInf: number
   limiteSup: number
   comisionDefinitiva: number

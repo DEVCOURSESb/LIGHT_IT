@@ -92,6 +92,19 @@ export function AppRouter() {
           component: () => import("@/pages/reaseguro/Contratos/Danios/NuevoContratoPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
+        //Configuracion tarifas
+        {
+          path: "/reaseguro/configuracion_tarifas",
+          name: "configuracion_tarifas",
+          component: () => import("@/pages/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage.vue"),
+          meta: { title: "Configuracion de tarifas" },
+        },
+        {
+          path: "/reaseguro/configuracion_tarifas_archivo/:id",
+          name: "configuracion_tarifas_archivo",
+          component: () => import("@/pages/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage.vue"),
+          meta: { title: "Configuracion de tarifas Identificador de archivo" },
+        },
       ],
     },
     {

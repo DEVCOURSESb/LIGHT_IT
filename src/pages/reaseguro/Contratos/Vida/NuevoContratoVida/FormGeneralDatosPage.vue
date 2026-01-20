@@ -197,7 +197,12 @@
           />
         </v-col>
         <v-col cols="12" md="1" v-if="Number(getID(tipoContratoObj)) === 3" class="d-flex align-center">
-          <v-btn color="indigo" icon="mdi-plus" @click="agregarCapa" />
+          <v-btn color="indigo" icon="mdi-plus" @click="agregarCapa">
+            <v-icon>{{ capaEditando !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ capaEditando !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -212,7 +217,7 @@
     </v-container>
 
     <v-col class="text-center mt-4">
-      <v-btn color="primary" size="large" @click="guardarDatosGenerales">
+      <v-btn class="btn-guardar" @click="guardarDatosGenerales">
         Guardar datos generales
       </v-btn>
     </v-col>
@@ -283,6 +288,7 @@ const getID = (item: any) => (item && typeof item === 'object' ? item.value : it
 
 const hidratarDesdeStore = () => {
   const g = contratoStore.general
+  const e = contratoStore.expc
   if (!g) return
 
   idContrato.value = g.idContrato || ''
@@ -296,6 +302,9 @@ const hidratarDesdeStore = () => {
   cesion.value = g.porcentajeCesion || ''
   piso.value = g.piso || '0'
   techo.value = g.techo || '0'
+
+  idContrato.value = g.idContrato || ''
+  capas.value = e?.capas || []
 
   if (subramoOptions.value.length > 0) {
     const ids = Array.isArray(g.subramo) ? g.subramo.map(getID) : []
@@ -330,6 +339,12 @@ const hidratarDesdeStore = () => {
 
   if (g.idTContrato === 3 && contratoStore.expc) {
     capas.value = [...contratoStore.expc.capas]
+  }
+
+  if (capaEditando.value !== null) {
+    capaEditando.value = null
+    retencionCapa.value = ''
+    techoCapa.value = ''
   }
 }
 

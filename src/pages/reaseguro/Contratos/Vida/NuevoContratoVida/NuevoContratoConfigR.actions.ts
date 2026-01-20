@@ -47,10 +47,17 @@ interface TipoTarifa {
   descTarifa: string;
 }
 
+interface TarifaPropia {
+  id: number;
+  nombreArchivo: string;
+}
+
 interface PTU {
   cvePtu: number;
   formulaPtu: string;
 }
+
+
 
 export const NuevoContratoVidaConR = () => {
 
@@ -64,6 +71,7 @@ export const NuevoContratoVidaConR = () => {
   const metodoCalPTUOptions = ref<SelectOption<number>[]>([])
   const polizasOptions = ref<SelectOption<number>[]>([])
   const tipoTarifaOptions = ref<SelectOption<number>[]>([])
+  const tarifasPropiasOptions = ref<SelectOption[]> ([])
 
   const baseAPIReaseg = BaseAPI({
     prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintReaseguradoraRest/"
@@ -87,9 +95,11 @@ export const NuevoContratoVidaConR = () => {
   const baseAPICoberturasAdi = BaseAPI({
     prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturaRest/"
   })
-
   const baseAPITipoTarifa = BaseAPI({
     prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoTarifaRest/"
+  })
+  const baseAPITarifaPropia = BaseAPI({
+    prefix: "ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest"
   })
   // ptu
 
@@ -172,6 +182,14 @@ export const NuevoContratoVidaConR = () => {
     }))
   }
 
+  const fetchTarifaPropia = async () => {
+    const { data } = await baseAPITarifaPropia.post<TarifaPropia[]>("getAllRecords")
+    tarifasPropiasOptions.value = data.map(i => ({
+      title: i.nombreArchivo,
+      value: Number(i.id)
+    }))
+  }
+
   //ptu
   const fetchMetodoCalPTU = async () => {
     const { data } = await baseAPIPtu.post<PTU[]>("getAllRecords")
@@ -201,6 +219,8 @@ export const NuevoContratoVidaConR = () => {
     metodoCalPTUOptions,
     fetchMetodoCalPTU,
     tipoTarifaOptions,
-    fetchTipoTarifa
+    fetchTipoTarifa,
+    tarifasPropiasOptions,
+    fetchTarifaPropia
   }
 }
