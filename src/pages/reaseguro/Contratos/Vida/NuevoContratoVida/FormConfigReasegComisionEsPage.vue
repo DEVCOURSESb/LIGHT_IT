@@ -2,9 +2,7 @@
   <div v-if="estaHabilitado">
     <v-form ref="formRef">
       <v-container>
-        <!-- SECCIÓN DE CAPTURA CON SLIDERS -->
         <v-row class="align-center">
-          <!-- Límite Inferior (0.00 - 1000.00) -->
           <v-col cols="12" md="4">
             <div class="text-caption grey--text mb-1">Límite inferior (%)</div>
             <v-slider
@@ -30,7 +28,6 @@
             </v-slider>
           </v-col>
 
-          <!-- Límite Superior (0.00 - 1000.00) -->
           <v-col cols="12" md="4">
             <div class="text-caption grey--text mb-1">Límite superior (%)</div>
             <v-slider
@@ -56,7 +53,6 @@
             </v-slider>
           </v-col>
 
-          <!-- Comisión Definitiva (0.00 - 100.00) -->
           <v-col cols="12" md="4">
             <div class="text-caption grey--text mb-1">Comisión definitiva (%)</div>
             <v-slider
@@ -83,7 +79,6 @@
           </v-col>
         </v-row>
 
-        <!-- BOTÓN AGREGAR -->
         <v-row class="justify-center mt-2">
           <v-btn
             color="indigo"
@@ -98,19 +93,6 @@
             </v-tooltip>
           </v-btn>
         </v-row>
-
-        <v-row>
-          <v-col cols="12" md="4">
-            <v-file-input
-              v-model="cargarComisiones"
-              label="Cargar comisiones (CSV)"
-              accept=".csv"
-              variant="solo-filled"
-              @update:model-value="alCambiarArchivo"
-            />
-          </v-col>
-        </v-row>
-
         <v-row class="mt-6">
           <v-col cols="12">
             <v-data-table
@@ -154,7 +136,6 @@
     </v-form>
   </div>
 
-  <!-- Mensaje alternativo si no está habilitado -->
   <v-container v-else>
     <v-alert type="info" variant="tonal" border="start">
       La sección de <strong>Comisión Escalonada</strong> no aplica para el Tipo de Comisión seleccionado actualmente.
@@ -178,7 +159,6 @@ const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref<any>(null)
 
-// --- REFS DE MODELO ---
 const limiteInf = ref<number>(0)
 const limiteSup = ref<number>(0)
 const comisionDef = ref<number>(0)
@@ -186,7 +166,6 @@ const comisiones = ref<ComisionReaseguro[]>([])
 const cargarComisiones = ref<File | null>(null)
 const editIndex = ref<number | null>(null)
 
-// --- LÓGICA DE VISIBILIDAD ---
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
 
 const estaHabilitado = computed(() => {
@@ -195,63 +174,6 @@ const estaHabilitado = computed(() => {
   return id == 2
 })
 
-const alCambiarArchivo = (file: File | File[] | null) => {
-  const selectedFile = Array.isArray(file) ? file[0] : file;
-  if (selectedFile) procesarArchivoCSV(selectedFile);
-};
-
-const procesarArchivoCSV = (file: File) => {
-  const reader = new FileReader();
-  reader.onload = (e: ProgressEvent<FileReader>) => {
-    const target = e.target as FileReader;
-    if (!target) return;
-    const content = target.result as string;
-
-
-    const lineas = content.split(/\r?\n/).filter(l => l.trim() !== '');
-
-    if (lineas.length < 2) {
-      dialog.show({ type: DialogType.ERROR, message: 'Archivo sin registros o sin encabezados', title: 'Error' });
-      return;
-    }
-    const primeraLinea = lineas[0];
-    if (!primeraLinea) {
-      dialog.show({ type: DialogType.ERROR, message: 'No se pudo leer el encabezado', title: 'Error' });
-      return;
-    }
-
-    const encabezados = primeraLinea.toUpperCase().split(',').map(h => h.trim());
-    const idxReas = encabezados.indexOf('REASEGURADOR');
-    const idxInf = encabezados.indexOf('LIMITE_INF');
-    const idxSup = encabezados.indexOf('LIMITE_SUP');
-    const idxCom = encabezados.indexOf('COMISION');
-
-    if (idxInf === -1 || idxSup === -1 || idxCom === -1) {
-      dialog.show({
-        type: DialogType.ERROR,
-        message: 'El CSV debe tener las columnas: Reasegurador, Limite_inf, Limite_sup, Comision',
-        title: 'Formato Incorrecto'
-      });
-      return;
-    }
-
-    const nuevosRegistros: ComisionReaseguro[] = lineas.slice(1).map(linea => {
-      const col = linea.split(',').map(c => c.trim());
-      return {
-        cveReasegurador: col[idxReas] || 'N/A',
-        limiteInf: parseFloat(col[idxInf] || '0'),
-        limiteSup: parseFloat(col[idxSup] || '0'),
-        comisionDefinitiva: parseFloat(col[idxCom] || '0')
-      };
-    });
-
-    comisiones.value = [...comisiones.value, ...nuevosRegistros];
-    dialog.show({ type: DialogType.SUCCESS, message: 'Datos cargados en la tabla', title: 'Éxito' });
-    cargarComisiones.value = null;
-  };
-  reader.readAsText(file);
-};
-
 const headers = [
   { title: 'Límite inf (%)', key: 'limiteInf' },
   { title: 'Límite sup (%)', key: 'limiteSup' },
@@ -259,7 +181,6 @@ const headers = [
   { title: 'Acciones', key: 'acciones', sortable: false },
 ]
 
-// --- HIDRATACIÓN ---
 const hidratarDesdeStore = () => {
   const cfg = contratoStore.configReasegCom
   if (!cfg || !Array.isArray(cfg.comisiones)) {
@@ -275,9 +196,7 @@ watch(
   { immediate: true, deep: true }
 )
 
-// --- ACCIONES ---
 const agregarComision = async () => {
-  // Validación de lógica de negocio
   if (Number(limiteSup.value) <= Number(limiteInf.value)) {
     dialog.show({
       title: 'Validación',

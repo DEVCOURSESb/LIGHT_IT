@@ -2,7 +2,6 @@
   <v-form ref="formRef" @submit.prevent>
     <v-container fluid>
       <v-row>
-        <!-- ¿Intermediario? (Siempre requerido) -->
         <v-col cols="12" md="4">
           <v-select
             v-model="intermediarioObj"
@@ -15,7 +14,6 @@
           />
         </v-col>
 
-        <!-- Asignación (Solo requerida si Intermediario es SI) -->
         <v-col cols="12" md="4">
           <v-select
             v-model="asignacionIntermObj"
@@ -29,7 +27,6 @@
           />
         </v-col>
 
-        <!-- Reaseguradora (Captura temporal, no bloquea el guardado global) -->
         <v-col cols="12" md="4">
           <v-select
             v-model="reaseguradoraObj"
@@ -48,7 +45,6 @@
       <v-divider class="my-4" />
 
       <v-row class="align-center">
-        <!-- Intermediario / Bróker (Captura temporal) -->
         <v-col cols="12" md="7">
           <v-autocomplete
             v-model="brokerObj"
