@@ -28,6 +28,25 @@ export function AppRouter() {
           component: () => import("@/pages/administracion/AdministracionPage.vue"),
           meta: { title: "Bitácora" },
         },
+        // calculo
+        {
+          path: "/reaseguro/contratosReaseguro/calculo_primas",
+          name: "primasVida",
+          component: () => import("@/pages/reaseguro/calculos/vida/PrimasPage.vue"),
+          meta: { title: "Cálculo de Primas de Vida" },
+        },
+        {
+          path: "/reaseguro/contratosReaseguro/calculo_siniestros",
+          name: "siniestrosVida",
+          component: () => import("@/pages/reaseguro/calculos/vida/SiniestrosPage.vue"),
+          meta: { title: "Cálculo de Siniestros de Vida" },
+        },
+        {
+          path: "/reaseguro/contratosReaseguro/ptu_comision_escalonada",
+          name: "ptuComisionEscalonada",
+          component: () => import("@/pages/reaseguro/calculos/vida/PtuComisionEscalonadaPage.vue"),
+          meta: { title: "PTU Comision Escalonada" },
+        },
         // reaseguro- danios
         {
           path: "/reaseguro/contratosReaseguro/nuevoContrato",

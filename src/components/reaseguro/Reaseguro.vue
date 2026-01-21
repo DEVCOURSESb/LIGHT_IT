@@ -155,6 +155,15 @@
         },
       ],
     },
+    { name: 'calculos', title: 'Cálculos', icon: '', items:[
+      { name: 'vida', title: 'Vida', icon: '', items: [
+            { name: 'calculo_primas', title: 'Primas', icon: '', items: [] },
+            { name: 'calculo_siniestros', title: 'Siniestros', icon: '', items: [] }, 
+            { name: 'ptu_comision_escalonada', title: 'PTU y Comisión Escalonada', icon: '', items: [] }
+          ] 
+        },
+      ]
+    },
     { name: 'configuracion_tarifas', title: 'Configuración de tarifas', icon: '', items:[]},
     { name: 'bordereaux', title: 'Bordereaux reaseguro', icon: '', items: [] },
     { name: 'estadosCuentaReaseg', title: 'Estados de cuenta reaseguro', icon: '', items: [] },

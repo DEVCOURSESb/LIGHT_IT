@@ -55,6 +55,9 @@ declare module 'vue-router/auto-routes' {
     '/insumos/cargas/EmisionPage': RouteRecordInfo<'/insumos/cargas/EmisionPage', '/insumos/cargas/EmisionPage', Record<never, never>, Record<never, never>>,
     '/insumos/cargas/SiniestrosPage': RouteRecordInfo<'/insumos/cargas/SiniestrosPage', '/insumos/cargas/SiniestrosPage', Record<never, never>, Record<never, never>>,
     '/insumos/CifrasControlPage': RouteRecordInfo<'/insumos/CifrasControlPage', '/insumos/CifrasControlPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/calculos/vida/PrimasPage': RouteRecordInfo<'/reaseguro/calculos/vida/PrimasPage', '/reaseguro/calculos/vida/PrimasPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/calculos/vida/PtuComisionEscalonadaPage': RouteRecordInfo<'/reaseguro/calculos/vida/PtuComisionEscalonadaPage', '/reaseguro/calculos/vida/PtuComisionEscalonadaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/calculos/vida/SiniestrosPage': RouteRecordInfo<'/reaseguro/calculos/vida/SiniestrosPage', '/reaseguro/calculos/vida/SiniestrosPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', Record<never, never>, Record<never, never>>,
@@ -267,6 +270,18 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/insumos/CifrasControlPage.vue': {
       routes: '/insumos/CifrasControlPage'
+      views: never
+    }
+    'src/pages/reaseguro/calculos/vida/PrimasPage.vue': {
+      routes: '/reaseguro/calculos/vida/PrimasPage'
+      views: never
+    }
+    'src/pages/reaseguro/calculos/vida/PtuComisionEscalonadaPage.vue': {
+      routes: '/reaseguro/calculos/vida/PtuComisionEscalonadaPage'
+      views: never
+    }
+    'src/pages/reaseguro/calculos/vida/SiniestrosPage.vue': {
+      routes: '/reaseguro/calculos/vida/SiniestrosPage'
       views: never
     }
     'src/pages/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage.vue': {

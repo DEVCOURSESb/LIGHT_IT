@@ -40,8 +40,6 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
     instance.interceptors.response.use(
       async response => {
 
-        console.log(response)
-
         if (response.status === 208) {
           const { showModalExistRow } = await import("@/utilities/catalogos/showModalExistRow");
           showModalExistRow();
