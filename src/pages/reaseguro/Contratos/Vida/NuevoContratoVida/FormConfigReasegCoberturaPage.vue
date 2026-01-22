@@ -123,7 +123,7 @@
             variant="solo-filled"
           />
         </v-col>
-        <v-col cols="12" md="4" v-if="detalleCobertura === 1 || detalleCapa === 1">
+        <v-col cols="12" md="4" v-if="detalleCobertura === 1">
           <v-select
             v-model="coberturaTarifaObj"
             label="Cobertura"
@@ -169,6 +169,7 @@
             label="Tarifa propia"
             chips
             multiple
+            clearable
             variant="solo-filled"
             :rules="[v => !!v || 'Debe seleccionar una tarifa propia']"
           />
@@ -183,6 +184,7 @@
           </v-btn>
         </v-col>
       </v-row>
+
 
       <v-row v-if="itemsTablaTarifas.length > 0">
         <v-col cols="12">
@@ -215,7 +217,7 @@
               <span v-else class="text-grey">-</span>
             </template>
 
-            <template #item.tarifaP="{ item }">
+            <template #item.tarifaPropia="{ item }">
               <div v-if="item.tipoTarifa?.value === 2 && item.nombreArchivo">
                 <v-icon size="small" color="green" class="mr-1">mdi-file-csv</v-icon>
                 <small>{{ item.nombreArchivo }}</small>
@@ -248,7 +250,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useContratoStore, type ContratoGeneralReasegCobertura } from "@/stores/contratoStore"
+import { useContratoStore } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 import { ValidacionesContrato } from './ValidacionesContrato'
@@ -256,7 +258,6 @@ import { ValidacionesContrato } from './ValidacionesContrato'
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref()
-const isHydrating = ref(true)
 
 const {
   coberturasOptions, fetchCoberturas,
@@ -281,57 +282,60 @@ const capaSeleccionada = ref<string | null>(null)
 const detalleCobertura = ref(0)
 const coberturaTarifaObj = ref<any>(null)
 const tipoTarifaObj = ref<any>(null)
-const primaTarFi = ref<number | null>(null)
-const porSobrePrimaE = ref<number>(100)
-const tarifaFijaM = ref<number | null>(null)
-const factorTarifaP = ref<number>(100)
-const tarifaPropiaObj = ref<any>(null)
+
+const primaTarFi = ref<number>(0)
+const porSobrePrimaE = ref<number>(0)
+const tarifaFijaM = ref<number>(0)
+const factorTarifaP = ref<number>(0)
+const tarifaPropiaObj = ref<any[]>([])
+
 const itemsTablaTarifas = ref<any[]>([])
-const editandoIndex = ref(-1)
 const editandoAgrupacionIndex = ref<number | null>(null)
+const editandoIndex = ref(-1)
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
   return (typeof item === 'object' && 'value' in item) ? item.value : item;
 }
 
-watch(() => tipoTarifaObj.value, tipo => {
-  if (isHydrating.value) return
+const existeTarifaDuplicada = (
+  cveCob: any,
+  idTipoTarifa: number,
+  nombreArchivo: string | null
+) => {
+  return itemsTablaTarifas.value.some(item => {
+    if (item.cveCob !== cveCob) return false
+    if (item.tipoTarifa?.value !== idTipoTarifa) return false
+    if (idTipoTarifa !== 2) return true
 
-  primaTarFi.value = 0
-  porSobrePrimaE.value = 0
-  tarifaFijaM.value = 0
-  factorTarifaP.value = 0
-  tarifaPropiaObj.value = null
+    return item.nombreArchivo === nombreArchivo
+  })
+}
 
-  if (!tipo) return
 
-  if (tipo.value === 1) porSobrePrimaE.value = 100
-  if (tipo.value === 2) factorTarifaP.value = 100
-})
+watch(() => getID(tipoTarifaObj.value), (tipo) => {
+  primaTarFi.value = 0;
+  porSobrePrimaE.value = 0;
+  tarifaFijaM.value = 0;
+  factorTarifaP.value = 0;
 
-watch(
-  [() => getID(tipoTarifaObj.value), () => coberturaTarifaObj.value],
-  ([tipo, cobertura]) => {
-    if (tipo !== 2) {
-      tarifaPropiaObj.value = ''
-      return
-    }
-    if (!tarifaPropiaObj.value && cobertura?.title) {
-      tarifaPropiaObj.value = cobertura.title
-    }
+  if (tipo === 1) {
+    porSobrePrimaE.value = 100;
+  } else if (tipo === 2) {
+    factorTarifaP.value = 100;
   }
-)
 
+  if (tipo !== 2) {
+    tarifaPropiaObj.value = [];
+  }
+})
 const esExcedentePorCapas = computed(() => {
   const id = getID(contratoStore.general?.idTContrato);
   return Number(id) === 3;
 })
 
 watch(esExcedentePorCapas, (valido) => {
-  if (!valido) {
-    detalleCapa.value = 0;
-  }
+  if (!valido) detalleCapa.value = 0;
 })
 
 const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || [])
@@ -345,7 +349,6 @@ const coberturasPermitidasParaTarifa = computed(() => {
   const idsPermitidos = [...coberturasBasiObj.value.map(c => c.value), ...coberturasAdiciObj.value.map(c => c.value)]
   return coberturasOptions.value.filter(c => idsPermitidos.includes(c.value))
 })
-
 
 const hidratarDesdeStore = () => {
   const data = contratoStore.configReasegCob
@@ -375,76 +378,122 @@ const agregarAgrupacion = () => {
   coberturasParaAgrupar.value = []; coberturaMadreObj.value = null
 }
 
-const eliminarAgrupacion = (index: number) => agrupaciones.value.splice(index, 1)
-
 const editarAgrupacion = (item: any, index: number) => {
   coberturasParaAgrupar.value = [...item.coberturas]; coberturaMadreObj.value = item.madre; eliminarAgrupacion(index)
 }
+const eliminarAgrupacion = (index: number) => agrupaciones.value.splice(index, 1)
 
 const agregarTarifa = () => {
-  if (tipoTarifaObj.value === null || coberturaTarifaObj.value === null) {
-    dialog.show({ type: DialogType.ERROR, message: 'Seleccione cobertura y tipo de tarifa', title: 'Error' });
-    return
+  const idTipoTarifa = getID(tipoTarifaObj.value);
+
+  if (idTipoTarifa === null) {
+    dialog.show({ type: DialogType.ERROR, message: 'Seleccione un tipo de tarifa', title: 'Error' });
+    return;
   }
 
   if (detalleCapa.value === 1 && !capaSeleccionada.value) {
-    dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa específica del listado', title: 'Error' });
-    return
+    dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa', title: 'Error' });
+    return;
   }
 
-  const nuevaCob = coberturaTarifaObj.value.value;
-  const nuevaTarifaTipo = tipoTarifaObj.value.value;
+  const idCobSeleccionada = getID(coberturaTarifaObj.value);
+  let tipoCoberturaTexto = 'BÁSICA';
 
-  const tarifaExistenteIndex = itemsTablaTarifas.value.findIndex(t => t.cveCob === nuevaCob);
-  if (tarifaExistenteIndex !== -1 && tarifaExistenteIndex !== editandoIndex.value) {
-    dialog.show({ type: DialogType.ERROR, message: 'Ya existe una tarifa para la cobertura seleccionada', title: 'Error' });
-    return
+  if (idCobSeleccionada !== null) {
+    const esBasica = coberturasBasiObj.value.some(c => getID(c) == idCobSeleccionada);
+    const esAdicional = coberturasAdiciObj.value.some(c => getID(c) == idCobSeleccionada);
+
+    if (esBasica) tipoCoberturaTexto = 'BÁSICA';
+    else if (esAdicional) tipoCoberturaTexto = 'BADI';
   }
 
-  const tarifaTipoExistenteIndex = itemsTablaTarifas.value.findIndex(t => t.cveCob === nuevaCob && t.tipoTarifa.value === nuevaTarifaTipo);
-  if (tarifaTipoExistenteIndex !== -1 && tarifaTipoExistenteIndex !== editandoIndex.value) {
-    dialog.show({ type: DialogType.ERROR, message: 'Ya existe una tarifa con el mismo tipo para la cobertura seleccionada', title: 'Error' });
-    return
+  const fechaInicio = contratoStore.general?.fechaInicio;
+  const anioVigencia = fechaInicio ? new Date(fechaInicio).getFullYear() : new Date().getFullYear();
+
+  let listaAProcesar: any[] = [];
+
+    if (idTipoTarifa !== 2) {
+    const coberturaRepetida = itemsTablaTarifas.value.some(
+      i => i.cveCob === idCobSeleccionada
+    );
+
+    if (coberturaRepetida) {
+      dialog.show({
+        type: DialogType.ERROR,
+        title: 'Error',
+        message: 'La cobertura ya fue agregada'
+      });
+      return;
+    }
   }
 
-  const tipoGlobalExistente = itemsTablaTarifas.value.find((t, index) =>
-    t.tipoTarifa.value === nuevaTarifaTipo && index !== editandoIndex.value
-  );
-
-  if (tipoGlobalExistente) {
-    dialog.show({
-      type: DialogType.ERROR,
-      message: `El tipo de tarifa "${tipoTarifaObj.value.title}" ya ha sido asignado a la cobertura "${tipoGlobalExistente.cobertura}". No se puede duplicar en otra cobertura.`,
-      title: 'Error'
-    });
-    return
+  if (idTipoTarifa === 2) {
+    if (tarifaPropiaObj.value.length > 0) {
+      listaAProcesar = [...tarifaPropiaObj.value];
+    } else {
+      listaAProcesar = [{
+        title: `${coberturaTarifaObj.value?.title || 'COB'}_${anioVigencia}`
+      }];
+    }
+  } else {
+    listaAProcesar = [null];
   }
 
-  const esBasica = coberturasBasiObj.value.some(c => c.value === coberturaTarifaObj.value.value);
-  const tipoCoberturaTexto = esBasica ? 'BÁSICA' : 'BADI';
+  for (const item of listaAProcesar) {
+    const nombreArchivo = item?.title ?? null;
 
-  const nuevaFila = {
-    detalleCapa: detalleCapa.value === 1 ? capaSeleccionada.value : 'NO',
-    tipoCobertura: tipoCoberturaTexto,
-    cobertura: coberturaTarifaObj.value.title,
-    cveCob: coberturaTarifaObj.value.value,
-    tipoTarifa: { ...tipoTarifaObj.value },
-    primaTarifa: primaTarFi.value || 0,
-    porSobrePrima: porSobrePrimaE.value || 0,
-    tarifaFijaM: tarifaFijaM.value || 0,
-    factorTap: factorTarifaP.value || 0,
-    tarifaPropia: tarifaPropiaObj.value?.title ?? (typeof tarifaPropiaObj.value === 'string' ? tarifaPropiaObj.value : '')
+    const duplicado = existeTarifaDuplicada(
+      idCobSeleccionada,
+      idTipoTarifa,
+      nombreArchivo
+    );
+
+    if (duplicado) {
+      dialog.show({
+        type: DialogType.ERROR,
+        title: 'Error',
+        message:
+          idTipoTarifa === 2
+            ? 'El archivo ya fue agregado para esta cobertura'
+            : 'No se permiten coberturas o tarifas repetidas'
+      });
+      return;
+    }
   }
 
   if (editandoIndex.value > -1) {
-    itemsTablaTarifas.value[editandoIndex.value] = nuevaFila
-    editandoIndex.value = -1
+    itemsTablaTarifas.value[editandoIndex.value] =
+      generarObjetoFila(listaAProcesar[0], tipoCoberturaTexto, idCobSeleccionada);
   } else {
-    itemsTablaTarifas.value.push(nuevaFila)
+    listaAProcesar.forEach(item => {
+      itemsTablaTarifas.value.push(
+        generarObjetoFila(item, tipoCoberturaTexto, idCobSeleccionada)
+      );
+    });
   }
 
-  limpiarTarifa()
+  editandoIndex.value = -1;
+  limpiarTarifa();
+};
+
+const generarObjetoFila = (itemTarifa: any, tipoTexto: string, idCob: any) => {
+  const nombreFinal = itemTarifa?.title ?? null;
+
+  return {
+    detalleCapa: detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : 'NO',
+    tipoCobertura: tipoTexto,
+    cobertura: coberturaTarifaObj.value?.title || '',
+    cveCob: idCob,
+    tipoTarifa: { ...tipoTarifaObj.value },
+    primaTarifa: primaTarFi.value,
+    porSobrePrima: porSobrePrimaE.value,
+    tarifaFijaM: tarifaFijaM.value,
+    factorTap: factorTarifaP.value,
+    nombreArchivo: nombreFinal,
+    tarifaPropia: nombreFinal
+  }
 }
+
 const limpiarTarifa = () => {
   coberturaTarifaObj.value = null;
   tipoTarifaObj.value = null;
@@ -452,15 +501,28 @@ const limpiarTarifa = () => {
   porSobrePrimaE.value = 0;
   tarifaFijaM.value = 0;
   factorTarifaP.value = 0;
-  tarifaPropiaObj.value = null
+  tarifaPropiaObj.value = [];
+  capaSeleccionada.value = null;
 }
 
 const editarTarifa = (item: any, index: number) => {
-  editandoIndex.value = index
-  coberturaTarifaObj.value = coberturasOptions.value.find(c => c.value === item.cveCob)
-  tipoTarifaObj.value = item.tipoTarifa
-  primaTarFi.value = item.primaTarifa; porSobrePrimaE.value = item.porSobrePrima
-  tarifaFijaM.value = item.tarifaFijaM; factorTarifaP.value = item.factorTap
+  editandoIndex.value = index;
+  detalleCOptions.value.forEach(c => {
+    if (c.title === item.detalleCapa) {
+      capaSeleccionada.value = c.value;
+    }
+  });
+
+  detalleCobertura.value = item.detalleCapa === 'NO' ? 0 : 1;
+  coberturaTarifaObj.value = coberturasOptions.value.find(c => c.value === item.cveCob) || null;
+  tipoTarifaObj.value = item.tipoTarifa;
+  primaTarFi.value = item.primaTarifa;
+  porSobrePrimaE.value = item.porSobrePrima;
+  tarifaFijaM.value = item.tarifaFijaM;
+  factorTarifaP.value = item.factorTap;
+  tarifaPropiaObj.value = item.nombreArchivo
+    ? [{ title: item.nombreArchivo }]
+    : [];
 }
 
 const eliminarTarifa = (index: number) => itemsTablaTarifas.value.splice(index, 1)
@@ -470,9 +532,12 @@ const guardarTodoEnStore = async () => {
   if (!valid) return
 
   const idContrato = contratoStore.general?.idContrato
-  if (!idContrato) { dialog.show({ type: DialogType.ERROR, message: 'No hay contrato activo', title: 'Error' }); return }
+  if (!idContrato) {
+    dialog.show({ type: DialogType.ERROR, message: 'No hay contrato activo', title: 'Error' });
+    return
+  }
 
-  const payload: any = {
+  const payload = {
     idContrato,
     agrupacionCoberturas: agrupacionCoberturas.value,
     agrupaciones: agrupaciones.value,
@@ -489,8 +554,11 @@ const guardarTodoEnStore = async () => {
 }
 
 const headersAgrupacion = [
-  { title: 'Coberturas', key: 'coberturas' }, { title: 'Agrupar en:', key: 'madre' }, { title: 'Acciones', key: 'acciones', sortable: false }
+  { title: 'Coberturas', key: 'coberturas' },
+  { title: 'Agrupar en:', key: 'madre' },
+  { title: 'Acciones', key: 'acciones', sortable: false }
 ]
+
 const headers2 = [
   { title: 'Detalle capa', key: 'detalleCapa' },
   { title: 'Tipo cobertura', key: 'tipoCobertura' },

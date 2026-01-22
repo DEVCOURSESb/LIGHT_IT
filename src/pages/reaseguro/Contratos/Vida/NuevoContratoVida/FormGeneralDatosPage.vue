@@ -419,7 +419,9 @@ const guardarDatosGenerales = async () => {
       capas: capas.value,
     })
   }
-
+  // Parte de si se guardaron bien los datos generales me redirige al siguiente paso, pero eso va en el componente padre,
+  // pero si en la sección de si forma contractual es facultativo (valor 1), me lleve a el FormPolizaPage.vue y si no es de valor 1
+  // me lleve a el FormConfigReasegGeneralPage.vue
   dialog.show({ title: 'Éxito', message: 'Datos de contrato general guardados', type: DialogType.SUCCESS })
 }
 

@@ -93,6 +93,19 @@
             </v-tooltip>
           </v-btn>
         </v-row>
+
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-file-input
+              v-model="cargarComisiones"
+              label="Cargar comisiones (CSV)"
+              accept=".csv"
+              variant="solo-filled"
+              @update:model-value="alCambiarArchivo"
+            />
+          </v-col>
+        </v-row>
+
         <v-row class="mt-6">
           <v-col cols="12">
             <v-data-table
@@ -104,11 +117,9 @@
               <template #item.cveReasegurador="{ item }">
                 <span class="font-weight-bold">{{ item.cveReasegurador }}</span>
               </template>
-
               <template #item.limiteInf="{ item }"> {{ Number(item.limiteInf).toFixed(2) }}% </template>
               <template #item.limiteSup="{ item }"> {{ Number(item.limiteSup).toFixed(2) }}% </template>
               <template #item.comisionDefinitiva="{ item }"> {{ Number(item.comisionDefinitiva).toFixed(2) }}% </template>
-
               <template #item.acciones="{ item, index }">
                 <v-btn icon color="blue" variant="text" size="small" @click="editarComision(item, index)">
                   <v-icon>mdi-pencil</v-icon>
@@ -120,7 +131,6 @@
             </v-data-table>
           </v-col>
         </v-row>
-
         <v-row class="text-center mt-10">
           <v-col>
             <v-btn
@@ -142,45 +152,85 @@
     </v-alert>
   </v-container>
 </template>
-
 <script lang="ts" setup>
 import { watch, ref, computed } from 'vue'
 import { useContratoStore } from '@/stores/contratoStore'
 import { useDialog, DialogType } from '@/stores/dialogStore'
-
 interface ComisionReaseguro {
   cveReasegurador?: string
   limiteInf: number
   limiteSup: number
   comisionDefinitiva: number
 }
-
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref<any>(null)
-
 const limiteInf = ref<number>(0)
 const limiteSup = ref<number>(0)
 const comisionDef = ref<number>(0)
 const comisiones = ref<ComisionReaseguro[]>([])
 const cargarComisiones = ref<File | null>(null)
 const editIndex = ref<number | null>(null)
-
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
-
 const estaHabilitado = computed(() => {
   const tipo = contratoStore.configReaseg?.tipoComision
   const id = getID(tipo)
   return id == 2
 })
-
+const alCambiarArchivo = (file: File | File[] | null) => {
+  const selectedFile = Array.isArray(file) ? file[0] : file;
+  if (selectedFile) procesarArchivoCSV(selectedFile);
+};
+const procesarArchivoCSV = (file: File) => {
+  const reader = new FileReader();
+  reader.onload = (e: ProgressEvent<FileReader>) => {
+    const target = e.target as FileReader;
+    if (!target) return;
+    const content = target.result as string;
+    const lineas = content.split(/\r?\n/).filter(l => l.trim() !== '');
+    if (lineas.length < 2) {
+      dialog.show({ type: DialogType.ERROR, message: 'Archivo sin registros o sin encabezados', title: 'Error' });
+      return;
+    }
+    const primeraLinea = lineas[0];
+    if (!primeraLinea) {
+      dialog.show({ type: DialogType.ERROR, message: 'No se pudo leer el encabezado', title: 'Error' });
+      return;
+    }
+    const encabezados = primeraLinea.toUpperCase().split(',').map(h => h.trim());
+    const idxReas = encabezados.indexOf('REASEGURADOR');
+    const idxInf = encabezados.indexOf('LIMITE_INF');
+    const idxSup = encabezados.indexOf('LIMITE_SUP');
+    const idxCom = encabezados.indexOf('COMISION');
+    if (idxInf === -1 || idxSup === -1 || idxCom === -1) {
+      dialog.show({
+        type: DialogType.ERROR,
+        message: 'El CSV debe tener las columnas: Reasegurador, Limite_inf, Limite_sup, Comision',
+        title: 'Formato Incorrecto'
+      });
+      return;
+    }
+    const nuevosRegistros: ComisionReaseguro[] = lineas.slice(1).map(linea => {
+      const col = linea.split(',').map(c => c.trim());
+      return {
+        cveReasegurador: col[idxReas] || 'N/A',
+        limiteInf: parseFloat(col[idxInf] || '0'),
+        limiteSup: parseFloat(col[idxSup] || '0'),
+        comisionDefinitiva: parseFloat(col[idxCom] || '0')
+      };
+    });
+    comisiones.value = [...comisiones.value, ...nuevosRegistros];
+    dialog.show({ type: DialogType.SUCCESS, message: 'Datos cargados en la tabla', title: 'Éxito' });
+    cargarComisiones.value = null;
+  };
+  reader.readAsText(file);
+};
 const headers = [
   { title: 'Límite inf (%)', key: 'limiteInf' },
   { title: 'Límite sup (%)', key: 'limiteSup' },
   { title: '% Comisión', key: 'comisionDefinitiva' },
   { title: 'Acciones', key: 'acciones', sortable: false },
 ]
-
 const hidratarDesdeStore = () => {
   const cfg = contratoStore.configReasegCom
   if (!cfg || !Array.isArray(cfg.comisiones)) {
@@ -189,13 +239,11 @@ const hidratarDesdeStore = () => {
   }
   comisiones.value = [...cfg.comisiones]
 }
-
 watch(
   () => contratoStore.configReasegCom,
   () => hidratarDesdeStore(),
   { immediate: true, deep: true }
 )
-
 const agregarComision = async () => {
   if (Number(limiteSup.value) <= Number(limiteInf.value)) {
     dialog.show({
@@ -205,14 +253,12 @@ const agregarComision = async () => {
     });
     return;
   }
-
   const nueva: ComisionReaseguro = {
     cveReasegurador: 'MANUAL',
     limiteInf: Number(limiteInf.value),
     limiteSup: Number(limiteSup.value),
     comisionDefinitiva: Number(comisionDef.value),
   };
-
   if (editIndex.value !== null) {
     const original = comisiones.value[editIndex.value];
     if (original) {
@@ -222,21 +268,17 @@ const agregarComision = async () => {
   } else {
     comisiones.value.push(nueva);
   }
-
   limpiarFormulario();
 };
-
 const editarComision = (item: ComisionReaseguro, index: number) => {
   limiteInf.value = item.limiteInf
   limiteSup.value = item.limiteSup
   comisionDef.value = item.comisionDefinitiva
   editIndex.value = index
 }
-
 const eliminarComision = (index: number) => {
   comisiones.value.splice(index, 1)
 }
-
 const limpiarFormulario = () => {
   limiteInf.value = 0
   limiteSup.value = 0
@@ -244,24 +286,20 @@ const limpiarFormulario = () => {
   editIndex.value = null
   if (formRef.value) formRef.value.resetValidation()
 }
-
 const guardarDatos = () => {
   const idContrato = contratoStore.general?.idContrato
   if (!idContrato) {
     dialog.show({ title: 'Error', message: 'No hay un contrato activo para guardar.', type: DialogType.ERROR })
     return
   }
-
   if (comisiones.value.length === 0) {
     dialog.show({ title: 'Atención', message: 'Debe agregar al menos un registro a la tabla.', type: DialogType.ERROR })
     return
   }
-
   contratoStore.setConfigReasCom({
     idContrato,
     comisiones: JSON.parse(JSON.stringify(comisiones.value)),
   })
-
   dialog.show({ title: 'Éxito', message: 'Comisiones escalonadas guardadas.', type: DialogType.SUCCESS })
 }
 </script>

@@ -66,6 +66,7 @@ import { useContratoStore } from '@/stores/contratoStore'
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
 import { AuthStore } from '@/stores/authStore'
+import { id } from 'vuetify/locale'
 
 const contratoStore = useContratoStore()
 const modalResumen = ref(false)
@@ -192,7 +193,7 @@ const tarifasTablaCompleta = computed(() => {
       porcentajePrimaEmitida: cleanN(t.porSobrePrima) + '%',
       tarifaFija: cleanN(t.tarifaFijaM).toFixed(4),
       factorTarifaPropia: cleanN(t.factorTap) + '%',
-      tarifaPropia: t.nombreArchivo || '-'
+      tarifaPropia: getTX(t.nombreArchivo) || ''
     };
   });
 });
@@ -285,7 +286,7 @@ const headersIntermediarios = [
   { title: 'ASIGNACIÓN', key: 'cveCriterioAsig' }, { title: 'BROKER', key: 'cveIntermediario' }, { title: '¿CORRETAJE?', key: 'indCorretaje' },
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];
-
+// antes de guardar en la base de datos se debe validar que el id del contrato no exista ya en caso contrario lanzar un dialog error diciendo que ya existe un contrato con ese ID y no guardar
 const guardarEnBD = async () => {
   const authStore = AuthStore();
   if (!authStore.getToken) return;
@@ -300,6 +301,12 @@ const guardarEnBD = async () => {
     const ptu = contratoStore.configReasegPTU;
 
     if (!gen) return;
+    /*const verificarContratoExistente = BaseAPI('/reaseguro/contratos/vida/contratos');
+    const identificadorContratoExistente = await contratoStore.verificarContratoExistente(gen.idContrato);
+    if(identificadorContratoExistente){
+      dialog.show({ title: 'Error', message: `El ID de contrato ${gen.idContrato} ya existe. Por favor, elija uno diferente.`, type: DialogType.ERROR });
+      return;
+    }*/
 
     const payloadGen = {
       idRamo: "010",
@@ -371,7 +378,7 @@ const guardarEnBD = async () => {
                 idContrato: gen.idContrato,
                 cveReasegurador: idR,
                 detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "",
-                descClasifCober: getTX(t.tipoCobertura || "0 (BASICA)").normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                descClasifCober: getTX(t.tipoCobertura).normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
                 cveCob: String(getID(t.cveCob)),
                 descCob: getTX(t.cobertura),
 
@@ -383,7 +390,7 @@ const guardarEnBD = async () => {
                 porcentajePrimaEmitida: cleanN(t.porSobrePrima),
                 tarifaFija: cleanN(t.tarifaFijaM),
                 factorTarifaPropia: cleanN(t.factorTap),
-                tarifaPropia: t.nombreArchivo || "0"
+                tarifaPropia: getTX(t.nombreArchivo)
               }));
             }
           });
@@ -413,7 +420,7 @@ const guardarEnBD = async () => {
                   porcentajePrimaEmitida: cleanN(r.porSobrePrima),
                   tarifaFija: cleanN(r.tarifaFijaM),
                   factorTarifaPropia: cleanN(r.factorTap),
-                  tarifaPropia: r.nombreArchivo || 0.0
+                  tarifaPropia: r.nombreArchivo || ""
                 }));
               });
             }
@@ -470,7 +477,11 @@ const guardarEnBD = async () => {
         })) : [];
 
     const promsCapas = (contratoStore.expc?.capas || []).map(c => apiCapas.post('register', { idContrato: gen.idContrato, detalleCapa: c.detalleCapa, montoRetencionCapa: cleanN(c.retencionC), techoCapa: cleanN(c.techoC) }));
-    const promsPolizas = (contratoStore.poli?.polizas || []).map(p => apiPolizas.post('register', { idContrato: gen.idContrato, numPoliza: p.poliza, numRenovPol: p.renovacion }));
+    const promsPolizas = (contratoStore.poli?.polizas || []).map(p => apiPolizas.post('register', {
+      idContrato: gen.idContrato,
+      llavePolRen: `${p.poliza}|${p.renovacion}`,
+      numPoliza: p.poliza,
+      numRenovPol: p.renovacion }));
 
     const promsComEsc = (contratoStore.configReasegCom?.comisiones || []).flatMap(c =>
       listaReaseguradoresContrato.map((r: any) => apiComisionEsc.post('register', {

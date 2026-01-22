@@ -149,6 +149,14 @@ const cargarParaEditar = (item: any) => {
   window.scrollTo(0, 0);
 };
 
+const obtenerFechaHoy = (): string => {
+  const hoy = new Date();
+  const dia = String(hoy.getDate()).padStart(2, '0');
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  const anio = hoy.getFullYear();
+  return `${dia}${mes}${anio}`;
+};
+
 const guardarEnBD = async () => {
   if (!authStore.getToken) return;
 
@@ -174,10 +182,12 @@ const guardarEnBD = async () => {
 
   try {
     dialog.show({ title: 'Procesando', message: 'Guardando configuración y detalles...', type: DialogType.INFO });
+    const fechaHoy = obtenerFechaHoy();
+    const nombreArchivoFinal = `${nombreTarifaPropia.value}${fechaHoy}`;
 
     const archivoBase64 = await fileToBase64(tarifaPropiaFile.value);
     const payloadNombreArchivo = {
-      nombreArchivo: nombreTarifaPropia.value,
+      nombreArchivo: nombreArchivoFinal,
       base64Content: archivoBase64,
       esActivo: esActivo.value
     };
@@ -187,7 +197,7 @@ const guardarEnBD = async () => {
     const nuevoId = resCabecera.data?.id || null;
 
     const payloadDetalles = datosTemporalCSV.value.map(fila => ({
-      nombreArchivo: nombreTarifaPropia.value,
+      nombreArchivo: nombreArchivoFinal,
       edad: fila.edad,
       genero: fila.sexo,
       fumador: fila.fumador,

@@ -243,11 +243,11 @@ const agregarIntermediario = () => {
 }
 
 const procesarGuardado = () => {
-  const esPorReaseguradora = getID(asignacionIntermObj.value) == 1;
+  const esIndividual = getID(asignacionIntermObj.value) === 0;
 
   const registro = {
     asignacionInterm: asignacionIntermObj.value,
-    reaseguradora: esPorReaseguradora ? reaseguradoraObj.value : reaseguradorasDelContrato.value,
+    reaseguradora: esIndividual ? reaseguradoraObj.value : reaseguradorasDelContrato.value,
     broker: brokerObj.value,
     corretaje: corretajePObj.value,
     tipoCorretaje: tipoCorretajeObj.value,
@@ -255,7 +255,9 @@ const procesarGuardado = () => {
     montoCorreFijo: Number(montoCorretaje.value),
     display: {
       asignacion: asignacionIntermObj.value?.title || '-',
-      reaseguradora: esPorReaseguradora ? (reaseguradoraObj.value?.title || '-') : 'TODAS LAS DEL CONTRATO',
+      reaseguradora: esIndividual
+        ? (reaseguradoraObj.value?.title || '-')
+        : 'TODAS LAS DEL CONTRATO',
       broker: brokerObj.value?.title || '-',
       tipo: tipoCorretajeObj.value?.title || '-',
     }
@@ -272,7 +274,6 @@ const procesarGuardado = () => {
 
 const limpiarCamposCaptura = () => {
   isHydrating.value = true
-  intermediarioObj.value = 0
   asignacionIntermObj.value = null
   brokerObj.value = null
   reaseguradoraObj.value = null
