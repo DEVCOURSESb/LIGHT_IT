@@ -25,8 +25,8 @@
               <v-select
                 label="Seleccione un subramo"
                 :items="itemsToSelect"
-                  item-title="text"
-                  item-value="value"
+                item-title="text"
+                item-value="value"
                 v-model="subramo"
                 density="compact"
               ></v-select>
@@ -54,6 +54,7 @@
     <v-card class="mt-4" elevation="0" outlined>
       <v-toolbar class="encabezado" flat>
         <v-toolbar-title>Resultados del Cálculo</v-toolbar-title>
+        <btn @click="exportarExcel"> Exportar a Excel </btn>
       </v-toolbar>
 
       <v-data-table
@@ -78,6 +79,7 @@
 <script setup lang="ts">
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useSnackbar } from "@/stores/useSnackbar";
+import { exportExcel } from "@/utils/exportExcel";
 import { ref } from "vue";
 
 const itemsToSelect = [
@@ -85,7 +87,6 @@ const itemsToSelect = [
   { text: "Vida Colectivo", value: "VIDA_COL" },
   { text: "Vida Grupo", value: "VIDA_GRU" },
 ];
-
 
 const items = [
   { subramo: "Vida Individual", fechaEvaluada: "2024-05-31" },
@@ -126,10 +127,7 @@ const calcularPrimas = () => {
     return;
   }
 
-  snackbar.mostrarMensajeSnackbar(
-    "Realizando cálculo de primas...",
-    "success",
-  );
+  snackbar.mostrarMensajeSnackbar("Realizando cálculo de primas...", "success");
   console.log(subramo.value);
   console.log(fechaEvaluada.value);
 };
@@ -139,21 +137,34 @@ const descargarItem = (item: any) => {
 };
 
 const deleteItem = (item: any) => {
-    dialog.show({
-      title: "Confirmar eliminación",
-      message: `¿Está seguro de que desea eliminar el cálculo de primas para el subramo "${item.subramo}" con fecha evaluada "${item.fechaEvaluada}"?`,
-      type: DialogType.ERROR,
-      ExtraAction: {
-        text: "Confirmar",
-        color: "secondary",
-        handler: () => {
-          console.log("Eliminar item:", item);
-          snackbar.mostrarMensajeSnackbar(
+  dialog.show({
+    title: "Confirmar eliminación",
+    message: `¿Está seguro de que desea eliminar el cálculo de primas para el subramo "${item.subramo}" con fecha evaluada "${item.fechaEvaluada}"?`,
+    type: DialogType.ERROR,
+    ExtraAction: {
+      text: "Confirmar",
+      color: "secondary",
+      handler: () => {
+        console.log("Eliminar item:", item);
+        snackbar.mostrarMensajeSnackbar(
           `Eliminando cálculo de primas para el subramo "${item.subramo}" con fecha evaluada "${item.fechaEvaluada}"...`,
           "info",
         );
-        },
       },
-    });
+    },
+  });
+};
+
+const exportarExcel = () => {
+  const data = items.map((item) => ({
+    Subramo: item.subramo,
+    "Fecha Evaluada": item.fechaEvaluada,
+  }));
+
+  exportExcel({
+    data,
+    fileName: "Calculo_Primas_Vida.xlsx",
+    sheetName: "Primas Vida",
+  });
 };
 </script>
