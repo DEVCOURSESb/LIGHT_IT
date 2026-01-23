@@ -1,55 +1,69 @@
 // composables/cifras/useCifrasControl.ts
-import { ref } from "vue";
+import { useQuery } from '@tanstack/vue-query';
 import type {
   CifrasControlEmisionDTO,
   CifrasControlSiniestroDTO,
 } from "@/API/generic/cifras-control";
 import { CifrasControlActions } from "@/API/cifras-control/cifras-control.actions";
 import { useSnackbar } from "@/stores/useSnackbar";
+import { computed } from 'vue';
 
 export const useCifrasControl = () => {
   const cifrasControlAPI = CifrasControlActions();
   const snackbar = useSnackbar();
 
-  // Estados
-  const cifrasEmision = ref<CifrasControlEmisionDTO[]>([]);
-  const cifrasSiniestros = ref<CifrasControlSiniestroDTO[]>([]);
-  const loadingEmision = ref(false);
-  const loadingSiniestros = ref(false);
-
-  
-  // Función para cargar cifras de emisión
-  const cargarCifrasEmision = async () => {
-    loadingEmision.value = true;
-    try {
+  // cifras de emisión
+  const {
+    data: cifrasEmisionData,
+    isLoading: loadingEmision,
+    refetch: cargarCifrasEmision,
+    error: errorEmision,
+  } = useQuery({
+    queryKey: ['cifras-control-emision'],
+    queryFn: async () => {
       const response = await cifrasControlAPI.fetchCifrasEmision();
-      
-      cifrasEmision.value = response.dataExtra || [];      
-    } catch (error) {
-        snackbar.mostrarMensajeSnackbar("Error al cargar cifras de emisión", "error");
-    } finally {
-      loadingEmision.value = false;
-    }
-  };
+      return response.dataExtra || [];
+    },
+  });
 
-  // Función para cargar cifras de siniestros
-  const cargarCifrasSiniestros = async () => {
-    loadingSiniestros.value = true;
-    try {
+  // cifras de siniestros
+  const {
+    data: cifrasSiniestrosData,
+    isLoading: loadingSiniestros,
+    refetch: cargarCifrasSiniestros,
+    error: errorSiniestros,
+  } = useQuery({
+    queryKey: ['cifras-control-siniestros'],
+    queryFn: async () => {
       const response = await cifrasControlAPI.fetchCifrasSiniestros();
-      
-      cifrasSiniestros.value = response.dataExtra || [];
-      
-    } catch (error) {
-      snackbar.mostrarMensajeSnackbar("Error al cargar cifras de siniestros", "error");
-    } finally {
-      loadingSiniestros.value = false;
-    }
-  };
+      return response.dataExtra || [];
+    },
+  });
+
+  // Computed para valores por defecto
+  const cifrasEmision = computed<CifrasControlEmisionDTO[]>(
+    () => cifrasEmisionData.value || []
+  );
+
+  const cifrasSiniestros = computed<CifrasControlSiniestroDTO[]>(
+    () => cifrasSiniestrosData.value || []
+  );
+
+  // Manejar errores con snackbar
+  if (errorEmision.value) {
+    snackbar.mostrarMensajeSnackbar("Error al cargar cifras de emisión", "error");
+  }
+
+  if (errorSiniestros.value) {
+    snackbar.mostrarMensajeSnackbar("Error al cargar cifras de siniestros", "error");
+  }
 
   // Función para cargar todas las cifras
   const cargarTodasLasCifras = async () => {
-    await Promise.all([cargarCifrasEmision(), cargarCifrasSiniestros()]);
+    await Promise.all([
+      cargarCifrasEmision(),
+      cargarCifrasSiniestros(),
+    ]);
   };
 
   return {
