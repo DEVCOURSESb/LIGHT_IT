@@ -33,7 +33,8 @@ jobs:
           git checkout --orphan dist
           git rm -rf .
           mv dist/* .
-          rm -rf dist
+          rm -rf dist node_modules
+          echo "node_modules/" > .gitignore
           git add .
           git commit -m "Build: ${{ github.sha }}"
           git push origin dist --force
