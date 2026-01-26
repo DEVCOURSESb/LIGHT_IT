@@ -54,6 +54,15 @@ export const coberturaConfig = {
       hidden: true,
     },
     {
+      name: "cveCob",
+      label: "Clave Cobertura",
+      type: "number",
+      required: true,
+      disabled: true,
+      dataKey: "cveCob",
+      defaultValue: "",
+    },
+    {
       name: "idCob",
       label: "ID Cobertura",
       type: "text",

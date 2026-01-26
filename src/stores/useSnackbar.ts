@@ -16,7 +16,6 @@ export const useSnackbar = defineStore("snackbar", () => {
     texto: string,
     color: "success" | "error" | "info"
   ) => {
-    console.log("mostrar mensaje");
     text.value = texto;
     snackbarColor.value = color;
     showSnackbar.value = true;

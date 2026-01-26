@@ -142,7 +142,7 @@ const breadcrumbs = ["Insumos", "Cifras Control"];
 const headersEmision = [
   { title: "Periodo", key: "anio", align: "start" as const },
   { title: "Registros", key: "registros", align: "center" as const },
-  { title: "ramo", key: "ramo", align: "start" as const },
+  { title: "Ramo", key: "ramo", align: "start" as const },
   { title: "Prima Emitida", key: "primaNetaEmitida", align: "end" as const },
 ];
 

@@ -132,6 +132,7 @@ export function useCrudGeneric(config: CrudConfig) {
       queryClient.setQueryData(queryKey, data);
       toggleModal();
     } catch (error: any) {
+      console.log(error)
       snackbar.mostrarMensajeSnackbar(`Error guardando ${config.entity}`, "error");
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
