@@ -6,9 +6,9 @@ export const perfilConfig = {
   entity: 'perfil',
   title: 'Perfiles',
   searchPlaceholder: '',
-  addButtonText: 'Agregar perfil',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo perfil',
-  tableTitle: 'Lista de Perfiles',
+  tableTitle: 'Lista de perfiles',
 
   headers: [
     { title: 'NOMBRE PERFIL', key: 'nombrePerfil', sortable: true,

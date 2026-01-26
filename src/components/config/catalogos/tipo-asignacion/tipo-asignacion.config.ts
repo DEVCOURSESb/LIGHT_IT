@@ -12,7 +12,7 @@ export const tipoAsignacionConfig = {
   addButtonText: "",
   modalTitle: "Agregar nuevo tipo asignación",
   editModalTitle: "Editar tipo asignación",
-  tableTitle: "Lista de Tipo Asignación",
+  tableTitle: "Lista de tipos de asignación",
 
   headers: [
     { title: "CLAVE", key: "cveAsignacion", sortable: true,

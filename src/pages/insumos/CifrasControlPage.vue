@@ -140,19 +140,19 @@ const breadcrumbs = ["Insumos", "Cifras Control"];
 
 // Headers de la tabla de emisión
 const headersEmision = [
-  { title: "Periodo", key: "anio", align: "start" as const },
-  { title: "Registros", key: "registros", align: "center" as const },
-  { title: "Ramo", key: "ramo", align: "start" as const },
-  { title: "Prima Emitida", key: "primaNetaEmitida", align: "end" as const },
+  { title: "PERIODO", key: "anio", align: "start" as const },
+  { title: "REGISTROS", key: "registros", align: "center" as const },
+  { title: "RAMO", key: "ramo", align: "start" as const },
+  { title: "PRIMA Emitida", key: "primaNetaEmitida", align: "end" as const },
 ];
 
 // Headers de la tabla de siniestros
 const headersSiniestros = [
-  { title: "Periodo", key: "aniomesCarga", align: "start" as const },
-  { title: "Registros", key: "rows", align: "center" as const },
-  { title: "Monto Siniestro", key: "montoSiniestro", align: "end" as const },
+  { title: "PERIODO", key: "aniomesCarga", align: "start" as const },
+  { title: "REGISTROS", key: "rows", align: "center" as const },
+  { title: "MONTO SINIESTRO", key: "montoSiniestro", align: "end" as const },
   {
-    title: "Indemnización Pagada",
+    title: "INDEMNIZACIÓN PAGADA",
     key: "indemnizacionPagada",
     align: "end" as const,
   },

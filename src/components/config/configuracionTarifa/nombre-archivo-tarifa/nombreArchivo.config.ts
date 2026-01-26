@@ -12,7 +12,7 @@ export const NombreArchivoConfig = {
   addButtonText: "",
   modalTitle: "Agregar nueva cobertura",
   editModalTitle: "Editar clasificación de cobertura",
-  tableTitle: "Lista de Clasificación Coberturas",
+  tableTitle: "Lista de clasificación coberturas",
 
   headers: [
     { title: "NOMBRE ARCHIVO", key: "nombreArchivo", sortable: true,

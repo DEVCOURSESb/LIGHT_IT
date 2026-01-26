@@ -8,10 +8,10 @@ export const intermediariosConfig = {
   entity: "intermediarios",
   title: "Intermediarios",
   searchPlaceholder: "",
-  addButtonText: "Registro individual",
+  addButtonText: "",
   modalTitle: "Agregar nuevo intermediario",
   editModalTitle: "Editar intermediario",
-  tableTitle: "Lista de Intermediarios",
+  tableTitle: "Lista de intermediarios",
 
   headers: [
     { title: "CLAVE INTERMEDIARIO", key: "cveIntermediario", sortable: true,

@@ -9,10 +9,10 @@ export const EntidadFederativaConfig = {
   entity: 'EntidadFederativa',
   title: 'Entidad Federativa',
   searchPlaceholder: '',
-  addButtonText: 'Registro individual',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo Entidad Federativa',
   editModalTitle: "Editar Entidad Federativa",
-  tableTitle: 'Lista de Entidad Federativas',
+  tableTitle: 'Lista de entidades federativas',
 
   headers: [
    /*  { title: 'CLAVE', key: 'cveEntidad', sortable: true,

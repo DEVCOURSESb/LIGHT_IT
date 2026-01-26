@@ -8,10 +8,10 @@ export const FumadorConfig = {
   entity: 'Fumador',
   title: 'Fumador',
   searchPlaceholder: '',
-  addButtonText: 'Registro individual',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo Fumador',
   editModalTitle: 'Editar Fumador',
-  tableTitle: 'Lista de Fumadores',
+  tableTitle: 'Lista de fumadores',
 
   headers: [
     { title: 'CLAVE', key: 'cveFumador', sortable: true,

@@ -11,7 +11,7 @@ export const monedaConfig = {
   addButtonText: "",
   modalTitle: "Agregar moneda",
   editModalTitle: "Editar moneda",
-  tableTitle: "Lista de Monedas",
+  tableTitle: "Lista de monedas",
 
   headers: [
     { title: "MONEDA", key: "cveMoneda", sortable: true,

@@ -11,7 +11,7 @@ export const tipoReaseguroConfig = {
   addButtonText: "",
   modalTitle: "Tipo de reaseguro",
   editModalTitle: "Editar tipo de reaseguro",
-  tableTitle: "Lista de tipos de Reaseguro",
+  tableTitle: "Lista de tipos de reaseguro",
 
   headers: [
     /* { title: "CLAVE", key: "cveTreaseg", sortable: true,

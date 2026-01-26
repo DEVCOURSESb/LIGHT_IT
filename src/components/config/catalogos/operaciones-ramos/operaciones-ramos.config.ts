@@ -8,10 +8,10 @@ export const operacionesRamosConfig = {
   entity: "operaciones-ramos",
   title: "Operaciones y Ramos",
   searchPlaceholder: "",
-  addButtonText: "Agregar operación ramo",
+  addButtonText: "",
   modalTitle: "Agregar nuevo operación ramo",
   editModalTitle: "Editar operación ramo",
-  tableTitle: "Lista de Operaciones Ramos",
+  tableTitle: "Lista de operaciones ramos",
 
   headers: [
     {

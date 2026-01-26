@@ -8,7 +8,7 @@ export const reaseguradoresConfig = {
   entity: "reaseguradores",
   title: "Reaseguradores",
   searchPlaceholder: "",
-  addButtonText: "Agregar reasegurador",
+  addButtonText: "",
   modalTitle: "Agregar nuevo reasegurador",
   editModalTitle: "Editar reasegurador",
   tableTitle: "Lista de reaseguradores",

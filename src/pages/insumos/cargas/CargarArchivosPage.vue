@@ -261,10 +261,10 @@ watch(puedeCargar, (newVal) => {
 });
 
 const headers = [
-  { title: 'Año', key: 'anio' },
-  { title: 'Mes', key: 'mes' },
-  { title: 'Nombre de Archivo', key: 'nombreArchivo' },
-  { title: 'Número de Registros', key: 'numeroRegistros' }
+  { title: 'AÑO', key: 'anio' },
+  { title: 'MES', key: 'mes' },
+  { title: 'NOMBRE DE ARCHIVO', key: 'nombreArchivo' },
+  { title: 'NÚMERO DE REGISTROS', key: 'numeroRegistros' }
 ];
 
 onMounted(() => {

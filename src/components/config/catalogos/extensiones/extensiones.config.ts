@@ -8,10 +8,10 @@ export const ExtensionesConfig = {
   entity: "extensiones",
   title: "Extensiones",
   searchPlaceholder: "",
-  addButtonText: "Agregar extensión",
+  addButtonText: "",
   modalTitle: "Agregar nueva extensión",
   editModalTitle: "Editar extensión",
-  tableTitle: "Lista de Extensiones",
+  tableTitle: "Lista de extensiones",
 
   headers: [
     /* { title: "CLAVE", key: "cveExtCober", sortable: true,

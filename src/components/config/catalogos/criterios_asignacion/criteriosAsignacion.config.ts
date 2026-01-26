@@ -10,9 +10,9 @@ export const criteriosAsignacionConfig = {
   title: "Criterios de Asignación",
   searchPlaceholder: "",
   addButtonText: "",
-  modalTitle: "Agregar nuevo criterio asignacion",
-  editModalTitle: "Editar criterio asignacion",
-  tableTitle: "Lista de criterios de asignacion",
+  modalTitle: "Agregar nuevo criterio asignación",
+  editModalTitle: "Editar criterio asignación",
+  tableTitle: "Lista de criterios de asignación",
 
   headers: [
     { title: "CLAVE CRITERIO ASIGNACION", key: "cveCriterioAsig", sortable: true,

@@ -12,7 +12,7 @@ export const ClasificacionCoberturaConfig = {
   addButtonText: "",
   modalTitle: "Agregar nueva cobertura",
   editModalTitle: "Editar clasificación de cobertura",
-  tableTitle: "Lista de Clasificación Coberturas",
+  tableTitle: "Lista de clasificación coberturas",
 
   headers: [
     { title: "CLAVE", key: "cveClasifcober", sortable: true,

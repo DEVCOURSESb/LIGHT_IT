@@ -10,7 +10,7 @@ export const CriterioCoberturaConfig = {
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo Criterio Cobertura",
-  tableTitle: "Lista de Criterio Coberturas",
+  tableTitle: "Lista de criterio coberturas",
 
   headers: [
     { title: "CLAVE", key: "cveCriterioCob", sortable: true,

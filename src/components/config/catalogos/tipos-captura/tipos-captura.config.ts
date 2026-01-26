@@ -6,9 +6,9 @@ export const TiposCapturaConfig = {
   entity: 'tipos-captura',
   title: 'Tipos captura',
   searchPlaceholder: '',
-  addButtonText: 'Agregar tipo captura',
+  addButtonText: '',
   modalTitle: 'Agregar nuevo tipo captura',
-  tableTitle: 'Lista de Tipos captura',
+  tableTitle: 'Lista de tipos captura',
 
   headers: [
     { title: 'CLAVE', key: 'cveTcaptura', sortable: true,

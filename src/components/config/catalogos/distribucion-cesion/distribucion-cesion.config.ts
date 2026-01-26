@@ -11,7 +11,7 @@ export const DistribucionCesionConfig = {
   addButtonText: "",
   modalTitle: "Agregar nueva distribución",
   editModalTitle: "Editar distribución",
-  tableTitle: "Lista de Distribuciones de Cesión",
+  tableTitle: "Lista de distribuciones de cesión",
 
   headers: [
     { title: "CLAVE", key: "cveDistrcesion", sortable: true,

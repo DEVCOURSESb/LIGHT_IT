@@ -11,7 +11,7 @@ export const coberturaConfig = {
   addButtonText: "",
   modalTitle: "Agregar cobertura",
   editModalTitle: "Editar cobertura",
-  tableTitle: "Lista de Coberturas",
+  tableTitle: "Lista de coberturas",
 
   headers: [
     /* { title: "ID COBERTURA", key: "idCob", sortable: true,

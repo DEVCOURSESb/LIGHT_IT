@@ -108,7 +108,7 @@ const headers = [
     sortable: true,
   },
   {
-    title: "Fecha Evaluada",
+    title: "Fecha de cálculo",
     key: "fechaEvaluada",
     sortable: true,
   },

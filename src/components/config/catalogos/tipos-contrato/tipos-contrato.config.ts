@@ -53,7 +53,7 @@ export const tiposContratoConfig = {
   addButtonText: "Agregar tipo de contrato",
   modalTitle: "Agregar nuevo tipo de contrato",
   editModalTitle: "Editar tipo de contrato",
-  tableTitle: "Lista de Tipos de Contrato",
+  tableTitle: "Lista de tipos de contrato",
 
   headers: [
     {
