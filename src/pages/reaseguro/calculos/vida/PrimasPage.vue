@@ -54,7 +54,7 @@
     <v-card class="mt-4" elevation="0" outlined>
       <v-toolbar class="encabezado" flat>
         <v-toolbar-title>Resultados del Cálculo</v-toolbar-title>
-        <btn @click="exportarExcel"> Exportar a Excel </btn>
+        <!-- <btn @click="exportarExcel"> Exportar a Excel </btn> -->
       </v-toolbar>
 
       <v-data-table
@@ -79,7 +79,6 @@
 <script setup lang="ts">
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useSnackbar } from "@/stores/useSnackbar";
-import { exportExcel } from "@/utils/exportExcel";
 import { ref } from "vue";
 
 const itemsToSelect = [
@@ -133,7 +132,7 @@ const calcularPrimas = () => {
 };
 
 const descargarItem = (item: any) => {
-  console.log("Editar item:", item);
+  console.log("descargar item:", item);
 };
 
 const deleteItem = (item: any) => {
@@ -155,7 +154,7 @@ const deleteItem = (item: any) => {
   });
 };
 
-const exportarExcel = () => {
+/* const exportarExcel = () => {
   const data = items.map((item) => ({
     Subramo: item.subramo,
     "Fecha Evaluada": item.fechaEvaluada,
@@ -166,5 +165,5 @@ const exportarExcel = () => {
     fileName: "Calculo_Primas_Vida.xlsx",
     sheetName: "Primas Vida",
   });
-};
+}; */
 </script>
