@@ -90,10 +90,14 @@ export class ValidacionesContrato {
   }
   // 21 dígitos: 19 enteros + 2 decimales
   static numeroC21() {
-    const regex = /^\d{1,19}(\.\d{1,2})?$/
-    return (v: string) =>
-      !v || regex.test(v) || 'Formato numérico inválido'
+  const regex = /^\d{1,19}(\.\d{1,2})?$/;
+
+  return (v: string | number) => {
+    if (!v) return true;
+    const valorLimpio = String(v).replace(/,/g, '');
+    return regex.test(valorLimpio) || 'Formato numérico inválido (máx. 2 decimales)';
   }
+}
   //CESION
   static cesion(tipoContrato: () => number | null) {
     const permitidos = [1, 7, 9]

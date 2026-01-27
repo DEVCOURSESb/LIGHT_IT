@@ -33,14 +33,12 @@ export interface ContratoGeneralPol {
   }[]
 }
 /* CONFIGURACION GENERAL */
-export interface ReaseguradorParticipacion {
-  cveReasegurador: string | number
-  nombreReasegurador?: string
-}
 
 export interface ContratoGeneralConfReaseg {
   idContrato: string | number
-  reaseguradores: ReaseguradorParticipacion[]
+  cveReasegurador: string | null
+  nombreReasegurador: any
+  participacion: number
   indicadorDistrC: any
   cesionCoberBasi: any
   comisionReaseg: any
@@ -96,6 +94,13 @@ export interface ContratoGeneralReasegCobertura {
   detalleC: CapaExPC[]
   detalleCobertura: number
   tarifas: DetalleTarifa[]
+}
+
+export interface ReaseguradorFila{
+  general: ContratoGeneralConfReaseg;
+  coberturas: ContratoGeneralReasegCobertura | null;
+  comisiones: ContratoConfigReasCom | null;
+  ptu: ContratoReasePTU | null;
 }
 
 export interface IntermediarioRegistro {
@@ -154,6 +159,14 @@ export interface ContratoReasePTU {
   gastos: string | null
 }
 
+export interface ReaseguradorCompleto {
+  general: ContratoGeneralConfReaseg;
+  coberturas: ContratoGeneralReasegCobertura | null;
+  comisiones: ContratoConfigReasCom | null;
+  ptu: ContratoReasePTU | null;
+  participacion: number;
+}
+
 export interface ContratoCompletoDTO {
   general: ContratoGeneralDatos | null
   expc: ContratoDatosExPC | null
@@ -174,7 +187,18 @@ export const useContratoStore = defineStore("contrato", {
     configReasegPTU: JSON.parse(localStorage.getItem("contrato_general_configReaseg_PTU") || "null") as ContratoReasePTU | null,
     configInt: JSON.parse(localStorage.getItem("contrato_general_configInt") || "null") as ContratoConfigInt | null,
     completo: JSON.parse(localStorage.getItem("contrato_completo") || "false") as boolean,
+    listaReaseguradoresFinal: [] as ReaseguradorCompleto[],
+    tempReasegurador: {
+      cveReasegurador: null,
+      nombreReasegurador: "",
+      participacion: 0,
+    } as any
   }),
+  getters: {
+    totalParticipacion: (state) => {
+      return state.listaReaseguradoresFinal.reduce((acc, r) => acc + r.participacion, 0);
+    }
+  },
 
   actions: {
     setGeneral(data: ContratoGeneralDatos) {
@@ -212,6 +236,11 @@ export const useContratoStore = defineStore("contrato", {
       localStorage.setItem("contrato_general_configReaseg_PTU", JSON.stringify(data));
     },
 
+    agregarReaseguradorALista(data: ReaseguradorCompleto) {
+      this.listaReaseguradoresFinal.push(data);
+      localStorage.setItem("lista_reaseguradores_final", JSON.stringify(this.listaReaseguradoresFinal));
+    },
+
     setConfigInt(data: ContratoConfigInt) {
       this.configInt = data;
       localStorage.setItem("contrato_general_configInt", JSON.stringify(data));
@@ -230,6 +259,11 @@ export const useContratoStore = defineStore("contrato", {
       this.configReasegCob = null;
       this.configReasegCom = null;
       this.configReasegPTU = null;
+      this.tempReasegurador = {
+        cveReasegurador: null,
+        nombreReasegurador: "",
+        participacion: 0,
+      };
       this.configInt = null;
       this.completo = false;
 

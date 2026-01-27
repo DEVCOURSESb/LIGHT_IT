@@ -12,6 +12,10 @@
       <v-tab value="tab-4">
         PTU
       </v-tab>
+
+      <v-tab value="tab-5">
+        Reaseguradores
+      </v-tab>
     </v-tabs>
 
     <v-window v-model="activeTab">
@@ -38,6 +42,12 @@
           <v-card-text><FormConfigReasegPTUPage /></v-card-text>
         </v-card>
       </v-window-item>
+
+      <v-window-item value="tab-5">
+        <v-card flat>
+          <v-card-text><ResumenReaseguradoresPage /></v-card-text>
+        </v-card>
+      </v-window-item>
     </v-window>
     <v-spacer class="mb-4" />
   </div>
@@ -50,6 +60,7 @@ import FormConfigReasegCoberturaPage from './FormConfigReasegCoberturaPage.vue'
 import FormConfigReasegComisionEsPage from './FormConfigReasegComisionEsPage.vue'
 import FormConfigReasegGeneralPage from './FormConfigReasegGeneralPage.vue'
 import FormConfigReasegPTUPage from './FormConfigReasegPTUPage.vue'
+import ResumenReaseguradoresPage from './ResumenReaseguradoresPage.vue'
 
 const contratoStore = useContratoStore()
 const activeTab = ref('tab-1')

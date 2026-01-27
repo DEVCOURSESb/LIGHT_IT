@@ -312,7 +312,6 @@ const existeTarifaDuplicada = (
   })
 }
 
-
 watch(() => getID(tipoTarifaObj.value), (tipo) => {
   primaTarFi.value = 0;
   porSobrePrimaE.value = 0;
@@ -533,7 +532,7 @@ const guardarTodoEnStore = async () => {
 
   const idContrato = contratoStore.general?.idContrato
   if (!idContrato) {
-    dialog.show({ type: DialogType.ERROR, message: 'No hay contrato activo', title: 'Error' });
+    dialog.show({ type: DialogType.ERROR, message: 'Falta ID del contrato', title: 'Error' });
     return
   }
 

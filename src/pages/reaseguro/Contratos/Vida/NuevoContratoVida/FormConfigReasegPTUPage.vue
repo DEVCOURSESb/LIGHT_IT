@@ -130,6 +130,15 @@
             Guardar PTU
           </v-btn>
         </v-col>
+        <v-col class="text-center">
+          <v-btn
+            class="btn-guardar"
+            elevation="4"
+            @click="guardarReasegurador"
+          >
+            Guardar Reasegurador
+          </v-btn>
+        </v-col>
       </v-row>
     </v-container>
   </v-form>
@@ -138,9 +147,10 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue'
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
-import { useContratoStore } from '@/stores/contratoStore'
+import { useContratoStore, type ContratoReasePTU, type ReaseguradorCompleto } from '@/stores/contratoStore'
 import { DialogType, useDialog } from '@/stores/dialogStore'
 import { ValidacionesContrato } from './ValidacionesContrato'
+import type { Reasegurador } from '@/API/catalogos/reaseguradores/reasegurador.interface'
 
 const contratoStore = useContratoStore()
 const dialog = useDialog()
@@ -226,5 +236,67 @@ const guardarDatosPTU = async () => {
     message: 'Configuración de PTU guardada correctamente',
     type: DialogType.SUCCESS
   })
+}
+const guardarReasegurador = async () => {
+  const { valid } = await formRef.value.validate()
+  if (!valid) return
+
+  const gen = contratoStore.configReaseg
+  const cob = contratoStore.configReasegCob
+  const com = contratoStore.configReasegCom
+
+  if (!gen || !gen.cveReasegurador) {
+    dialog.show({ title: 'Error', message: 'Faltan datos de Configuración General', type: DialogType.ERROR })
+    return
+  }
+
+  const datosPTU: ContratoReasePTU = {
+    idContrato: gen.idContrato,
+    otorgaPtu: getID(otorgaPtuObj.value),
+    metodoCalPTU: getID(metodoCalPTUObj.value),
+    ptu: ptu.value ? ptu.value.toFixed(2) : null,
+    kPor: kPor.value ? kPor.value.toFixed(2) : null,
+    aniosArrastre: aniosArrastre.value || 0,
+    gastos: gastos.value ? gastos.value.toFixed(2) : null
+  }
+
+  const reaseguradorFinal: ReaseguradorCompleto ={
+    general: { ...gen },
+    coberturas: cob ? { ...cob } : null,
+    comisiones: com ? { ...com } : null,
+    ptu: datosPTU,
+    participacion: Number(gen.participacion)
+  }
+
+  contratoStore.agregarReaseguradorALista(reaseguradorFinal)
+
+  resetearTodoElFlujo()
+
+  dialog.show({
+    title: 'Proceso Completo',
+    message: `La reaseguradora ${gen.nombreReasegurador} ha sido configurada y guardada exitosamente.`,
+    type: DialogType.SUCCESS
+  })
+}
+
+const resetearTodoElFlujo = () => {
+  limpiarFormularioLocal()
+
+  contratoStore.configReaseg = null
+  contratoStore.configReasegCob = null
+  contratoStore.configReasegCom = null
+  contratoStore.configReasegPTU = null
+  //Aun no lo he probado para ver si al agregar otro reasegurador me regresa a la pantalla general para agregar otro
+  // emit('cambiar-tab', 'general')
+}
+
+const limpiarFormularioLocal = () => {
+  otorgaPtuObj.value = siNoOptions[1]
+  metodoCalPTUObj.value = null
+  ptu.value = 0
+  kPor.value = 0
+  aniosArrastre.value = 0
+  gastos.value = 0
+  if (formRef.value) formRef.value.resetValidation()
 }
 </script>

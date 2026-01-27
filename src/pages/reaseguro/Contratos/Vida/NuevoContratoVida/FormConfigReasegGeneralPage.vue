@@ -33,36 +33,8 @@
             </template>
           </v-slider>
         </v-col>
-        <v-col cols="12" md="1" class="d-flex justify-center">
-          <v-btn color="indigo" icon="mdi-plus" size="small" elevation="2" @click="agregarReaseguradora">
-            <v-icon>{{ editIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
-            <v-tooltip activator="parent" location="top">
-              {{ editIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
-            </v-tooltip>
-          </v-btn>
-        </v-col>
       </v-row>
-
-      <v-row v-if="reaseguradores.length > 0">
-        <v-col cols="12">
-          <v-data-table :headers="headersReaseg" :items="reaseguradores" density="compact" class="elevation-1 mt-4">
-            <template #item.participacion="{ item }">
-              {{ Number(item.participacion).toFixed(2) }}%
-            </template>
-            <template #item.acciones="{ item, index }">
-              <v-btn icon color="blue" variant="text" size="small" @click="editarReaseg(item, index)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn icon color="red" variant="text" size="small" @click="eliminarReaseg(index)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
-
       <br>
-
       <v-row>
         <v-col cols="12" md="4">
           <v-select
@@ -215,10 +187,6 @@ const tipoCoberturaObj = ref<any>(null) // como quito la opcion de general si de
 const comisionPrimerAnio = ref<number>(0)
 const comisionRenovacion = ref<number>(0)
 const reaseguradores = ref<any[]>([])
-const editIndex = ref<number | null>(null)
-
-const companiaReasegRef = ref()
-const participacionRef = ref()
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
@@ -226,9 +194,6 @@ const getID = (item: any) => {
   return item;
 }
 
-const opcionesFiltradasTipoCobertura = computed(() => {
-  return tipoCoberturaOptions.value.filter(o => [0, 1].includes(Number(o.value)))
-})
 
 watch(
   [() => getID(comisionReasegObj.value), () => getID(detalleCoberturaObj.value)],
@@ -236,7 +201,8 @@ watch(
     if (comision !== 1 || detalle !== 1) {
       tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
       return
-    } // segun yo aqui debe ir la logica para filtrar las opciones de tipoCobertura si detalle es igual a 1 debera solo mostrar basica y badi que es 0 y 1
+    }
+    // segun yo aqui debe ir la logica para filtrar las opciones de tipoCobertura si detalle es igual a 1 debera solo mostrar basica y badi que es 0 y 1
 
     if (detalle === 1) {
       const yaExisteBasicaEnTarifas = contratoStore.configReasegCob?.tarifas?.some(
@@ -265,57 +231,13 @@ watch(() => getID(comisionReasegObj.value), (val) => {
   }
 })
 
-const editarReaseg = (item: any, index: number) => {
-  companiaReasegObj.value = compaReasegOptions.value.find(o => o.value === item.cveReasegurador)
-  participacion.value = item.participacion
-  editIndex.value = index
-}
-
-const eliminarReaseg = (index: number) => {
-  reaseguradores.value.splice(index, 1)
-}
-
-const agregarReaseguradora = async () => {
-  const cErrors = await companiaReasegRef.value.validate()
-  const pErrors = await participacionRef.value.validate()
-  if (cErrors.length > 0 || pErrors.length > 0 || !companiaReasegObj.value) return
-
-  const nuevaCve = companiaReasegObj.value.value
-  const esDuplicado = reaseguradores.value.some((r, index) => r.cveReasegurador === nuevaCve && index !== editIndex.value)
-
-  if (esDuplicado) {
-    dialog.show({ title: 'Aviso', message: 'La compañía ya ha sido agregada.', type: DialogType.INFO })
-    return
-  }
-
-  const sumaActual = reaseguradores.value.reduce((acc: number, r: any) => acc + Number(r.participacion), 0)
-  const sumaNueva = (editIndex.value !== null)
-    ? (sumaActual - Number(reaseguradores.value[editIndex.value].participacion) + participacion.value)
-    : (sumaActual + participacion.value)
-
-  const procesarGuardado = () => {
-    const data = {
-      cveReasegurador: companiaReasegObj.value.value,
-      nombreReasegurador: companiaReasegObj.value.title,
-      participacion: Number(participacion.value.toFixed(2))
-    }
-    if (editIndex.value !== null) { reaseguradores.value[editIndex.value] = data; editIndex.value = null }
-    else { reaseguradores.value.push(data) }
-    companiaReasegObj.value = null; participacion.value = 100.00
-    nextTick(() => { companiaReasegRef.value.resetValidation(); participacionRef.value.resetValidation() })
-  }
-
-  if (sumaNueva > 100) {
-    dialog.show({ title: 'Confirmación', message: 'El contrato supera el 100%. ¿Desea continuar?', type: DialogType.CONFIRM, onConfirm: procesarGuardado })
-  } else { procesarGuardado() }
-}
 
 const hidratar = () => {
   const cfg = contratoStore.configReaseg
   if (!cfg) return
-
-  reaseguradores.value = cfg.reaseguradores || []
-
+  companiaReasegObj.value = compaReasegOptions.value.find(o =>
+      Number(o.value) === Number(getID(cfg.cveReasegurador))
+  )
   indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => Number(o.value) === Number(getID(cfg.indicadorDistrC)))
   cesionCoberBasiObj.value = siNoOptions.find(o => o.value === getID(cfg.cesionCoberBasi))
   comisionReasegObj.value = siNoOptions.find(o => o.value === getID(cfg.comisionReaseg))
@@ -338,9 +260,17 @@ const guardarConfigReaseguro = async () => {
     return
   }
 
+  const sumaPrevia = contratoStore.totalParticipacion;
+  if (sumaPrevia + participacion.value > 100.01) {
+    dialog.show({ title: 'Error', message: 'La participación total excedería el 100%', type: DialogType.ERROR })
+    return;
+  }
+
   const payload: ContratoGeneralConfReaseg = {
     idContrato,
-    reaseguradores: JSON.parse(JSON.stringify(reaseguradores.value)),
+    cveReasegurador: getID(companiaReasegObj.value),
+    nombreReasegurador: companiaReasegObj.value ? companiaReasegObj.value.title : '',
+    participacion: Number(participacion.value.toFixed(2)),
     indicadorDistrC: indicadorDistrCObj.value,
     cesionCoberBasi: cesionCoberBasiObj.value,
     comisionReaseg: comisionReasegObj.value,
@@ -351,7 +281,12 @@ const guardarConfigReaseguro = async () => {
     comisionRenovacion: Number(comisionRenovacion.value.toFixed(2))
   }
 
-  contratoStore.setConfigReasG(payload)
+  contratoStore.setConfigReasG(payload);
+  contratoStore.tempReasegurador = {
+    cveReasegurador: getID(companiaReasegObj.value),
+    nombreReasegurador: companiaReasegObj.value ? companiaReasegObj.value.title : '',
+    participacion: Number(participacion.value.toFixed(2)),
+  };
   dialog.show({ title: 'Éxito', message: 'Configuración guardada correctamente.', type: DialogType.SUCCESS })
 }
 

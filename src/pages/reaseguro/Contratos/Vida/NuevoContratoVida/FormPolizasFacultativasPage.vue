@@ -241,7 +241,6 @@ const guardarDatosGenerales = async () => {
 
 const hidratarPolizasDesdeStore = () => {
   const guardadas = contratoStore.poli
-  console.log('Hidratando pólizas:', guardadas)
 
   if (!guardadas || guardadas.polizas.length === 0) return
 

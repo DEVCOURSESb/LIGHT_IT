@@ -135,7 +135,7 @@ import { onMounted, ref, watch, computed, nextTick } from 'vue'
 import { NuevoContratoVidaConInt } from './NuevoContratoConfigInt.actions'
 import { useContratoStore } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
-import ModalEnviarDatos from './ModalEnviarDatos.vue'
+//import ModalEnviarDatos from './ModalEnviarDatos.vue'
 import { ValidacionesContrato } from './ValidacionesContrato'
 
 const contratoStore = useContratoStore()
@@ -219,9 +219,9 @@ watch(intermediarioObj, value => {
 })
 
 const reaseguradorasDelContrato = computed(() => {
-  return contratoStore.configReaseg?.reaseguradores.map(r => ({
-    title: r.nombreReasegurador,
-    value: r.cveReasegurador
+  return contratoStore.listaReaseguradoresFinal?.map(r => ({
+    title: r.general.nombreReasegurador,
+    value: r.general.cveReasegurador
   })) || []
 })
 

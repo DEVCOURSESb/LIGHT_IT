@@ -26,10 +26,10 @@
             <v-data-table :headers="headersPolizasResumen" :items="polizasFacuResumen" density="compact" hide-default-footer />
           </v-card>
 
-          <v-card v-if="reaseguradoresTablaCompleta.length" class="mb-4 elevation-2">
+          <!--<v-card v-if="reaseguradoresTablaCompleta.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">REASEGURADORES Y PARTICIPACIÓN DE UTILIDADES (PTU)</v-card-title>
             <v-data-table :headers="headersReaseguradores" :items="reaseguradoresTablaCompleta" density="compact" hide-default-footer />
-          </v-card>
+          </v-card>-->
 
           <v-card v-if="tarifasTablaCompleta.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">DETALLE TÉCNICO DE COBERTURAS (TARIFAS)</v-card-title>
@@ -87,7 +87,7 @@ const getTX = (item: any): string => {
 const joinByDash = (arr: any[]) =>
   Array.isArray(arr) ? arr.map(a => getID(a)).join('-') : getID(arr);
 
-const formatSiNo = (val: any) => {
+const formatoSiNo = (val: any) => {
   const v = getID(val);
   if (v === 1 || v === '1' || v === true || String(v).toUpperCase() === 'SI' || String(v).toUpperCase() === 'SÍ') return 'SÍ';
   if (v === 0 || v === '0' || v === false || String(v).toUpperCase() === 'NO') return 'NO';
@@ -148,7 +148,7 @@ const polizasFacuResumen = computed(() => {
   }))
 });
 
-const reaseguradoresTablaCompleta = computed(() => {
+/*const reaseguradoresTablaCompleta = computed(() => {
   const conf = contratoStore.configReaseg;
   const ptu = contratoStore.configReasegPTU;
   if (!conf) return [];
@@ -157,17 +157,18 @@ const reaseguradoresTablaCompleta = computed(() => {
     cveReasegurador: r.nombreReasegurador || getTX(r.cveReasegurador),
     participacion: r.participacion + '%',
     cveDistrCesion: getTX(conf?.indicadorDistrC),
-    indCesionBasica: formatSiNo(conf.cesionCoberBasi),
-    indComisionReaseguro: formatSiNo(conf.comisionReaseg),
-    indDetalleCobertura: formatSiNo(conf.detalleCobertura),
+    indCesionBasica: formatoSiNo(conf.cesionCoberBasi),
+    indComisionReaseguro: formatoSiNo(conf.comisionReaseg),
+    indDetalleCobertura: formatoSiNo(conf.detalleCobertura),
     cveAsignacion: getTX(conf.tipoComision),
-    otrogaPtu: formatSiNo(ptu?.otorgaPtu),
+    otrogaPtu: formatoSiNo(ptu?.otorgaPtu),
     cvePtu: getTX(ptu?.metodoCalPTU),
     porcentajePtu: (ptu?.ptu || 0) + '%',
     porcentajeK: (ptu?.kPor || 0) + '%',
     aniosArrastre: ptu?.aniosArrastre || 0
   }))
 });
+*/
 
 const tarifasTablaCompleta = computed(() => {
   const cob = contratoStore.configReasegCob;
@@ -301,7 +302,8 @@ const guardarEnBD = async () => {
     const ptu = contratoStore.configReasegPTU;
 
     if (!gen) return;
-    /*const verificarContratoExistente = BaseAPI('/reaseguro/contratos/vida/contratos');
+    // para verificar si el contrato ya existe en la base de datos
+    /*const verificarContratoExistente = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/DatosContratoRest', isBase: true, isPrivate: true });
     const identificadorContratoExistente = await contratoStore.verificarContratoExistente(gen.idContrato);
     if(identificadorContratoExistente){
       dialog.show({ title: 'Error', message: `El ID de contrato ${gen.idContrato} ya existe. Por favor, elija uno diferente.`, type: DialogType.ERROR });
@@ -327,11 +329,11 @@ const guardarEnBD = async () => {
       techo: cleanN(gen.techo),
       porcentajeCesion: cleanN(gen.porcentajeCesion)
     };
-    await apiDatosContrato.post('register', payloadGen);
+    //await apiDatosContrato.post('register', payloadGen);
 
-    const listaReaseguradoresContrato = conf?.reaseguradores || [];
+    const listaReaseguradoresContrato = conf?.cveReasegurador || [];
 
-    const promsReas = listaReaseguradoresContrato.map((r: any) =>
+    /*const promsReas = listaReaseguradoresContrato.map((r: any) =>
       apiReaseguradoras.post('register', {
         idContrato: gen.idContrato,
         cveReasegurador: String(r.clave || getID(r.cveReasegurador)),
@@ -426,7 +428,7 @@ const guardarEnBD = async () => {
             }
           });
         });
-      }
+      }*/
 
     /*const promsCob: any[] = [];
     if (cob?.tarifas && cob.tarifas.length > 0) {
@@ -467,7 +469,7 @@ const guardarEnBD = async () => {
       });
     }*/
 
-    const promsComNormal = (conf && getID(conf.comisionReaseg) == 1)
+    /*const promsComNormal = (conf && getID(conf.comisionReaseg) == 1)
       ? listaReaseguradoresContrato.map((r: any) => apiComision.post('register', {
           idContrato: gen.idContrato,
           cveReasegurador: String(r.clave || getID(r.cveReasegurador)),
@@ -542,7 +544,7 @@ const guardarEnBD = async () => {
     console.error("ERROR:", error);
     dialog.show({ title: 'ERROR', message: `Error al guardar: ${error.message || error}`, type: DialogType.ERROR });
   }
-};
+};*/
 
 const abrirResumen = () => { modalResumen.value = true }
 defineExpose({ abrirResumen })
