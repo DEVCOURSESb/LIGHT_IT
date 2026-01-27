@@ -1,8 +1,8 @@
 <template>
   <v-form ref="formRef" @submit.prevent>
     <v-container fluid>
-      <v-row>
-        <v-col cols="12" md="4">
+      <v-row class="d-flex">
+        <v-col cols="12" md="3">
           <v-select
             v-model="intermediarioObj"
             :items="opcionesSiNo"
@@ -11,6 +11,15 @@
             chips
             return-object
             :rules="[v => v !== null || 'Requerido']"
+          />
+        </v-col>
+
+        <v-col cols="12" md="1" class="d-flex align-center">
+          <v-checkbox
+            v-model="invertir"
+            label="¿Invertir?"
+            color="indigo"
+            hide-details
           />
         </v-col>
 
@@ -27,7 +36,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" :order="invertir ? 2 : 1">
           <v-select
             v-model="reaseguradoraObj"
             :items="reaseguradorasDisponibles"
@@ -44,8 +53,8 @@
 
       <v-divider class="my-4" />
 
-      <v-row class="align-center">
-        <v-col cols="12" md="7">
+      <v-row class="align-center d-flex">
+        <v-col cols="12" md="7" :order="invertir ? 1 : 2">
           <v-autocomplete
             v-model="brokerObj"
             :items="intermeOptions"
@@ -58,7 +67,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="4" :order="3">
           <v-select
             v-model="corretajePObj"
             :items="opcionesSiNo"
@@ -70,7 +79,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="1" class="d-flex justify-center">
+        <v-col cols="12" md="1" class="d-flex justify-center" :order="4">
           <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
             <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
             <v-tooltip activator="parent" location="top">
@@ -85,9 +94,6 @@
           <v-select v-model="tipoCorretajeObj" :items="tipoCorretajeOptions" :disabled="getID(intermediarioObj) != 1" label="Tipo de corretaje" variant="solo-filled" chips return-object/>
         </v-col>
         <v-col cols="12" md="4" v-if="getID(tipoCorretajeObj) == 0">
-          <!--<v-text-field v-model.number="corretajePorc" label="% Corretaje" type="number" variant="solo-filled" suffix="%" />
-        </v-col>
-        <v-col cols="12" md="4">-->
           <div class="text-caption grey--text">Corretaje (%)</div>
           <v-slider v-model="corretajePorc" min="0" max="100" step="0.01" thumb-label color="indigo" hide-details>
             <template v-slot:append>
@@ -142,8 +148,11 @@ const contratoStore = useContratoStore()
 const dialog = useDialog()
 const modalRef = ref<any>(null)
 const formRef = ref<any>(null)
+const invertir = ref(false)
 
-const abrirModalResumen = () => modalRef.value?.abrirResumen?.()
+const abrirModalResumen = () => {
+  modalRef.value?.abrirResumen?.()
+}
 
 const {
   asignacionIntermediarioOptions, fetchAsignacionInt,
