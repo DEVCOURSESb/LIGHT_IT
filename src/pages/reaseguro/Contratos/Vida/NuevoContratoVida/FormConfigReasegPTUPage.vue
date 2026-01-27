@@ -150,7 +150,10 @@ import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 import { useContratoStore, type ContratoReasePTU, type ReaseguradorCompleto } from '@/stores/contratoStore'
 import { DialogType, useDialog } from '@/stores/dialogStore'
 import { ValidacionesContrato } from './ValidacionesContrato'
-import type { Reasegurador } from '@/API/catalogos/reaseguradores/reasegurador.interface'
+
+const emit = defineEmits<{ 
+  onIncParticipaation: [];
+}>();
 
 const contratoStore = useContratoStore()
 const dialog = useDialog()
@@ -277,6 +280,19 @@ const guardarReasegurador = async () => {
     message: `La reaseguradora ${gen.nombreReasegurador} ha sido configurada y guardada exitosamente.`,
     type: DialogType.SUCCESS
   })
+
+
+  const isFullParticipation = contratoStore.totalParticipacion === 100;
+
+  if (!isFullParticipation) {
+    dialog.show({
+      title: 'Atención',
+      message: `La participación total de reaseguradores es ${contratoStore.totalParticipacion}%. Por favor, agregue otro reasegurador para completar el 100%.`,
+      type: DialogType.INFO
+    })
+
+    emit('onIncParticipaation')
+  }
 }
 
 const resetearTodoElFlujo = () => {

@@ -39,7 +39,8 @@
 
       <v-window-item value="tab-4">
         <v-card flat>
-          <v-card-text><FormConfigReasegPTUPage /></v-card-text>
+          <!-- emit -->
+          <v-card-text><FormConfigReasegPTUPage @on-inc-participaation="changeToGeneralTab" /></v-card-text>
         </v-card>
       </v-window-item>
 
@@ -64,6 +65,10 @@ import ResumenReaseguradoresPage from './ResumenReaseguradoresPage.vue'
 
 const contratoStore = useContratoStore()
 const activeTab = ref('tab-1')
+
+const changeToGeneralTab = () => {
+  activeTab.value = 'tab-1'
+}
 
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
 
