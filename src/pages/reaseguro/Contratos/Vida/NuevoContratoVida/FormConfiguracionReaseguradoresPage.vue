@@ -21,26 +21,26 @@
     <v-window v-model="activeTab">
       <v-window-item value="tab-1">
         <v-card flat>
-          <v-card-text><FormConfigReasegGeneralPage /></v-card-text>
+          <v-card-text><FormConfigReasegGeneralPage @on-save-complete="() => activeTab = 'tab-2'" /></v-card-text>
         </v-card>
       </v-window-item>
 
       <v-window-item value="tab-2">
         <v-card flat>
-          <v-card-text><FormConfigReasegCoberturaPage /></v-card-text>
+          <v-card-text><FormConfigReasegCoberturaPage @on-save-complete="() => activeTab = mostrarComisionEscalonada ? 'tab-3' : 'tab-4'" /></v-card-text>
         </v-card>
       </v-window-item>
 
       <v-window-item v-if="mostrarComisionEscalonada" value="tab-3">
         <v-card flat>
-          <v-card-text><FormConfigReasegComisionEsPage /></v-card-text>
+          <v-card-text><FormConfigReasegComisionEsPage @on-save-complete="() => activeTab = 'tab-4'" /></v-card-text>
         </v-card>
       </v-window-item>
 
       <v-window-item value="tab-4">
         <v-card flat>
           <!-- emit -->
-          <v-card-text><FormConfigReasegPTUPage @on-inc-participaation="changeToGeneralTab" /></v-card-text>
+          <v-card-text><FormConfigReasegPTUPage @on-not-fully-participation="() => activeTab = 'tab-1'" @on-full-participation="() => activeTab = 'tab-5'" /></v-card-text>
         </v-card>
       </v-window-item>
 
@@ -66,9 +66,6 @@ import ResumenReaseguradoresPage from './ResumenReaseguradoresPage.vue'
 const contratoStore = useContratoStore()
 const activeTab = ref('tab-1')
 
-const changeToGeneralTab = () => {
-  activeTab.value = 'tab-1'
-}
 
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
 
@@ -76,6 +73,7 @@ const mostrarComisionEscalonada = computed(() => {
   const tipo = contratoStore.configReaseg?.tipoComision
   return getID(tipo) == 2
 })
+
 
 watch(mostrarComisionEscalonada, (isVisible) => {
   if (!isVisible && activeTab.value === 'tab-3') {

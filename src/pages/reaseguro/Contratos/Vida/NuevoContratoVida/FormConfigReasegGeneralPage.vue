@@ -163,6 +163,10 @@ import { useContratoStore, type ContratoGeneralConfReaseg } from "@/stores/contr
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { ValidacionesContrato } from './ValidacionesContrato'
 
+const emits = defineEmits<{
+  (e: 'on-save-complete'): void
+}>();
+
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref()
@@ -197,14 +201,21 @@ const getID = (item: any) => {
 
 watch(
   [() => getID(comisionReasegObj.value), () => getID(detalleCoberturaObj.value)],
-  ([comision, detalle]) => {
+  async ([comision, detalle]) => {
+    console.log({comision, detalle})
     if (comision !== 1 || detalle !== 1) {
+      // obtener de nuevo todas las opciones de tipoCobertura
+      await fetchTipoCobertura()
       tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
       return
     }
-    // segun yo aqui debe ir la logica para filtrar las opciones de tipoCobertura si detalle es igual a 1 debera solo mostrar basica y badi que es 0 y 1
 
     if (detalle === 1) {
+      // si detalle por cobertura es SI, quitar la opcion de GENERAL del select de tipoCobertura
+      tipoCoberturaOptions.value = tipoCoberturaOptions.value.filter(tipoCobertura => tipoCobertura.title !== 'GENERAL')
+      /* console.log(tipoCoberturaOptions)
+      console.log(tipoCoberturaObj) */
+
       const yaExisteBasicaEnTarifas = contratoStore.configReasegCob?.tarifas?.some(
         (t: any) => getID(t.tipoCobertura) === 0
       )
@@ -288,6 +299,7 @@ const guardarConfigReaseguro = async () => {
     participacion: Number(participacion.value.toFixed(2)),
   };
   dialog.show({ title: 'Éxito', message: 'Configuración guardada correctamente.', type: DialogType.SUCCESS })
+  emits('on-save-complete')
 }
 
 onMounted(async () => {
@@ -308,10 +320,4 @@ onMounted(async () => {
     hidratar()
   }
 })
-
-const headersReaseg = [
-  { title: 'Reaseguradora', key: 'nombreReasegurador' },
-  { title: '% Participación', key: 'participacion' },
-  { title: 'Acciones', key: 'acciones', sortable: false }
-]
 </script>

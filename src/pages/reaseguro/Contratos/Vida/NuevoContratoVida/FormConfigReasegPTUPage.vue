@@ -151,8 +151,9 @@ import { useContratoStore, type ContratoReasePTU, type ReaseguradorCompleto } fr
 import { DialogType, useDialog } from '@/stores/dialogStore'
 import { ValidacionesContrato } from './ValidacionesContrato'
 
-const emit = defineEmits<{
-  onIncParticipaation: [];
+const emits = defineEmits<{
+  'on-not-fully-participation': [],
+  'on-full-participation': []
 }>();
 
 const contratoStore = useContratoStore()
@@ -291,7 +292,9 @@ const guardarReasegurador = async () => {
       type: DialogType.INFO
     })
 
-    emit('onIncParticipaation')
+    emits('on-not-fully-participation')
+  } else {
+    emits('on-full-participation')
   }
 }
 

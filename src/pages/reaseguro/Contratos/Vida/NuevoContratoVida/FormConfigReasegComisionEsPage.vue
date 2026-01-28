@@ -162,6 +162,11 @@ interface ComisionReaseguro {
   limiteSup: number
   comisionDefinitiva: number
 }
+
+const emits = defineEmits<{
+  (e: 'on-save-complete'): void
+}>();
+
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref<any>(null)
@@ -301,5 +306,6 @@ const guardarDatos = () => {
     comisiones: JSON.parse(JSON.stringify(comisiones.value)),
   })
   dialog.show({ title: 'Éxito', message: 'Comisiones escalonadas guardadas.', type: DialogType.SUCCESS })
+  emits('on-save-complete')
 }
 </script>

@@ -255,6 +255,10 @@ import { DialogType, useDialog } from "@/stores/dialogStore"
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 import { ValidacionesContrato } from './ValidacionesContrato'
 
+const emits = defineEmits<{
+  (e: 'on-save-complete'): void
+}>();
+
 const contratoStore = useContratoStore()
 const dialog = useDialog()
 const formRef = ref()
@@ -550,6 +554,7 @@ const guardarTodoEnStore = async () => {
 
   contratoStore.setConfigReasCob(payload)
   dialog.show({ type: DialogType.SUCCESS, message: 'Configuración de coberturas guardada', title: 'Éxito' })
+  emits('on-save-complete')
 }
 
 const headersAgrupacion = [

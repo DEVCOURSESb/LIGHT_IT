@@ -10,7 +10,7 @@
       <v-window-item value="tab-1">
         <v-card flat>
           <v-card-text>
-            <FormGeneralDatosPage @actualizarFormaContractual="actualizarFormaContractual" />
+            <FormGeneralDatosPage @actualizarFormaContractual="actualizarFormaContractual" @on-success-register="onSuccessRegisterDatosGenerales" />
           </v-card-text>
         </v-card>
       </v-window-item>
@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import FormGeneralDatosPage from './FormGeneralDatosPage.vue'
 import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
 
@@ -40,10 +40,11 @@ const actualizarFormaContractual = (valor: number) => {
   esFacultativo.value = valor === 1
 }
 
-watch(esFacultativo, (val) => {
-  if (!val && activeTab.value === 'tab-2') {
-    activeTab.value = 'tab-1'
+const onSuccessRegisterDatosGenerales = () => {
+  if (esFacultativo.value) {
+    activeTab.value = 'tab-2'
   }
-})
+}
+
 
 </script>

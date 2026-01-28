@@ -287,7 +287,8 @@ const techoCapa = ref<number>(0)
 const capaEditando = ref<number | null>(null)
 
 const emit = defineEmits<{
-  (e: 'actualizarFormaContractual', valor: number): void
+  (e: 'actualizarFormaContractual', valor: number): void,
+  (e: 'onSuccessRegister'): void
 }>()
 
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
@@ -452,6 +453,8 @@ const guardarDatosGenerales = async () => {
   }
 
   dialog.show({ title: 'Éxito', message: 'Datos de contrato general guardados', type: DialogType.SUCCESS })
+
+  emit('onSuccessRegister')
 }
 
 const headers1 = [
