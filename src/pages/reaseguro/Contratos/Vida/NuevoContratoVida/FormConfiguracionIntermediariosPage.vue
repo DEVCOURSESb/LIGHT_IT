@@ -14,7 +14,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="1" class="d-flex align-center">
+        <v-col v-if="getID(asignacionIntermObj) === 0" cols="12" md="1" class="d-flex align-center">
           <v-checkbox
             v-model="invertir"
             label="¿Invertir?"
@@ -35,7 +35,12 @@
             :rules="[v => (getID(intermediarioObj) == 0 ? !!v : true) || 'Requerido']"
           />
         </v-col>
+      </v-row>
 
+      <v-divider class="my-4" />
+
+      <v-row class="align-center d-flex">
+        <!-- Reaseguradora - order 2 cuando invertir=true, order 1 cuando invertir=false -->
         <v-col cols="12" md="4" :order="invertir ? 2 : 1">
           <v-select
             v-model="reaseguradoraObj"
@@ -49,11 +54,8 @@
             :error-messages="errorReaseguradora"
           />
         </v-col>
-      </v-row>
 
-      <v-divider class="my-4" />
-
-      <v-row class="align-center d-flex">
+        <!-- Intermediario/Broker - order 1 cuando invertir=true, order 2 cuando invertir=false -->
         <v-col cols="12" md="7" :order="invertir ? 1 : 2">
           <v-autocomplete
             v-model="brokerObj"
@@ -225,6 +227,13 @@ watch(montoCorretaje, (newVal) => {
 watch(intermediarioObj, value => {
   if (isHydrating.value) return
   limpiarCamposCaptura()
+})
+
+// Resetear invertir cuando cambie la asignación y no sea "POR REASEGURADORA"
+watch(asignacionIntermObj, (newVal) => {
+  if (getID(newVal) !== 0) {
+    invertir.value = false
+  }
 })
 
 const reaseguradorasDelContrato = computed(() => {
