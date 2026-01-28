@@ -274,6 +274,7 @@ const procesarGuardado = () => {
     corretajeFijo: Number(corretajePorc.value),
     montoCorreFijo: Number(montoCorretaje.value),
     display: {
+      idContrato: contratoStore.general?.idContrato,
       asignacion: asignacionIntermObj.value?.title || '-',
       reaseguradora: reaseg?.title || '-',
       broker: brokerObj.value?.title || '-',
@@ -397,6 +398,7 @@ onMounted(async () => {
 })
 
 const headers = [
+  { title: 'ID Contrato', key: 'display.idContrato' },
   { title: 'Asignación', key: 'display.asignacion' },
   { title: 'Reaseguradora', key: 'display.reaseguradora' },
   { title: 'Intermediario / Bróker', key: 'display.broker' },

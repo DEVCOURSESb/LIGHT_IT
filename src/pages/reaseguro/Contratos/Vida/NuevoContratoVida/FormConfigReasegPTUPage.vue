@@ -282,7 +282,7 @@ const guardarReasegurador = async () => {
   })
 
 
-  const isFullParticipation = contratoStore.totalParticipacion === 100;
+  const isFullParticipation = contratoStore.totalParticipacion >= 100;
 
   if (!isFullParticipation) {
     dialog.show({

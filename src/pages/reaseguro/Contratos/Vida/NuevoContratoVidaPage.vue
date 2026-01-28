@@ -76,7 +76,7 @@ const dialog = useDialog();
 const disabledIntermediario = ref(true);
 
 const checkParticipationReaseg = () => {
-  const isFullParticipation = contratoStore.totalParticipacion === 100;
+  const isFullParticipation = contratoStore.totalParticipacion >= 100;
 
   if (!isFullParticipation) {
     dialog.show({
