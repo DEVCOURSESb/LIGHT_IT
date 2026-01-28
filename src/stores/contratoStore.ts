@@ -275,6 +275,7 @@ export const useContratoStore = defineStore("contrato", {
       localStorage.removeItem("contrato_general_configReaseg_Com");
       localStorage.removeItem("contrato_general_configReaseg_PTU");
       localStorage.removeItem("contrato_general_configInt");
+      localStorage.removeItem("lista_reaseguradores_final");
       localStorage.removeItem("contrato_completo");
     },
   },

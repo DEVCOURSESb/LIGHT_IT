@@ -143,7 +143,7 @@ import { onMounted, ref, watch, computed, nextTick } from 'vue'
 import { NuevoContratoVidaConInt } from './NuevoContratoConfigInt.actions'
 import { useContratoStore } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
-//import ModalEnviarDatos from './ModalEnviarDatos.vue'
+import ModalEnviarDatos from './ModalEnviarDatos.vue'
 import { ValidacionesContrato } from './ValidacionesContrato'
 
 const contratoStore = useContratoStore()
@@ -236,7 +236,7 @@ watch(asignacionIntermObj, (newVal) => {
   }
 })
 
-const reaseguradorasDelContrato = computed(() => {
+const reaseguradorasDeContrato = computed(() => {
   return contratoStore.listaReaseguradoresFinal?.map(r => ({
     title: r.general.nombreReasegurador,
     value: r.general.cveReasegurador
@@ -244,12 +244,13 @@ const reaseguradorasDelContrato = computed(() => {
 })
 
 const reaseguradorasDisponibles = computed(() => {
-  if (getID(asignacionIntermObj.value) == 1) return reaseguradorasDelContrato.value;
+  if (getID(asignacionIntermObj.value) == 1) return reaseguradorasDeContrato.value;
   const idsAsignados = intermediariosTabla.value
     .filter((_, idx) => idx !== indexEdicion.value)
     .map(i => getID(i.reaseguradora))
-  return reaseguradorasDelContrato.value.filter(r => !idsAsignados.includes(r.value))
+  return reaseguradorasDeContrato.value.filter(r => !idsAsignados.includes(r.value))
 })
+
 
 const agregarIntermediario = () => {
   errorBroker.value = !brokerObj.value ? 'Seleccione un al menos un intermediario' : ''
@@ -260,12 +261,13 @@ const agregarIntermediario = () => {
   procesarGuardado()
 }
 
+
 const procesarGuardado = () => {
   const esIndividual = getID(asignacionIntermObj.value) === 0;
 
-  const registro = {
+  const crearEstructuraRegistro = (reaseg: any) => ({
     asignacionInterm: asignacionIntermObj.value,
-    reaseguradora: esIndividual ? reaseguradoraObj.value : reaseguradorasDelContrato.value,
+    reaseguradora: reaseg,
     broker: brokerObj.value,
     corretaje: corretajePObj.value,
     tipoCorretaje: tipoCorretajeObj.value,
@@ -273,22 +275,29 @@ const procesarGuardado = () => {
     montoCorreFijo: Number(montoCorretaje.value),
     display: {
       asignacion: asignacionIntermObj.value?.title || '-',
-      reaseguradora: esIndividual
-        ? (reaseguradoraObj.value?.title || '-')
-        : 'TODAS LAS DEL CONTRATO',
+      reaseguradora: reaseg?.title || '-',
       broker: brokerObj.value?.title || '-',
       tipo: tipoCorretajeObj.value?.title || '-',
     }
-  }
+  });
 
   if (indexEdicion.value !== null) {
-    intermediariosTabla.value[indexEdicion.value] = registro
-    indexEdicion.value = null
+    intermediariosTabla.value[indexEdicion.value] = crearEstructuraRegistro(reaseguradoraObj.value);
+    indexEdicion.value = null;
   } else {
-    intermediariosTabla.value.push(registro)
+    if (esIndividual) {
+      intermediariosTabla.value.push(crearEstructuraRegistro(reaseguradoraObj.value));
+    } else {
+      reaseguradorasDeContrato.value.forEach(reaseg => {
+        const existe = intermediariosTabla.value.some(i => getID(i.reaseguradora) === reaseg.value);
+        if (!existe) {
+          intermediariosTabla.value.push(crearEstructuraRegistro(reaseg));
+        }
+      });
+    }
   }
-  limpiarCamposCaptura()
-}
+  limpiarCamposCaptura();
+};
 
 const limpiarCamposCaptura = () => {
   isHydrating.value = true
@@ -369,7 +378,7 @@ const hidratar = () => {
         display: {
           asignacion: findInOptions(asignacionIntermediarioOptions.value, item.asignacionInterm)?.title || '-',
           reaseguradora: esPorReaseg
-             ? (findInOptions(reaseguradorasDelContrato.value, item.reaseguradora)?.title || '-')
+             ? (findInOptions(reaseguradorasDeContrato.value, item.reaseguradora)?.title || '-')
              : 'TODAS LAS DEL CONTRATO',
           broker: findInOptions(intermeOptions.value, item.broker)?.title || '-',
           tipo: findInOptions(tipoCorretajeOptions.value, item.tipoCorretaje)?.title || '-'
@@ -381,7 +390,7 @@ const hidratar = () => {
   setTimeout(() => { isHydrating.value = false }, 100)
 }
 
-watch([() => contratoStore.configInt, intermeOptions, reaseguradorasDelContrato], hidratar, { immediate: true })
+watch([() => contratoStore.configInt, intermeOptions, reaseguradorasDeContrato], hidratar, { immediate: true })
 
 onMounted(async () => {
   await Promise.all([fetchAsignacionInt(), fetchReasegurador(), fetchIntermediario(), fetchTipoCorretaje()])

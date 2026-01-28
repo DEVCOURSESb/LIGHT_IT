@@ -49,7 +49,7 @@ const fetchTransformado = async () => {
 export const tiposContratoConfig = {
   entity: "tipos-contrato",
   title: "Tipos de Contrato",
-  searchPlaceholder: "Buscar tipo de contrato...",
+  searchPlaceholder: "",
   addButtonText: "Agregar tipo de contrato",
   modalTitle: "Agregar nuevo tipo de contrato",
   editModalTitle: "Editar tipo de contrato",

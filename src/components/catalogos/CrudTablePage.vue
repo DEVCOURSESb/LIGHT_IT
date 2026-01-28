@@ -3,9 +3,15 @@
   <div>
     <v-breadcrumbs :items="['Catálogos', config.title]" />
     <v-card-title class="d-flex align-center"> </v-card-title>
-
     <v-card-text>
-      <v-row class="w-100">
+      <v-row justify="center">
+        <v-col cols="4" class="d-flex align-center justify-center">
+          <h1>{{ config.title }}</h1>
+        </v-col>
+      </v-row>
+    </v-card-text>
+    <v-card-text>
+      <v-row>
         <v-col cols="4">
           <SearchComponent
             :initial-value-search="search"
@@ -13,15 +19,11 @@
             @on-write="setSearch"
           />
         </v-col>
-
-        <v-col cols="4" class="d-flex align-center justify-center">
-          <h1>{{ config.title }}</h1>
-        </v-col>
-
+        <v-spacer />
         <v-col cols="4" class="d-flex justify-end align-top gap-2">
           <ModalComponent
             :is-active="activeModal"
-            :text-button="config?.addButtonText || 'Registro individual'"
+            :text-button="config?.addButtonText || 'Agregar'"
             :title="
               editingId
                 ? config.editModalTitle || config.modalTitle
@@ -103,7 +105,7 @@
                 :loading="loading"
                 type="submit"
               >
-                {{ editingId ? "Actualizar" : "Guardar" }}  
+                {{ editingId ? "Actualizar" : "Guardar" }}
               </v-btn>
             </v-form>
           </ModalComponent>
