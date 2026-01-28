@@ -28,9 +28,11 @@
               <ul class="text-caption">
                 <li><strong>ID Contrato:</strong> {{ item.general.idContrato }}</li>
                 <li><strong>Cesión Básica:</strong> {{ item.general.cesionCoberBasi?.title }}</li>
-                <li><strong>Indicador Distribución:</strong> {{ item.general.indicadorDistrC }}</li>
+                <li><strong>Indicador Distribución:</strong> {{ item.general.indicadorDistrC?.title }}</li>
                 <li><strong>Comisión Reaseguro:</strong> {{ item.general.comisionReaseg?.title }}</li>
                 <li><strong>Tipo Comisión:</strong> {{ item.general.tipoComision?.title }}</li>
+                <li><strong>Detalle por cobertura:</strong> {{ item.general.detalleCobertura?.title }}</li>
+                <li><strong>Tipo cobertura:</strong> {{ item.general.tipoCobertura?.title }}</li>
                 <li><strong>Comisión 1er Año:</strong> {{ item.general.comisionPrimerAnio }}%</li>
                 <li><strong>Comisión Renovación:</strong> {{ item.general.comisionRenovacion }}%</li>
               </ul>
@@ -58,7 +60,7 @@
                   <span v-else-if="tarifa.tipoTarifa === 1">{{ tarifa.porSobrePrima }}%</span>
                   <span v-else-if="tarifa.tipoTarifa === 3">{{ tarifa.tarifaFijaM }} (Millar)</span>
                   <span v-else-if="tarifa.tipoTarifa === 2">{{ tarifa.factorTap }}% (Propia)</span>
-                  <span v-else class="text-grey">N/A</span>
+                  <span v-else-if="tarifa.tipoTarifa === 4">{{ tarifa.tarifaP }} (Millar)</span>
                 </template>
               </v-data-table>
 

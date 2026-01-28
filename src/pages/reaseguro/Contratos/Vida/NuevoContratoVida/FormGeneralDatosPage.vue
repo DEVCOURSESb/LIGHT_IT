@@ -2,7 +2,6 @@
   <v-form ref="formRef">
     <v-container fluid>
       <v-row>
-        <!-- Subramo -->
         <v-col cols="12" md="4">
           <v-select
             v-model="subramoObj"
@@ -17,7 +16,6 @@
           />
         </v-col>
 
-        <!-- ID Contrato -->
         <v-col cols="12" md="4">
           <v-text-field
             v-model="idContrato"
@@ -28,7 +26,6 @@
           />
         </v-col>
 
-        <!-- Negocios Cubiertos -->
         <v-col cols="12" md="4">
           <v-text-field
             v-model="negociosCubiertos"
@@ -39,7 +36,6 @@
           />
         </v-col>
 
-        <!-- Moneda -->
         <v-col cols="12" md="4">
           <v-select
             v-model="monedaObj"
@@ -53,7 +49,6 @@
           />
         </v-col>
 
-        <!-- Fecha Inicio -->
         <v-col cols="12" md="4">
           <v-date-input
             v-model="inicioContrato"
@@ -66,7 +61,6 @@
           />
         </v-col>
 
-        <!-- Fecha Fin -->
         <v-col cols="12" md="4">
           <v-date-input
             v-model="finContrato"
@@ -79,7 +73,6 @@
           />
         </v-col>
 
-        <!-- Forma Contractual -->
         <v-col cols="12" md="4">
           <v-select
             v-model="formaContractualObj"
@@ -92,7 +85,6 @@
           />
         </v-col>
 
-        <!-- Tipo Reaseguro -->
         <v-col cols="12" md="4">
           <v-select
             v-model="tipoReaseguroObj"
@@ -105,7 +97,6 @@
           />
         </v-col>
 
-        <!-- Tipo Contrato -->
         <v-col cols="12" md="4">
           <v-select
             v-model="tipoContratoObj"
@@ -118,7 +109,6 @@
           />
         </v-col>
 
-        <!-- Criterio Cobertura -->
         <v-col cols="12" md="4">
           <v-select
             v-model="criterioCoberturaObj"
@@ -132,7 +122,6 @@
           />
         </v-col>
 
-        <!-- Límite Máximo Contrato (Formateado) -->
         <v-col cols="12" md="4">
           <v-text-field
             v-model="displayLimiteMax"
@@ -143,7 +132,6 @@
           />
         </v-col>
 
-        <!-- Límite Máximo Responsabilidad (Formateado) -->
         <v-col cols="12" md="4">
           <v-text-field
             v-model="displayLimiteMaxResCR"
@@ -154,7 +142,6 @@
           />
         </v-col>
 
-        <!-- Retención Propia (Formateado) -->
         <v-col cols="12" md="4">
           <v-text-field
             v-model="displayRetencionP"
@@ -166,7 +153,6 @@
           />
         </v-col>
 
-        <!-- Cesión -->
         <v-col cols="12" md="4" v-if="[1, 7, 9].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="cesion"
@@ -177,7 +163,6 @@
           />
         </v-col>
 
-        <!-- Piso (Formateado) -->
         <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="displayPiso"
@@ -188,7 +173,6 @@
           />
         </v-col>
 
-        <!-- Techo (Formateado) -->
         <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="displayTecho"
@@ -201,7 +185,6 @@
 
         <v-divider v-if="Number(getID(tipoContratoObj)) === 3" class="my-4" />
 
-        <!-- Capas (Si tipo contrato es 3) -->
         <v-col cols="12" md="4" v-if="Number(getID(tipoContratoObj)) === 3">
           <v-text-field
             v-model="displayRetencionCapa"
@@ -229,7 +212,6 @@
       </v-row>
     </v-container>
 
-    <!-- Tabla de Capas -->
     <v-container v-if="Number(getID(tipoContratoObj)) === 3">
       <v-data-table :headers="headers1" :items="capas" hide-default-footer class="elevation-1">
         <template v-slot:item.retencionC="{ item }">
@@ -280,7 +262,6 @@ onMounted(async () => {
   ])
 })
 
-// Objetos de selección
 const subramoObj = ref<any[]>([])
 const monedaObj = ref<any>(null)
 const formaContractualObj = ref<any>(null)
@@ -288,7 +269,6 @@ const tipoReaseguroObj = ref<any>(null)
 const tipoContratoObj = ref<any>(null)
 const criterioCoberturaObj = ref<any>(null)
 
-// Campos de texto (Usamos number para la lógica)
 const idContrato = ref('')
 const negociosCubiertos = ref('TODA LA CARTERA')
 const inicioContrato = ref<any>(null)
@@ -301,7 +281,6 @@ const cesion = ref<string | number>('')
 const piso = ref<number>(0)
 const techo = ref<number>(0)
 
-// Capas
 const capas = ref<any[]>([])
 const retencionCapa = ref<number>(0)
 const techoCapa = ref<number>(0)

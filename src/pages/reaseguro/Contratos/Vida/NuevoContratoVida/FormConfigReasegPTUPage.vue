@@ -132,7 +132,7 @@
         </v-col>
         <v-col class="text-center">
           <v-btn
-            class="btn-guardar"
+            color="primary"
             elevation="4"
             @click="guardarReasegurador"
           >
@@ -151,7 +151,7 @@ import { useContratoStore, type ContratoReasePTU, type ReaseguradorCompleto } fr
 import { DialogType, useDialog } from '@/stores/dialogStore'
 import { ValidacionesContrato } from './ValidacionesContrato'
 
-const emit = defineEmits<{ 
+const emit = defineEmits<{
   onIncParticipaation: [];
 }>();
 
