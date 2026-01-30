@@ -70,7 +70,7 @@
           <v-select
             v-model="coberturasBasiObj"
             :items="coberturasBasiOptions"
-            label="Coberturas básicas"
+            label="Coberturas BASICAs"
             item-title="title"
             return-object
             multiple
@@ -400,13 +400,13 @@ const agregarTarifa = () => {
   }
 
   const idCobSeleccionada = getID(coberturaTarifaObj.value);
-  let tipoCoberturaTexto = 'BÁSICA';
+  let tipoCoberturaTexto = 'BASICA';
 
   if (idCobSeleccionada !== null) {
     const esBasica = coberturasBasiObj.value.some(c => getID(c) == idCobSeleccionada);
     const esAdicional = coberturasAdiciObj.value.some(c => getID(c) == idCobSeleccionada);
 
-    if (esBasica) tipoCoberturaTexto = 'BÁSICA';
+    if (esBasica) tipoCoberturaTexto = 'BASICA';
     else if (esAdicional) tipoCoberturaTexto = 'BADI';
   }
 

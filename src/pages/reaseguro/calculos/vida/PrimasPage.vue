@@ -1,77 +1,69 @@
 <template>
   <div>
     <v-breadcrumbs :items="breadcrumbs" />
-    <v-card-title>
-      <v-row class="w-100">
-        <v-col cols="4"></v-col>
-
-        <v-col cols="4" class="d-flex align-center justify-center">
-          <h1>Cálculo de Primas de Vida</h1>
-        </v-col>
-
-        <v-col cols="4" class="d-flex justify-end align-top gap-2"></v-col>
-      </v-row>
+    <v-card-title class="d-flex align-center">
+      Cálculo de Primas
     </v-card-title>
 
-    <v-card class="mt-4" elevation="0" outlined>
-      <v-toolbar class="encabezado" flat>
-        <v-toolbar-title></v-toolbar-title>
-      </v-toolbar>
+   <v-card class="mt-4" elevation="0" outlined>
+    <v-card-title>
+      <v-form ref="formRef">
+        <v-row align="center" justify="center" class="mb-4">
+          <v-col cols="12" md="3">
+            <v-select
+              v-model="subramoObj"
+              :items="subramoOptions"
+              label="Subramo"
+              chips
+              return-object
+              variant="solo-filled"
+              clearable
+              required
+            />
+          </v-col>
 
-      <v-card-title class="pt-6">
-        <v-form ref="formRef">
-          <v-row>
-            <v-col cols="12" md="3">
-              <v-select
-                label="Seleccione un subramo"
-                :items="itemsToSelect"
-                item-title="text"
-                item-value="value"
-                v-model="subramo"
-                density="compact"
-              ></v-select>
-            </v-col>
+          <v-col cols="12" md="3">
+            <v-date-input
+              v-model="fechaEvaluacion"
+              label="Fecha de evaluación"
+              variant="solo-filled"
+              clearable
+              required
+            />
+          </v-col>
 
-            <v-col cols="12" md="3">
-              <v-text-field
-                label="Seleccione fecha de evaluación"
-                type="date"
-                density="compact"
-                v-model="fechaEvaluada"
-              ></v-text-field>
-            </v-col>
+          <v-col cols="8" md="2" class="title-center">
+            <v-btn
+              size="small"
+              class="btn-guardar"
+            >
+              Calcular
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-form>
+      <v-divider class="mb-4" />
 
-            <v-col cols="12" md="2" class="d-flex align-center">
-              <v-btn block class="btn-modificar" @click="calcularPrimas">
-                Cálcular
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-form>
-      </v-card-title>
-    </v-card>
-
-    <v-card class="mt-4" elevation="0" outlined>
-      <v-toolbar class="encabezado" flat>
-        <v-toolbar-title>Resultados del Cálculo</v-toolbar-title>
-        <!-- <btn @click="exportarExcel"> Exportar a Excel </btn> -->
-      </v-toolbar>
-
-      <v-data-table
-        class="mt-4"
-        :headers="headers"
-        :items="items"
-        striped="odd"
-      >
-        <template #item.actions="{ item }">
-          <v-icon class="edit" size="large" @click="descargarItem(item)">
-            mdi-download
-          </v-icon>
-          <v-icon class="delete" size="large" @click="deleteItem(item)">
-            mdi-delete
-          </v-icon>
+      <div class="mb-2">
+        <h6>Historico de Primas</h6>
+      </div>
+      <!-- <btn @click="exportarExcel"> Exportar a Excel </btn> -->
+        <v-data-table
+          :headers="headers"
+          :items="items"
+          class="elevation-1"
+          hide-default-footer
+        >
+          <template #item.actions="{ item }">
+            <v-icon class="edit" size="large" @click="descargarItem(item)">
+              mdi-download
+            </v-icon>
+            <v-icon class="delete" size="large" @click="deleteItem(item)">
+              mdi-delete
+            </v-icon>
         </template>
-      </v-data-table>
+        </v-data-table>
+      </v-card-title>
     </v-card>
   </div>
 </template>
@@ -79,13 +71,21 @@
 <script setup lang="ts">
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useSnackbar } from "@/stores/useSnackbar";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { CalcularSiniestros } from './Data/CalculoPrimasSiniestrosPtu.actions'
 
-const itemsToSelect = [
-  { text: "Vida Individual", value: "VIDA_IND" },
-  { text: "Vida Colectivo", value: "VIDA_COL" },
-  { text: "Vida Grupo", value: "VIDA_GRU" },
-];
+const subramoObj = ref<any[]>([])
+const fechaEvaluacion = ref<Date | null>(null)
+
+const {
+  subramoOptions, fetchSubramos,
+} = CalcularSiniestros()
+
+onMounted(async () => {
+  await Promise.all([
+    fetchSubramos()
+  ])
+})
 
 const items = [
   { subramo: "Vida Individual", fechaEvaluada: "2024-05-31" },
@@ -112,7 +112,7 @@ const headers = [
     sortable: true,
   },
   {
-    title: "ACCIONES",
+    title: "Acciones",
     key: "actions",
   },
 ];

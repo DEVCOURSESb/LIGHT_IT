@@ -363,6 +363,9 @@ const guardarEnBD = async () => {
 
       if (c?.tarifas) {
         c.tarifas.forEach((t: any) => {
+          const agrupacionEncontrada = c.agrupaciones?.find((a: any) =>
+            a.coberturas?.some((idCob: any) => String(getID(idCob)) === String(getID(t.cveCob)))
+          );
           promsCob.push(apiCoberturas.post('register', {
             idContrato: gen.idContrato,
             cveReasegurador: String(getID(g.cveReasegurador)),
@@ -370,12 +373,14 @@ const guardarEnBD = async () => {
             descClasifCober: getTX(t.tipoCobertura || "BÁSICA"),
             cveCob: String(getID(t.cveCob)),
             descCob: getTX(t.cobertura),
+            cveAgrupCob: agrupacionEncontrada ? String(getID(agrupacionEncontrada.madre)) : "",
+            descAgrupCob: agrupacionEncontrada ? getTX(agrupacionEncontrada.madre) : "",
             cveTarifa: Number(getID(t.tipoTarifa)),
             primaTarifaFija: cleanN(t.primaTarifa),
             porcentajePrimaEmitida: cleanN(t.porSobrePrima),
             tarifaFija: cleanN(t.tarifaFijaM),
             factorTap: cleanN(t.factorTap),
-            nombreArchivo: getTX(t.nombreArchivo)
+            tarifaPropia: getTX(t.nombreArchivo)
           }));
         });
       }
@@ -402,7 +407,7 @@ const guardarEnBD = async () => {
         }));
       }
     });
-    
+
     const promsCapas = (contratoStore.expc?.capas || []).map(c => apiCapas.post('register', {
       idContrato: gen.idContrato,
       detalleCapa: c.detalleCapa,
@@ -459,14 +464,22 @@ const guardarEnBD = async () => {
       ...promsInter
     ]);
 
-    dialog.show({ title: 'ÉXITO', message: 'Contrato guardado correctamente.', type: DialogType.SUCCESS });
-    contratoStore.reset();
+    await dialog.show({
+    title: 'ÉXITO',
+    message: 'Contrato guardado correctamente.',
+    type: DialogType.SUCCESS
+  });
+
+  contratoStore.reset();
+  modalResumen.value = false;
+  window.location.reload();
 
   } catch (error: any) {
     console.error("ERROR:", error);
     dialog.show({ title: 'ERROR', message: `Error: ${error.message}`, type: DialogType.ERROR });
   }
 };
+
 const abrirResumen = () => { modalResumen.value = true }
 defineExpose({ abrirResumen })
 
