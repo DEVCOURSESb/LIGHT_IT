@@ -90,7 +90,7 @@ export const NuevoContratoVida = () => {
     const { data } = await baseAPIOperacion.post<Subramo[]>("getAllRecords")
 
     subramoOptions.value = data
-      .filter(i => i.ramo === "010")
+      .filter(i => i.subramo === "011" || i.subramo === "012" || i.subramo === "013")
       .map(i => ({
         title: i.descOperacionRamos,
         value: i.subramo

@@ -1,7 +1,7 @@
 <template>
   <v-breadcrumbs :items="['Reaseguro', 'Configuración de tarifas', nombreArchivoVisual || 'Detalle']" />
   <br>
-  <v-btn rounded="xl" to="/reaseguro/configuracion_tarifas" variant="text">
+  <v-btn color="blue" rounded="xl" to="/reaseguro/configuracion_tarifas" variant="text">
     <v-icon start>mdi-arrow-left</v-icon>
     Volver
   </v-btn>

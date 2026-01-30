@@ -41,14 +41,42 @@
             <v-col cols="12" class="mt-4">
               <div class="text-subtitle-1 blue--text font-weight-bold">Detalle de Coberturas y Tarifas</div>
               <v-divider class="mb-2"></v-divider>
+              <v-data-table
+                v-if="item.coberturas && item.coberturas.agrupaciones.length > 0"
+                :headers="[
+                  { title: 'Coberturas', key: 'listaCoberturas' },
+                  { title: 'Agrupar en:', key: 'madre.title' },
+                ]"
+                :items="item.coberturas.agrupaciones"
+                density="compact"
+                class="elevation-0 border"
+                hide-default-footer
+              >
+                <template #item.listaCoberturas="{ item: agrupacion }">
+                  <span>
+                    {{ agrupacion.coberturas.map((c) => c.title).join(', ') }}
+                  </span>
+                </template>
 
+                <template #item.madre.title="{ item: agrupacion }">
+                  <span>
+                    {{ agrupacion.madre?.title }}
+                  </span>
+                </template>
+              </v-data-table>
+
+              <br>
               <v-data-table
                 v-if="item.coberturas && item.coberturas.tarifas.length > 0"
                 :headers="[
                   { title: 'Capa', key: 'detalleCapa' },
                   { title: 'Cobertura', key: 'cobertura' },
                   { title: 'Tipo Tarifa', key: 'tipoTarifa.title' },
-                  { title: 'Valor', key: 'valor' }
+                  { title: 'Prima tarifa', key: 'primaTarifa'},
+                  { title: '% Por sobre prima', key: 'porSobrePrima' },
+                  { title: 'Tarifa fija Millar', key: 'tarifaFijaM'},
+                  { title: 'Factor tarifa', key: 'factorTap'},
+                  { title: 'Tarifa propia', key: 'tarifaPropia'}
                 ]"
                 :items="item.coberturas.tarifas"
                 density="compact"

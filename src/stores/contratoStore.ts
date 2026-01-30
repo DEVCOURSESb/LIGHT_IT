@@ -271,7 +271,7 @@ export const useContratoStore = defineStore("contrato", {
       localStorage.removeItem("contrato_general_expc_datos");
       localStorage.removeItem("contrato_general_polizas");
       localStorage.removeItem("contrato_general_configReaseg_G");
-      localStorage.removeItem("contrato_general_configReaseg_Cob");
+      localStorage.removeItem("contrato_general_configReaseg_Cob"); // este no se esta eliminando correctamente y me genera que para la parte de reaseguradores me ponga el mismo
       localStorage.removeItem("contrato_general_configReaseg_Com");
       localStorage.removeItem("contrato_general_configReaseg_PTU");
       localStorage.removeItem("contrato_general_configInt");

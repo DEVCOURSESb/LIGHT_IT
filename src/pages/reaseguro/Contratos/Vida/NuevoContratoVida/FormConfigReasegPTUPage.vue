@@ -264,11 +264,11 @@ const guardarReasegurador = async () => {
     gastos: gastos.value ? gastos.value.toFixed(2) : null
   }
 
-  const reaseguradorFinal: ReaseguradorCompleto ={
-    general: { ...gen },
-    coberturas: cob ? { ...cob } : null,
-    comisiones: com ? { ...com } : null,
-    ptu: datosPTU,
+  const reaseguradorFinal: ReaseguradorCompleto = {
+    general: gen ? JSON.parse(JSON.stringify(gen)) : null,
+    coberturas: cob ? JSON.parse(JSON.stringify(cob)) : null,
+    comisiones: com ? JSON.parse(JSON.stringify(com)) : null,
+    ptu: JSON.parse(JSON.stringify(datosPTU)),
     participacion: Number(gen.participacion)
   }
 

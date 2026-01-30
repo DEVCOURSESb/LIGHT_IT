@@ -92,6 +92,7 @@ const router = useRouter()
 
 const apiTarifaRegistro = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
 const apiTarifaConsulta = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
+const apiTarifaEliminacion = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
 const apiTarifaPropiaRegistro = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegTipoTarifaPropiaRest', isBase: true, isPrivate: true });
 
 
@@ -129,8 +130,6 @@ const cargarTarifas = async () => {
 
 const visualizarTarifa = (item: any) => {
   const nombreParaEnviar = item.tarifaP || item.nombreTarifa || item.nombreArchivo;
-
-  console.log("Enviando a detalle:", item.id, nombreParaEnviar);
 
   router.push({
     path: `/reaseguro/configuracion_tarifas_archivo/${item.id}`,
@@ -229,11 +228,12 @@ const guardarEnBD = async () => {
 const eliminarTarifa = async (item: any) => {
   dialog.show({
     title: 'Confirmar',
-    message: `¿Estás seguro de eliminar ${item.nombreTarifa}?`,
-    type: DialogType.INFO,
-  });
-  // await apiTarifaRegistro.post('delete', { id: item.id });
-  // cargarTarifas();
+    message: `¿Estás seguro de eliminar el archivo?`,
+    type: DialogType.CONFIRM,
+  }); // debe esperar primero la confirmación antes de proceder a eliminar
+
+  await apiTarifaEliminacion.delete(`deleteRecord/${item.id}`);
+  cargarTarifas();
 };
 
 
