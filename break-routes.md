@@ -1,6 +1,5 @@
 reaseguro
 contratos de reaseguro
-    - autos de por si no funciona
     - daños
         - no proporcional de por si no funciona
         - proporcional
@@ -10,4 +9,3 @@ contratos de reaseguro
     - bordereaux de por si no funciona
     - estados de cuenta de reaseguro de por si no funciona
     - reportes reaseguro de por si no funciona
-    -- RR6 de por si no funciona

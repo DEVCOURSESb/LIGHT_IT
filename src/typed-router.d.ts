@@ -113,6 +113,7 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormGeneralDatosPageV', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV', '/reaseguro/Contratos/Vida/VisualizarContratoVida/FormPolizasFacultativasPageV', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage', '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage', Record<never, never>, Record<never, never>>,
+    '/TodoPage': RouteRecordInfo<'/TodoPage', '/TodoPage', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -504,6 +505,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage.vue': {
       routes: '/reaseguro/Contratos/Vida/VisualizarContratoVida/VisualizarContratoVidaPage'
+      views: never
+    }
+    'src/pages/TodoPage.vue': {
+      routes: '/TodoPage'
       views: never
     }
   }

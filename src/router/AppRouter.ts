@@ -36,33 +36,54 @@ export function AppRouter() {
         },
       ],
     },
+    catalogosRoutes,
     {
       path: "/reaseguro",
       component: () => import("@/layouts/MainLayout.vue"),
       meta: { requiresAuth: true, requiresVerification: true },
       children: [
-        { ...calculoRoutes },
         { ...contratosReaseguroRoutes },
-
-        // no se especificaba a donde pertenecian
-        // Autos
+        { ...calculoRoutes },
         {
-          path: "/visualizarContrato",
-          name: "visualizarContratos",
-          component: () =>
-            import("@/pages/reaseguro/Contratos/Danios/NuevoContratoPage.vue"),
-          meta: { title: "Visualizar Contratos" },
-        },
-        //Configuracion tarifas
-        {
-          path: "/configuracion_tarifas",
+          path: "configuracion_tarifas",
           name: "configuracion_tarifas",
           component: () =>
             import("@/pages/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage.vue"),
           meta: { title: "Configuracion de tarifas" },
         },
         {
-          path: "/configuracion_tarifas_archivo/:id",
+          path: "bordereaux",
+          name: "bordereaux",
+          component: () =>
+          import("@/pages/TodoPage.vue"),
+          meta: { title: "Bordereaux" },
+        },
+        {
+          path: "estadosCuentaReaseg",
+          name: "estadosCuentaReaseg",
+          component: () =>
+          import("@/pages/TodoPage.vue"),
+          meta: { title: "Estados de cuenta reaseguro" },
+        },
+        {
+          path: "reportesReaseguro",
+          name: "reportesReaseguro",
+          component: () =>
+          import("@/pages/TodoPage.vue"),
+          meta: { title: "Reportes Reaseguro" },
+        },
+        {
+          path: "RR6",
+          name: "rr6",
+          component: () =>
+            import("@/pages/TodoPage.vue"),
+          meta: { title: "RR6" },
+        },
+
+        // no se especificaba a donde pertenecian
+        // Autos
+        {
+          path: "configuracion_tarifas_archivo/:id",
           name: "configuracion_tarifas_archivo",
           component: () =>
             import("@/pages/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage.vue"),
@@ -72,7 +93,6 @@ export function AppRouter() {
     },
 
     insumosRoutes,
-    catalogosRoutes,
   ];
 
   return { routes };
