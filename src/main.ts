@@ -10,7 +10,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000 * 30, // 30 minutos
-      gcTime: 5 * 60 * 1000, // (5 minutos)
+      gcTime: 60 * 1000 * 35,     // 35 minutos
       retry: 2, // Reintentar 2 veces
       refetchOnWindowFocus: true, // Refetch al enfocar la ventana
       refetchOnReconnect: true, // Refetch al reconectar
