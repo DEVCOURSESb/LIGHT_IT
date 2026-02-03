@@ -34,5 +34,9 @@ const listItems = [
   { name: "tipo_cambio", title: "Tipo cambio" },
   { name: "entidad_federativa", title: "Entidad federativa" },
   { name: "criterio_cobertura", title: "Criterios de cobertura" },
+  { name: "rr6_sector", title: "RR6 Sector" },
+  { name: "coberturas_aye", title: "Coberturas AYE" },
+  { name: "lim_corretaje", title: "Límite Corretaje" },
+  { name: "calculo_comision", title: "Cálculo comisión" },
 ];
 </script>
