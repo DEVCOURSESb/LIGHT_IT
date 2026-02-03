@@ -23,7 +23,7 @@
         <v-col cols="4" class="d-flex justify-end align-top gap-2">
           <ModalComponent
             :is-active="activeModal"
-            :text-button="config?.addButtonText || 'Agregar'"
+            :text-button="config?.addButtonText || 'Registro individual'"
             :title="
               editingId
                 ? config.editModalTitle || config.modalTitle
