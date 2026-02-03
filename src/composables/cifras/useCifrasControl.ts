@@ -1,4 +1,3 @@
-// composables/cifras/useCifrasControl.ts
 import { useQuery } from '@tanstack/vue-query';
 import type {
   CifrasControlEmisionDTO,
@@ -6,7 +5,7 @@ import type {
 } from "@/API/generic/cifras-control";
 import { CifrasControlActions } from "@/API/cifras-control/cifras-control.actions";
 import { useSnackbar } from "@/stores/useSnackbar";
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 export const useCifrasControl = () => {
   const cifrasControlAPI = CifrasControlActions();
@@ -49,14 +48,18 @@ export const useCifrasControl = () => {
     () => cifrasSiniestrosData.value || []
   );
 
-  // Manejar errores con snackbar
-  if (errorEmision.value) {
-    snackbar.mostrarMensajeSnackbar("Error al cargar cifras de emisión", "error");
-  }
+  // Manejar errores con watch en lugar de if directo
+  watch(errorEmision, (error) => {
+    if (error) {
+      snackbar.mostrarMensajeSnackbar("Error al cargar cifras de emisión", "error");
+    }
+  });
 
-  if (errorSiniestros.value) {
-    snackbar.mostrarMensajeSnackbar("Error al cargar cifras de siniestros", "error");
-  }
+  watch(errorSiniestros, (error) => {
+    if (error) {
+      snackbar.mostrarMensajeSnackbar("Error al cargar cifras de siniestros", "error");
+    }
+  });
 
   // Función para cargar todas las cifras
   const cargarTodasLasCifras = async () => {

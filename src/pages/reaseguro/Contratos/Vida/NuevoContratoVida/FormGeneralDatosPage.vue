@@ -163,7 +163,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+        <v-col cols="12" md="4" v-if="[2, 4, 5, 6].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="displayPiso"
             label="Piso"
@@ -173,7 +173,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" v-if="[4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+        <v-col cols="12" md="4" v-if="[2, 4, 5, 6].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="displayTecho"
             label="Techo"

@@ -120,7 +120,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useCifrasControl } from "@/composables/cifras/useCifrasControl";
 import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 
@@ -207,10 +206,6 @@ const formatearMoneda = (num: number): string => {
   }).format(num);
 };
 
-// Cargar datos al montar el componente
-onMounted(() => {
-  cargarTodasLasCifras();
-});
 </script>
 
 <style scoped>
