@@ -1,6 +1,5 @@
 import { EntidadFederativaActions } from "@/API/catalogos/entidad-federativa/entidad_federativa.actions";
 import { validationsHandler } from "@/utilities/validations/validationsHandler";
-import { transform } from "typescript";
 
 const actions = EntidadFederativaActions();
 const { minMax, minMaxString, validateBoolean, fillString, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
