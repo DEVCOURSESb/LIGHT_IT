@@ -14,11 +14,12 @@ export const ExtensionesConfig = {
   tableTitle: "Lista de extensiones",
 
   headers: [
-    /* { title: "CLAVE", key: "cveExtCober", sortable: true,
+    { title: "CLAVE", key: "cveExtCober", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+      hidden: true,
+    },
     { title: "EXTENSIÓN DE LA COBERTURA", key: "descExtCober", sortable: true,
       headerProps: {
         style: "font-weight: bold",

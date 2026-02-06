@@ -115,7 +115,7 @@
 
       <v-data-table
         class="mt-4"
-        :headers="config.headers"
+        :headers="visibleHeaders"
         :items="items"
         :loading="loading"
         :search="search"
@@ -212,6 +212,11 @@ const {
 
 const visibleFields = computed(() =>
   props.config.fields.filter((field) => !field.hidden)
+);
+
+// Computed para filtrar headers visibles
+const visibleHeaders = computed(() =>
+  props.config.headers.filter((header) => !header.hidden)
 );
 
 // Helper para obtener valor del campo con transformación

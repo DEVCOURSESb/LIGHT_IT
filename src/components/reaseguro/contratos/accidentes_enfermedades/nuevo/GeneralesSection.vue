@@ -4,7 +4,7 @@
       <v-card-text>
         <v-container>
           <v-form @submit.prevent="handleSubmit">
-            <!-- !row  -->
+            <!-- ! ROW-->
             <v-row>
               <!-- ID CONTRATO -->
               <v-col cols="12" md="3">
@@ -58,7 +58,7 @@
               </v-col>
             </v-row>
 
-            <!-- !row  -->
+            <!-- ! ROW-->
             <v-row>
               <v-col cols="12" md="3">
                 <!-- TIPO DE REASEGURO -->
@@ -75,6 +75,7 @@
                   :error-messages="showErrors ? formErrors['cveTReaseguro'] : undefined"
                 />
               </v-col>
+
               <!-- TIPO DE CONTRATO -->
               <v-col cols="12" md="3">
                 <v-select
@@ -90,6 +91,7 @@
                   :error-messages="showErrors ? formErrors['idTcontrato'] : undefined"
                 />
               </v-col>
+
               <!-- FORMA CONTRACTUAL -->
               <v-col cols="12" md="3">
                 <v-select
@@ -105,6 +107,7 @@
                   :error-messages="showErrors ? formErrors['cveFcontrac'] : undefined"
                 />
               </v-col>
+
               <!-- CRITERIO DE COBERTURA si reaseguro es proporcional-->
               <v-col cols="12" md="3" v-if="formData['cveTReaseguro'] == 0">
                 <v-select
@@ -122,7 +125,7 @@
               </v-col>
             </v-row>
 
-            <!-- !row  -->
+            <!-- ! ROW-->
             <v-row>
               <!-- TRASPASO DE CARTERA si reaseguro es proporcional-->
               <v-col cols="12" md="3" v-if="formData['cveTReaseguro'] == 0">
@@ -136,6 +139,7 @@
                   :error-messages="showErrors ? formErrors['traspasoCartera'] : undefined"
                 />
               </v-col>
+
               <!-- ENTIDAD FEDERATIVA si forma contractual es facultativa-->
               <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
                 <v-select
@@ -151,6 +155,7 @@
                   :error-messages="showErrors ? formErrors['cveEntidad'] : undefined"
                 />
               </v-col>
+
               <!-- MUNICIPIO si forma contractual es facultativa-->
               <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
                 <v-text-field 
@@ -192,6 +197,7 @@
                   :error-messages="showErrors ? formErrors['asegurado'] : undefined"
                 />
               </v-col>
+
               <!-- NEGOCIOS CUBIERTOS -->
               <v-col cols="12" md="6">
                 <v-text-field
@@ -204,8 +210,8 @@
               </v-col>
             </v-row>
 
-            <!-- !row  -->
-            <v-row>
+            <!-- ! ROW-->
+            <v-row align="center">
               <!-- MONEDA -->
               <v-col cols="12" md="3">
                 <v-select
@@ -220,17 +226,18 @@
                   :disabled="queryMoneda.isLoading.value"
                   :model-value="formData['cveMonedaContrato']"
                   @update:model-value="setFieldValue('cveMonedaContrato', $event)"
-                  :error-messages="showErrors ? formErrors['cveMonedaContrato'] : undefined"
                 />
               </v-col>
+
               <!-- AGREGAR MONEDA -->
               <v-col cols="12" md="2">
-                <v-btn size="x-large"  @click="sendSelectToTableMoneda">
+                <v-btn size="large"  @click="sendSelectToTableMoneda">
                   Agregar moneda
                 </v-btn>
               </v-col>
+
               <!-- TIPO DE OPERACION / RAMO -->
-              <v-col cols="12" md="3">
+              <v-col cols="12" md="2">
                 <v-select
                   :items="queryExtensionesCobertura.data.value || []"
                   item-title="descExtCober"
@@ -240,9 +247,9 @@
                   :disabled="queryExtensionesCobertura.isLoading.value"
                   :model-value="formData['cveExtCober']"
                   @update:model-value="setFieldValue('cveExtCober', $event)"
-                  :error-messages="showErrors ? formErrors['cveExtCober'] : undefined"
                 />
               </v-col>
+
               <!-- OPERACION / RAMO -->
               <v-col cols="12" md="2">
                 <v-select
@@ -255,19 +262,20 @@
                   multiple
                   :model-value="formData['cveCobertura']"
                   @update:model-value="setFieldValue('cveCobertura', $event)"
-                  :error-messages="showErrors ? formErrors['cveCobertura'] : undefined"
                 />
               </v-col>
+
               <!-- AGREGAR OPERACION / RAMO -->
-              <v-col cols="12" md="2">
-                <v-btn size="x-large"  @click="() => {}">
-                  Agregar O/R
+              <v-col cols="12" md="3">
+                <v-btn size="large"  @click="sendSelectToTableOperacionRamo">
+                  Agregar Operación / Ramo
                 </v-btn>
               </v-col>
             </v-row>
 
-            <!-- !row  -->
+            <!-- ! ROW-->
             <v-row>
+              <!-- table moneda activa -->
               <v-col cols="12" md="6">
                 <v-data-table
                   class="mt-4"
@@ -289,30 +297,33 @@
                 <div style="color: red; text-align: center; font-size: 12px;" v-if="showErrors && errorTablaMonedas">{{ errorTablaMonedas }}</div>
               </v-col>
 
+              <!-- table operaciones ramo activas -->
               <v-col cols="12" md="6">
                 <v-data-table
                   class="mt-4"
                   :headers="headerOperaciones"
-                  :items="[]"
+                  :items="dataTableOperacionRamo"
                   :loading="false"
                   striped="odd"
                 >
-                  <template #item.actions="{ item }">
-                    <v-icon class="edit" size="large" @click="() => {console.log(item)}">
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon class="delete" size="large" @click="() => {}">
-                      mdi-delete
-                    </v-icon>
+                 <template #item.operRamoActivo="{ item }">
+                    <v-checkbox
+                      :model-value="item?.operRamoActivo"
+                      @update:model-value="() => toggleOperRamoActivo(item)"
+                      hide-details
+                      density="compact"
+                    />
                   </template>
+
                 </v-data-table>
+                <div style="color: red; text-align: center; font-size: 12px;" v-if="showErrors && errorTablaOperacionRamo">{{ errorTablaOperacionRamo }}</div>
               </v-col>
             </v-row>
 
-            <!-- !row  -->
+            <!-- ! ROW-->
             <v-row>
-              <v-col cols="12" class="text-center">
-                <v-btn class="btn-guardar" size="small" @click="handleSubmit">
+              <v-col cols="12">
+                <v-btn class="btn-guardar" size="large" @click="handleSubmit">
                   Guardar generales
                 </v-btn>
               </v-col>
@@ -323,21 +334,30 @@
     </v-card>
   </v-window-item>
 </template>
+
 <script lang="ts" setup>
 import { useGeneralSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/general/useGeneralSection";
 
 const {
+  /* formulario */
   formData,
   formErrors,
   setFieldValue,
   handleSubmit,
-  headerMoneda,
-  headerOperaciones,
   showErrors,
+
+  /* tablas */
+  headerMoneda,
   dataTableMoneda,
   sendSelectToTableMoneda,
   toggleMonActiva,
   errorTablaMonedas,
+  
+  headerOperaciones,
+  dataTableOperacionRamo,
+  sendSelectToTableOperacionRamo,
+  toggleOperRamoActivo,
+  errorTablaOperacionRamo,
  
   // catalogos a utilizar
   queryTiposReaseguro,
