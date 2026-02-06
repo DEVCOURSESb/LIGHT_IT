@@ -1,7 +1,7 @@
 import { AuthStore } from '@/stores/authStore';
-import { DialogType, useDialog } from '@/stores/dialogStore';
 import axios, { type AxiosInstance } from 'axios'
-import router from '@/router';
+import { SessionManager } from '@/utils/SessionManager';
+
 
 interface BaseAPIOptions {
   isBase?: boolean
@@ -18,7 +18,6 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
   })
 
   const authStore = AuthStore();
-  const dialog = useDialog();
 
   if (isPrivate) {
     instance.interceptors.request.use(
@@ -48,38 +47,11 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
         return response;
       },
       async error => {
-        console.log(error)
-        if (error.code === 'ERR_NETWORK') {
-
-          const { useAuth } = await import('@/composables/auth/useAuth');
-          const { AuthStore } = await import('@/stores/authStore');
-          const { useQueryClient } = await import('@tanstack/vue-query');
-
-          const auth = useAuth();
-          const authStore = AuthStore();
-
-          // si se esta autenticado, cerrar sesión y notificar al usuario
-          if( authStore.checkAuth() ) {
-            await auth.logout();
-
-            const queryClient = useQueryClient();
-
-            queryClient.clear();
-
-            dialog.show({
-              title: 'Sesión expirada',
-              message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-              type: DialogType.ERROR,
-            });
-
-            setTimeout(() => {
-              dialog.cerrar();
-              router.replace({ path: "/" });
-            }, 800);
-          }
-
+        console.log(error);        
+        if (error.code === 'ERR_NETWORK' || error.response?.status === 423) {
+          await SessionManager.handleSessionExpiration();
         }
-        return Promise.reject(error)
+        return Promise.reject(error);
       },
     )
   }
