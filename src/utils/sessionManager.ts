@@ -14,14 +14,13 @@ export const SessionManager = {
       try {
         const { useAuth } = await import('@/composables/auth/useAuth');
         const { AuthStore } = await import('@/stores/authStore');
-        const { useQueryClient } = await import('@tanstack/vue-query');
+        const { queryClient } = await import('@/main'); // 👈 Importar directamente
         const { DialogType, useDialog } = await import('@/stores/dialogStore');
         const router = (await import('@/router')).default;
 
         const auth = useAuth();
         const authStore = AuthStore();
         const dialog = useDialog();
-        const queryClient = useQueryClient();
 
         // Verificar autenticación antes de proceder
         if (!authStore.checkAuth()) {
@@ -31,7 +30,7 @@ export const SessionManager = {
         // Cerrar sesión
         await auth.logout();
 
-        // Limpiar queries
+        // Limpiar queries usando la instancia directa
         queryClient.clear();
 
         // Mostrar diálogo

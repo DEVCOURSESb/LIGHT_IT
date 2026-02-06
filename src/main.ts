@@ -6,7 +6,7 @@ import "unfonts.css";
 import "./styles/estilosglobales.css";
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000 * 30, // 30 minutos
