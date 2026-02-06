@@ -7,7 +7,7 @@ import "./styles/estilosglobales.css";
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60 * 1000 * 30, // 30 minutos

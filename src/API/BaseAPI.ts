@@ -1,7 +1,5 @@
 import { AuthStore } from '@/stores/authStore';
 import axios, { type AxiosInstance } from 'axios'
-import { SessionManager } from '@/utils/SessionManager';
-
 
 interface BaseAPIOptions {
   isBase?: boolean
@@ -48,7 +46,8 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
       },
       async error => {
         console.log(error);        
-        if (error.code === 'ERR_NETWORK' || error.response?.status === 423) {
+        if (error.code === 'ERR_NETWORK') {
+          const { SessionManager } = await import('@/utils/SessionManager');
           await SessionManager.handleSessionExpiration();
         }
         return Promise.reject(error);
