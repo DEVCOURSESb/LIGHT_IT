@@ -238,7 +238,7 @@ export const useGeneralSection = () => {
 
   // Watch para limpiar campos cuando cambia el tipo de reaseguro
   watch(
-    () => formData.cveTReaseguro,
+    () => formData.cveTreaseg,
     (newValue, oldValue) => {
       // Si cambia de proporcional (0) a otro valor, limpiar campos relacionados
       if (oldValue === 0 && newValue !== 0) {

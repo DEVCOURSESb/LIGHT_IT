@@ -70,9 +70,9 @@
                   variant="solo-filled"
                   clearable
                   :disabled="queryTiposReaseguro.isLoading.value"
-                  :model-value="formData['cveTReaseguro']"
-                  @update:model-value="setFieldValue('cveTReaseguro', $event)"
-                  :error-messages="showErrors ? formErrors['cveTReaseguro'] : undefined"
+                  :model-value="formData['cveTreaseg']"
+                  @update:model-value="setFieldValue('cveTreaseg', $event)"
+                  :error-messages="showErrors ? formErrors['cveTreaseg'] : undefined"
                 />
               </v-col>
 
@@ -109,7 +109,7 @@
               </v-col>
 
               <!-- CRITERIO DE COBERTURA si reaseguro es proporcional-->
-              <v-col cols="12" md="3" v-if="formData['cveTReaseguro'] == 0">
+              <v-col cols="12" md="3" v-if="formData['cveTreaseg'] == 0">
                 <v-select
                   :items="queryCriterioCobertura.data.value || []"
                   item-title="descCriterioCob"
@@ -128,7 +128,7 @@
             <!-- ! ROW-->
             <v-row>
               <!-- TRASPASO DE CARTERA si reaseguro es proporcional-->
-              <v-col cols="12" md="3" v-if="formData['cveTReaseguro'] == 0">
+              <v-col cols="12" md="3" v-if="formData['cveTreaseg'] == 0">
                 <v-select
                   :items="['SI', 'NO']"
                   label="¿Traspaso de cartera?"
@@ -244,6 +244,7 @@
                   item-value="cveExtCober"
                   label="Tipo de operación / ramo"
                   variant="solo-filled"
+                  clearable
                   :disabled="queryExtensionesCobertura.isLoading.value"
                   :model-value="formData['cveExtCober']"
                   @update:model-value="setFieldValue('cveExtCober', $event)"
@@ -260,6 +261,7 @@
                   variant="solo-filled"
                   clearable
                   multiple
+                  :disabled="queryOperacionesRamos.isLoading.value || !formData['cveExtCober']"
                   :model-value="formData['cveCobertura']"
                   @update:model-value="setFieldValue('cveCobertura', $event)"
                 />

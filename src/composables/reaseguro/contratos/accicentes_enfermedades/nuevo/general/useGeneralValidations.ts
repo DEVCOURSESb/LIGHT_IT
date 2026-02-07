@@ -20,21 +20,21 @@ export const useGeneralValidations = () => {
       return true;
     },
     ordenCobertura: (value: number) => val.minMax(value, 1, 999) || "Debe ser un número entre 1 y 999.",
-    cveTReaseguro: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.",
+    cveTreaseg: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.",
     idTcontrato: (value: number) => value >= 0 || "El tipo de contrato es obligatorio.",
     cveFcontrac: (value: number) => value >= 0 || "La forma contractual es obligatoria.",
     // criterio cobertura solo si el reaseguro es proporcional
     cveCriterioCob: (value: number, context: any) => {
-      const cveTReaseguro = context.form?.cveTReaseguro;
-      if (cveTReaseguro === 0) {
+      const cveTreaseg = context.form?.cveTreaseg;
+      if (cveTreaseg === 0) {
         return value >= 0 || "El criterio de cobertura es obligatorio.";
       }
       return true;
     },
     // traspasoCartera solo si el reaseguro es proporcional
     traspasoCartera: (value: string, context: any) => {
-      const cveTReaseguro = context.form?.cveTReaseguro;
-      if (cveTReaseguro === 0) {
+      const cveTreaseg = context.form?.cveTreaseg;
+      if (cveTreaseg === 0) {
         return (value === "SI" || value === "NO") || "El traspaso de cartera es obligatorio.";
       }
       return true;
