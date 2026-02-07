@@ -7,9 +7,42 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   const dialog = useDialog();
 
-  const guardarGenerales = (data: Object) => {
+  const guardarGenerales = (data: Record<string, any>) => {
     console.log("Guardando datos generales:", data);
+
+    const copy = { ...data, };
+    delete copy?.dataTableMoneda;
+    delete copy?.dataTableOperacionRamo;
+    window.localStorage.setItem("CAE_GENERALES_CONTRATO", JSON.stringify(copy));
+    
+    const informacionMoneda = data.dataTableMoneda.map((moneda: any) => {
+        /* TODO: verificar clave de contrato */
+        /* TODO: cveMonedaContrato opcion de crear un type desde la tabla */
+        return {
+          cveContrato: data.idContrato,
+          cveMonedaContrato: moneda.cveMoneda,
+          monActiva: moneda.monActiva,
+      }
+    });
+    window.localStorage.setItem("CAE_MONEDA_CONTRATO", JSON.stringify(informacionMoneda));
+
+
+    const informacionOperacionRamo = data.dataTableOperacionRamo.map((operacionRamo: any) => {
+      /* TODO: mismo caso de clave contrato y types */
+      return {
+        cveContrato: data.idContrato,
+        cveExtCoberContrato: operacionRamo.cveExtCober,
+        cveCoberContrato: operacionRamo.cveCobertura,
+        cveOperacionRamo: operacionRamo.cveOperacionRamo,
+        operRamoActivo: operacionRamo.operRamoActivo,
+      }
+    });
+
+    window.localStorage.setItem("CAE_OPERACION_RAMO_CONTRATO", JSON.stringify(informacionOperacionRamo));
+
+
     window.localStorage.setItem("contratoAE_generales", JSON.stringify(data));
+
     activeTab.value = "tab-2";
 
     dialog.show({
