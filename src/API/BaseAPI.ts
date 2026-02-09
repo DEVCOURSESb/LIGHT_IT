@@ -47,7 +47,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
       async error => {
         console.log(error);        
         if (error.code === 'ERR_NETWORK') {
-          const { SessionManager } = await import('@/utils/SessionManager');
+          const { SessionManager } = await import('@/utils/sessionManager');
           await SessionManager.handleSessionExpiration();
         }
         return Promise.reject(error);
