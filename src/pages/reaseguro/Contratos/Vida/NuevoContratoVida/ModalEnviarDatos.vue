@@ -7,7 +7,7 @@
 
       <v-card-text style="background-color: #f5f5f5; height: 80vh;">
         <v-alert type="warning" variant="tonal" border="start" class="mb-4 mt-2">
-          Revise la información antes de guardar. Si detecta errores, cierre esta pestaña y regrese al formulario.
+          Revise la información antes de guardar. Si detecta errores, cierre esta pestaña y regrese al formulario correspondiente.
         </v-alert>
 
         <v-container fluid>
@@ -28,25 +28,25 @@
 
           <v-card v-if="reaseguradoresTablaCompleta.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">REASEGURADORES Y PARTICIPACIÓN DE UTILIDADES (PTU)</v-card-title>
-            <v-data-table :headers="headersReaseguradores" :items="reaseguradoresTablaCompleta" density="compact" hide-default-footer />
+            <v-data-table :headers="headersReaseguradores" :items="reaseguradoresTablaCompleta" density="compact" />
           </v-card>
 
           <v-card v-if="tarifasTablaCompleta.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">DETALLE TÉCNICO DE COBERTURAS (TARIFAS)</v-card-title>
-            <v-data-table :headers="headersCoberturas" :items="tarifasTablaCompleta" density="compact" hide-default-footer />
+            <v-data-table :headers="headersCoberturas" :items="tarifasTablaCompleta" density="compact" />
           </v-card>
 
           <v-card v-if="comisionFijaTabla.length || comisionEscalonadaTabla.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">COMISIONES (FIJA Y ESCALONADA)</v-card-title>
-            <v-data-table v-if="comisionFijaTabla.length" :headers="headersComisionContrato" :items="comisionFijaTabla" density="compact" hide-default-footer class="mb-2" />
+            <v-data-table v-if="comisionFijaTabla.length" :headers="headersComisionContrato" :items="comisionFijaTabla" density="compact" class="mb-2" />
 
             <v-card-title v-if="comisionEscalonadaTabla.length" class="text-caption">ESCALONADA</v-card-title>
-            <v-data-table v-if="comisionEscalonadaTabla.length" :headers="headersComisionEscalonada" :items="comisionEscalonadaTabla" density="compact" hide-default-footer />
+            <v-data-table v-if="comisionEscalonadaTabla.length" :headers="headersComisionEscalonada" :items="comisionEscalonadaTabla" density="compact" />
           </v-card>
 
           <v-card v-if="intermediariosTablaCompleta.length" class="mb-4 elevation-2">
             <v-card-title class="text-subtitle-2 bg-grey-lighten-3">INTERMEDIARIOS DEL CONTRATO</v-card-title>
-            <v-data-table :headers="headersIntermediarios" :items="intermediariosTablaCompleta" density="compact" hide-default-footer />
+            <v-data-table :headers="headersIntermediarios" :items="intermediariosTablaCompleta" density="compact" />
           </v-card>
         </v-container>
       </v-card-text>
@@ -163,6 +163,7 @@ const reaseguradoresTablaCompleta = computed(() => {
     cvePtu: getTX(item.ptu?.metodoCalPTU),
     porcentajePtu: (item.ptu?.ptu || 0) + '%',
     porcentajeK: (item.ptu?.kPor || 0) + '%',
+    gastos: (item.ptu?.gastos || 0) + '%',
     aniosArrastre: item.ptu?.aniosArrastre || 0
   }))
 });
@@ -183,15 +184,21 @@ const tarifasTablaCompleta = computed(() => {
         a.coberturas?.some((c: any) => String(getID(c)) === String(t.cveCob))
       );
 
+      const esMadre = agrup
+        ? String(t.cveCob) === String(getID(agrup.madre))
+        : false;
+
       todasLasTarifas.push({
         idContrato: item.general.idContrato,
         cveReasegurador: item.general.nombreReasegurador,
         detalleCapa: t.detalleCapa || 'NO',
-        descClasifCober: t.tipoCobertura || 'BÁSICA',
+        descClasifCober: String(t.tipoCobertura),
         cveCob: String(t.cveCob),
         descCob: t.cobertura,
-        cveAgrupCob: agrup ? String(getID(agrup.madre)) : '-',
-        descAgrupCob: agrup ? getTX(agrup.madre) : '-',
+
+        cveAgrupCob: (agrup && !esMadre) ? String(getID(agrup.madre)) : '-',
+        descAgrupCob: (agrup && !esMadre) ? getTX(agrup.madre) : '-',
+
         cveTarifa: getTX(t.tipoTarifa),
         primaTarifaFija: '$ ' + cleanN(t.primaTarifa).toLocaleString(),
         porSobrePrima: cleanN(t.porSobrePrima) + '%',
@@ -206,16 +213,22 @@ const tarifasTablaCompleta = computed(() => {
 });
 
 const comisionFijaTabla = computed(() => {
-  const lista = contratoStore.listaReaseguradoresFinal;
+  const lista = contratoStore.listaReaseguradoresFinal || [];
+
   return lista
-    .filter((item: any) => getID(item.general.comisionReaseg) == 1 && getID(item.general.tipoComision) == 0)
-    .map((item: any) => ({
-      idContrato: item.general.idContrato,
-      cveReasegurador: item.general.nombreReasegurador,
-      descClasifCober: getTX(item.general.tipoCobertura),
-      comisionPrimerAnioFijaProv: (item.general.comisionPrimerAnio || 0) + '%',
-      comisionRenovacionFijaProv: (item.general.comisionRenovacion || 0) + '%'
-    }));
+    .filter((item: any) => getID(item.general.comisionReaseg) === 1)
+    .flatMap((item: any) => {
+      const coberturas = item.general.coberturas || [];
+
+      return coberturas.map((cob: any) => ({
+        idContrato: item.general.idContrato,
+        cveReasegurador: item.general.nombreReasegurador,
+        descClasifCober: cob.tipoCobertura || cob.tipoCobertura,
+        tipoComision: item.general.tipoComision?.title || 'N/A',
+        comisionPrimerAnioFijaProv: `${cob.comisionPrimerAnio || 0}%`,
+        comisionRenovacionFijaProv: `${cob.comisionRenovacion || 0}%`
+      }));
+    });
 });
 
 const comisionEscalonadaTabla = computed(() => {
@@ -224,11 +237,12 @@ const comisionEscalonadaTabla = computed(() => {
 
   lista.forEach((item: any) => {
     if (item.comisiones?.comisiones) {
+
       item.comisiones.comisiones.forEach((c: any) => {
         todasEscalonadas.push({
           idContrato: item.general.idContrato,
           cveReasegurador: item.general.nombreReasegurador,
-          desClasifCober: getTX(item.general.tipoCobertura),
+          desClasifCober: getTX(c.tipoCobertura),
           limiteInf: c.limiteInf + '%',
           limiteSup: c.limiteSup + '%',
           comisionDefinitiva: c.comisionDefinitiva + '%'
@@ -274,16 +288,16 @@ const headersPolizasResumen = [
 
 const headersReaseguradores = [
   { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'PARTICIPACIÓN', key: 'participacion' },
-  { title: 'DISTR. CESIÓN', key: 'cveDistrCesion' }, { title: 'COB. BÁSICA', key: 'indCesionBasica' }, { title: 'COMISIÓN', key: 'indComisionReaseguro' },
+  { title: 'COB. BÁSICA', key: 'indCesionBasica' }, { title: 'DISTR. CESIÓN', key: 'cveDistrCesion' }, { title: 'COMISIÓN', key: 'indComisionReaseguro' },
   { title: 'DETALLE COB.', key: 'indDetalleCobertura' }, { title: 'ASIGNACIÓN', key: 'cveAsignacion' }, { title: 'OTORGA PTU', key: 'otrogaPtu' },
-  { title: 'MÉTODO PTU', key: 'cvePtu' }, { title: '% PTU', key: 'porcentajePtu' }, { title: '% K', key: 'porcentajeK' }, { title: 'AÑOS ARRASTRE', key: 'aniosArrastre' }
+  { title: 'MÉTODO PTU', key: 'cvePtu' }, { title: '% PTU', key: 'porcentajePtu' }, { title: '% K', key: 'porcentajeK' }, {title: '%Gastos', key: 'gastos'}, { title: 'AÑOS ARRASTRE', key: 'aniosArrastre' }
 ];
 
 const headersCoberturas = [
   { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'DETALLE CAPA', key: 'detalleCapa' },
   { title: 'TIPO COBERTURA', key: 'descClasifCober' }, { title: 'CLAVE COB', key: 'cveCob' }, { title: 'COBERTURA', key: 'descCob' },
   { title: 'CVE AGRUPAR', key: 'cveAgrupCob' }, { title: 'AGRUPAR EN', key: 'descAgrupCob' }, { title: 'TIPO TARIFA', key: 'cveTarifa' },
-  { title: 'PRIMA FIJA', key: 'primaTarifaFija' }, { title: '% SOBRE PRIMA', key: 'porcentajePrimaEmitida' }, { title: 'TARIFA MILLAR', key: 'tarifaFija' },
+  { title: 'PRIMA FIJA', key: 'primaTarifaFija' }, { title: '% SOBRE PRIMA', key: 'porSobrePrima' }, { title: 'TARIFA MILLAR', key: 'tarifaFija' },
   { title: 'FACTOR PROPIA', key: 'factorTarifaPropia' }, { title: 'TARIFA PROPIA', key: 'tarifaPropia' }
 ];
 
@@ -302,7 +316,6 @@ const headersIntermediarios = [
   { title: 'ASIGNACIÓN', key: 'cveCriterioAsig' }, { title: 'BROKER', key: 'cveIntermediario' }, { title: '¿CORRETAJE?', key: 'indCorretaje' },
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];
-// antes de guardar en la base de datos se debe validar que el id del contrato no exista ya en caso contrario lanzar un dialog error diciendo que ya existe un contrato con ese ID y no guardar
 const guardarEnBD = async () => {
   const authStore = AuthStore();
   if (!authStore.getToken) return;
@@ -311,7 +324,7 @@ const guardarEnBD = async () => {
     dialog.show({ title: 'Procesando', message: 'Guardando información...', type: DialogType.INFO });
 
     const gen = contratoStore.general;
-    const listaFinal = contratoStore.listaReaseguradoresFinal; // Nuestra nueva fuente de verdad
+    const listaFinal = contratoStore.listaReaseguradoresFinal;
     if (!gen || !listaFinal.length) return;
 
     const payloadGen = {
@@ -358,7 +371,8 @@ const guardarEnBD = async () => {
         cvePtu: getID(p?.metodoCalPTU),
         porcentajePtu: cleanN(p?.ptu),
         porcentajeK: cleanN(p?.kPor),
-        aniosArrastre: cleanN(p?.aniosArrastre)
+        aniosArrastre: cleanN(p?.aniosArrastre),
+        porcentajeGastos: cleanN(p?.gastos)
       }));
 
       if (c?.tarifas) {
@@ -366,45 +380,60 @@ const guardarEnBD = async () => {
           const agrupacionEncontrada = c.agrupaciones?.find((a: any) =>
             a.coberturas?.some((idCob: any) => String(getID(idCob)) === String(getID(t.cveCob)))
           );
+          const esMadre = agrupacionEncontrada
+            ? String(getID(t.cveCob)) === String(getID(agrupacionEncontrada.madre))
+            : false;
+
           promsCob.push(apiCoberturas.post('register', {
             idContrato: gen.idContrato,
             cveReasegurador: String(getID(g.cveReasegurador)),
             detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "NO",
-            descClasifCober: getTX(t.tipoCobertura || "BÁSICA"),
+            descClasifCober: getTX(t.tipoCobertura || "BASICA"),
             cveCob: String(getID(t.cveCob)),
             descCob: getTX(t.cobertura),
-            cveAgrupCob: agrupacionEncontrada ? String(getID(agrupacionEncontrada.madre)) : "",
-            descAgrupCob: agrupacionEncontrada ? getTX(agrupacionEncontrada.madre) : "",
+            cveAgrupCob: (agrupacionEncontrada && !esMadre) ? String(getID(agrupacionEncontrada.madre)) : null,
+            descAgrupCob: (agrupacionEncontrada && !esMadre) ? getTX(agrupacionEncontrada.madre) : null,
             cveTarifa: Number(getID(t.tipoTarifa)),
             primaTarifaFija: cleanN(t.primaTarifa),
             porcentajePrimaEmitida: cleanN(t.porSobrePrima),
             tarifaFija: cleanN(t.tarifaFijaM),
-            factorTap: cleanN(t.factorTap),
+            factorTarifaPropia: cleanN(t.factorTap),
             tarifaPropia: getTX(t.nombreArchivo)
           }));
         });
       }
 
-      if (com?.comisiones) {
-        com.comisiones.forEach((ce: any) => {
-          promsComisiones.push(apiComisionEsc.post('register', {
-            idContrato: gen.idContrato,
-            cveReasegurador: String(getID(g.cveReasegurador)),
-            descClasifCober: getTX(g.tipoCobertura),
-            limiteInf: cleanN(ce.limiteInf),
-            limiteSup: cleanN(ce.limiteSup),
-            comisionDefinitiva: cleanN(ce.comisionDefinitiva)
-          }));
-        });
-      }
-      if (getID(g.comisionReaseg) == 1 && getID(g.tipoComision) == 0) {
-        promsComisiones.push(apiComision.post('register', {
-          idContrato: gen.idContrato,
-          cveReasegurador: String(getID(g.cveReasegurador)),
-          descClasifCober: getTX(g.tipoCobertura),
-          comisionPrimerAnioFijaProv: cleanN(g.comisionPrimerAnio),
-          comisionRenovacionFijaProv: cleanN(g.comisionRenovacion)
-        }));
+      const tieneComision = getID(g.comisionReaseg) == 1;
+      const esEscalonada = com?.comisiones && com.comisiones.length > 0;
+      const esPorCobertura = getID(g.detalleCobertura) == 1;
+
+      if (tieneComision) {
+        if (esEscalonada) {
+
+          com.comisiones.forEach((ce: any) => {
+            promsComisiones.push(apiComisionEsc.post('register', {
+              idContrato: gen.idContrato,
+              cveReasegurador: String(getID(g.cveReasegurador)),
+              descClasifCober: String(ce.tipoCobertura),
+              limiteInf: cleanN(ce.limiteInf),
+              limiteSup: cleanN(ce.limiteSup),
+              comisionDefinitiva: cleanN(ce.comisionDefinitiva)
+            }));
+          });
+        } else {
+          if (g.coberturas && g.coberturas.length > 0) {
+            g.coberturas.forEach((cob: any) => {
+              promsComisiones.push(apiComision.post('register', {
+                idContrato: gen.idContrato,
+                cveReasegurador: String(getID(g.cveReasegurador)),
+                //descClasifCober: esPorCobertura ? getTX(cob.tipoCobertura) : "GENERAL", // aqui solo llega el general y no los demas, y no quiero que llegue solo el general
+                descClasifCober: getTX(cob.tipoCobertura), // aqui solo llega el general y no los demas, y no quiero que llegue solo el general
+                comisionPrimerAnioFijaProv: cleanN(cob.comisionPrimerAnio),
+                comisionRenovacionFijaProv: cleanN(cob.comisionRenovacion)
+              }));
+            });
+          }
+        }
       }
     });
 
@@ -412,34 +441,33 @@ const guardarEnBD = async () => {
       idContrato: gen.idContrato,
       detalleCapa: c.detalleCapa,
       montoRetencionCapa: cleanN(c.retencionC),
-      techoCapa: cleanN(c.techoC) }));
+      techoCapa: cleanN(c.techoC)
+    }));
 
     const promsPolizas = (contratoStore.poli?.polizas || []).map(p => apiPolizas.post('register', {
       idContrato: gen.idContrato,
       llavePolRen: `${p.poliza}|${p.renovacion}`,
       numPoliza: p.poliza,
-      numRenovPol: p.renovacion }));
+      numRenovPol: p.renovacion
+    }));
 
     const promsInter = (contratoStore.configInt?.intermediariosTabla || []).flatMap(filaInter => {
       const reaseguradorValor = getID(filaInter.reaseguradora);
-
-      const listaFinal = contratoStore.listaReaseguradoresFinal.filter((r: any) => {
-        const id = r.clave || r.cveReasegurador;
-        return String(getID(id)) !== '[object Object]';
+      const listaFinalFiltrada = contratoStore.listaReaseguradoresFinal.filter((r: any) => {
+         const id = r.general?.cveReasegurador || r.clave;
+         return id && String(getID(id)) !== '[object Object]';
       });
 
       let reaseguradorasAAplicar: string[] = [];
-      if (!reaseguradorValor || reaseguradorValor === 'TODAS' || reaseguradorValor === '0' || reaseguradorValor === 0) {
-        reaseguradorasAAplicar = listaFinal.map((r: any) => {
-          const id = r.clave || r.cveReasegurador;
-          return String(getID(id));
-        });
+
+      if (!reaseguradorValor || String(reaseguradorValor) === 'TODAS' || reaseguradorValor == 0) {
+        reaseguradorasAAplicar = listaFinalFiltrada.map((r: any) => String(getID(r.general?.cveReasegurador || r.clave)));
       } else {
         reaseguradorasAAplicar = [String(reaseguradorValor)];
       }
 
       return reaseguradorasAAplicar.map((idReasegurador) => {
-        if (idReasegurador.includes('[object')) return null;
+        if (!idReasegurador || idReasegurador.includes('[object')) return null;
 
         return apiIntermediarios.post('register', {
           idContrato: String(gen.idContrato),
@@ -465,18 +493,18 @@ const guardarEnBD = async () => {
     ]);
 
     await dialog.show({
-    title: 'ÉXITO',
-    message: 'Contrato guardado correctamente.',
-    type: DialogType.SUCCESS
-  });
+      title: 'ÉXITO',
+      message: 'Contrato guardado correctamente.',
+      type: DialogType.SUCCESS
+    });
 
-  contratoStore.reset();
-  modalResumen.value = false;
-  window.location.reload();
+    contratoStore.reset();
+    modalResumen.value = false;
+    window.location.reload();
 
   } catch (error: any) {
-    console.error("ERROR:", error);
-    dialog.show({ title: 'ERROR', message: `Error: ${error.message}`, type: DialogType.ERROR });
+    console.error("ERROR AL GUARDAR:", error);
+    dialog.show({ title: 'ERROR', message: `No se pudo guardar: ${error.message || error}`, type: DialogType.ERROR });
   }
 };
 

@@ -44,7 +44,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
           const { showModalExistRow } = await import("@/utilities/catalogos/showModalExistRow");
           showModalExistRow();
         }
-      
+
         return response;
       },
       async error => {
@@ -67,7 +67,8 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
           dialog.cerrar();
           router.replace({ path: "/" });
         }, 800);
-
+        // aqui se debe verificar que el store quede limpio es
+        // decir que se eliminen el email y token una vez la cesión es cerrada
       }
       return Promise.reject(error)
       },

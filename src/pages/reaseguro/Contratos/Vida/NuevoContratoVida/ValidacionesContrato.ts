@@ -90,14 +90,30 @@ export class ValidacionesContrato {
   }
   // 21 dígitos: 19 enteros + 2 decimales
   static numeroC21() {
-  const regex = /^\d{1,19}(\.\d{1,2})?$/;
+    const regex = /^\d{1,19}(\.\d{1,2})?$/;
 
-  return (v: string | number) => {
-    if (!v) return true;
-    const valorLimpio = String(v).replace(/,/g, '');
-    return regex.test(valorLimpio) || 'Formato numérico inválido (máx. 2 decimales)';
+    return (v: string | number) => {
+      if (!v) return true;
+      const valorLimpio = String(v).replace(/,/g, '');
+      return regex.test(valorLimpio) || 'Formato numérico inválido (máx. 2 decimales)';
+    }
   }
-}
+
+  static tasaAlMillar() {
+    const regex = /^0?\.\d{1,10}$/;
+
+    return (v: any) => {
+      if (v === undefined || v === null || v === '') return 'La tasa es requerida';
+
+      const valorS = String(v);
+      const numero = parseFloat(valorS);
+      if (numero >= 1) return 'Debe ser menor a 1 (0 enteros)';
+
+      return regex.test(valorS) || 'Máximo 10 decimales';
+    };
+  }
+
+
   //CESION
   static cesion(tipoContrato: () => number | null) {
     const permitidos = [1, 7, 9]

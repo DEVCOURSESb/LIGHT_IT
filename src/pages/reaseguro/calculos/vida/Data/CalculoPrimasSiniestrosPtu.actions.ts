@@ -25,7 +25,7 @@ export const CalcularSiniestros = () => {
 
   const subramoOptions = ref<SelectOption<string>[]>([])
   const idContratoOptions = ref<SelectOption<number>[]>([])
-
+  // aqui no me deja meter el filtro para solo traer determinados campos que estan en base: {baseApi}/ws_reaseguro_contratos_vida/api/v1/DatosContratoRest/getAllRecords?only=idContrato,fechaInicioContrato,fechaFinContrato
   const baseAPIContrato = BaseAPI({
     prefix: "ws_reaseguro_contratos_vida/api/v1/DatosContratoRest"
   })

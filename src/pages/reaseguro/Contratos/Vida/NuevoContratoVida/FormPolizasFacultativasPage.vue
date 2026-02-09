@@ -19,7 +19,7 @@
   <v-overlay :model-value="estaCargando" class="align-center justify-center" persistent>
     <div class="text-center">
       <v-progress-circular color="white" indeterminate size="64" width="7" />
-      <div class="text-white text-h6 mt-4">Procesando registros en el servidor...</div>
+      <div class="text-white text-h6 mt-4">Procesando registros...</div>
     </div>
   </v-overlay>
 
@@ -143,6 +143,8 @@ watch([fechaInicioContrato, fechaFinContrato], () => {
   if (!mostrarAdvertencia.value) ejecutarConsulta()
 })
 
+//quitar campos que ya fueron seleccionados, es decir evitar duplicados
+//no se si aqui tenga que ir la validación que debe tener afuerza polizas si en general es facultativo es decir que no permita que esta tabla vaya vacio
 const polizaOptions = computed(() => {
   const fi = normalizarFecha(fechaInicioContrato.value)
   const ff = normalizarFecha(fechaFinContrato.value)
@@ -193,7 +195,7 @@ const headers1 = [
 
 const agregarPoliza = () => {
   if (!polizaInput.value || renovacionInput.value === null) return
-
+  // por alguna razon al regresar esta vista se procesa otra vez la información y me muestra lo que tenia en el store pero me deja duplicar el registro que estaba en el store
   const duplicado = polizas.value.some((p: PolizaItem, index: number) =>
     p.poliza === polizaInput.value &&
     p.renovacion === renovacionInput.value &&
@@ -201,7 +203,7 @@ const agregarPoliza = () => {
   )
 
   if (duplicado) {
-    dialog.show({ title: 'Error', message: 'Ya existe esta combinación', type: DialogType.ERROR })
+    dialog.show({ title: 'Error', message: 'Ya existe esta combinación de poliza y renovación', type: DialogType.ERROR })
     return
   }
 

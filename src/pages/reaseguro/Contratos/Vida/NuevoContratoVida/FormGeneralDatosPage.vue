@@ -58,6 +58,7 @@
             :rules="[ValidacionesContrato.fechaInicio()]"
             required
             variant="solo-filled"
+            @update:model-value="calcularFechaFin"
           />
         </v-col>
 
@@ -100,11 +101,12 @@
         <v-col cols="12" md="4">
           <v-select
             v-model="tipoContratoObj"
-            :items="tipoContratoOptions"
+            :items="tipoContratoFiltrado"
             label="Tipo de contrato"
             variant="solo-filled"
             chips
             :rules="[ValidacionesContrato.tipoContrato()]"
+            :disabled="!tipoReaseguroObj"
             return-object
           />
         </v-col>
@@ -253,21 +255,23 @@ const {
   tipoReaseguroOptions, fetchTipoReaseguro,
   tipoContratoOptions, fetchTipoContrato,
   criterioCoberturaOptions, fetchCriterioCobertura,
+  apiDatosContrato, fetchAllRecords,
 } = NuevoContratoVida()
 
 onMounted(async () => {
   await Promise.all([
     fetchSubramos(), fetchMoneda(), fetchFormaContractual(),
-    fetchTipoReaseguro(), fetchTipoContrato(), fetchCriterioCobertura()
+    fetchTipoReaseguro(), fetchTipoContrato(), fetchCriterioCobertura(),
+    fetchAllRecords()
   ])
 })
 
 const subramoObj = ref<any[]>([])
 const monedaObj = ref<any>(null)
-const formaContractualObj = ref<any>(null)
-const tipoReaseguroObj = ref<any>(null)
+const formaContractualObj = ref<any>(0)
+const tipoReaseguroObj = ref<any>(0)
 const tipoContratoObj = ref<any>(null)
-const criterioCoberturaObj = ref<any>(null)
+const criterioCoberturaObj = ref<any>(0)
 
 const idContrato = ref('')
 const negociosCubiertos = ref('TODA LA CARTERA')
@@ -290,6 +294,16 @@ const emit = defineEmits<{
   (e: 'actualizarFormaContractual', valor: number): void,
   (e: 'onSuccessRegister'): void
 }>()
+
+const calcularFechaFin = (nuevaFechaInicio: Date | null) => {
+  if(nuevaFechaInicio){
+    const nuevaFI = new Date(nuevaFechaInicio);
+    nuevaFI.setFullYear(nuevaFI.getFullYear() + 1)
+    finContrato.value = nuevaFI;
+  } else {
+    finContrato.value = null;
+  }
+}
 
 const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
 
@@ -396,6 +410,20 @@ watch(
   { immediate: true, deep: true }
 )
 
+const tipoContratoFiltrado = computed(() => {
+  const idReaseguroSeleccionado = getID(tipoReaseguroObj.value);
+
+  if (idReaseguroSeleccionado === null) return [];
+
+  return tipoContratoOptions.value.filter((contrato: any) => {
+    return contrato.cveTreaseg === idReaseguroSeleccionado;
+  });
+});
+
+watch(() => tipoReaseguroObj.value, () => {
+  tipoContratoObj.value = null;
+});
+
 const agregarCapa = () => {
   if (!retencionCapa.value || !techoCapa.value) return
   const index = capaEditando.value !== null ? capaEditando.value + 1 : capas.value.length + 1
@@ -427,34 +455,58 @@ const guardarDatosGenerales = async () => {
     return
   }
 
-  const payload: ContratoGeneralDatos = {
-    idContrato: idContrato.value,
-    subramo: subramoObj.value,
-    negociosCubiertos: negociosCubiertos.value,
-    fechaInicio: inicioContrato.value,
-    fechaFin: finContrato.value,
-    cveMoneda: monedaObj.value,
-    cveFormaContractual: formaContractualObj.value,
-    cveTReaseguro: tipoReaseguroObj.value,
-    idTContrato: tipoContratoObj.value,
-    criterioCobertura: criterioCoberturaObj.value,
-    limiteMax: String(limiteMax.value),
-    limiteMaxResCR: String(limiteMaxResCR.value),
-    montoRetencion: String(retencionP.value),
-    piso: String(piso.value),
-    techo: String(techo.value),
-    porcentajeCesion: String(cesion.value),
+  try {
+    const response = await apiDatosContrato.post('getAllRecords');
+    const listaContratos = response.data || [];
+
+    const existe = listaContratos.some(
+      (contrato: any) => String(contrato.idContrato).trim().toLowerCase() === String(idContrato.value).trim().toLowerCase()
+    )
+
+    if (existe) {
+      dialog.show({
+        title: 'Contrato Existente',
+        message: `El nombre ingresado para el contrato "${idContrato.value}" ya se encuentra registrado.`,
+        type: DialogType.ERROR
+      })
+      return
+    }
+
+    const payload: ContratoGeneralDatos = {
+      idContrato: idContrato.value,
+      subramo: subramoObj.value,
+      negociosCubiertos: negociosCubiertos.value,
+      fechaInicio: inicioContrato.value,
+      fechaFin: finContrato.value,
+      cveMoneda: monedaObj.value,
+      cveFormaContractual: formaContractualObj.value,
+      cveTReaseguro: tipoReaseguroObj.value,
+      idTContrato: tipoContratoObj.value,
+      criterioCobertura: criterioCoberturaObj.value,
+      limiteMax: String(limiteMax.value),
+      limiteMaxResCR: String(limiteMaxResCR.value),
+      montoRetencion: String(retencionP.value),
+      piso: String(piso.value),
+      techo: String(techo.value),
+      porcentajeCesion: String(cesion.value),
+    }
+
+    contratoStore.setGeneral(payload)
+
+    if (getID(tipoContratoObj.value) === 3) {
+      contratoStore.setDatosExPC({ idContrato: idContrato.value, capas: capas.value })
+    }
+
+    dialog.show({ title: 'Éxito', message: 'Datos de contrato general guardados', type: DialogType.SUCCESS })
+    emit('onSuccessRegister')
+
+  } catch (error) {
+    dialog.show({
+      title: 'Error de Red',
+      message: 'No se pudo validar la existencia del contrato. Revise su conexión.',
+      type: DialogType.ERROR
+    })
   }
-
-  contratoStore.setGeneral(payload)
-
-  if (getID(tipoContratoObj.value) === 3) {
-    contratoStore.setDatosExPC({ idContrato: idContrato.value, capas: capas.value })
-  }
-
-  dialog.show({ title: 'Éxito', message: 'Datos de contrato general guardados', type: DialogType.SUCCESS })
-
-  emit('onSuccessRegister')
 }
 
 const headers1 = [

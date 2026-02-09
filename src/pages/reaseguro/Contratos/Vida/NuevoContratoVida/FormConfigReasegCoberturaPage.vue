@@ -9,6 +9,7 @@
             label="¿Agrupación de coberturas?"
             chips
             variant="solo-filled"
+            @update:model-value="guardarAgrupacion = false"
           />
         </v-col>
       </v-row>
@@ -63,14 +64,20 @@
         </v-col>
       </v-row>
 
-      <v-divider class="my-6" />
+      <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
+        <v-col cols="12" md="4" class="text-center">
+          <v-btn color="primary" @click="confirmarAgrupacion">Guardar Agrupación</v-btn>
+        </v-col>
+      </v-row>
 
-      <v-row>
+      <v-divider class="my-6" v-if="mostrarSeccionDetalle" />
+
+      <v-row v-if="mostrarSeccionDetalle">
         <v-col cols="12" md="4">
           <v-select
             v-model="coberturasBasiObj"
-            :items="coberturasBasiOptions"
-            label="Coberturas BASICAs"
+            :items="coberturasBasicasOptions"
+            label="Coberturas básicas"
             item-title="title"
             return-object
             multiple
@@ -81,7 +88,7 @@
         <v-col cols="12" md="4">
           <v-select
             v-model="coberturasAdiciObj"
-            :items="coberturasAdiciOptions"
+            :items="coberturasAdicionalesOptions"
             label="Coberturas adicionales"
             item-title="title"
             return-object
@@ -102,15 +109,14 @@
         </v-col>
       </v-row>
 
-      <v-divider class="my-6" />
-
-      <v-row>
+      <v-row v-if="mostrarSeccionDetalle">
         <v-col cols="12" md="4" v-if="detalleCapa === 1">
           <v-select
             v-model="capaSeleccionada"
             :items="detalleCOptions"
             chips
             label="Detalle de capa"
+            :rules="[v => (detalleCapa === 1 ? !!v : true) || 'Seleccione una capa']"
             variant="solo-filled"
           />
         </v-col>
@@ -154,13 +160,13 @@
           <v-text-field v-model.number="porSobrePrimaE" label="% Prima" suffix="%" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 3">
-          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]"/>
+          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" :rules="[ValidacionesContrato.tasaAlMillar()]"/>
         </v-col>
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
           <v-text-field v-model.number="factorTarifaP" label="Factor %" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
 
-        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
+        <v-col cols="12" md="5" v-if="tipoTarifaObj?.value === 2">
           <v-select
             v-model="tarifaPropiaObj"
             :items="tarifasPropiasOptions"
@@ -172,7 +178,16 @@
             clearable
             variant="solo-filled"
             :rules="[v => !!v || 'Debe seleccionar una tarifa propia']"
-          />
+          >
+            <template v-slot:append>
+              <router-link to="/reaseguro/configuracion_tarifas" style="text-decoration: none;">
+                <v-icon>mdi-help-circle-outline</v-icon>
+                <v-tooltip activator="parent" location="top" max-width="350">
+                  Si requiere agregar o modificar algun archivo de la lista antes de seleccionarlo presione aqui
+                </v-tooltip>
+              </router-link>
+            </template>
+        </v-select>
         </v-col>
 
         <v-col cols="12" md="1" class="d-flex align-center">
@@ -274,6 +289,7 @@ const {
 const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
 
 const agrupacionCoberturas = ref(0)
+const guardarAgrupacion = ref(false)
 const coberturasParaAgrupar = ref<any[]>([])
 const coberturaMadreObj = ref<any>(null)
 const agrupaciones = ref<any[]>([])
@@ -297,6 +313,30 @@ const itemsTablaTarifas = ref<any[]>([])
 const editandoAgrupacionIndex = ref<number | null>(null)
 const editandoIndex = ref(-1)
 
+const mostrarSeccionDetalle = computed(() => {
+  return agrupacionCoberturas.value === 0 || guardarAgrupacion.value;
+});
+
+const coberturasHijasAgrupadas = computed(() => {
+  if (agrupacionCoberturas.value === 0) return [];
+  const todasLasHijas = agrupaciones.value.flatMap(a => a.coberturas.map((c: any) => c.value));
+  return todasLasHijas;
+});
+
+const coberturasBasicasOptions = computed(() => {
+  if (agrupacionCoberturas.value === 0) return coberturasBasiOptions.value;
+  return coberturasBasiOptions.value.filter(c => coberturasHijasAgrupadas.value.includes(c.value));
+});
+
+const coberturasAdicionalesOptions = computed(() => {
+  let filtradas = agrupacionCoberturas.value === 0
+    ? coberturasAdiciOptions.value
+    : coberturasAdiciOptions.value.filter(c => coberturasHijasAgrupadas.value.includes(c.value));
+
+  const idsBasicas = coberturasBasiObj.value.map(c => getID(c));
+  return filtradas.filter(c => !idsBasicas.includes(c.value));
+});
+
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
   return (typeof item === 'object' && 'value' in item) ? item.value : item;
@@ -304,17 +344,18 @@ const getID = (item: any) => {
 
 const existeTarifaDuplicada = (
   cveCob: any,
-  idTipoTarifa: number,
-  nombreArchivo: string | null
+  capaActual: string | null
 ) => {
-  return itemsTablaTarifas.value.some(item => {
-    if (item.cveCob !== cveCob) return false
-    if (item.tipoTarifa?.value !== idTipoTarifa) return false
-    if (idTipoTarifa !== 2) return true
+  return itemsTablaTarifas.value.some((item, index) => {
+    if (editandoIndex.value !== -1 && index === editandoIndex.value) return false;
+    if (item.cveCob !== cveCob) return false;
 
-    return item.nombreArchivo === nombreArchivo
-  })
-}
+    if (esExcedentePorCapas.value) {
+      return item.detalleCapa === capaActual;
+    }
+    return true;
+  });
+};
 
 watch(() => getID(tipoTarifaObj.value), (tipo) => {
   primaTarFi.value = 0;
@@ -369,6 +410,12 @@ watch([() => coberturasOptions.value, () => tipoTarifaOptions.value], ([c, t]) =
   if (c.length > 0 && t.length > 0) hidratarDesdeStore()
 }, { immediate: true })
 
+watch(detalleCobertura, value => {
+  if (value === 0){
+    itemsTablaTarifas.value = []
+  }
+})
+
 onMounted(async () => {
   await Promise.all([fetchCoberturas(), fetchCoberturasBasicas(), fetchCoberturasAdicionales(), fetchTipoTarifa(), fetchTarifaPropia()])
 })
@@ -384,10 +431,55 @@ const agregarAgrupacion = () => {
 const editarAgrupacion = (item: any, index: number) => {
   coberturasParaAgrupar.value = [...item.coberturas]; coberturaMadreObj.value = item.madre; eliminarAgrupacion(index)
 }
-const eliminarAgrupacion = (index: number) => agrupaciones.value.splice(index, 1)
+const eliminarAgrupacion = (index: number) => {
+  agrupaciones.value.splice(index, 1);
+
+  coberturasBasiObj.value = [];
+  coberturasAdiciObj.value = [];
+  itemsTablaTarifas.value = [];
+};
+const confirmarAgrupacion = () => {
+  if (agrupaciones.value.length === 0) {
+    dialog.show({ type: DialogType.ERROR, message: 'Debe realizar al menos una agrupación.', title: 'Error' });
+    return;
+  }
+  guardarAgrupacion.value = true;
+  dialog.show({ type: DialogType.SUCCESS, message: 'Agrupación confirmada.', title: 'Éxito' });
+};
+
+const obtenerAnioVigencia = () => {
+  const fecha = contratoStore.general?.fechaInicio;
+  if (!fecha) return new Date().getFullYear();
+  return new Date(fecha).getFullYear();
+};
+
+const generarNombreDefaultArchivo = (nombreCob: string) => {
+  const anio = obtenerAnioVigencia();
+  return `${nombreCob.toUpperCase().replace(/\s+/g, '_')}_${anio}`;
+};
+
+watch([() => coberturaTarifaObj.value, () => tipoTarifaObj.value], ([nuevaCob, nuevoTipo]) => {
+  const textoTarifa = nuevoTipo?.title || '';
+  const esTipoQX = textoTarifa.includes('TARIFA PROPIA TIPO QX') || getID(nuevoTipo) === 2;
+
+  if (esTipoQX && nuevaCob) {
+    const nombreSugerido = generarNombreDefaultArchivo(nuevaCob.title);
+
+  }
+}, { deep: true });
+
+watch(detalleCobertura, (nuevoValor) => {
+  if (nuevoValor === 0) {
+    itemsTablaTarifas.value = [];
+    if (coberturasBasiObj.value.length > 0) {
+      coberturaTarifaObj.value = coberturasBasiObj.value[0];
+    }
+  }
+});
 
 const agregarTarifa = () => {
   const idTipoTarifa = getID(tipoTarifaObj.value);
+  const textoTarifa = tipoTarifaObj.value?.title || '';
 
   if (idTipoTarifa === null) {
     dialog.show({ type: DialogType.ERROR, message: 'Seleccione un tipo de tarifa', title: 'Error' });
@@ -395,107 +487,95 @@ const agregarTarifa = () => {
   }
 
   if (detalleCapa.value === 1 && !capaSeleccionada.value) {
-    dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa', title: 'Error' });
+    dialog.show({
+      type: DialogType.ERROR,
+      message: 'Debe seleccionar una capa para continuar.',
+      title: 'Dato obligatorio'
+    });
     return;
   }
 
-  const idCobSeleccionada = getID(coberturaTarifaObj.value);
-  let tipoCoberturaTexto = 'BASICA';
+  const capaActual = detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : 'NO';
+  const esTipoQX = textoTarifa.includes('TARIFA PROPIA TIPO QX') || idTipoTarifa === 2;
 
-  if (idCobSeleccionada !== null) {
-    const esBasica = coberturasBasiObj.value.some(c => getID(c) == idCobSeleccionada);
-    const esAdicional = coberturasAdiciObj.value.some(c => getID(c) == idCobSeleccionada);
-
-    if (esBasica) tipoCoberturaTexto = 'BASICA';
-    else if (esAdicional) tipoCoberturaTexto = 'BADI';
+  let coberturasAProcesar: any[] = [];
+  if (detalleCobertura.value === 0) {
+    coberturasAProcesar = [...coberturasBasiObj.value, ...coberturasAdiciObj.value];
+    itemsTablaTarifas.value = [];
+  } else {
+    if (!coberturaTarifaObj.value) return;
+    coberturasAProcesar = [coberturaTarifaObj.value];
   }
 
-  const fechaInicio = contratoStore.general?.fechaInicio;
-  const anioVigencia = fechaInicio ? new Date(fechaInicio).getFullYear() : new Date().getFullYear();
+  coberturasAProcesar.forEach(cob => {
+    const idCob = getID(cob);
+    const esBasica = coberturasBasiObj.value.some(c => getID(c) == idCob);
+    const nombreDefault = generarNombreDefaultArchivo(cob.title);
 
-  let listaAProcesar: any[] = [];
-
-    if (idTipoTarifa !== 2) {
-    const coberturaRepetida = itemsTablaTarifas.value.some(
-      i => i.cveCob === idCobSeleccionada
-    );
-
-    if (coberturaRepetida) {
-      dialog.show({
-        type: DialogType.ERROR,
-        title: 'Error',
-        message: 'La cobertura ya fue agregada'
-      });
-      return;
-    }
-  }
-
-  if (idTipoTarifa === 2) {
-    if (tarifaPropiaObj.value.length > 0) {
-      listaAProcesar = [...tarifaPropiaObj.value];
+    let listaNombres: string[] = [];
+    if (esTipoQX) {
+      listaNombres = tarifaPropiaObj.value.length > 0
+        ? tarifaPropiaObj.value.map(a => a.title)
+        : [nombreDefault];
     } else {
-      listaAProcesar = [{
-        title: `${coberturaTarifaObj.value?.title || 'COB'}_${anioVigencia}`
-      }];
+      listaNombres = [tarifaPropiaObj.value.length > 0 ? tarifaPropiaObj.value[0].title : ''];
     }
-  } else {
-    listaAProcesar = [null];
-  }
 
-  for (const item of listaAProcesar) {
-    const nombreArchivo = item?.title ?? null;
+    listaNombres.forEach((nombreRef, indexArchivo) => {
+      const duplicado = itemsTablaTarifas.value.some((item, index) => {
+        if (editandoIndex.value !== -1 && index === editandoIndex.value) return false;
 
-    const duplicado = existeTarifaDuplicada(
-      idCobSeleccionada,
-      idTipoTarifa,
-      nombreArchivo
-    );
+        const mismaCob = item.cveCob === idCob;
+        const mismaCapa = item.detalleCapa === capaActual;
 
-    if (duplicado) {
-      dialog.show({
-        type: DialogType.ERROR,
-        title: 'Error',
-        message:
-          idTipoTarifa === 2
-            ? 'El archivo ya fue agregado para esta cobertura'
-            : 'No se permiten coberturas o tarifas repetidas'
+        if (esTipoQX) {
+          return mismaCob && mismaCapa && item.nombreArchivo === nombreRef;
+        } else {
+          return mismaCob && mismaCapa;
+        }
       });
-      return;
-    }
-  }
 
-  if (editandoIndex.value > -1) {
-    itemsTablaTarifas.value[editandoIndex.value] =
-      generarObjetoFila(listaAProcesar[0], tipoCoberturaTexto, idCobSeleccionada);
-  } else {
-    listaAProcesar.forEach(item => {
-      itemsTablaTarifas.value.push(
-        generarObjetoFila(item, tipoCoberturaTexto, idCobSeleccionada)
-      );
+      if (duplicado && detalleCobertura.value === 1) {
+        let mensajeError = '';
+
+        if (esExcedentePorCapas.value && detalleCapa.value === 1) {
+          mensajeError = `La cobertura ${cob.title} ya tiene la tarifa ${nombreRef} asignada en la capa ${capaActual}.`;
+        } else {
+          mensajeError = `La cobertura ${cob.title} ya cuenta con una tarifa asignada.`;
+        }
+        dialog.show({
+          type: DialogType.ERROR,
+          message: mensajeError,
+          title: 'Registro Duplicado'
+        });
+        return;
+      }
+
+      const nuevaFila = {
+        detalleCapa: capaActual,
+        tipoCobertura: esBasica ? 'BASICA' : 'BADI',
+        cobertura: cob.title || '',
+        cveCob: idCob,
+        tipoTarifa: { ...tipoTarifaObj.value },
+        primaTarifa: primaTarFi.value,
+        porSobrePrima: porSobrePrimaE.value,
+        tarifaFijaM: tarifaFijaM.value,
+        factorTap: factorTarifaP.value,
+        nombreArchivo: nombreRef,
+        tarifaPropia: nombreRef
+      };
+
+      if (editandoIndex.value > -1 && indexArchivo === 0) {
+        itemsTablaTarifas.value[editandoIndex.value] = nuevaFila;
+        editandoIndex.value = -1;
+      } else {
+        itemsTablaTarifas.value.push(nuevaFila);
+      }
     });
-  }
+  });
 
-  editandoIndex.value = -1;
-  limpiarTarifa();
+  if (detalleCobertura.value === 1) limpiarTarifa();
 };
-
-const generarObjetoFila = (itemTarifa: any, tipoTexto: string, idCob: any) => {
-  const nombreFinal = itemTarifa?.title ?? null;
-
-  return {
-    detalleCapa: detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : 'NO',
-    tipoCobertura: tipoTexto,
-    cobertura: coberturaTarifaObj.value?.title || '',
-    cveCob: idCob,
-    tipoTarifa: { ...tipoTarifaObj.value },
-    primaTarifa: primaTarFi.value,
-    porSobrePrima: porSobrePrimaE.value,
-    tarifaFijaM: tarifaFijaM.value,
-    factorTap: factorTarifaP.value,
-    nombreArchivo: nombreFinal,
-    tarifaPropia: nombreFinal
-  }
-}
 
 const limpiarTarifa = () => {
   coberturaTarifaObj.value = null;
@@ -531,15 +611,89 @@ const editarTarifa = (item: any, index: number) => {
 const eliminarTarifa = (index: number) => itemsTablaTarifas.value.splice(index, 1)
 
 const guardarTodoEnStore = async () => {
-  const { valid } = await formRef.value.validate()
-  if (!valid) return
+  const { valid } = await formRef.value.validate();
+  if (!valid) return;
 
-  const idContrato = contratoStore.general?.idContrato
+  const idContrato = contratoStore.general?.idContrato;
   if (!idContrato) {
     dialog.show({ type: DialogType.ERROR, message: 'Falta ID del contrato', title: 'Error' });
-    return
+    return;
   }
 
+  const idsRequeridos = [
+    ...coberturasBasiObj.value.map(c => getID(c)),
+    ...coberturasAdiciObj.value.map(c => getID(c))
+  ];
+
+  if (idsRequeridos.length === 0) {
+    dialog.show({
+      type: DialogType.ERROR,
+      message: 'Debe seleccionar al menos una cobertura (Básica o Adicional) antes de guardar.',
+      title: 'Configuración incompleta'
+    });
+    return;
+  }
+
+  let tarifasFinales: any[] = [];
+
+  if (itemsTablaTarifas.value.length > 0) {
+    tarifasFinales = [...itemsTablaTarifas.value];
+
+    const idsEnTabla = tarifasFinales.map(t => t.cveCob);
+    const faltantes = idsRequeridos.filter(id => !idsEnTabla.includes(id));
+
+    if (faltantes.length > 0) {
+      dialog.show({
+        type: DialogType.ERROR,
+        title: 'Coberturas sin Tarifa',
+        message: 'Existen coberturas seleccionadas que no tienen una tarifa asignada.'
+      });
+      return;
+    }
+  }
+  else if (detalleCobertura.value === 0) {
+    const idTipoTarifa = getID(tipoTarifaObj.value);
+
+    if (!idTipoTarifa) {
+      dialog.show({
+        type: DialogType.ERROR,
+        message: 'No se ha definido un tipo de tarifa para asignar a las coberturas seleccionadas.',
+        title: 'Faltan datos'
+      });
+      return;
+    }
+
+    tarifasFinales = idsRequeridos.map(id => {
+      const cobOriginal = [...coberturasBasiOptions.value, ...coberturasAdiciOptions.value].find(c => getID(c) === id);
+      const esBasica = coberturasBasiObj.value.some(c => getID(c) === id);
+      const nombreRef = tarifaPropiaObj.value.length > 0 ? tarifaPropiaObj.value[0].title : null;
+
+      return {
+        detalleCapa: detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : 'NO',
+        tipoCobertura: esBasica ? 'BASICA' : 'BADI',
+        cobertura: cobOriginal?.title || '',
+        cveCob: id,
+        tipoTarifa: { ...tipoTarifaObj.value },
+        primaTarifa: primaTarFi.value,
+        porSobrePrima: porSobrePrimaE.value,
+        tarifaFijaM: tarifaFijaM.value,
+        factorTap: factorTarifaP.value,
+        nombreArchivo: nombreRef,
+        tarifaPropia: nombreRef
+      };
+    });
+  }
+  // 3. Si la tabla está vacía y detalle es SI
+  else {
+    dialog.show({
+      type: DialogType.ERROR,
+      message: 'Debe agregar al menos una tarifa a la tabla técnica.',
+      title: 'Faltan datos'
+    });
+    return;
+  }
+
+  // --- GUARDADO FINAL ---
   const payload = {
     idContrato,
     agrupacionCoberturas: agrupacionCoberturas.value,
@@ -549,13 +703,19 @@ const guardarTodoEnStore = async () => {
     detalleCapa: detalleCapa.value,
     detalleC: contratoStore.expc?.capas || [],
     detalleCobertura: detalleCobertura.value,
-    tarifas: itemsTablaTarifas.value
-  }
+    tarifas: tarifasFinales
+  };
 
-  contratoStore.setConfigReasCob(payload)
-  dialog.show({ type: DialogType.SUCCESS, message: 'Configuración de coberturas guardada', title: 'Éxito' })
-  emits('on-save-complete')
-}
+  contratoStore.setConfigReasCob(payload);
+  itemsTablaTarifas.value = tarifasFinales;
+
+  dialog.show({
+    type: DialogType.SUCCESS,
+    message: 'Configuración guardada exitosamente.',
+    title: 'Éxito'
+  });
+  emits('on-save-complete');
+};
 
 const headersAgrupacion = [
   { title: 'Coberturas', key: 'coberturas' },

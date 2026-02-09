@@ -4,11 +4,11 @@
       No hay reaseguradores agregados todavía.
     </v-alert>
 
-    <v-expansion-panels v-else variant="popout" class="mt-4">
-      <v-expansion-panel
-        v-for="(item, index) in contratoStore.listaReaseguradoresFinal"
-        :key="index"
-      >
+      <v-expansion-panels v-else>
+        <v-expansion-panel
+          v-for="(item, index) in listaReaseguradoresFinal"
+          :key="index"
+        >
         <v-expansion-panel-title>
           <v-row no-gutters class="align-center">
             <v-col cols="8">
@@ -25,17 +25,48 @@
             <v-col cols="12" md="6">
               <div class="text-subtitle-1 blue--text font-weight-bold">Configuración General</div>
               <v-divider class="mb-2"></v-divider>
-              <ul class="text-caption">
+
+              <ul class="text-caption mb-4">
                 <li><strong>ID Contrato:</strong> {{ item.general.idContrato }}</li>
                 <li><strong>Cesión Básica:</strong> {{ item.general.cesionCoberBasi?.title }}</li>
                 <li><strong>Indicador Distribución:</strong> {{ item.general.indicadorDistrC?.title }}</li>
                 <li><strong>Comisión Reaseguro:</strong> {{ item.general.comisionReaseg?.title }}</li>
                 <li><strong>Tipo Comisión:</strong> {{ item.general.tipoComision?.title }}</li>
                 <li><strong>Detalle por cobertura:</strong> {{ item.general.detalleCobertura?.title }}</li>
-                <li><strong>Tipo cobertura:</strong> {{ item.general.tipoCobertura?.title }}</li>
-                <li><strong>Comisión 1er Año:</strong> {{ item.general.comisionPrimerAnio }}%</li>
-                <li><strong>Comisión Renovación:</strong> {{ item.general.comisionRenovacion }}%</li>
               </ul>
+
+              <div class="text-subtitle-1 blue--text font-weight-bold">Coberturas por tipo de comisión</div>
+              <v-divider class="mb-2"></v-divider>
+
+              <v-data-table
+                v-if="item.general && item.general.coberturas && item.general.coberturas.length > 0"
+                :headers="[
+                  { title: 'Tipo cobertura', key: 'tipoCobertura' },
+                  { title: 'Comisión Primer Año', key: 'comisionPrimerAnio' },
+                  { title: 'Comisión Renovación', key: 'comisionRenovacion' },
+                ]"
+                :items="item.general.coberturas"
+                density="compact"
+                class="elevation-0 border mt-2"
+                hide-default-footer
+              >
+                <template #item.comisionPrimerAnio="{ value }">
+                  <span class="font-weight-medium">{{ value }}%</span>
+                </template>
+
+                <template #item.comisionRenovacion="{ value }">
+                  <span class="font-weight-medium">{{ value }}%</span>
+                </template>
+              </v-data-table>
+              <v-alert
+                v-else
+                type="info"
+                variant="tonal"
+                density="compact"
+                class="text-caption mt-2"
+              >
+                No hay coberturas configuradas.
+              </v-alert>
             </v-col>
 
             <v-col cols="12" class="mt-4">
@@ -81,7 +112,6 @@
                 :items="item.coberturas.tarifas"
                 density="compact"
                 class="elevation-0 border"
-                hide-default-footer
               >
                 <template #item.valor="{ item: tarifa }">
                   <span v-if="tarifa.tipoTarifa === 0">$ {{ tarifa.primaTarifa }}</span>
@@ -104,6 +134,7 @@
               <v-data-table
                 v-if="item.comisiones && item.comisiones.comisiones.length > 0"
                 :headers="[
+                  { title: 'Tipo de cobertura', key: 'tipoCobertura' },
                   { title: 'Límite Inferior', key: 'limiteInf' },
                   { title: 'Límite Superior', key: 'limiteSup' },
                   { title: 'Comisión Definitiva', key: 'comisionDefinitiva' }
@@ -111,7 +142,6 @@
                 :items="item.comisiones.comisiones"
                 density="compact"
                 class="elevation-0 border"
-                hide-default-footer
               >
                 <template #item.limiteInf="{ value }">{{ value }}%</template>
                 <template #item.limiteSup="{ value }">{{ value }}%</template>
@@ -127,25 +157,22 @@
               <div class="text-subtitle-1 orange--text font-weight-bold">Participación de Utilidades (PTU)</div>
               <v-divider class="mb-2"></v-divider>
               <ul class="text-caption" v-if="item.ptu">
-              <li>
-                <strong>Otorga PTU:</strong>
-                {{ item.ptu.otorgaPtu === 1 ? 'SÍ' : 'NO' }}
-              </li>
-
-              <template v-if="item.ptu.otorgaPtu === 1">
                 <li>
-                  <strong>Método:</strong>
-                  {{ item.ptu.metodoCalPTU ?? 'N/A' }}
+                  <strong>Otorga PTU:</strong>
+                  {{ getTX(item.ptu.otorgaPtu) }}
                 </li>
-                <li><strong>Porcentaje PTU:</strong> {{ item.ptu.ptu }}%</li>
-                <li><strong>Factor K:</strong> {{ item.ptu.kPor }}%</li>
-                <li><strong>Años Arrastre:</strong> {{ item.ptu.aniosArrastre }}</li>
-                <li><strong>Gastos:</strong> {{ item.ptu.gastos }}%</li>
-              </template>
-            </ul>
-            <div v-else class="text-caption grey--text">
-              Sin configuración de PTU definida.
-            </div>
+                <li>
+                  <strong>Método de cálculo:</strong>
+                  {{ getTX(item.ptu.metodoCalPTU) }}
+                </li>
+                <li><strong>Porcentaje PTU:</strong> {{ item.ptu.ptu || 0 }}%</li>
+                <li><strong>Factor K:</strong> {{ item.ptu.kPor || 0 }}%</li>
+                <li><strong>Años Arrastre:</strong> {{ item.ptu.aniosArrastre || 0 }}</li>
+                <li><strong>Gastos:</strong> {{ item.ptu.gastos || 0 }}%</li>
+              </ul>
+              <div v-else class="text-caption grey--text">
+                Sin configuración de PTU definida.
+              </div>
             </v-col>
           </v-row>
 
@@ -170,18 +197,42 @@
 </template>
 
 <script setup lang="ts">
-
-
-import { computed } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useContratoStore } from '@/stores/contratoStore'
+import { storeToRefs } from 'pinia'
 
-const contratoStore = useContratoStore()
+const hidratarListaReaseguradores = () => {
+  const data = contratoStore.listaReaseguradoresFinal
+  if (!data || data.length === 0) {
+    const backup = localStorage.getItem('lista_reaseguradores_final')
+    if (backup) {
+      contratoStore.listaReaseguradoresFinal = JSON.parse(backup)
+    }
+  }
+}
 
-const totalPart = computed(() => {
-  return contratoStore.listaReaseguradoresFinal.reduce((acc, curr) => acc + curr.general.participacion, 0)
+onMounted(() => {
+  hidratarListaReaseguradores()
 })
 
-/* Falta realizar la parte de editar la reaseguradora */
+const contratoStore = useContratoStore()
+const { listaReaseguradoresFinal } = storeToRefs(contratoStore)
+
+
+const totalPart = computed(() =>
+  listaReaseguradoresFinal.value.reduce(
+    (acc, curr) => acc + Number(curr.general.participacion || 0),
+    0
+  )
+)
+
+const getTX = (item: any): string => {
+  if (!item) return 'N/A';
+  if (typeof item === 'object') {
+    return item.title || item.label || item.nombre || String(item.value || 'N/A');
+  }
+  return String(item);
+};
 
 const eliminarReasegurador = (index: number) => {
   contratoStore.listaReaseguradoresFinal.splice(index, 1)
