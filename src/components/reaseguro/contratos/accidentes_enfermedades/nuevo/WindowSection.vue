@@ -1,7 +1,7 @@
 <template>
   <v-window v-model="activeTab">
     <generales-section />
-    <detalles-proporcionales-section />
+    <detalles-proporcionales-section v-if="isTypeProporcional" />
     <polizas-facultativas-section />
     <reaseguradores-section />
     <comisiones-rate-on-line-section />
@@ -36,4 +36,5 @@ import CorretajeSection from "./CorretajeSection.vue";
 import AdministracionSection from "./AdministracionSection.vue";
 const useAEStore = useContratoAEStore();
 const { activeTab } = storeToRefs(useAEStore);
+const { isTypeProporcional } = storeToRefs(useAEStore);
 </script>

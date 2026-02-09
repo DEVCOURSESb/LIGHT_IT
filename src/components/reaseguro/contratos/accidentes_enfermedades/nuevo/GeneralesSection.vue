@@ -193,7 +193,7 @@
                   label="Asegurado"
                   variant="solo-filled"
                   :model-value="formData['asegurado']"
-                  @update:model-value="setFieldValue('asegurado', $event)"
+                  @update:model-value="setFieldValue('asegurado', $event.toUpperCase())"
                   :error-messages="showErrors ? formErrors['asegurado'] : undefined"
                 />
               </v-col>
@@ -204,7 +204,7 @@
                   label="Negocios cubiertos"
                   variant="solo-filled"
                   :model-value="formData['negociosCubiertos']"
-                  @update:model-value="setFieldValue('negociosCubiertos', $event)"
+                  @update:model-value="setFieldValue('negociosCubiertos', $event.toUpperCase())"
                   :error-messages="showErrors ? formErrors['negociosCubiertos'] : undefined"
                 />
               </v-col>

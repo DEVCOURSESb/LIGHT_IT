@@ -245,6 +245,7 @@ export const useGeneralSection = () => {
         setFieldValue('cveCriterioCob', null);
         setFieldValue('traspasoCartera', null);
       }
+      contratoAEStore.isTypeProporcional = newValue === 0;
     }
   );
 
