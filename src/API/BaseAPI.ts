@@ -48,29 +48,38 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
         return response;
       },
       async error => {
-      console.log(error)
-      if (error.code === 'ERR_NETWORK') {
+        console.log(error)
+        if (error.code === 'ERR_NETWORK') {
 
-        const { useAuth } = await import('@/composables/auth/useAuth');
+          const { useAuth } = await import('@/composables/auth/useAuth');
+          const { AuthStore } = await import('@/stores/authStore');
+          const { useQueryClient } = await import('@tanstack/vue-query');
 
-        const auth = useAuth();
+          const auth = useAuth();
+          const authStore = AuthStore();
 
-        await auth.logout();
+          // si se esta autenticado, cerrar sesión y notificar al usuario
+          if( authStore.checkAuth() ) {
+            await auth.logout();
 
-        dialog.show({
-          title: 'Sesión expirada',
-          message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-          type: DialogType.ERROR,
-        });
+            const queryClient = useQueryClient();
 
-        setTimeout(() => {
-          dialog.cerrar();
-          router.replace({ path: "/" });
-        }, 800);
-        // aqui se debe verificar que el store quede limpio es
-        // decir que se eliminen el email y token una vez la cesión es cerrada
-      }
-      return Promise.reject(error)
+            queryClient.clear();
+
+            dialog.show({
+              title: 'Sesión expirada',
+              message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+              type: DialogType.ERROR,
+            });
+
+            setTimeout(() => {
+              dialog.cerrar();
+              router.replace({ path: "/" });
+            }, 800);
+          }
+
+        }
+        return Promise.reject(error)
       },
     )
   }

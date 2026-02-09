@@ -4,9 +4,15 @@ import { ref, watch } from "vue";
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   const activeTab = ref<string>(localStorage.getItem("activeTab") ?? "tab-1");
 
-  const setActiveTab = (newTab: string): void => {
-    activeTab.value = newTab;
+  const guardarGenerales = (data: Object) => {
+    console.log("Guardando datos generales:", data);
+    window.localStorage.setItem("contratoAE_generales", JSON.stringify(data));
   };
+
+  const obtenerGenerales = () => {
+    const data = window.localStorage.getItem("contratoAE_generales");
+    return data ? JSON.parse(data) : {};
+  }
 
   // Persistencia automática
   watch(activeTab, (value) => {
@@ -15,6 +21,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   return {
     activeTab,
-    setActiveTab,
+    guardarGenerales,
+    obtenerGenerales
   };
 });

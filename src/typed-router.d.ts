@@ -24,8 +24,10 @@ declare module 'vue-router/auto-routes' {
     '/administracion/ContratosReasegPage': RouteRecordInfo<'/administracion/ContratosReasegPage', '/administracion/ContratosReasegPage', Record<never, never>, Record<never, never>>,
     '/auth/Login': RouteRecordInfo<'/auth/Login', '/auth/Login', Record<never, never>, Record<never, never>>,
     '/auth/LoginC': RouteRecordInfo<'/auth/LoginC', '/auth/LoginC', Record<never, never>, Record<never, never>>,
+    '/catalogos/CalculoComisionPage': RouteRecordInfo<'/catalogos/CalculoComisionPage', '/catalogos/CalculoComisionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ClasificacionCoberturaPage': RouteRecordInfo<'/catalogos/ClasificacionCoberturaPage', '/catalogos/ClasificacionCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CoberturaPage': RouteRecordInfo<'/catalogos/CoberturaPage', '/catalogos/CoberturaPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/CoberturasAyePage': RouteRecordInfo<'/catalogos/CoberturasAyePage', '/catalogos/CoberturasAyePage', Record<never, never>, Record<never, never>>,
     '/catalogos/CriteriosAsignacionPage': RouteRecordInfo<'/catalogos/CriteriosAsignacionPage', '/catalogos/CriteriosAsignacionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/CriteriosCoberturaPage': RouteRecordInfo<'/catalogos/CriteriosCoberturaPage', '/catalogos/CriteriosCoberturaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/DistribucionCesionPage': RouteRecordInfo<'/catalogos/DistribucionCesionPage', '/catalogos/DistribucionCesionPage', Record<never, never>, Record<never, never>>,
@@ -37,11 +39,13 @@ declare module 'vue-router/auto-routes' {
     '/catalogos/FormaPagoPage': RouteRecordInfo<'/catalogos/FormaPagoPage', '/catalogos/FormaPagoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/FumadorPage': RouteRecordInfo<'/catalogos/FumadorPage', '/catalogos/FumadorPage', Record<never, never>, Record<never, never>>,
     '/catalogos/IntermediariosPage': RouteRecordInfo<'/catalogos/IntermediariosPage', '/catalogos/IntermediariosPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/LimCorretajePage': RouteRecordInfo<'/catalogos/LimCorretajePage', '/catalogos/LimCorretajePage', Record<never, never>, Record<never, never>>,
     '/catalogos/MonedaPage': RouteRecordInfo<'/catalogos/MonedaPage', '/catalogos/MonedaPage', Record<never, never>, Record<never, never>>,
     '/catalogos/OperacionesRamosPage': RouteRecordInfo<'/catalogos/OperacionesRamosPage', '/catalogos/OperacionesRamosPage', Record<never, never>, Record<never, never>>,
     '/catalogos/PerfilPage': RouteRecordInfo<'/catalogos/PerfilPage', '/catalogos/PerfilPage', Record<never, never>, Record<never, never>>,
     '/catalogos/PtuPage': RouteRecordInfo<'/catalogos/PtuPage', '/catalogos/PtuPage', Record<never, never>, Record<never, never>>,
     '/catalogos/ReaseguradoresPage': RouteRecordInfo<'/catalogos/ReaseguradoresPage', '/catalogos/ReaseguradoresPage', Record<never, never>, Record<never, never>>,
+    '/catalogos/Rr6SectorPage': RouteRecordInfo<'/catalogos/Rr6SectorPage', '/catalogos/Rr6SectorPage', Record<never, never>, Record<never, never>>,
     '/catalogos/SexoPage': RouteRecordInfo<'/catalogos/SexoPage', '/catalogos/SexoPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoAsignacionPage': RouteRecordInfo<'/catalogos/TipoAsignacionPage', '/catalogos/TipoAsignacionPage', Record<never, never>, Record<never, never>>,
     '/catalogos/TipoEndosoPage': RouteRecordInfo<'/catalogos/TipoEndosoPage', '/catalogos/TipoEndosoPage', Record<never, never>, Record<never, never>>,
@@ -151,12 +155,20 @@ declare module 'vue-router/auto-routes' {
       routes: '/auth/LoginC'
       views: never
     }
+    'src/pages/catalogos/CalculoComisionPage.vue': {
+      routes: '/catalogos/CalculoComisionPage'
+      views: never
+    }
     'src/pages/catalogos/ClasificacionCoberturaPage.vue': {
       routes: '/catalogos/ClasificacionCoberturaPage'
       views: never
     }
     'src/pages/catalogos/CoberturaPage.vue': {
       routes: '/catalogos/CoberturaPage'
+      views: never
+    }
+    'src/pages/catalogos/CoberturasAyePage.vue': {
+      routes: '/catalogos/CoberturasAyePage'
       views: never
     }
     'src/pages/catalogos/CriteriosAsignacionPage.vue': {
@@ -203,6 +215,10 @@ declare module 'vue-router/auto-routes' {
       routes: '/catalogos/IntermediariosPage'
       views: never
     }
+    'src/pages/catalogos/LimCorretajePage.vue': {
+      routes: '/catalogos/LimCorretajePage'
+      views: never
+    }
     'src/pages/catalogos/MonedaPage.vue': {
       routes: '/catalogos/MonedaPage'
       views: never
@@ -221,6 +237,10 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/catalogos/ReaseguradoresPage.vue': {
       routes: '/catalogos/ReaseguradoresPage'
+      views: never
+    }
+    'src/pages/catalogos/Rr6SectorPage.vue': {
+      routes: '/catalogos/Rr6SectorPage'
       views: never
     }
     'src/pages/catalogos/SexoPage.vue': {

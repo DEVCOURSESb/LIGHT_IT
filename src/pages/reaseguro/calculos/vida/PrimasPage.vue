@@ -1,53 +1,50 @@
 <template>
   <div>
     <v-breadcrumbs :items="breadcrumbs" />
-    <v-card-title class="d-flex align-center">
-      Cálculo de Primas
-    </v-card-title>
+    <v-card-title class="d-flex align-center"> Cálculo de Primas </v-card-title>
 
-   <v-card class="mt-4" elevation="0" outlined>
-    <v-card-title>
-      <v-form ref="formRef">
-        <v-row align="center" justify="center" class="mb-4">
-          <v-col cols="12" md="3">
-            <v-select
-              v-model="subramoObj"
-              :items="subramoOptions"
-              label="Subramo"
-              chips
-              return-object
-              variant="solo-filled"
-              clearable
-              required
-            />
-          </v-col>
+    <v-card class="mt-4" elevation="0" outlined>
+      <v-card-title>
+        <v-form ref="formRef">
+          <v-row align="center" justify="center" class="mb-4">
+            <v-col cols="12" md="3">
+              <v-select
+                v-model="subramo"
+                :items="dataSelec"
+                item-title="descOperacionRamos"
+                item-value="cveCobertura"
+                label="Subramo"
+                :disabled="isLoadingSelectOptions"
+                return-object
+                variant="solo-filled"
+                clearable
+                required
+              />
+            </v-col>
 
-          <v-col cols="12" md="3">
-            <v-date-input
-              v-model="fechaEvaluacion"
-              label="Fecha de evaluación"
-              variant="solo-filled"
-              clearable
-              required
-            />
-          </v-col>
+            <v-col cols="12" md="3">
+              <v-date-input
+                v-model="fechaEvaluada"
+                label="Fecha de evaluación"
+                variant="solo-filled"
+                clearable
+                required
+              />
+            </v-col>
 
-          <v-col cols="8" md="2" class="title-center">
-            <v-btn
-              size="small"
-              class="btn-guardar"
-            >
-              Calcular
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-form>
-      <v-divider class="mb-4" />
+            <v-col cols="8" md="2" class="title-center">
+              <v-btn size="small" class="btn-guardar" @click="calcularPrimas">
+                Calcular
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
+        <v-divider class="mb-4" />
 
-      <div class="mb-2">
-        <h6>Historico de Primas</h6>
-      </div>
-      <!-- <btn @click="exportarExcel"> Exportar a Excel </btn> -->
+        <div class="mb-2">
+          <h6>Historico de Primas</h6>
+        </div>
+        <!-- <btn @click="exportarExcel"> Exportar a Excel </btn> -->
         <v-data-table
           :headers="headers"
           :items="items"
@@ -61,7 +58,7 @@
             <v-icon class="delete" size="large" @click="deleteItem(item)">
               mdi-delete
             </v-icon>
-        </template>
+          </template>
         </v-data-table>
       </v-card-title>
     </v-card>
@@ -69,23 +66,22 @@
 </template>
 
 <script setup lang="ts">
+import { OperacionesRamosActions } from "@/API/catalogos/operaciones-ramos/operaciones-ramos.actions";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useSnackbar } from "@/stores/useSnackbar";
-import { onMounted, ref } from "vue";
-import { CalcularSiniestros } from './Data/CalculoPrimasSiniestrosPtu.actions'
+import { useQuery } from "@tanstack/vue-query";
+import { ref } from "vue";
 
-const subramoObj = ref<any[]>([])
-const fechaEvaluacion = ref<Date | null>(null)
+const { fetchOperacionesRamosFiltered } = OperacionesRamosActions();
+const dialog = useDialog();
+const snackbar = useSnackbar();
 
-const {
-  subramoOptions, fetchSubramos,
-} = CalcularSiniestros()
+const breadcrumbs = ["Reaseguro", "Cálculos", "Vida", "Primas"];
 
-onMounted(async () => {
-  await Promise.all([
-    fetchSubramos()
-  ])
-})
+const { data: dataSelec, isLoading: isLoadingSelectOptions } = useQuery({
+  queryKey: ["operaciones-ramos", "list", "CVE_EXT_COBER-2", "RAMO-010"],
+  queryFn: fetchOperacionesRamosFiltered,
+});
 
 const items = [
   { subramo: "Vida Individual", fechaEvaluada: "2024-05-31" },
@@ -93,12 +89,8 @@ const items = [
   { subramo: "Vida Grupo", fechaEvaluada: "2024-05-31" },
 ];
 
-const dialog = useDialog();
-const snackbar = useSnackbar();
 const subramo = ref("");
 const fechaEvaluada = ref("");
-
-const breadcrumbs = ["Reaseguro", "Cálculos", "Vida", "Primas"];
 
 const headers = [
   {
