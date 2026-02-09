@@ -32,8 +32,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
       return {
         cveContrato: data.idContrato,
         cveExtCoberContrato: operacionRamo.cveExtCober,
-        cveCoberContrato: operacionRamo.cveCobertura,
-        cveOperacionRamo: operacionRamo.cveOperacionRamo,
+        cveOperRamo: operacionRamo.cveCobertura,
         operRamoActivo: operacionRamo.operRamoActivo,
       }
     });
