@@ -90,11 +90,8 @@ const dialog = useDialog()
 const authStore = AuthStore()
 const router = useRouter()
 
-const apiTarifaRegistro = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
-const apiTarifaConsulta = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
-const apiTarifaEliminacion = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
-const apiTarifaPropiaRegistro = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegTipoTarifaPropiaRest', isBase: true, isPrivate: true });
-
+const apiTarifaBase = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegArchivoTipoTarifaRest', isBase: true, isPrivate: true });
+const apiTarifaPropia = BaseAPI({ prefix: 'ws_configuracion_tarifas_reaseg/api/v1/ReasegTipoTarifaPropiaRest', isBase: true, isPrivate: true });
 
 const tarifaPropiaFile = ref<File | null>(null)
 const itemsTablaTarifas = ref<any[]>([])
@@ -117,27 +114,30 @@ const headers2 = [
 
 const cargarTarifas = async () => {
   try {
-    const response = await apiTarifaConsulta.post('getAllRecords');
-    itemsTablaTarifas.value = response.data.map((t: any) => ({
-      id: t.idTarifa || t.id || t.id_tarifa,
-      nombreTarifa: t.nombreTarifaPropia,
-      tarifaP: t.nombreArchivo || 'N/A',
-      esActivo: t.esActivo,
-      estadoTexto: t.esActivo === 1 ? 'ACTIVO' : 'NO ACTIVO'
-    }));
-  } catch (error) { }
+    const response = await apiTarifaBase.post('getAllRecords');
+    if (response.data) {
+      itemsTablaTarifas.value = response.data.map((t: any) => ({
+        id: t.idTarifa || t.id || t.id_tarifa,
+        nombreTarifa: t.nombreTarifaPropia,
+        tarifaP: t.nombreArchivo || 'N/A',
+        esActivo: t.esActivo,
+        estadoTexto: t.esActivo === 1 ? 'ACTIVO' : 'NO ACTIVO'
+      }));
+    }
+  } catch (error) {
+    console.error("Error cargando tarifas:", error);
+  }
 };
+
+onMounted(cargarTarifas);
 
 const visualizarTarifa = (item: any) => {
   const nombreParaEnviar = item.tarifaP || item.nombreTarifa || item.nombreArchivo;
-
   router.push({
     path: `/reaseguro/configuracion_tarifas_archivo/${item.id}`,
     query: { nombre: nombreParaEnviar }
   });
 };
-
-onMounted(cargarTarifas);
 
 const cargarParaEditar = (item: any) => {
   esModoEdicion.value = true;
@@ -145,15 +145,12 @@ const cargarParaEditar = (item: any) => {
   nombreTarifaPropia.value = item.nombreTarifa;
   esActivo.value = item.esActivo;
   tarifaPropiaFile.value = null;
-  window.scrollTo(0, 0);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const obtenerFechaHoy = (): string => {
   const hoy = new Date();
-  const dia = String(hoy.getDate()).padStart(2, '0');
-  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-  const anio = hoy.getFullYear();
-  return `${dia}${mes}${anio}`;
+  return `${String(hoy.getDate()).padStart(2, '0')}${String(hoy.getMonth() + 1).padStart(2, '0')}${hoy.getFullYear()}`;
 };
 
 const guardarEnBD = async () => {
@@ -161,39 +158,38 @@ const guardarEnBD = async () => {
 
   if (esModoEdicion.value) {
     try {
-      await apiTarifaConsulta.post('updateStatus', {
+      await apiTarifaBase.post('updateStatus', {
         idTarifa: idSeleccionado.value,
         esActivo: esActivo.value
       });
-      dialog.show({ title: 'ÉXITO', message: 'Estado actualizado.', type: DialogType.SUCCESS });
+      dialog.show({ title: 'ÉXITO', message: 'Estado actualizado correctamente.', type: DialogType.SUCCESS });
       await cargarTarifas();
       limpiarFormulario();
     } catch (error) {
-      dialog.show({ title: 'ERROR', message: 'Error al actualizar estado', type: DialogType.ERROR });
+      dialog.show({ title: 'ERROR', message: 'Error al actualizar el estado.', type: DialogType.ERROR });
     }
     return;
   }
 
   if (!tarifaPropiaFile.value || !nombreTarifaPropia.value || datosTemporalCSV.value.length === 0) {
-    dialog.show({ type: DialogType.ERROR, message: 'Faltan datos o el archivo no se ha procesado.', title: 'Error' });
+    dialog.show({ type: DialogType.ERROR, message: 'Faltan datos o el archivo no se ha procesado correctamente.', title: 'Error' });
     return;
   }
 
   try {
-    dialog.show({ title: 'Procesando', message: 'Guardando configuración y detalles...', type: DialogType.INFO });
+    dialog.show({ title: 'Procesando', message: 'Guardando configuración...', type: DialogType.INFO });
+
     const fechaHoy = obtenerFechaHoy();
     const nombreArchivoFinal = `${nombreTarifaPropia.value}${fechaHoy}`;
-
     const archivoBase64 = await fileToBase64(tarifaPropiaFile.value);
-    const payloadNombreArchivo = {
+
+    const payloadCabecera = {
       nombreArchivo: nombreArchivoFinal,
       base64Content: archivoBase64,
       esActivo: esActivo.value
     };
 
-    const resCabecera = await apiTarifaRegistro.post('insertRecord', payloadNombreArchivo);
-
-    const nuevoId = resCabecera.data?.id || null;
+    await apiTarifaBase.post('insertRecord', payloadCabecera);
 
     const payloadDetalles = datosTemporalCSV.value.map(fila => ({
       nombreArchivo: nombreArchivoFinal,
@@ -204,7 +200,7 @@ const guardarEnBD = async () => {
       esActivo: esActivo.value
     }));
 
-    await apiTarifaPropiaRegistro.post('insertRecord', payloadDetalles);
+    await apiTarifaPropia.post('insertRecord', payloadDetalles);
 
     dialog.show({
       title: 'ÉXITO',
@@ -216,26 +212,35 @@ const guardarEnBD = async () => {
     limpiarFormulario();
 
   } catch (error: any) {
-    console.error("Error en el proceso de guardado:", error);
-    dialog.show({
-      title: 'ERROR',
-      message: 'Error al guardar la información. Verifique los datos.',
-      type: DialogType.ERROR
-    });
+    console.error("Error en guardado:", error);
+    dialog.show({ title: 'ERROR', message: 'Error al guardar la información. Verifique los datos.', type: DialogType.ERROR });
   }
 };
 
 const eliminarTarifa = async (item: any) => {
   dialog.show({
     title: 'Confirmar',
-    message: `¿Estás seguro de eliminar el archivo?`,
+    message: `¿Estás seguro de eliminar el archivo "${item.tarifaP}"?`,
     type: DialogType.CONFIRM,
-  }); // debe esperar primero la confirmación antes de proceder a eliminar
-
-  await apiTarifaEliminacion.delete(`deleteRecord/${item.id}`);
-  cargarTarifas();
+    onConfirm: async () => {
+      try {
+        await apiTarifaBase.delete(`deleteRecord/${item.id}`);
+        dialog.show({
+          title: 'ELIMINADO',
+          message: 'Registro borrado con éxito.',
+          type: DialogType.SUCCESS
+        });
+        cargarTarifas();
+      } catch (error) {
+        dialog.show({
+          title: 'ERROR',
+          message: 'No se pudo eliminar el registro.',
+          type: DialogType.ERROR
+        });
+      }
+    }
+  });
 };
-
 
 const alCambiarArchivo = (file: any) => {
   const selectedFile = Array.isArray(file) ? file[0] : file;
@@ -248,32 +253,32 @@ const alCambiarArchivo = (file: any) => {
 const procesarArchivoCSV = (file: File) => {
   const reader = new FileReader();
   reader.onload = (e) => {
-    const content = e.target?.result as string;
-    const lineas = content.split(/\r?\n/).filter(l => l.trim() !== '');
-
-    if (lineas.length < 2) {
-      dialog.show({ type: DialogType.ERROR, message: 'El archivo está vacío o no contiene datos.', title: 'Error de archivo' });
-      tarifaPropiaFile.value = null;
+    if (!e.target || typeof e.target.result !== 'string') {
+      dialog.show({
+        type: DialogType.ERROR, message: 'No se pudo leer el archivo.',
+        title: 'Error al leer archivo'
+      });
       return;
     }
-    const primeraLinea = lineas[0];
-    if (!primeraLinea) return;
+    const content = e.target?.result as string;
+    const lineas = content.split(/\r?\n/).filter(l => l.trim() !== '');
+    if (lineas.length < 2) {
+      dialog.show({ type: DialogType.ERROR, message: 'El archivo está vacío o no contiene datos.', title: 'Archivo Inválido' });
+      return;
+    }
+    if (!e.target) return;
 
-    const encabezadosRecibidos = primeraLinea.toUpperCase().split(',').map(h => h.trim());
-
-    const encabezadosRequeridos = ['EDAD', 'CVE_SEXO', 'CVE_FUMADOR', 'PRIMA_RIESGO'];
-
-    const faltantes = encabezadosRequeridos.filter(h => !encabezadosRecibidos.includes(h));
+    const encabezadosRecibidos = lineas[0]!.toUpperCase().split(',').map(h => h.trim());
+    const requeridos = ['EDAD', 'CVE_SEXO', 'CVE_FUMADOR', 'PRIMA_RIESGO'];
+    const faltantes = requeridos.filter(h => !encabezadosRecibidos.includes(h));
 
     if (faltantes.length > 0) {
       dialog.show({
         type: DialogType.ERROR,
-        title: 'Formato de archivo inválido',
-        message: `El archivo CSV no tiene la estructura correcta. Faltan los siguientes encabezados: ${faltantes.join(', ')}. Asegúrese de que estén escritos exactamente igual.`
+        title: 'Formato Incorrecto',
+        message: `Faltan columnas: ${faltantes.join(', ')}`
       });
-
       tarifaPropiaFile.value = null;
-      datosTemporalCSV.value = [];
       return;
     }
 
@@ -284,34 +289,17 @@ const procesarArchivoCSV = (file: File) => {
       pri: encabezadosRecibidos.indexOf('PRIMA_RIESGO')
     };
 
-    try {
-      datosTemporalCSV.value = lineas.slice(1).map((linea, index) => {
-        const col = linea.split(',');
-
-        if (col.length < encabezadosRequeridos.length) {
-          console.warn(`Fila ${index + 2} incompleta`);
-        }
-
-        return {
-          edad: Number(col[idx.edad]) || 0,
-          sexo: col[idx.sexo]?.trim() || '',
-          fumador: col[idx.fum]?.trim().toUpperCase() === 'N' ? 1 : 0,
-          primaRiesgo: Number(col[idx.pri]) || 0,
-          esActivo: 1
-        };
-      });
-
-      console.log("CSV Procesado correctamente", datosTemporalCSV.value);
-    } catch (error) {
-      dialog.show({ type: DialogType.ERROR, message: 'Ocurrió un error al leer las filas del archivo.', title: 'Error de lectura' });
-      tarifaPropiaFile.value = null;
-    }
+    datosTemporalCSV.value = lineas.slice(1).map(linea => {
+      const col = linea.split(',');
+      return {
+        edad: Number(col[idx.edad]) || 0,
+        sexo: col[idx.sexo]?.trim() || '',
+        fumador: col[idx.fum]?.trim().toUpperCase() === 'S' ? 1 : 0, // Ajustado lógica S/N
+        primaRiesgo: Number(col[idx.pri]) || 0,
+        esActivo: 1
+      };
+    });
   };
-
-  reader.onerror = () => {
-    dialog.show({ type: DialogType.ERROR, message: 'No se pudo leer el archivo.', title: 'Error' });
-  };
-
   reader.readAsText(file);
 };
 
@@ -321,20 +309,10 @@ const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
     reader.onload = () => {
       const result = reader.result as string;
-      if (!result) {
-        reject("No se pudo leer el archivo");
-        return;
-      }
-      const parts = result.split(',');
-      const cleanBase64 = parts.length > 1 ? parts[1] : parts[0];
-      resolve(cleanBase64 || '');
+      resolve(result.split(',')[1] || '');
     };
-    reader.onerror = (error) => reject(error);
+    reader.onerror = error => reject(error);
   });
-};
-
-const borrarDetallesAnteriores = async (nombre: string) => {
-    await apiTarifaPropiaRegistro.post('deleteByFileName', { nombreArchivo: nombre });
 };
 
 const limpiarFormulario = () => {

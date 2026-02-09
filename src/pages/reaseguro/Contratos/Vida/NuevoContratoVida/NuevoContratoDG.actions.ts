@@ -30,6 +30,7 @@ interface TipoReaseguro {
 export interface TipoContrato {
   idTcontrato: number
   descTcontrato: string
+  cveTreaseg : number
 }
 
 interface CriterioCobertura {
@@ -56,6 +57,7 @@ export const NuevoContratoVida = () => {
   const criterioCoberturaOptions = ref<SelectOption<number>[]>([])
   const polizaOptions = ref<SelectOption<string>[]>([])
   const renovacionOptions = ref<SelectOption<number>[]>([])
+  const tipoContratoOptionsMaster = ref<any[]>([]);
 
   const baseAPIOperacion = BaseAPI({
     prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintOperYRamosAnx3817Rest/"
@@ -85,6 +87,21 @@ export const NuevoContratoVida = () => {
     prefix: "ws_reaseguro_contratos_vida/api/v1/EmisionContableRest/"
   })
 
+  const apiDatosContrato = BaseAPI({
+    prefix: 'ws_reaseguro_contratos_vida/api/v1/DatosContratoRest',
+    isBase: true,
+    isPrivate: true
+  });
+
+  const fetchAllRecords = async () => {
+    try {
+      const response = await apiDatosContrato.post('getAllRecords');
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener contratos:", error);
+      throw error;
+    }
+  };
 
   const fetchSubramos = async () => {
     const { data } = await baseAPIOperacion.post<Subramo[]>("getAllRecords")
@@ -129,7 +146,8 @@ export const NuevoContratoVida = () => {
 
     tipoContratoOptions.value = data.map(i => ({
       title: i.descTcontrato,
-      value: Number(i.idTcontrato)
+      value: Number(i.idTcontrato),
+      cveTreaseg: Number(i.cveTreaseg)
     }))
   }
 
@@ -166,6 +184,8 @@ export const NuevoContratoVida = () => {
     criterioCoberturaOptions,
     fetchCriterioCobertura,
     fetchEmisionContable,
+    apiDatosContrato,
+    fetchAllRecords
   }
 
 }

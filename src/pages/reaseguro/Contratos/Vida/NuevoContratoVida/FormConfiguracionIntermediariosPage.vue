@@ -1,8 +1,8 @@
 <template>
   <v-form ref="formRef" @submit.prevent>
     <v-container fluid>
-      <v-row class="d-flex">
-        <v-col cols="12" md="3">
+      <v-row class="d-flex justify-center align-center">
+        <v-col cols="12" md="4">
           <v-select
             v-model="intermediarioObj"
             :items="opcionesSiNo"
@@ -14,7 +14,7 @@
           />
         </v-col>
 
-        <v-col v-if="getID(asignacionIntermObj) === 0" cols="12" md="1" class="d-flex align-center">
+        <v-col v-if="getID(asignacionIntermObj) === 0" cols="12" md="2" class="d-flex align-center">
           <v-checkbox
             v-model="invertir"
             label="¿Invertir?"
@@ -39,9 +39,9 @@
 
       <v-divider class="my-4" />
 
-      <v-row class="align-center d-flex">
+      <v-row class="align-center d-flex justify-center align-center">
         <!-- Reaseguradora - order 2 cuando invertir=true, order 1 cuando invertir=false -->
-        <v-col cols="12" md="4" :order="invertir ? 2 : 1">
+        <v-col cols="12" md="6" :order="invertir ? 2 : 1">
           <v-select
             v-model="reaseguradoraObj"
             :items="reaseguradorasDisponibles"
@@ -56,7 +56,7 @@
         </v-col>
 
         <!-- Intermediario/Broker - order 1 cuando invertir=true, order 2 cuando invertir=false -->
-        <v-col cols="12" md="7" :order="invertir ? 1 : 2">
+        <v-col cols="12" md="6" :order="invertir ? 1 : 2">
           <v-autocomplete
             v-model="brokerObj"
             :items="intermeOptions"
@@ -79,15 +79,6 @@
             chips
             return-object
           />
-        </v-col>
-
-        <v-col cols="12" md="1" class="d-flex justify-center" :order="4">
-          <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
-            <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
-            <v-tooltip activator="parent" location="top">
-              {{ indexEdicion !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
-            </v-tooltip>
-          </v-btn>
         </v-col>
       </v-row>
 
@@ -116,6 +107,16 @@
         <v-col cols="12" md="4" v-if="getID(tipoCorretajeObj) == 0">
           <v-text-field v-model.number="montoCorretaje" label="Monto corretaje" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
         </v-col>
+        <v-row class="d-flex justify-center align-center">
+          <v-col cols="12" md="1" class="d-flex justify-center" :order="4">
+            <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
+              <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+              <v-tooltip activator="parent" location="top">
+                {{ indexEdicion !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+              </v-tooltip>
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-row>
 
       <v-divider class="my-6" />
@@ -229,7 +230,6 @@ watch(intermediarioObj, value => {
   limpiarCamposCaptura()
 })
 
-// Resetear invertir cuando cambie la asignación y no sea "POR REASEGURADORA"
 watch(asignacionIntermObj, (newVal) => {
   if (getID(newVal) !== 0) {
     invertir.value = false
@@ -244,14 +244,8 @@ const reaseguradorasDeContrato = computed(() => {
 })
 
 const reaseguradorasDisponibles = computed(() => {
-  if (getID(asignacionIntermObj.value) == 1) return reaseguradorasDeContrato.value;
-  const idsAsignados = intermediariosTabla.value
-    .filter((_, idx) => idx !== indexEdicion.value)
-    .map(i => getID(i.reaseguradora))
-  return reaseguradorasDeContrato.value.filter(r => !idsAsignados.includes(r.value))
+  return reaseguradorasDeContrato.value;
 })
-
-
 const agregarIntermediario = () => {
   errorBroker.value = !brokerObj.value ? 'Seleccione un al menos un intermediario' : ''
   errorReaseguradora.value = (getID(asignacionIntermObj.value) == 0 && !reaseguradoraObj.value) ? 'Seleccione reaseguradora' : ''
@@ -260,7 +254,6 @@ const agregarIntermediario = () => {
 
   procesarGuardado()
 }
-
 
 const procesarGuardado = () => {
   const esIndividual = getID(asignacionIntermObj.value) === 0;
@@ -374,15 +367,25 @@ const hidratar = () => {
   if (cfg.intermediariosTabla) {
     intermediariosTabla.value = cfg.intermediariosTabla.map((item: any) => {
       const esPorReaseg = getID(item.asignacionInterm) == 0;
+
+      const reasegEncontrada = findInOptions(reaseguradorasDeContrato.value, item.reaseguradora);
+      const brokerEncontrado = findInOptions(intermeOptions.value, item.broker);
+      const tipoEncontrado = findInOptions(tipoCorretajeOptions.value, item.tipoCorretaje);
+
       return {
         ...item,
         display: {
-          asignacion: findInOptions(asignacionIntermediarioOptions.value, item.asignacionInterm)?.title || '-',
+          idContrato: item.display?.idContrato || contratoStore.general?.idContrato || 'S/N',
+
+          asignacion: findInOptions(asignacionIntermediarioOptions.value, item.asignacionInterm)?.title || item.display?.asignacion || '-',
+
           reaseguradora: esPorReaseg
-             ? (findInOptions(reaseguradorasDeContrato.value, item.reaseguradora)?.title || '-')
-             : 'TODAS LAS DEL CONTRATO',
-          broker: findInOptions(intermeOptions.value, item.broker)?.title || '-',
-          tipo: findInOptions(tipoCorretajeOptions.value, item.tipoCorretaje)?.title || '-'
+              ? (reasegEncontrada?.title || item.reaseguradora?.title || '-')
+              : 'TODAS LAS DEL CONTRATO',
+
+          broker: brokerEncontrado?.title || item.broker?.title || '-',
+
+          tipo: tipoEncontrado?.title || item.tipoCorretaje?.title || '-'
         }
       }
     })

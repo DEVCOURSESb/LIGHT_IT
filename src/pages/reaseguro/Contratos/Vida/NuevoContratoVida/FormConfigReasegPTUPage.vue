@@ -241,6 +241,7 @@ const guardarDatosPTU = async () => {
     type: DialogType.SUCCESS
   })
 }
+
 const guardarReasegurador = async () => {
   const { valid } = await formRef.value.validate()
   if (!valid) return
@@ -256,8 +257,8 @@ const guardarReasegurador = async () => {
 
   const datosPTU: ContratoReasePTU = {
     idContrato: gen.idContrato,
-    otorgaPtu: getID(otorgaPtuObj.value),
-    metodoCalPTU: getID(metodoCalPTUObj.value),
+    otorgaPtu: otorgaPtuObj.value,
+    metodoCalPTU: metodoCalPTUObj.value,
     ptu: ptu.value ? ptu.value.toFixed(2) : null,
     kPor: kPor.value ? kPor.value.toFixed(2) : null,
     aniosArrastre: aniosArrastre.value || 0,

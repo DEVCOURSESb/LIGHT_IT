@@ -8,9 +8,10 @@
   <br>
 
   <v-card-title class="d-flex align-center">
-    Configuración de Tarifas - {{ nombreArchivoVisual || 'Cargando...' }}
+    Configuración de Tarifas para {{ nombreArchivoVisual || 'Cargando...' }}
   </v-card-title>
 
+  <br>
   <v-row>
     <v-col cols="12">
       <v-data-table
@@ -21,34 +22,92 @@
         no-data-text="No se encontraron registros para este archivo"
       >
         <template #item.acciones="{ item }">
-          <v-btn icon color="blue" variant="text" size="small">
+          <v-btn icon color="blue" variant="text" size="small" @click="abrirEditar(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
-          <v-btn icon color="red" variant="text" size="small">
+          <!--<v-btn icon color="red" variant="text" size="small">
             <v-icon>mdi-delete</v-icon>
-          </v-btn>
+          </v-btn>-->
         </template>
       </v-data-table>
     </v-col>
   </v-row>
 
+  <v-dialog v-model="modalEditar" max-width="500">
+    <v-card>
+      <v-card-title class="d-flex align-center bg-grey-lighten-3">Editar registro</v-card-title>
+      <br>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.edad"
+              label="Edad (0 a 99)"
+              type="number"
+              :rules="validarRangoEdad"
+              variant="solo-filled"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select
+              v-model="form.genero"
+              :items="['M', 'F']"
+              label="Género"
+              variant="solo-filled"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-select
+              v-model="form.fumador"
+              :items="['SÍ', 'NO']"
+              label="Fumador"
+              variant="solo-filled"
+            />
+          </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="form.primaRiesgo"
+              label="Prima de riesgo"
+              type="number"
+              variant="solo-filled"
+            />
+          </v-col>
+        </v-row>
+      </v-card-text>
+
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red" variant="text" @click="modalEditar = false">Cancelar</v-btn>
+        <v-btn color="green" variant="elevated" @click="confirmarEdicion">Confirmar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
   <v-row justify="center" class="mt-5">
-    <v-btn class="btn-guardar" color="primary" @click="guardarEnBD">
+    <v-btn class="btn-guardar" @click="guardarEnBD">
       Guardar cambios
     </v-btn>
   </v-row>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { DialogType, useDialog } from "@/stores/dialogStore"
-import { AuthStore } from '@/stores/authStore'
 import { BaseAPI } from '@/API/BaseAPI'
 
 const route = useRoute()
+const dialogGlobal = useDialog()
 const dialog = useDialog()
-const authStore = AuthStore()
+
+const modalEditar = ref(false)
+const idActual = ref<any>(null)
+const form = reactive({
+  edad: '',
+  genero: '',
+  fumador: '',
+  primaRiesgo: ''
+})
 
 const itemsDetalle = ref<any[]>([])
 const cargando = ref(false)
@@ -72,39 +131,94 @@ const cargarDetalles = async () => {
   cargando.value = true;
   try {
     const response = await apiConfigTarifa.post('getAllRecords', {});
-
     if (response.data && Array.isArray(response.data)) {
       const filtro = nombreArchivoVisual.value;
-
-      console.log("Nombre para filtrar:", filtro);
-      console.log("Total registros recibidos:", response.data.length);
-
       const filtrados = response.data.filter((reg: any) => reg.nombreArchivo === filtro);
 
       itemsDetalle.value = filtrados.map((reg: any) => ({
         ...reg,
+        idInterno: reg.id || reg.cveTarifa || Math.random(),
         fumadorTexto: reg.fumador === 0 ? 'SÍ' : 'NO'
       }));
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error al cargar detalles:", error);
   } finally {
     cargando.value = false;
   }
 };
 
+const abrirEditar = (item: any) => {
+  idActual.value = item.idInterno;
+  form.edad = item.edad;
+  form.genero = item.genero;
+  form.fumador = item.fumadorTexto;
+  form.primaRiesgo = item.primaRiesgo;
+
+  modalEditar.value = true;
+};
+
+const confirmarEdicion = () => {
+  const index = itemsDetalle.value.findIndex(i => i.idInterno === idActual.value);
+  if (index !== -1) {
+    itemsDetalle.value[index] = {
+      ...itemsDetalle.value[index],
+      edad: Number(form.edad),
+      genero: form.genero,
+      fumador: form.fumador === 'SÍ' ? 0 : 1,
+      fumadorTexto: form.fumador,
+      primaRiesgo: Number(form.primaRiesgo)
+    };
+  }
+  modalEditar.value = false;
+};
+
+const validarRangoEdad = ref();
+
+const eliminarTarifa = async (item: any) => {
+  dialog.show({
+    title: 'Confirmar',
+    message: `¿Estás seguro de eliminar el archivo?`,
+    type: DialogType.CONFIRM,
+  }); // debe esperar primero la confirmación antes de proceder a eliminar
+
+  await apiConfigTarifa.delete(`deleteRecord/${item.id}`);
+  cargarDetalles();
+};
+
+const guardarEnBD = async () => {
+  try {
+    dialogGlobal.show({ title: 'Guardando', message: 'Actualizando registros...', type: DialogType.INFO });
+
+    const promesas = itemsDetalle.value.map(item => {
+      return apiConfigTarifa.post(`insertRecord/${item.id}`, {
+        //id: item.id,
+        nombreArchivo: item.nombreArchivo,
+        edad: item.edad,
+        genero: item.genero,
+        fumador: item.fumador,
+        primaRiesgo: item.primaRiesgo,
+      });
+    });
+
+    await Promise.all(promesas);
+
+    dialogGlobal.show({
+      title: 'ÉXITO',
+      message: 'Todos los cambios se guardaron correctamente.',
+      type: DialogType.SUCCESS
+    });
+
+    cargarDetalles();
+  } catch (error: any) {
+  }
+};
+
 onMounted(() => {
   const nombreQuery = route.query.nombre as string;
-
   if (nombreQuery) {
     nombreArchivoVisual.value = nombreQuery;
     cargarDetalles();
-  } else {
-    console.error("No se encontró el parámetro 'nombre' en la URL. Asegúrate de pasar query: { nombre: ... } en el router.push");
   }
 });
-
-const guardarEnBD = async () => {
-
-};
 </script>

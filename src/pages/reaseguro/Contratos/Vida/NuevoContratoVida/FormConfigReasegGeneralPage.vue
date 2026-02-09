@@ -48,8 +48,9 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" v-if="getID(cesionCoberBasiObj) === 1">
+        <v-col cols="12" md="4">
           <v-select
+            :disabled="getID(cesionCoberBasiObj) === 1"
             v-model="indicadorDistrCObj"
             :items="indicadorDistrCOptions"
             label="Indicador Distr. Cesión"
@@ -57,7 +58,6 @@
             chips
             return-object
             variant="solo-filled"
-            :rules="[v => !!v || 'Requerido']"
           />
         </v-col>
 
@@ -111,6 +111,16 @@
             variant="solo-filled"
           />
         </v-col>
+        <v-row class="d-flex justify-center align-center">
+          <v-col cols="12" md="1" v-if="getID(detalleCoberturaObj) === 1">
+            <v-btn color="indigo" icon @click="agregarComision">
+              <v-icon>{{ editandoAgrupacionIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+              <v-tooltip activator="parent" location="top">
+                {{ editandoAgrupacionIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+              </v-tooltip>
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-row>
 
       <v-row v-if="getID(comisionReasegObj) === 1" class="mt-4">
@@ -148,6 +158,31 @@
           </v-slider>
         </v-col>
       </v-row>
+
+      <v-row v-if="itemsTablaCoberturas.length > 0">
+        <v-col cols="12">
+          <v-data-table :headers="headers2" :items="itemsTablaCoberturas">
+
+            <template #item.comisionPA="{ value }">
+              <span>{{ value }}%</span>
+            </template>
+
+            <template #item.comisionR="{ value }">
+              <span>{{ value }}%</span>
+            </template>
+
+            <template #item.acciones="{ index, item }">
+              <v-btn icon color="blue" variant="text" size="small" @click="editarCobertura(item, index)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon color="red" variant="text" size="small" @click="eliminarCobertura(index)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+
       <v-col class="text-center mt-10">
         <v-btn class="btn-guardar" elevation="4" @click="guardarConfigReaseguro">
           GUARDAR CONFIGURACIÓN GENERAL
@@ -159,7 +194,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch, nextTick, computed } from 'vue'
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
-import { useContratoStore, type ContratoGeneralConfReaseg } from "@/stores/contratoStore"
+import { useContratoStore, type ContratoGeneralConfReaseg, type TipoCoberturas } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { ValidacionesContrato } from './ValidacionesContrato'
 
@@ -187,10 +222,13 @@ const cesionCoberBasiObj = ref<any>(null)
 const comisionReasegObj = ref<any>(null)
 const detalleCoberturaObj = ref<any>(null)
 const tipoComisionObj = ref<any>(null)
-const tipoCoberturaObj = ref<any>(null) // como quito la opcion de general si detalleCobertura es igual a Si
+const tipoCoberturaObj = ref<any>(null)
 const comisionPrimerAnio = ref<number>(0)
 const comisionRenovacion = ref<number>(0)
 const reaseguradores = ref<any[]>([])
+
+const itemsTablaCoberturas = ref<any[]>([])
+const editandoAgrupacionIndex = ref<number | null>(null)
 
 const getID = (item: any) => {
   if (item === null || item === undefined) return null;
@@ -198,23 +236,23 @@ const getID = (item: any) => {
   return item;
 }
 
+const getTX = (item: any): string => {
+  if (item === null || item === undefined) return 'NULL';
+  if (typeof item === 'object') return item.title || item.label || item.nombre || 'NULL';
+  return String(item);
+};
 
 watch(
   [() => getID(comisionReasegObj.value), () => getID(detalleCoberturaObj.value)],
   async ([comision, detalle]) => {
-    console.log({comision, detalle})
     if (comision !== 1 || detalle !== 1) {
-      // obtener de nuevo todas las opciones de tipoCobertura
       await fetchTipoCobertura()
       tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
       return
     }
 
     if (detalle === 1) {
-      // si detalle por cobertura es SI, quitar la opcion de GENERAL del select de tipoCobertura
       tipoCoberturaOptions.value = tipoCoberturaOptions.value.filter(tipoCobertura => tipoCobertura.title !== 'GENERAL')
-      /* console.log(tipoCoberturaOptions)
-      console.log(tipoCoberturaObj) */
 
       const yaExisteBasicaEnTarifas = contratoStore.configReasegCob?.tarifas?.some(
         (t: any) => getID(t.tipoCobertura) === 0
@@ -235,31 +273,147 @@ watch(() => getID(comisionReasegObj.value), (val) => {
     if (!detalleCoberturaObj.value) detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
     if (!tipoComisionObj.value) tipoComisionObj.value = tipoComisionOptions.value.find(o => Number(o.value) === 0)
   } else {
-    detalleCoberturaObj.value = siNoOptions.find(o => o.value === 0)
+    detalleCoberturaObj.value = null
     tipoComisionObj.value = null
     comisionPrimerAnio.value = 0
     comisionRenovacion.value = 0
   }
 })
 
+watch(() => getID(detalleCoberturaObj.value), (val) => {
+  if (val === 0) {
+    itemsTablaCoberturas.value = [];
+    editandoAgrupacionIndex.value = null;
+    const opcionGeneral = tipoCoberturaOptions.value.find(o => Number(o.value) === 2);
+    if (opcionGeneral) {
+      tipoCoberturaObj.value = opcionGeneral;
+    }
+  }
+});
+
+const findInOptions = (options: any[], value: any) => {
+  const id = getID(value);
+  if (id === null) return null;
+  return options.find(o => getID(o) == id) || null;
+}
+
+const agregarComision = () => {
+  procesarGuardado()
+}
+
+const procesarGuardado = () => {
+  if (!tipoCoberturaObj.value) {
+    dialog.show({ title: 'Aviso', message: 'Seleccione un tipo de cobertura', type: DialogType.INFO });
+    return;
+  }
+
+  const crearEstructuraRegistro = () => ({
+    tipoCoberturaObj: tipoCoberturaObj.value,
+    tipoCoberturaNombre: tipoCoberturaObj.value?.title || '-',
+    comisionPA: comisionPrimerAnio.value || 0,
+    comisionR: comisionRenovacion.value || 0,
+  });
+
+  if (editandoAgrupacionIndex.value !== null) {
+    itemsTablaCoberturas.value[editandoAgrupacionIndex.value] = crearEstructuraRegistro();
+    editandoAgrupacionIndex.value = null; // Resetear modo edición
+  } else {
+    const existe = itemsTablaCoberturas.value.some(
+      item => getID(item.tipoCoberturaObj) === getID(tipoCoberturaObj.value)
+    );
+
+    if (existe) {
+      dialog.show({ title: 'Aviso', message: 'Esta cobertura ya fue agregada a la tabla.', type: DialogType.INFO });
+      return;
+    }
+
+    itemsTablaCoberturas.value.push(crearEstructuraRegistro());
+  }
+
+  limpiarCamposCaptura();
+};
+
+const limpiarCamposCaptura = () => {
+  tipoCoberturaObj.value = null
+  comisionPrimerAnio.value = 0
+  comisionRenovacion.value = 0
+}
+
+const editarCobertura = (item: any, index: number) => {
+  editandoAgrupacionIndex.value = index;
+  tipoCoberturaObj.value = findInOptions(tipoCoberturaOptions.value, item.tipoCoberturaObj);
+  comisionPrimerAnio.value = item.comisionPA;
+  comisionRenovacion.value = item.comisionR;
+}
+
+
+const eliminarCobertura = (index: number) => itemsTablaCoberturas.value.splice(index, 1)
 
 const hidratar = () => {
   const cfg = contratoStore.configReaseg
   if (!cfg) return
-  companiaReasegObj.value = compaReasegOptions.value.find(o =>
-      Number(o.value) === Number(getID(cfg.cveReasegurador))
-  )
+
+  companiaReasegObj.value = compaReasegOptions.value.find(o => Number(o.value) === Number(getID(cfg.cveReasegurador)))
   indicadorDistrCObj.value = indicadorDistrCOptions.value.find(o => Number(o.value) === Number(getID(cfg.indicadorDistrC)))
   cesionCoberBasiObj.value = siNoOptions.find(o => o.value === getID(cfg.cesionCoberBasi))
   comisionReasegObj.value = siNoOptions.find(o => o.value === getID(cfg.comisionReaseg))
   detalleCoberturaObj.value = siNoOptions.find(o => o.value === getID(cfg.detalleCobertura))
   tipoComisionObj.value = tipoComisionOptions.value.find(o => Number(o.value) === Number(getID(cfg.tipoComision)))
 
-  tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === Number(getID(cfg.tipoCobertura)))
+  participacion.value = cfg.participacion || 0
 
-  comisionPrimerAnio.value = cfg.comisionPrimerAnio || 0
-  comisionRenovacion.value = cfg.comisionRenovacion || 0
+  if (cfg.coberturas && cfg.coberturas.length > 0) {
+    if (getID(detalleCoberturaObj.value) === 0) {
+      const general = cfg.coberturas[0]
+      comisionPrimerAnio.value = general?.comisionPrimerAnio || 0
+      comisionRenovacion.value = general?.comisionRenovacion || 0
+      tipoCoberturaObj.value = tipoCoberturaOptions.value.find(o => Number(o.value) === 2)
+    }
+    else {
+      itemsTablaCoberturas.value = cfg.coberturas.map(c => {
+        const opcionTipo = tipoCoberturaOptions.value.find(o =>
+            String(o.title) === String(c.tipoCobertura) ||
+            Number(o.value) === Number(c.tipoCobertura)
+        )
+
+        return {
+          tipoCoberturaObj: opcionTipo || { title: c.tipoCobertura, value: null },
+          tipoCoberturaNombre: opcionTipo ? opcionTipo.title : c.tipoCobertura,
+          comisionPA: c.comisionPrimerAnio,
+          comisionR: c.comisionRenovacion
+        }
+      })
+    }
+  }
 }
+watch(() => companiaReasegObj.value, (nuevoValor) => {
+  if (!nuevoValor) return;
+
+  const id = getID(nuevoValor);
+  const yaExiste = contratoStore.listaReaseguradoresFinal?.some(
+    (r: any) => getID(r.cveReasegurador) === id
+  );
+
+  if (yaExiste) {
+    dialog.show({
+      title: 'Atención',
+      message: 'Esta reaseguradora ya está en la lista.',
+      type: DialogType.ERROR
+    });
+    nextTick(() => { companiaReasegObj.value = null; });
+  }
+});
+
+watch(cesionCoberBasiObj, (value) => {
+  const idValue = getID(value);
+  const opcionDefault = indicadorDistrCOptions.value.find(o => Number(o.value) === 0);
+
+  if (idValue === 0) {
+    indicadorDistrCObj.value = opcionDefault;
+  } else {
+    indicadorDistrCObj.value = opcionDefault;
+  }
+});
 
 const guardarConfigReaseguro = async () => {
   const { valid } = await formRef.value.validate()
@@ -272,33 +426,60 @@ const guardarConfigReaseguro = async () => {
   }
 
   const sumaPrevia = contratoStore.totalParticipacion;
-  if (sumaPrevia + participacion.value > 100.01) {
-    dialog.show({ title: 'Error', message: 'La participación total excedería el 100%', type: DialogType.ERROR })
-    return;
+  const participacionNueva = Number(participacion.value.toFixed(2));
+  const totalConNuevo = sumaPrevia + participacionNueva;
+
+  if (totalConNuevo > 100.01) {
+    dialog.show({
+      title: 'Confirmación de Participación',
+      message: `La participación total acumulada será de ${totalConNuevo.toFixed(2)}%. ¿Desea continuar a pesar de exceder el 100%?`,
+      type: DialogType.CONFIRM,
+      onConfirm: () => ejecutarGuardadoFinal(idContrato) // Función que ejecuta el proceso final
+    });
+  } else {
+    ejecutarGuardadoFinal(idContrato);
+  }
+}
+
+const ejecutarGuardadoFinal = (idContrato: string) => {
+  let coberturasFinal: TipoCoberturas[] = []
+
+  if (getID(detalleCoberturaObj.value) === 1) {
+    coberturasFinal = itemsTablaCoberturas.value.map(c => ({
+      tipoCobertura: String(getTX(c.tipoCoberturaObj)),
+      comisionPrimerAnio: c.comisionPA,
+      comisionRenovacion: c.comisionR
+    }))
+  } else {
+    coberturasFinal = [{
+      tipoCobertura: getTX(tipoCoberturaObj.value),
+      comisionPrimerAnio: comisionPrimerAnio.value,
+      comisionRenovacion: comisionRenovacion.value
+    }]
   }
 
   const payload: ContratoGeneralConfReaseg = {
     idContrato,
     cveReasegurador: getID(companiaReasegObj.value),
-    nombreReasegurador: companiaReasegObj.value ? companiaReasegObj.value.title : '',
+    nombreReasegurador: companiaReasegObj.value?.title || '',
     participacion: Number(participacion.value.toFixed(2)),
     indicadorDistrC: indicadorDistrCObj.value,
     cesionCoberBasi: cesionCoberBasiObj.value,
     comisionReaseg: comisionReasegObj.value,
     detalleCobertura: detalleCoberturaObj.value,
     tipoComision: tipoComisionObj.value,
-    tipoCobertura: tipoCoberturaObj.value,
-    comisionPrimerAnio: Number(comisionPrimerAnio.value.toFixed(2)),
-    comisionRenovacion: Number(comisionRenovacion.value.toFixed(2))
+    coberturas: coberturasFinal
   }
 
   contratoStore.setConfigReasG(payload);
+
   contratoStore.tempReasegurador = {
-    cveReasegurador: getID(companiaReasegObj.value),
-    nombreReasegurador: companiaReasegObj.value ? companiaReasegObj.value.title : '',
-    participacion: Number(participacion.value.toFixed(2)),
+    cveReasegurador: payload.cveReasegurador,
+    nombreReasegurador: payload.nombreReasegurador,
+    participacion: payload.participacion,
   };
-  dialog.show({ title: 'Éxito', message: 'Configuración guardada correctamente.', type: DialogType.SUCCESS })
+
+  dialog.show({ title: 'Éxito', message: 'Configuración guardada.', type: DialogType.SUCCESS })
   emits('on-save-complete')
 }
 
@@ -320,4 +501,12 @@ onMounted(async () => {
     hidratar()
   }
 })
+
+const headers2 = [
+  { title: 'Tipo cobertura', key: 'tipoCoberturaNombre' },
+  { title: 'Comisión Primer Año', key: 'comisionPA' },
+  { title: 'Comisión Renovación', key: 'comisionR' },
+  { title: 'Acciones', key: 'acciones', sortable: false }
+]
+
 </script>

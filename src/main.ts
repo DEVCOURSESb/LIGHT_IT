@@ -5,6 +5,7 @@ import App from "./App.vue";
 import "unfonts.css";
 import "./styles/estilosglobales.css";
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,11 @@ const queryClient = new QueryClient({
 })
 
 const app = createApp(App);
+const pinia = createPinia()
+
+pinia.use(piniaPluginPersistedstate)
+
+app.use(pinia)
 
 app.use(createPinia());
 

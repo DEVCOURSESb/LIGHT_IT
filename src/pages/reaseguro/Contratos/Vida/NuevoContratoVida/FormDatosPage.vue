@@ -14,7 +14,8 @@
           </v-card-text>
         </v-card>
       </v-window-item>
-
+      <!--Aqui falta la parte de si es facultativo o no que sería el caso de arriba al momento de guardar
+       me manda a la parte de reasegurador que esta en FormReasegGeneralPage-->
       <v-window-item value="tab-2" v-if="esFacultativo">
         <v-card flat>
           <v-card-text>

@@ -33,6 +33,11 @@ export interface ContratoGeneralPol {
   }[]
 }
 /* CONFIGURACION GENERAL */
+export interface TipoCoberturas {
+  tipoCobertura: string | null
+  comisionPrimerAnio: number | null
+  comisionRenovacion: number | null
+}
 
 export interface ContratoGeneralConfReaseg {
   idContrato: string | number
@@ -44,9 +49,7 @@ export interface ContratoGeneralConfReaseg {
   comisionReaseg: any
   detalleCobertura: any
   tipoComision: any
-  tipoCobertura: any
-  comisionPrimerAnio: number | null
-  comisionRenovacion: number | null
+  coberturas: TipoCoberturas[]
 }
 
 /* EXCEDENTE POR CAPAS*/
@@ -146,6 +149,7 @@ export interface ComisionReaseguro {
 
 export interface ContratoConfigReasCom {
   idContrato: string | number
+  tipoCobertura: string | number
   comisiones: ComisionReaseguro[]
 }
 
@@ -223,7 +227,7 @@ export const useContratoStore = defineStore("contrato", {
 
     setConfigReasCob(data: ContratoGeneralReasegCobertura) {
       this.configReasegCob = data;
-      localStorage.setItem("contrato_general_configReaseg_ Cob", JSON.stringify(data));
+      localStorage.setItem("contrato_general_configReaseg_Cob", JSON.stringify(data));
     },
 
     setConfigReasCom(data: ContratoConfigReasCom) {
@@ -279,4 +283,8 @@ export const useContratoStore = defineStore("contrato", {
       localStorage.removeItem("contrato_completo");
     },
   },
+  persist: {
+    key: 'contrato_app_storage', // Una sola clave para TODO el objeto del store
+    storage: localStorage,
+  }
 });
