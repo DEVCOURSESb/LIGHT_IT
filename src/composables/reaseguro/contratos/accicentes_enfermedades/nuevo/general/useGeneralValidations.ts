@@ -27,7 +27,7 @@ export const useGeneralValidations = () => {
     cveCriterioCob: (value: number, context: any) => {
       const cveTreaseg = context.form?.cveTreaseg;
       if (cveTreaseg === 0) {
-        return value >= 0 || "El criterio de cobertura es obligatorio.";
+        return value != null && value >= 0 || "El criterio de cobertura es obligatorio.";
       }
       return true;
     },
