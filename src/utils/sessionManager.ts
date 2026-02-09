@@ -14,7 +14,7 @@ export const SessionManager = {
       try {
         const { useAuth } = await import('@/composables/auth/useAuth');
         const { AuthStore } = await import('@/stores/authStore');
-        const { queryClient } = await import('@/main'); // 👈 Importar directamente
+        const { queryClient } = await import('@/main');
         const { DialogType, useDialog } = await import('@/stores/dialogStore');
         const router = (await import('@/router')).default;
 
