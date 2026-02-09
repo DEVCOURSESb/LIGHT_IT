@@ -242,14 +242,6 @@ const guardarDatosPTU = async () => {
   })
 }
 
-
-/*o	Primera validación:
-	Se verificará que la suma total del campo “Participación” correspondiente a los reaseguradores registrados sea igual a 100.
-	En caso de que la suma sea menor a 100, el sistema deberá mostrar un mensaje de confirmación con el siguiente texto:
-	¿Desea continuar sin que el contrato esté cubierto al 100%?
-	Si el usuario selecciona “Continuar”, el sistema permitirá avanzar a la siguiente sección.
-	Si el usuario selecciona “Cancelar”, el sistema deberá mantenerse en la sección de Configuración de Reaseguradoras para que el usuario pueda ajustar los valores de participación.
-*/
 const guardarReasegurador = async () => {
   const { valid } = await formRef.value.validate()
   if (!valid) return

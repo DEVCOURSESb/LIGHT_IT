@@ -683,7 +683,7 @@ const guardarTodoEnStore = async () => {
       };
     });
   }
-  // 3. Si la tabla está vacía y detalle es SI
+
   else {
     dialog.show({
       type: DialogType.ERROR,
@@ -693,7 +693,6 @@ const guardarTodoEnStore = async () => {
     return;
   }
 
-  // --- GUARDADO FINAL ---
   const payload = {
     idContrato,
     agrupacionCoberturas: agrupacionCoberturas.value,
