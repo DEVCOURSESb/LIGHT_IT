@@ -239,15 +239,16 @@ export const useGeneralSection = () => {
   // Watch para limpiar campos cuando cambia el tipo de reaseguro
   watch(
     () => formData.cveTreaseg,
-    (newValue, oldValue) => {
-      // Si cambia de proporcional (0) a otro valor, limpiar campos relacionados
-      if (oldValue === 0 && newValue !== 0) {
-        setFieldValue('cveCriterioCob', null);
-        setFieldValue('traspasoCartera', null);
+    (newValue) => {
+      contratoAEStore.setTipoReaseguro(Number(newValue));
+
+      if (Number(newValue) !== 0) {
+        setFieldValue("cveCriterioCob", null);
+        setFieldValue("traspasoCartera", null);
       }
-      contratoAEStore.isTypeProporcional = newValue === 0;
     }
   );
+
 
   // Watch para limpiar campos cuando cambia la forma contractual
   watch(

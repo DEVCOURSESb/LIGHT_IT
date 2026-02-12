@@ -1,19 +1,47 @@
 <template>
   <v-window v-model="activeTab">
-    <generales-section />
-    <detalles-proporcionales-section v-if="isTypeProporcional" />
-    <polizas-facultativas-section />
-    <reaseguradores-section />
-    <comisiones-rate-on-line-section />
-    <coberturas-section />
-    <excedentes-section />
-    <cumulos-section />
-    <tarifa-section />
-    <proporcion-prima-section />
-    <reinstalaciones-section />
-    <intermediarios-section />
-    <corretaje-section />
-    <administracion-section />
+    <v-window-item value="tab-1">
+      <generales-section />
+    </v-window-item>
+    <v-window-item value="tab-2" v-show="isTypeProporcional" :eager="true">
+      <detalles-proporcionales-section />
+    </v-window-item>
+    <v-window-item value="tab-3">
+      <polizas-facultativas-section />
+    </v-window-item>
+    <v-window-item value="tab-4">
+      <reaseguradores-section />
+    </v-window-item>
+    <v-window-item value="tab-5">
+      <comisiones-rate-on-line-section />
+    </v-window-item>
+    <v-window-item value="tab-6">
+      <coberturas-section />
+    </v-window-item>
+    <v-window-item value="tab-7">
+      <excedentes-section />
+    </v-window-item>
+    <v-window-item value="tab-8">
+      <cumulos-section />
+    </v-window-item>
+    <v-window-item value="tab-9">
+      <tarifa-section />
+    </v-window-item>
+    <v-window-item value="tab-10">
+      <proporcion-prima-section />
+    </v-window-item>
+    <v-window-item value="tab-11">
+      <reinstalaciones-section />
+    </v-window-item>
+    <v-window-item value="tab-12">
+      <intermediarios-section />
+    </v-window-item>
+    <v-window-item value="tab-13">
+      <corretaje-section />
+    </v-window-item>
+    <v-window-item value="tab-14">
+      <administracion-section />
+    </v-window-item>
   </v-window>
 </template>
 <script lang="ts" setup>
