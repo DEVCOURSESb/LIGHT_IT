@@ -2,7 +2,7 @@
   <v-tabs v-model="activeTab" align-tabs="center" color="primary">
     <v-tab value="tab-1">Generales</v-tab>
     <v-tab value="tab-2" v-if="isTypeProporcional">Detalles Proporcionales</v-tab>
-    <v-tab value="tab-3">Pólizas Facultativas</v-tab>
+    <v-tab value="tab-3" v-if="isFacultativo">Pólizas Facultativas</v-tab>
     <v-tab value="tab-4">Reaseguradores</v-tab>
     <v-tab value="tab-5">Comisiones / Rate on line</v-tab>
     <v-tab value="tab-6">Coberturas</v-tab>
@@ -22,5 +22,5 @@ import { storeToRefs } from "pinia";
 
 const useAEStore = useContratoAEStore();
 const { activeTab } = storeToRefs(useAEStore);
-const { isTypeProporcional } = storeToRefs(useAEStore);
+const { isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
 </script>

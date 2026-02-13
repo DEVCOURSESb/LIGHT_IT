@@ -8,6 +8,10 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     localStorage.getItem("isTypeProporcional") === "true",
   );
 
+  const isFacultativo = ref<boolean>(
+    localStorage.getItem("isFacultativo") === "true",
+  );
+
   const dialog = useDialog();
 
   const guardarGenerales = (data: Record<string, any>) => {
@@ -16,6 +20,8 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     // actualizar antes de usarlo para decidir el tab
     isTypeProporcional.value = Number(data.cveTreaseg) === 0;
     localStorage.setItem("isTypeProporcional", isTypeProporcional.value.toString());
+    isFacultativo.value = Number(data.cveFcontrac) === 1;
+    localStorage.setItem("isFacultativo", isFacultativo.value.toString());
 
     const copy = { ...data };
     delete copy?.dataTableMoneda;
@@ -60,6 +66,9 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     if (parsed.cveTreaseg !== undefined && parsed.cveTreaseg !== null) {
       isTypeProporcional.value = Number(parsed.cveTreaseg) === 0;
     }
+    if (parsed.cveFcontrac !== undefined && parsed.cveFcontrac !== null) {
+      isFacultativo.value = Number(parsed.cveFcontrac) === 1;
+    }
 
     return {
       ...parsed,
@@ -78,16 +87,16 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   };
 
   const guardarDetallesProporcionales = (data: Record<string, any>[]) => {
-    
     // TODO, CLAVE DE CONTRATO, DE MOMENTO SE ASIGNA EL ID
-    const cveContrato = obtenerGenerales().idContrato;
+    const generales = obtenerGenerales();
+    const cveContrato = generales.idContrato;
     const dataWithContrato = data.map((item) => ({
       ...item,
       cveContrato,
     }));
     window.localStorage.setItem("CAE_DETALLES_CONTRATO", JSON.stringify(dataWithContrato));
-    activeTab.value = "tab-3";
-  }
+    activeTab.value = isFacultativo.value ? "tab-3" : "tab-4";
+  };
 
   const obtenerDetallesProporcionales = () => {
     const data = window.localStorage.getItem("CAE_DETALLES_CONTRATO") || "[]";
@@ -107,5 +116,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     setTipoReaseguro,
     guardarDetallesProporcionales,
     obtenerDetallesProporcionales,
+    isFacultativo,
   };
 });

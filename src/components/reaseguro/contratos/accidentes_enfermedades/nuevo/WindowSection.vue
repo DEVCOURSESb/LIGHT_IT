@@ -6,7 +6,7 @@
     <v-window-item value="tab-2" v-show="isTypeProporcional" :eager="true">
       <detalles-proporcionales-section />
     </v-window-item>
-    <v-window-item value="tab-3">
+    <v-window-item value="tab-3" v-show="isFacultativo" :eager="true">
       <polizas-facultativas-section />
     </v-window-item>
     <v-window-item value="tab-4">
@@ -64,5 +64,5 @@ import CorretajeSection from "./CorretajeSection.vue";
 import AdministracionSection from "./AdministracionSection.vue";
 const useAEStore = useContratoAEStore();
 const { activeTab } = storeToRefs(useAEStore);
-const { isTypeProporcional } = storeToRefs(useAEStore);
+const { isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
 </script>
