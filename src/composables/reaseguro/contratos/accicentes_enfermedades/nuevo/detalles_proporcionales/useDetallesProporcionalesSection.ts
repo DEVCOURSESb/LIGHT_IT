@@ -440,7 +440,7 @@ export const useDetallesProporcionalesSection = () => {
   const handleSubmit = async () => {
     if (detallesProporcionalesTable.value.length === 0) {
       dialog.show({
-        title: "Error",
+        title: "Atención",
         message: "Debe agregar al menos un detalle proporcional antes de continuar.",
         type: DialogType.ERROR,
       });
@@ -529,85 +529,85 @@ export const useDetallesProporcionalesSection = () => {
 
   const detallesProporcionalesTableHeaders = [
     { 
-      title: "Tipo operación / ramo", 
+      title: "TIPO OPERACIÓN / RAMO", 
       key: "descExtCoberDetalles", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Operación / ramo (detallada)", 
+      title: "OPERACIÓN / RAMO (DETALLADA)", 
       key: "descOperRamoDetalles", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "% Retención", 
+      title: "% RETENCIÓN", 
       key: "porcentajeRetencion", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "% Cesión", 
+      title: "% CESIÓN", 
       key: "porcentajeCesion", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Monto Retención", 
+      title: "MONTO RETENCIÓN", 
       key: "montoRetencionFormatted", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Monto Retención Contrato", 
+      title: "MONTO RETENCIÓN CONTRATO", 
       key: "montoRetencionContratoFormatted", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Monto Cesión", 
+      title: "MONTO CESIÓN", 
       key: "montoCesionFormatted", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Capacidad de contrato", 
+      title: "CAPACIDAD DE CONTRATO", 
       key: "capacidadContratoFormatted", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Criterio de capacidad", 
+      title: "CRITERIO DE CAPACIDAD", 
       key: "descCriterioAsigCapacidad", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Distribución Cesión", 
+      title: "DISTRIBUCIÓN CESIÓN", 
       key: "descDistrCesion", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Moneda detalles", 
+      title: "MONEDA DETALLES", 
       key: "descMonedaDetalles", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "¿cúmulos?", 
+      title: "¿CÚMULOS?", 
       key: "cumulos", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Activo", 
+      title: "ACTIVO", 
       key: "detalleActivo", 
       sortable: true, 
       headerProps: { style: "font-weight: bold" } 
     },
     { 
-      title: "Acciones", 
+      title: "ACCIONES", 
       key: "actions", 
       sortable: false, 
       headerProps: { style: "font-weight: bold" } 
