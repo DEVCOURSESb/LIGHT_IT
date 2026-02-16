@@ -21,6 +21,5 @@ import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { storeToRefs } from "pinia";
 
 const useAEStore = useContratoAEStore();
-const { activeTab } = storeToRefs(useAEStore);
-const { isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
 </script>

@@ -5,6 +5,8 @@ import { ref, watch, computed } from "vue";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import type { Extension } from "@/API/catalogos/extensiones/extensiones.interfaces";
 import { DialogType, useDialog } from "@/stores/dialogStore";
+import { formattNumber } from "@/utils/formattNumber";
+import { formatCurrency } from "@/utils/formatCurrency";
 
 interface DetallesProporcionalesFormTable {
   capacidadContrato: number;
@@ -150,36 +152,6 @@ export const useDetallesProporcionalesSection = () => {
       }
     },
   );
-
-  // Función para formatear números durante la escritura
-  const formattNumber = (value: string) => {
-    // Elimina todo lo que no sea número o punto
-    let clean = value.replace(/[^\d.]/g, "");
-
-    // Permite solo un punto decimal
-    const parts = clean.split(".");
-    if (parts.length > 2) {
-      clean = parts[0] + "." + parts.slice(1).join("");
-    }
-
-    // Si hay decimales, limita a 2
-    if (clean.includes(".")) {
-      const [enteros, decimales] = clean.split(".");
-      if (decimales && decimales.length > 2) {
-        clean = enteros + "." + decimales.slice(0, 2);
-      }
-    }
-
-    return clean;
-  };
-
-  // Función para formatear números con comas y 2 decimales
-  const formatCurrency = (value: number): string => {
-    return value.toLocaleString("en-US", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
 
   //MONTO RETENCION
   const onInput = (value: string) => {

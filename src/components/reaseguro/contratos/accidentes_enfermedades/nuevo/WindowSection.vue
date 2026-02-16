@@ -63,6 +63,5 @@ import IntermediariosSection from "./IntermediariosSection.vue";
 import CorretajeSection from "./CorretajeSection.vue";
 import AdministracionSection from "./AdministracionSection.vue";
 const useAEStore = useContratoAEStore();
-const { activeTab } = storeToRefs(useAEStore);
-const { isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
 </script>
