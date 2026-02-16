@@ -249,11 +249,18 @@ export const useGeneralSection = () => {
     }
   );
 
+  watch(
+    () => formData.idTcontrato,
+    (newValue) => {
+      contratoAEStore.setTipoContrato(newValue);
+    }
+  );
 
   // Watch para limpiar campos cuando cambia la forma contractual
   watch(
     () => formData.cveFcontrac,
     (newValue, oldValue) => {
+      contratoAEStore.setIsFacultativo(Number(newValue));
       // Si cambia de facultativa (1) a otro valor, limpiar campos relacionados
       if (oldValue === 1 && newValue !== 1) {
         setFieldValue('cveEntidad', null);

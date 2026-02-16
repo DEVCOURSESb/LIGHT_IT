@@ -12,6 +12,9 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     localStorage.getItem("isFacultativo") === "true",
   );
 
+  const tipo = JSON.parse(localStorage.getItem("tipoContrato")!)  || null ;
+  const tipoContrato = ref<number | null>(tipo);
+
   const dialog = useDialog();
 
   const guardarGenerales = (data: Record<string, any>) => {
@@ -86,6 +89,16 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     localStorage.setItem("isTypeProporcional", isTypeProporcional.value.toString());
   };
 
+  const setIsFacultativo = (newValue: number) => {
+    isFacultativo.value = newValue === 1;
+    localStorage.setItem("isFacultativo", isFacultativo.value.toString());
+  }
+
+  const setTipoContrato = (newValue: number) => {
+    tipoContrato.value = newValue;
+    localStorage.setItem("tipoContrato", tipoContrato.value.toString());
+  };
+
   const guardarDetallesProporcionales = (data: Record<string, any>[]) => {
     // TODO, CLAVE DE CONTRATO, DE MOMENTO SE ASIGNA EL ID
     const generales = obtenerGenerales();
@@ -103,6 +116,10 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     return JSON.parse(data);
   }
 
+  const guardarPolizasFacultativas = () => {
+    activeTab.value = "tab-4";
+  }
+
   // Persistencia automática
   watch(activeTab, (value) => {
     localStorage.setItem("activeTab", value);
@@ -117,5 +134,9 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     guardarDetallesProporcionales,
     obtenerDetallesProporcionales,
     isFacultativo,
+    setIsFacultativo,
+    tipoContrato,
+    setTipoContrato,
+    guardarPolizasFacultativas
   };
 });

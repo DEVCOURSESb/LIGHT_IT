@@ -3,10 +3,10 @@
     <v-window-item value="tab-1">
       <generales-section />
     </v-window-item>
-    <v-window-item value="tab-2" v-show="isTypeProporcional" :eager="true">
+    <v-window-item value="tab-2" v-show="isTypeProporcional">
       <detalles-proporcionales-section />
     </v-window-item>
-    <v-window-item value="tab-3" v-show="isFacultativo" :eager="true">
+    <v-window-item value="tab-3" v-show="isFacultativo">
       <polizas-facultativas-section />
     </v-window-item>
     <v-window-item value="tab-4">

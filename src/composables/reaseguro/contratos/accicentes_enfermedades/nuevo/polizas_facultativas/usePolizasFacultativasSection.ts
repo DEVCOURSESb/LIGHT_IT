@@ -1,5 +1,6 @@
 import { othersActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/others.actions";
 import { DialogType, useDialog } from "@/stores/dialogStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { useForm } from "vee-validate";
 import { ref } from "vue";
 
@@ -14,20 +15,29 @@ export const usePolizasFacultativasSection = () => {
 
   const showErrors = ref(false);
   const dialog = useDialog();
+  const store = useContratoAEStore();
 
   const {
     resetForm,
     setFieldValue,
     values: formData,
     errors: formErrors,
-    validate,
   } = useForm({
     validationSchema: {},
     validateOnMount: false,
   });
 
   const handleSubmit = () => {
-    console.log("send");
+   dialog.show({
+    title: "Atención",
+    message: "¿Confirma que los datos ingresados de pólizas facultativas del contrato son correctos?",
+    ExtraAction: {
+      text: "Aceptar",
+      handler: () => {
+        store.guardarPolizasFacultativas();
+      }
+    }
+   });
   };
 
   const sendSelect = () => {
@@ -37,24 +47,29 @@ export const usePolizasFacultativasSection = () => {
         title: "Atención",
         message: "Por favor, selecciona al menos una póliza.",
         type: DialogType.ERROR,
-        ExtraAction: {
-          text: "Aceptar",
-          color: "primary",
-          handler: () => {},
-        },
       });
 
       return;
     }
 
-    const newItems = polizas.map((poliza: string) => ({
-      noPoliza: poliza,
-      polActiva: true,
-    }));
+    dialog.show({
+      title: "Agregar pólizas",
+      message: "¿Confirma que los datos ingresados de pólizas facultativas del contrato son correctos?",
+      ExtraAction: {
+        text: "Aceptar",
+        handler: () => {
+          const newItems = polizas.map((poliza: string) => ({
+            noPoliza: poliza,
+            polActiva: true,
+          }));
 
-    dataTableItems.value = [...newItems];
+          dataTableItems.value = [...newItems];
 
-    setFieldValue("noPoliza", null);
+          setFieldValue("noPoliza", null);
+        },
+        color: "primary"
+      }
+    });
   };
 
   const togglePolizaStatus = (item: PolizasFacultativasForm) => {
@@ -94,7 +109,7 @@ export const usePolizasFacultativasSection = () => {
       },
     },
     {
-      title: "ACTIVO",
+      title: "PÓLIZA ACTIVA",
       key: "polActiva",
       headerProps: {
         style: "font-weight: bold",

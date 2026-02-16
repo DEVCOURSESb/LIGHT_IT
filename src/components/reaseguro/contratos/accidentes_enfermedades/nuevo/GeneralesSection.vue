@@ -78,9 +78,9 @@
             <!-- TIPO DE CONTRATO -->
             <v-col cols="12" md="3">
               <v-select
-                :items="queryTiposContrato.data.value || []"
+                :items="queryTiposContrato.data.value?.filter(row => row.cveTreasegRaw == formData['cveTreaseg']) || []"
                 item-title="descTcontrato"
-                item-value="cveTcontrato"
+                item-value="idTcontrato"
                 label="Tipo de contrato"
                 variant="solo-filled"
                 clearable
