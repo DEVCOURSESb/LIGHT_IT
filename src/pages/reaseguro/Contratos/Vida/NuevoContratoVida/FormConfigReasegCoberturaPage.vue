@@ -566,8 +566,6 @@ const generarNombreDefaultArchivo = (nombreCob: string) => {
   if (detalleCobertura.value === 1) limpiarTarifa();
 };*/
 
-// es duplicar la información para cada capa que exista es decir colocar 3 veces la misma
-// cobertura con la tarifa si existen 3 excedentes o los que se tengan
 const agregarTarifa = () => {
   const idTipoTarifa = getID(tipoTarifaObj.value);
   const textoTarifa = tipoTarifaObj.value?.title || '';
@@ -584,21 +582,26 @@ const agregarTarifa = () => {
 
   let capasAProcesar: string[] = [];
 
-  if (detalleCapa.value === 1) {
-    const capa = capaSeleccionada.value;
-    if (capa) {
-      capasAProcesar = [capa];
+  if (esExcedentePorCapas.value) {
+    if (detalleCapa.value === 1) {
+      if (!capaSeleccionada.value) {
+        return dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa para continuar.', title: 'Dato obligatorio' });
+      }
+      capasAProcesar = [capaSeleccionada.value];
     } else {
-      dialog.show({ type: DialogType.ERROR, message: 'Seleccione una capa', title: 'Error' });
-      return;
+      capasAProcesar = contratoStore.expc?.capas.map(c => c.detalleCapa || '').filter(Boolean) || [];
     }
-  } else {
-    capasAProcesar = contratoStore.expc?.capas.map(c => c.detalleCapa || '') || [];
-  }
-  if (capasAProcesar.length === 0) {
-    dialog.show({ type: DialogType.ERROR, message: 'No se encontraron capas configuradas en el contrato.', title: 'Error' });
-    return;
-  }
+
+    if (capasAProcesar.length === 0) {
+      return dialog.show({
+        type: DialogType.ERROR,
+        message: 'No se encontraron capas configuradas en el contrato.',
+        title: 'Error'
+      });
+    }
+    } else {
+      capasAProcesar = ['NO'];
+    }
 
   let coberturasAProcesar: any[] = [];
   if (detalleCobertura.value === 0) {

@@ -78,7 +78,7 @@ const dialog = useDialog();
 const disabledIntermediario = ref(true);
 const deshabilitarReasegurador = ref(true);
 
-const revisarExistenciaContrato = () => {
+/*const revisarExistenciaContrato = () => {
   const datosContratos = contratoStore.general?.idContrato;
 
   const polizasFacultativas = contratoStore.poli?.polizas;
@@ -91,7 +91,7 @@ const revisarExistenciaContrato = () => {
         "No se encontro algun contrato configurado en el apartado de Datos.",
     });
     // aqui esta bien y mal pues aunque el contrato no sea Facultativo este sigue esperando para tener datos en el store, y si desbloquea el segundo panel pero aparece el mensaje de error
-  } else if (!polizasFacultativas) {
+  } /*else if (!polizasFacultativas) {
     dialog.show({
       type: DialogType.ERROR,
       title: "Advertencia",
@@ -103,6 +103,34 @@ const revisarExistenciaContrato = () => {
   deshabilitarReasegurador.value = !datosContratos;
   // aqui si se comprueba que si existen datos en el store lo habilite en automatico y abra el segundo panel de expansion
   // esto es lo que esta en ese tab en el archivo FormConfiguracionReaseguradores
+};*/
+
+const revisarExistenciaContrato = () => {
+  const tieneDatosGenerales = !!contratoStore.general?.idContrato;
+  const esFacultativo = Number(contratoStore.general?.idTContrato) === 1; // Asumiendo que 1 es Facultativo, ajusta el ID según corresponda
+  //const tienePolizas = contratoStore.poli?.polizas.length > 0;
+  const tienePolizas = contratoStore.poli?.polizas;
+
+  if (!tieneDatosGenerales) {
+    deshabilitarReasegurador.value = true;
+    return dialog.show({
+      type: DialogType.ERROR,
+      title: "Faltan Datos",
+      message: "Debe configurar y guardar el apartado de 'Datos del Contrato' antes de continuar.",
+    });
+  }
+
+  if (esFacultativo && !tienePolizas) {
+    deshabilitarReasegurador.value = true;
+    return dialog.show({
+      type: DialogType.ERROR,
+      title: "Pólizas Requeridas",
+      message: "Para contratos Facultativos, debe agregar al menos una póliza en el apartado correspondiente.",
+    });
+  }
+
+  deshabilitarReasegurador.value = false;
+
 };
 
 const checkParticipationReaseg = () => {
@@ -119,6 +147,5 @@ const checkParticipationReaseg = () => {
 
   disabledIntermediario.value = !isFullParticipation;
 };
-
 
 </script>
