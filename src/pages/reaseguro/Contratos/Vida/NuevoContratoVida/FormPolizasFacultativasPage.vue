@@ -143,8 +143,6 @@ watch([fechaInicioContrato, fechaFinContrato], () => {
   if (!mostrarAdvertencia.value) ejecutarConsulta()
 })
 
-//quitar campos que ya fueron seleccionados, es decir evitar duplicados
-//no se si aqui tenga que ir la validación que debe tener afuerza polizas si en general es facultativo es decir que no permita que esta tabla vaya vacio
 const polizaOptions = computed(() => {
   const fi = normalizarFecha(fechaInicioContrato.value)
   const ff = normalizarFecha(fechaFinContrato.value)
@@ -166,20 +164,31 @@ const renovacionOptions = computed(() => {
   const fi = normalizarFecha(fechaInicioContrato.value)
   const ff = normalizarFecha(fechaFinContrato.value)
 
-  return [
-    ...new Map(
-      emisiones.value
-        .filter(e =>
-          e.numPoliza === polizaInput.value &&
-          normalizarFecha(e.fintVigPol) === fi &&
-          normalizarFecha(e.ffinVigPol) === ff
-        )
-        .map(e => [
-          e.numRenovPol,
-          { title: e.numRenovPol.toString(), value: e.numRenovPol }
-        ])
-    ).values()
-  ]
+  const emisionesFiltradas = emisiones.value.filter(e =>
+    e.numPoliza === polizaInput.value &&
+    normalizarFecha(e.fintVigPol) === fi &&
+    normalizarFecha(e.ffinVigPol) === ff
+  )
+
+  const unicos = new Map()
+
+  emisionesFiltradas.forEach(e => {
+    const renovacion = e.numRenovPol
+
+    const yaEstaEnTabla = polizas.value.some(p =>
+      String(p.poliza).trim() === String(polizaInput.value).trim() &&
+      Number(p.renovacion) === Number(renovacion)
+    )
+
+    if (!yaEstaEnTabla && !unicos.has(renovacion)) {
+      unicos.set(renovacion, {
+        title: renovacion.toString(),
+        value: renovacion
+      })
+    }
+  })
+
+  return Array.from(unicos.values())
 })
 
 watch(polizaInput, () => {
@@ -195,21 +204,31 @@ const headers1 = [
 
 const agregarPoliza = () => {
   if (!polizaInput.value || renovacionInput.value === null) return
-  // por alguna razon al regresar esta vista se procesa otra vez la información y me muestra lo que tenia en el store pero me deja duplicar el registro que estaba en el store
-  const duplicado = polizas.value.some((p: PolizaItem, index: number) =>
-    p.poliza === polizaInput.value &&
-    p.renovacion === renovacionInput.value &&
-    index !== polizaEditando.value
-  )
 
-  if (duplicado) {
-    dialog.show({ title: 'Error', message: 'Ya existe esta combinación de poliza y renovación', type: DialogType.ERROR })
+  const polizaNueva = String(polizaInput.value).trim()
+  const renovacionNueva = Number(renovacionInput.value)
+
+  // La validación ahora es por AMBOS campos estrictamente
+  const duplicadoExacto = polizas.value.some((p, index) => {
+    if (polizaEditando.value !== null && index === polizaEditando.value) return false
+
+    return String(p.poliza).trim() === polizaNueva &&
+           Number(p.renovacion) === renovacionNueva
+  })
+
+  if (duplicadoExacto) {
+    dialog.show({
+      title: 'Registro Duplicado',
+      message: `La póliza ${polizaNueva} ya cuenta con la renovación ${renovacionNueva} en la lista.`,
+      type: DialogType.ERROR
+    })
     return
   }
 
+  // Si llegamos aquí, es una renovación nueva (aunque la póliza sea repetida)
   const item: PolizaItem = {
-    poliza: polizaInput.value!,
-    renovacion: renovacionInput.value!
+    poliza: polizaNueva,
+    renovacion: renovacionNueva
   }
 
   if (polizaEditando.value !== null) {
@@ -242,26 +261,35 @@ const guardarDatosGenerales = async () => {
 }
 
 const hidratarPolizasDesdeStore = () => {
-  const guardadas = contratoStore.poli
+  const guardadas = contratoStore.poli?.polizas || []
 
-  if (!guardadas || guardadas.polizas.length === 0) return
+  guardadas.forEach(p => {
+    const existe = polizas.value.some(local =>
+      String(local.poliza).trim() === String(p.poliza).trim() &&
+      Number(local.renovacion) === Number(p.renovacion)
+    )
 
-  polizas.value = guardadas.polizas.map(p => ({
-    poliza: p.poliza,
-    renovacion: Number(p.renovacion)
-  }))
+    if (!existe) {
+      polizas.value.push({
+        poliza: String(p.poliza).trim(),
+        renovacion: Number(p.renovacion)
+      })
+    }
+  })
 }
-
+const hidratado = ref(false);
 
 watch(
   [() => emisiones.value.length, () => contratoStore.poli],
   ([len, poli]) => {
-    if (len > 0 && poli?.polizas?.length) {
-      hidratarPolizasDesdeStore()
+    // Solo hidratamos si tenemos emisiones cargadas, hay datos en el store Y NO hemos hidratado ya
+    if (len > 0 && poli?.polizas?.length && !hidratado.value) {
+      hidratarPolizasDesdeStore();
+      hidratado.value = true; // Marcamos como listo
     }
   },
   { immediate: true }
-)
+);
 
 
 </script>

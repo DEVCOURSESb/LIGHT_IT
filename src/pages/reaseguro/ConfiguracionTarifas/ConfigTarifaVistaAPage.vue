@@ -59,7 +59,7 @@
           <v-col cols="12" md="6">
             <v-select
               v-model="form.fumador"
-              :items="['SÍ', 'NO']"
+              :items="['S', 'N']"
               label="Fumador"
               variant="solo-filled"
             />
@@ -138,7 +138,7 @@ const cargarDetalles = async () => {
       itemsDetalle.value = filtrados.map((reg: any) => ({
         ...reg,
         idInterno: reg.id || reg.cveTarifa || Math.random(),
-        fumadorTexto: reg.fumador === 0 ? 'SÍ' : 'NO'
+        fumadorTexto: reg.fumador === 1 ? 'S' : 'N'
       }));
     }
   } catch (error) {
@@ -165,7 +165,7 @@ const confirmarEdicion = () => {
       ...itemsDetalle.value[index],
       edad: Number(form.edad),
       genero: form.genero,
-      fumador: form.fumador === 'SÍ' ? 0 : 1,
+      fumador: form.fumador === 'S' ? 0 : 1,
       fumadorTexto: form.fumador,
       primaRiesgo: Number(form.primaRiesgo)
     };

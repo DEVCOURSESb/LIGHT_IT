@@ -1,78 +1,7 @@
 <template>
   <v-form ref="formRef">
     <v-container>
-      <v-row class="d-flex justify-center align-center">
-        <v-col cols="12" md="4">
-          <v-select
-            v-model="agrupacionCoberturas"
-            :items="siNoOptions"
-            label="¿Agrupación de coberturas?"
-            chips
-            variant="solo-filled"
-            @update:model-value="guardarAgrupacion = false"
-          />
-        </v-col>
-      </v-row>
-
-      <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
-        <v-col cols="12" md="5">
-          <p class="text-subtitle-2 mb-2">Coberturas para agrupar:</p>
-          <v-data-table
-            v-model="coberturasParaAgrupar"
-            :headers="[{ title: 'Coberturas Disponibles', key: 'title' }]"
-            :items="coberturasDisponiblesParaAgrupar"
-            show-select
-            item-value="value"
-            return-object
-            density="compact"
-            max-height="300px"
-          />
-        </v-col>
-        <v-col cols="12" md="3">
-          <v-select
-            v-model="coberturaMadreObj"
-            :items="coberturasDisponiblesParaAgrupar"
-            item-title="title"
-            chips
-            return-object
-            label="Agrupar en (Cobertura Madre):"
-            variant="solo-filled"
-          />
-        </v-col>
-        <v-col cols="12" md="1">
-          <v-btn color="indigo" icon @click="agregarAgrupacion">
-            <v-icon>{{ editandoAgrupacionIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
-            <v-tooltip activator="parent" location="top">
-              {{ editandoAgrupacionIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
-            </v-tooltip>
-          </v-btn>
-        </v-col>
-
-        <v-col cols="12" md="10" v-if="agrupaciones.length > 0">
-          <v-data-table :headers="headersAgrupacion" :items="agrupaciones" hide-default-footer>
-            <template v-slot:item.coberturas="{ item }">
-              {{ item.coberturas.map((c: any) => c.title).join(', ') }}
-            </template>
-            <template v-slot:item.madre="{ item }">
-              <v-chip color="primary" label>{{ item.madre?.title }}</v-chip>
-            </template>
-            <template v-slot:item.acciones="{ item, index }">
-              <v-btn icon color="blue" variant="text" @click="editarAgrupacion(item, index)"><v-icon>mdi-pencil</v-icon></v-btn>
-              <v-btn icon color="red" variant="text" @click="eliminarAgrupacion(index)"><v-icon>mdi-delete</v-icon></v-btn>
-            </template>
-          </v-data-table>
-        </v-col>
-      </v-row>
-
-      <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
-        <v-col cols="12" md="4" class="text-center">
-          <v-btn color="primary" @click="confirmarAgrupacion">Guardar Agrupación</v-btn>
-        </v-col>
-      </v-row>
-
-      <v-divider class="my-6" v-if="mostrarSeccionDetalle" />
-
-      <v-row v-if="mostrarSeccionDetalle">
+      <v-row>
         <v-col cols="12" md="4">
           <v-select
             v-model="coberturasBasiObj"
@@ -109,7 +38,7 @@
         </v-col>
       </v-row>
 
-      <v-row v-if="mostrarSeccionDetalle">
+      <v-row>
         <v-col cols="12" md="4" v-if="detalleCapa === 1">
           <v-select
             v-model="capaSeleccionada"
@@ -199,8 +128,6 @@
           </v-btn>
         </v-col>
       </v-row>
-
-
       <v-row v-if="itemsTablaTarifas.length > 0">
         <v-col cols="12">
           <v-data-table
@@ -251,6 +178,78 @@
           </v-data-table>
         </v-col>
       </v-row>
+      <br>
+      <v-divider />
+      <br>
+      <v-row class="d-flex justify-center align-center">
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="agrupacionCoberturas"
+            :items="siNoOptions"
+            label="¿Agrupación de coberturas?"
+            chips
+            variant="solo-filled"
+            @update:model-value="guardarAgrupacion = false"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
+        <v-col cols="12" md="5">
+          <p class="text-subtitle-2 mb-2">Coberturas para agrupar:</p>
+          <v-data-table
+            v-model="coberturasParaAgrupar"
+            :headers="[{ title: 'Coberturas Disponibles', key: 'title' }]"
+            :items="coberturasDisponiblesParaAgrupar"
+            show-select
+            item-value="value"
+            select-strategy="page"
+            return-object
+            density="compact"
+            max-height="300px"
+          />
+        </v-col>
+        <v-col cols="12" md="3">
+          <v-select
+            v-model="coberturaMadreObj"
+            :items="coberturasDisponiblesParaAgrupar"
+            item-title="title"
+            chips
+            return-object
+            label="Agrupar en (Cobertura Madre):"
+            variant="solo-filled"
+          />
+        </v-col>
+        <v-col cols="12" md="1">
+          <v-btn color="indigo" icon @click="agregarAgrupacion">
+            <v-icon>{{ editandoAgrupacionIndex !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ editandoAgrupacionIndex !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
+          </v-btn>
+        </v-col>
+
+        <v-col cols="12" md="10" v-if="agrupaciones.length > 0">
+          <v-data-table :headers="headersAgrupacion" :items="agrupaciones" hide-default-footer>
+            <template v-slot:item.coberturas="{ item }">
+              {{ item.coberturas.map((c: any) => c.title).join(', ') }}
+            </template>
+            <template v-slot:item.madre="{ item }">
+              <v-chip color="primary" label>{{ item.madre?.title }}</v-chip>
+            </template>
+            <template v-slot:item.acciones="{ item, index }">
+              <v-btn icon color="blue" variant="text" @click="editarAgrupacion(item, index)"><v-icon>mdi-pencil</v-icon></v-btn>
+              <v-btn icon color="red" variant="text" @click="eliminarAgrupacion(index)"><v-icon>mdi-delete</v-icon></v-btn>
+            </template>
+          </v-data-table>
+        </v-col>
+      </v-row>
+
+      <v-row class="d-flex justify-center align-center" v-if="agrupacionCoberturas === 1">
+        <v-col cols="12" md="4" class="text-center">
+          <v-btn color="primary" @click="confirmarAgrupacion">Guardar Agrupación</v-btn>
+        </v-col>
+      </v-row>
 
       <v-row class="mt-8">
         <v-col class="text-center">
@@ -262,7 +261,6 @@
     </v-container>
   </v-form>
 </template>
-
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useContratoStore } from "@/stores/contratoStore"
@@ -286,8 +284,6 @@ const {
   tarifasPropiasOptions, fetchTarifaPropia
 } = NuevoContratoVidaConR()
 
-const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
-
 const agrupacionCoberturas = ref(0)
 const guardarAgrupacion = ref(false)
 const coberturasParaAgrupar = ref<any[]>([])
@@ -310,134 +306,147 @@ const factorTarifaP = ref<number>(0)
 const tarifaPropiaObj = ref<any[]>([])
 
 const itemsTablaTarifas = ref<any[]>([])
-const editandoAgrupacionIndex = ref<number | null>(null)
 const editandoIndex = ref(-1)
+const editandoAgrupacionIndex = ref<number | null>(null)
 
-const mostrarSeccionDetalle = computed(() => {
-  return agrupacionCoberturas.value === 0 || guardarAgrupacion.value;
-});
-
-const coberturasHijasAgrupadas = computed(() => {
-  if (agrupacionCoberturas.value === 0) return [];
-  const todasLasHijas = agrupaciones.value.flatMap(a => a.coberturas.map((c: any) => c.value));
-  return todasLasHijas;
-});
-
-const coberturasBasicasOptions = computed(() => {
-  if (agrupacionCoberturas.value === 0) return coberturasBasiOptions.value;
-  return coberturasBasiOptions.value.filter(c => coberturasHijasAgrupadas.value.includes(c.value));
-});
-
-const coberturasAdicionalesOptions = computed(() => {
-  let filtradas = agrupacionCoberturas.value === 0
-    ? coberturasAdiciOptions.value
-    : coberturasAdiciOptions.value.filter(c => coberturasHijasAgrupadas.value.includes(c.value));
-
-  const idsBasicas = coberturasBasiObj.value.map(c => getID(c));
-  return filtradas.filter(c => !idsBasicas.includes(c.value));
-});
+const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
 
 const getID = (item: any) => {
-  if (item === null || item === undefined) return null;
+  if (!item) return null;
   return (typeof item === 'object' && 'value' in item) ? item.value : item;
 }
 
-const existeTarifaDuplicada = (
-  cveCob: any,
-  capaActual: string | null
-) => {
-  return itemsTablaTarifas.value.some((item, index) => {
-    if (editandoIndex.value !== -1 && index === editandoIndex.value) return false;
-    if (item.cveCob !== cveCob) return false;
+const coberturasBasicasOptions = computed(() => {
+  if (agrupacionCoberturas.value === 0) return coberturasBasiOptions.value;
+  const idsMadres = agrupaciones.value.map(a => getID(a.madre));
+  return coberturasBasiOptions.value.filter(c => idsMadres.includes(c.value));
+});
 
-    if (esExcedentePorCapas.value) {
-      return item.detalleCapa === capaActual;
-    }
-    return true;
-  });
-};
+const coberturasAdicionalesOptions = computed(() => {
+  const idsSeleccionadosBasi = coberturasBasiObj.value.map(c => getID(c));
+  return coberturasAdiciOptions.value.filter(c => !idsSeleccionadosBasi.includes(c.value));
+});
+
+const todasLasSeleccionadas = computed(() => {
+  return [...(coberturasBasiObj.value || []), ...(coberturasAdiciObj.value || [])];
+});
+
+watch(todasLasSeleccionadas, (newList) => {
+  const idsVivos = newList.map(c => getID(c));
+
+  agrupaciones.value = agrupaciones.value
+    .filter(a => idsVivos.includes(getID(a.madre)))
+    .map(a => ({
+      ...a,
+      coberturas: a.coberturas.filter((c: any) => idsVivos.includes(getID(c)))
+    }))
+    .filter(a => a.coberturas.length > 0);
+}, { deep: true });
+
+const coberturasDisponiblesParaAgrupar = computed(() => {
+  const idsMadres = agrupaciones.value.map(a => getID(a.madre));
+  const idsHijas = agrupaciones.value.flatMap(a => a.coberturas.map((c: any) => getID(c)));
+
+  const idsEnUso = [...idsMadres, ...idsHijas];
+
+  return todasLasSeleccionadas.value.filter(c => !idsEnUso.includes(getID(c)));
+});
+
+const coberturasPermitidasParaTarifa = computed(() => {
+  const idsPermitidos = [...coberturasBasiObj.value.map(c => getID(c)), ...coberturasAdiciObj.value.map(c => getID(c))];
+  return coberturasOptions.value.filter(c => idsPermitidos.includes(c.value));
+});
+
+const esExcedentePorCapas = computed(() => Number(getID(contratoStore.general?.idTContrato)) === 3);
+const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || []);
 
 watch(() => getID(tipoTarifaObj.value), (tipo) => {
   primaTarFi.value = 0;
-  porSobrePrimaE.value = 0;
   tarifaFijaM.value = 0;
-  factorTarifaP.value = 0;
-
-  if (tipo === 1) {
-    porSobrePrimaE.value = 100;
-  } else if (tipo === 2) {
-    factorTarifaP.value = 100;
-  }
-
-  if (tipo !== 2) {
-    tarifaPropiaObj.value = [];
-  }
-})
-const esExcedentePorCapas = computed(() => {
-  const id = getID(contratoStore.general?.idTContrato);
-  return Number(id) === 3;
-})
-
-watch(esExcedentePorCapas, (valido) => {
-  if (!valido) detalleCapa.value = 0;
-})
-
-const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || [])
-
-const coberturasDisponiblesParaAgrupar = computed(() => {
-  const idsAgrupados = agrupaciones.value.flatMap(a => a.coberturas.map((c: any) => c.value))
-  return coberturasOptions.value.filter(c => !idsAgrupados.includes(c.value))
-})
-
-const coberturasPermitidasParaTarifa = computed(() => {
-  const idsPermitidos = [...coberturasBasiObj.value.map(c => c.value), ...coberturasAdiciObj.value.map(c => c.value)]
-  return coberturasOptions.value.filter(c => idsPermitidos.includes(c.value))
-})
+  porSobrePrimaE.value = tipo === 1 ? 100 : 0;
+  factorTarifaP.value = tipo === 2 ? 100 : 0;
+  if (tipo !== 2) tarifaPropiaObj.value = [];
+});
 
 const hidratarDesdeStore = () => {
-  const data = contratoStore.configReasegCob
-  if (!data || Object.keys(data).length === 0) return
-  agrupacionCoberturas.value = data.agrupacionCoberturas ?? 0
-  agrupaciones.value = data.agrupaciones || []
-  coberturasBasiObj.value = data.coberturasBasi || []
-  coberturasAdiciObj.value = data.coberturasAdici || []
-  detalleCapa.value = data.detalleCapa ?? 0
-  detalleCobertura.value = data.detalleCobertura ?? 0
-  itemsTablaTarifas.value = data.tarifas ? [...data.tarifas] : []
-}
+  const data = contratoStore.configReasegCob;
+  if (!data || Object.keys(data).length === 0) return;
 
-watch([() => coberturasOptions.value, () => tipoTarifaOptions.value], ([c, t]) => {
-  if (c.length > 0 && t.length > 0) hidratarDesdeStore()
-}, { immediate: true })
+  agrupacionCoberturas.value = data.agrupacionCoberturas ?? 0;
+  agrupaciones.value = data.agrupaciones || [];
+  coberturasBasiObj.value = data.coberturasBasi || [];
+  coberturasAdiciObj.value = data.coberturasAdici || [];
+  detalleCapa.value = data.detalleCapa ?? 0;
+  detalleCobertura.value = data.detalleCobertura ?? 0;
+  itemsTablaTarifas.value = data.tarifas ? [...data.tarifas] : [];
+};
 
-watch(detalleCobertura, value => {
-  if (value === 0){
-    itemsTablaTarifas.value = []
-  }
-})
+watch([coberturasOptions, tipoTarifaOptions], ([c, t]) => {
+  if (c.length > 0 && t.length > 0) hidratarDesdeStore();
+}, { immediate: true });
 
-onMounted(async () => {
-  await Promise.all([fetchCoberturas(), fetchCoberturasBasicas(), fetchCoberturasAdicionales(), fetchTipoTarifa(), fetchTarifaPropia()])
-})
 
 const agregarAgrupacion = () => {
   if (coberturasParaAgrupar.value.length === 0 || !coberturaMadreObj.value) {
-    dialog.show({ type: DialogType.ERROR, message: 'Faltan datos de agrupación', title: 'Error' }); return
+    dialog.show({ type: DialogType.ERROR, message: 'Faltan datos de agrupación', title: 'Error' });
+    return;
   }
-  agrupaciones.value.push({ coberturas: [...coberturasParaAgrupar.value], madre: { ...coberturaMadreObj.value } })
-  coberturasParaAgrupar.value = []; coberturaMadreObj.value = null
-}
+  agrupaciones.value.push({
+    coberturas: [...coberturasParaAgrupar.value],
+    madre: { ...coberturaMadreObj.value }
+  });
+  coberturasParaAgrupar.value = [];
+  coberturaMadreObj.value = null;
+};
 
 const editarAgrupacion = (item: any, index: number) => {
-  coberturasParaAgrupar.value = [...item.coberturas]; coberturaMadreObj.value = item.madre; eliminarAgrupacion(index)
-}
-const eliminarAgrupacion = (index: number) => {
-  agrupaciones.value.splice(index, 1);
 
-  coberturasBasiObj.value = [];
-  coberturasAdiciObj.value = [];
-  itemsTablaTarifas.value = [];
+  const seleccionadas = item.coberturas.map((guardada: any) => {
+    return coberturasDisponiblesParaAgrupar.value.find(
+      (disponible: any) => String(disponible.value) === String(guardada.value)
+    ) || guardada;
+  });
+
+  const madreEncontrada = coberturasDisponiblesParaAgrupar.value.find(
+    (disponible: any) => String(disponible.value) === String(item.madre.value)
+  ) || item.madre;
+
+  coberturasParaAgrupar.value = seleccionadas;
+  coberturaMadreObj.value = madreEncontrada;
+
+  eliminarAgrupacion(index);
+
+  editandoAgrupacionIndex.value = null;
 };
+
+const eliminarAgrupacion = (index: number) => {
+  const agrupacionEliminada = agrupaciones.value.splice(index, 1)[0];
+
+  agrupacionEliminada.coberturas.forEach((cobertura: any) => {
+    if (cobertura.tipo === 'basica') {
+      coberturasBasiObj.value.push(cobertura);
+    } else if (cobertura.tipo === 'adicional') {
+      coberturasAdiciObj.value.push(cobertura);
+    }
+  });
+};
+const limpiarFormularioAgrupacion = () => {
+  coberturaMadreObj.value = null;
+  coberturasParaAgrupar.value = [];
+  editandoAgrupacionIndex.value = null;
+};
+
+watch(agrupacionCoberturas, (newValue) => {
+  if (newValue === 0) {
+    coberturasParaAgrupar.value = [];
+    coberturaMadreObj.value = null;
+    agrupaciones.value = [];
+    editandoAgrupacionIndex.value = null;
+
+    console.log("Se han reseteado todas las agrupaciones porque se marcó 'No'");
+  }
+});
+
 const confirmarAgrupacion = () => {
   if (agrupaciones.value.length === 0) {
     dialog.show({ type: DialogType.ERROR, message: 'Debe realizar al menos una agrupación.', title: 'Error' });
@@ -458,26 +467,7 @@ const generarNombreDefaultArchivo = (nombreCob: string) => {
   return `${nombreCob.toUpperCase().replace(/\s+/g, '_')}_${anio}`;
 };
 
-watch([() => coberturaTarifaObj.value, () => tipoTarifaObj.value], ([nuevaCob, nuevoTipo]) => {
-  const textoTarifa = nuevoTipo?.title || '';
-  const esTipoQX = textoTarifa.includes('TARIFA PROPIA TIPO QX') || getID(nuevoTipo) === 2;
-
-  if (esTipoQX && nuevaCob) {
-    const nombreSugerido = generarNombreDefaultArchivo(nuevaCob.title);
-
-  }
-}, { deep: true });
-
-watch(detalleCobertura, (nuevoValor) => {
-  if (nuevoValor === 0) {
-    itemsTablaTarifas.value = [];
-    if (coberturasBasiObj.value.length > 0) {
-      coberturaTarifaObj.value = coberturasBasiObj.value[0];
-    }
-  }
-});
-
-const agregarTarifa = () => {
+/*const agregarTarifa = () => {
   const idTipoTarifa = getID(tipoTarifaObj.value);
   const textoTarifa = tipoTarifaObj.value?.title || '';
 
@@ -524,7 +514,6 @@ const agregarTarifa = () => {
     listaNombres.forEach((nombreRef, indexArchivo) => {
       const duplicado = itemsTablaTarifas.value.some((item, index) => {
         if (editandoIndex.value !== -1 && index === editandoIndex.value) return false;
-
         const mismaCob = item.cveCob === idCob;
         const mismaCapa = item.detalleCapa === capaActual;
 
@@ -575,18 +564,123 @@ const agregarTarifa = () => {
   });
 
   if (detalleCobertura.value === 1) limpiarTarifa();
+};*/
+
+// es duplicar la información para cada capa que exista es decir colocar 3 veces la misma
+// cobertura con la tarifa si existen 3 excedentes o los que se tengan
+const agregarTarifa = () => {
+  const idTipoTarifa = getID(tipoTarifaObj.value);
+  const textoTarifa = tipoTarifaObj.value?.title || '';
+
+  if (idTipoTarifa === null) {
+    dialog.show({ type: DialogType.ERROR, message: 'Seleccione un tipo de tarifa', title: 'Error' });
+    return;
+  }
+
+  if (detalleCapa.value === 1 && !capaSeleccionada.value) {
+    dialog.show({ type: DialogType.ERROR, message: 'Debe seleccionar una capa para continuar.', title: 'Dato obligatorio' });
+    return;
+  }
+
+  let capasAProcesar: string[] = [];
+
+  if (detalleCapa.value === 1) {
+    const capa = capaSeleccionada.value;
+    if (capa) {
+      capasAProcesar = [capa];
+    } else {
+      dialog.show({ type: DialogType.ERROR, message: 'Seleccione una capa', title: 'Error' });
+      return;
+    }
+  } else {
+    capasAProcesar = contratoStore.expc?.capas.map(c => c.detalleCapa || '') || [];
+  }
+  if (capasAProcesar.length === 0) {
+    dialog.show({ type: DialogType.ERROR, message: 'No se encontraron capas configuradas en el contrato.', title: 'Error' });
+    return;
+  }
+
+  let coberturasAProcesar: any[] = [];
+  if (detalleCobertura.value === 0) {
+    coberturasAProcesar = [...coberturasBasiObj.value, ...coberturasAdiciObj.value];
+  } else {
+    if (!coberturaTarifaObj.value) return;
+    coberturasAProcesar = [coberturaTarifaObj.value];
+  }
+
+  const hayDuplicados = coberturasAProcesar.some(cob => {
+    const idCob = getID(cob);
+    return capasAProcesar.some(capa =>
+      itemsTablaTarifas.value.some(item => item.cveCob === idCob && item.detalleCapa === capa)
+    );
+  });
+
+  const ejecutarGuardado = () => {
+    const esTipoQX = textoTarifa.includes('TARIFA PROPIA TIPO QX') || idTipoTarifa === 2;
+
+    coberturasAProcesar.forEach(cob => {
+      const idCob = getID(cob);
+      const esBasica = coberturasBasiObj.value.some(c => getID(c) == idCob);
+      const nombreDefault = generarNombreDefaultArchivo(cob.title);
+
+      let listaNombres = esTipoQX
+        ? (tarifaPropiaObj.value.length > 0 ? tarifaPropiaObj.value.map(a => a.title) : [nombreDefault])
+        : [tarifaPropiaObj.value[0]?.title || ''];
+
+      capasAProcesar.forEach(capaActual => {
+        listaNombres.forEach((nombreRef) => {
+          const indiceDuplicado = itemsTablaTarifas.value.findIndex(item =>
+            item.cveCob === idCob && item.detalleCapa === capaActual
+          );
+
+          const nuevaFila = {
+            detalleCapa: capaActual, // Se guarda el nombre de la capa (ej. "1er Excedente")
+            tipoCobertura: esBasica ? 'BASICA' : 'BADI',
+            cobertura: cob.title || '',
+            cveCob: idCob,
+            tipoTarifa: { ...tipoTarifaObj.value },
+            primaTarifa: primaTarFi.value,
+            porSobrePrima: porSobrePrimaE.value,
+            tarifaFijaM: tarifaFijaM.value,
+            factorTap: factorTarifaP.value,
+            nombreArchivo: nombreRef,
+            tarifaPropia: nombreRef
+          };
+
+          if (indiceDuplicado !== -1) {
+            itemsTablaTarifas.value[indiceDuplicado] = nuevaFila;
+          } else {
+            itemsTablaTarifas.value.push(nuevaFila);
+          }
+        });
+      });
+    });
+    limpiarTarifa();
+  };
+
+  if (hayDuplicados) {
+    const msg = detalleCapa.value === 0
+      ? 'Se actualizarán las tarifas para todas las capas existentes. ¿Desea continuar?'
+      : 'Esta combinación de cobertura y capa ya existe. ¿Desea actualizarla?';
+
+    dialog.show({
+      title: 'Confirmar Actualización',
+      message: msg,
+      type: DialogType.CONFIRM,
+      onConfirm: ejecutarGuardado
+    });
+  } else {
+    ejecutarGuardado();
+  }
 };
 
 const limpiarTarifa = () => {
   coberturaTarifaObj.value = null;
   tipoTarifaObj.value = null;
   primaTarFi.value = 0;
-  porSobrePrimaE.value = 0;
-  tarifaFijaM.value = 0;
-  factorTarifaP.value = 0;
   tarifaPropiaObj.value = [];
   capaSeleccionada.value = null;
-}
+};
 
 const editarTarifa = (item: any, index: number) => {
   editandoIndex.value = index;
@@ -609,6 +703,7 @@ const editarTarifa = (item: any, index: number) => {
 }
 
 const eliminarTarifa = (index: number) => itemsTablaTarifas.value.splice(index, 1)
+
 
 const guardarTodoEnStore = async () => {
   const { valid } = await formRef.value.validate();
@@ -715,6 +810,17 @@ const guardarTodoEnStore = async () => {
   });
   emits('on-save-complete');
 };
+
+
+onMounted(async () => {
+  await Promise.all([
+    fetchCoberturas(),
+    fetchCoberturasBasicas(),
+    fetchCoberturasAdicionales(),
+    fetchTipoTarifa(),
+    fetchTarifaPropia()
+  ]);
+});
 
 const headersAgrupacion = [
   { title: 'Coberturas', key: 'coberturas' },

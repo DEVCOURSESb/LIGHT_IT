@@ -15,11 +15,11 @@ export const SexoConfig = {
   tableTitle: 'Lista de sexos',
 
   headers: [
-    /* { title: 'CLAVE', key: 'cveSexo', sortable: true,
+    { title: 'CLAVE', key: 'cveSexo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
-    },
+    },/*
     { title: 'FECHA DE REGISTRO', key: 'fechaRegistro', sortable: true,
       headerProps: {
         style: 'font-weight: bold',

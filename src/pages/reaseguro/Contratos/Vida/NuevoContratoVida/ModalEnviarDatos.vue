@@ -271,30 +271,30 @@ const intermediariosTablaCompleta = computed(() => {
 });
 
 const headersDatosContrato = [
-  { title: 'SUBRAMO', key: 'subRamo' }, { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'NEGOCIOS', key: 'negocioCubiertos' },
+  { title: 'SUBRAMO', key: 'subRamo' }, { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'NEGOCIOS', key: 'negocioCubiertos' },
   { title: 'INICIO', key: 'fechaInicioContrato' }, { title: 'FIN', key: 'fechaFinContrato' }, { title: 'MONEDA', key: 'cveMoneda' },
   { title: 'FORMA CONTRACTUAL', key: 'cveFContrac' }, { title: 'TIPO CONTRATO', key: 'idTContrato' }, { title: 'CRITERIO', key: 'criterioCobertura' },
-  { title: 'LÍMITE MÁX', key: 'limiteMaximoContrato' }, { title: 'RESPONSABILIDAD', key: 'limiteMaximoPorContrato' }, { title: 'TIPO REASEGURO', key: 'cveTReaseg' },
+  { title: 'LIMITE MAXIMO', key: 'limiteMaximoContrato' }, { title: 'LIMITE MAXIMO POR CONTRATO', key: 'limiteMaximoPorContrato' }, { title: 'TIPO REASEGURO', key: 'cveTReaseg' },
   { title: 'RETENCIÓN', key: 'montoRetencion' }, { title: 'PISO', key: 'piso' }, { title: 'TECHO', key: 'techo' }, { title: '% CESIÓN', key: 'porcentajeCesion' }
 ];
 
 const headersCapasResumen = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'DETALLE CAPA', key: 'detalleCapa' }, { title: 'RETENCIÓN', key: 'montoRetencionCapa' }, { title: 'TECHO', key: 'techoCapa' }
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'DETALLE CAPA', key: 'detalleCapa' }, { title: 'RETENCIÓN', key: 'montoRetencionCapa' }, { title: 'TECHO', key: 'techoCapa' }
 ];
 
 const headersPolizasResumen = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'LLAVE', key: 'llavePolRen' }, { title: 'PÓLIZA', key: 'numPoliza' }, { title: 'RENOVACIÓN', key: 'numRenovPol' }
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'LLAVE', key: 'llavePolRen' }, { title: 'PÓLIZA', key: 'numPoliza' }, { title: 'RENOVACIÓN', key: 'numRenovPol' }
 ];
 
 const headersReaseguradores = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'PARTICIPACIÓN', key: 'participacion' },
-  { title: 'COB. BÁSICA', key: 'indCesionBasica' }, { title: 'DISTR. CESIÓN', key: 'cveDistrCesion' }, { title: 'COMISIÓN', key: 'indComisionReaseguro' },
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'PARTICIPACIÓN', key: 'participacion' },
+  { title: '¿CESIÓN SOBRE LA COBERTURA BÁSICA?', key: 'indCesionBasica' }, { title: 'DISTRIBUCIÓN SOBRE LA CESIÓN', key: 'cveDistrCesion' }, { title: 'COMISIÓN', key: 'indComisionReaseguro' },
   { title: 'DETALLE COB.', key: 'indDetalleCobertura' }, { title: 'ASIGNACIÓN', key: 'cveAsignacion' }, { title: 'OTORGA PTU', key: 'otrogaPtu' },
   { title: 'MÉTODO PTU', key: 'cvePtu' }, { title: '% PTU', key: 'porcentajePtu' }, { title: '% K', key: 'porcentajeK' }, {title: '%Gastos', key: 'gastos'}, { title: 'AÑOS ARRASTRE', key: 'aniosArrastre' }
 ];
 
 const headersCoberturas = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'DETALLE CAPA', key: 'detalleCapa' },
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'DETALLE CAPA', key: 'detalleCapa' },
   { title: 'TIPO COBERTURA', key: 'descClasifCober' }, { title: 'CLAVE COB', key: 'cveCob' }, { title: 'COBERTURA', key: 'descCob' },
   { title: 'CVE AGRUPAR', key: 'cveAgrupCob' }, { title: 'AGRUPAR EN', key: 'descAgrupCob' }, { title: 'TIPO TARIFA', key: 'cveTarifa' },
   { title: 'PRIMA FIJA', key: 'primaTarifaFija' }, { title: '% SOBRE PRIMA', key: 'porSobrePrima' }, { title: 'TARIFA MILLAR', key: 'tarifaFija' },
@@ -302,17 +302,17 @@ const headersCoberturas = [
 ];
 
 const headersComisionContrato = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'TIPO COBERTURA', key: 'descClasifCober' },
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'TIPO COBERTURA', key: 'descClasifCober' },
   { title: '% 1ER AÑO', key: 'comisionPrimerAnioFijaProv' }, { title: '% RENOVACIÓN', key: 'comisionRenovacionFijaProv' }
 ];
 
 const headersComisionEscalonada = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'TIPO COBERTURA', key: 'desClasifCober' },
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: 'TIPO COBERTURA', key: 'desClasifCober' },
   { title: 'LÍMITE INF', key: 'limiteInf' }, { title: 'LÍMITE SUP', key: 'limiteSup' }, { title: 'COMISIÓN DEF.', key: 'comisionDefinitiva' }
 ];
 
 const headersIntermediarios = [
-  { title: 'ID CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: '¿INTERMEDIARIO?', key: 'indIntermediario' },
+  { title: 'IDENTIFICADOR DE CONTRATO', key: 'idContrato' }, { title: 'REASEGURADORA', key: 'cveReasegurador' }, { title: '¿INTERMEDIARIO?', key: 'indIntermediario' },
   { title: 'ASIGNACIÓN', key: 'cveCriterioAsig' }, { title: 'BROKER', key: 'cveIntermediario' }, { title: '¿CORRETAJE?', key: 'indCorretaje' },
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];

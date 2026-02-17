@@ -22,13 +22,13 @@
               variant="solo-filled"
               clearable
               required
-              @update:model-value="llenarCampos"
+              @update:modelValue="llenarCampos"
             />
           </v-col>
 
           <v-col cols="12" md="3">
             <!--Formato dd/mm/aaaa-->
-            <v-text-field
+            <v-date-input
               v-model="fechaInicio"
               label="Fecha inicio"
               variant="solo-filled"
@@ -37,7 +37,7 @@
           </v-col>
 
           <v-col cols="12" md="3">
-            <v-text-field
+            <v-date-input
               v-model="fechaFin"
               label="Fecha fin"
               variant="solo-filled"
@@ -89,22 +89,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { CalcularSiniestros, type IdContrato } from './Data/CalculoPrimasSiniestrosPtu.actions'
 import { ValidacionesCalculos } from './Data/Validaciones.actions'
+import { format, parseISO } from 'date-fns';
 
 const formRef = ref()
 
 const idContratoObj = ref<IdContrato | null>(null);
 
-const fechaInicio = ref<Date | null>(null)
+type NewType = Date;
+
+const fechaInicio = ref<NewType | null>(null)
 const fechaFin = ref<Date | null>(null)
-
-const normalizarFecha = (fecha: string | undefined | null): string => {
-  if (!fecha) return ''
-  return new Date(fecha).toISOString().split(' ')[0] ?? ''
-}
-
 
 const {
   idContratoOptions, fetchIdContratos,
@@ -115,18 +112,23 @@ onMounted(async () => {
     fetchIdContratos()
   ])
 })
-// no se estan llenando correctamente los campos de fecha inicio y fin
-const llenarCampos = (contrato: IdContrato) => {
-  if (contrato) {
-    // es que el formato de fecha en bd para ambos casos es asi: 2026-01-05 00:00:00.000,
-    // pero solo debe traer la primera parte y no los contadores de miles
-    fechaInicio.value = contrato.fechaInicioContrato;
-    fechaFin.value = contrato.fechaFinContrato;
+
+const normalizarFecha = (fecha: string | undefined | null): string => {
+    if (!fecha) return ''
+    return format(parseISO(fecha), 'dd/MM/yyyy');
+    //return new Date(fecha).toISOString().split('T')[0] ?? ''
+  }
+
+const llenarCampos = (contrato: IdContrato | null) => {
+  /*if (contrato) {
+    fechaInicio.value = normalizarFecha(contrato.fechaInicioContrato as unknown as string);
+    fechaFin.value = normalizarFecha(contrato.fechaFinContrato as unknown as string);
   } else {
     fechaInicio.value = null;
     fechaFin.value = null;
-  }
+  }*/
 };
+
 
 
 const headers = ref([

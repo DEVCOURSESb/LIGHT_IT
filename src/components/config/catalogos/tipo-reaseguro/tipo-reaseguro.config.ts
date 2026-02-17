@@ -14,11 +14,11 @@ export const tipoReaseguroConfig = {
   tableTitle: "Lista de tipos de reaseguro",
 
   headers: [
-    /* { title: "CLAVE", key: "cveTreaseg", sortable: true,
+    { title: "CLAVE", key: "cveTreaseg", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "TIPO REASEGURO", key: "descTreaseg", sortable: true,
       headerProps: {
         style: "font-weight: bold",
