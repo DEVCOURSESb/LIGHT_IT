@@ -6,7 +6,7 @@ export interface SelectOption<T = string | number> {
   value: T
 }
 
-interface Subramo {
+export interface Subramo {
   ramo: string
   subramo: string
   descOperacionRamos: string
@@ -93,6 +93,12 @@ export const NuevoContratoVida = () => {
     isPrivate: true
   });
 
+  const apiPolizasFacul = BaseAPI({
+    prefix: 'ws_reaseguro_contratos_vida/api/v1/PolizasFacuRest',
+    isBase: true,
+    isPrivate: true
+  });
+
   const fetchAllRecords = async () => {
     try {
       const response = await apiDatosContrato.post('getAllRecords');
@@ -170,6 +176,33 @@ export const NuevoContratoVida = () => {
     return data
   }
 
+  const fetchPolizasFacultativas = async (fi?: string, ff?: string) => {
+    try {
+      const response = await apiPolizasFacul.post('getAllRecords');
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener polizas:", error);
+      throw error;
+    }
+  };
+
+  const verificarPolizas = async (poliza: string, renovacion: number, idContratoActual?: number): Promise<boolean> => {
+    try {
+      const todosLosRegistros = await fetchPolizasFacultativas();
+
+      const existe = todosLosRegistros.some((reg: any) =>
+        reg.numPoliza === poliza &&
+        Number(reg.numRenovPol) === renovacion &&
+        reg.idContrato !== idContratoActual
+      );
+
+      return existe;
+    } catch (error) {
+      return false;
+    }
+  };
+
+
   return {
     subramoOptions,
     fetchSubramos,
@@ -185,7 +218,10 @@ export const NuevoContratoVida = () => {
     fetchCriterioCobertura,
     fetchEmisionContable,
     apiDatosContrato,
-    fetchAllRecords
+    fetchAllRecords,
+    apiPolizasFacul,
+    fetchPolizasFacultativas,
+    verificarPolizas,
   }
 
 }

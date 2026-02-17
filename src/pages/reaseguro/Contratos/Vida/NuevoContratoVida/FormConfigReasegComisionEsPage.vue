@@ -210,15 +210,6 @@ const alCambiarArchivo = (file: File | File[] | null) => {
 };
 
 const procesarArchivoCSV = (file: File) => {
-  if (!coberturaObj.value) {
-    dialog.show({
-      type: DialogType.ERROR,
-      message: 'Por favor, seleccione un Tipo de Cobertura antes de cargar el archivo.',
-      title: 'Validación'
-    });
-    cargarComisiones.value = null;
-    return;
-  }
 
   const reader = new FileReader();
   reader.onload = (e: ProgressEvent<FileReader>) => {
@@ -245,15 +236,11 @@ const procesarArchivoCSV = (file: File) => {
       });
       return;
     }
-    const coberturaActual = coberturaObj.value && typeof coberturaObj.value === 'object'
-        ? coberturaObj.value.title
-        : coberturaObj.value;
-
     const nuevosRegistros = lineas.slice(1).map(linea => {
       const col = linea.split(',').map(c => c.trim());
       return {
         cveReasegurador: col[idxReas] || 'N/A',
-        tipoCobertura: coberturaActual,
+        tipoCobertura: col[idxReas],
         limiteInf: parseFloat(col[idxInf] || '0'),
         limiteSup: parseFloat(col[idxSup] || '0'),
         comisionDefinitiva: parseFloat(col[idxCom] || '0')
@@ -289,19 +276,6 @@ const hidratarDesdeStore = () => {
     }));
   }
 }
-
-watch(coberturaObj, (nuevoValor) => {
-  if (nuevoValor && comisiones.value.length > 0) {
-    const nombreCobertura = typeof nuevoValor === 'object'
-      ? nuevoValor.title
-      : nuevoValor;
-
-    comisiones.value = comisiones.value.map(c => ({
-      ...c,
-      tipoCobertura: String(nombreCobertura)
-    }));
-  }
-});
 
 watch(
   () => contratoStore.configReasegCom,

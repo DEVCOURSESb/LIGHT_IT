@@ -13,11 +13,11 @@ export const estatusReciboConfig = {
   editModalTitle: "Editar estatus recibo",
   tableTitle: "Lista de estatus recibo",
   headers: [
-   /*  { title: "CLAVE", key: "cveEstatusRec", sortable: true,
+   { title: "CLAVE", key: "cveEstatusRec", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    },
+    },/*
     { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
         style: "font-weight: bold",

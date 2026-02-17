@@ -6,7 +6,7 @@ const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transfo
 
 export const ExtensionesConfig = {
   entity: "extensiones",
-  title: "Extensiones",
+  title: "Extensión de coberturas",
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nueva extensión",
@@ -14,11 +14,11 @@ export const ExtensionesConfig = {
   tableTitle: "Lista de extensiones",
 
   headers: [
-    /* { title: "CLAVE", key: "cveExtCober", sortable: true,
+    { title: "CLAVE", key: "cveExtCober", sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
-    }, */
+    },
     { title: "EXTENSIÓN DE LA COBERTURA", key: "descExtCober", sortable: true,
       headerProps: {
         style: "font-weight: bold",

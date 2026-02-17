@@ -21,6 +21,7 @@
             color="indigo"
             hide-details
           />
+          <v-tooltip activator="parent" location="top" max-width="350">Seleccione en caso de requerir capturar más de un intermediario por reaseguradora o contrato</v-tooltip>
         </v-col>
 
         <v-col cols="12" md="4">
@@ -107,16 +108,16 @@
         <v-col cols="12" md="4" v-if="getID(tipoCorretajeObj) == 0">
           <v-text-field v-model.number="montoCorretaje" label="Monto corretaje" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
         </v-col>
-        <v-row class="d-flex justify-center align-center">
-          <v-col cols="12" md="1" class="d-flex justify-center" :order="4">
-            <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
-              <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
-              <v-tooltip activator="parent" location="top">
-                {{ indexEdicion !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
-              </v-tooltip>
-            </v-btn>
-          </v-col>
-        </v-row>
+      </v-row>
+      <v-row class="d-flex justify-center align-center">
+        <v-col cols="12" md="1" class="d-flex justify-center" :order="4">
+          <v-btn icon color="indigo" size="small" :disabled="getID(intermediarioObj) != 1" @click="agregarIntermediario">
+            <v-icon>{{ indexEdicion !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ indexEdicion !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
+          </v-btn>
+        </v-col>
       </v-row>
 
       <v-divider class="my-6" />
@@ -168,7 +169,7 @@ const intermediarioObj = ref<any>(0)
 const asignacionIntermObj = ref<any>(null)
 const reaseguradoraObj = ref<any>(null)
 const brokerObj = ref<any>(null)
-const corretajePObj = ref<any>(null)
+const corretajePObj = ref<any>(0)
 const tipoCorretajeObj = ref<any>(null)
 const corretajePorc = ref<number>(0)
 const montoCorretaje = ref<number | null>(null)

@@ -91,7 +91,7 @@
             v-model="detalleCoberturaObj"
             :items="siNoOptions"
             label="¿Detalle por cobertura?"
-            :disabled="getID(comisionReasegObj) !== 1"
+            :disabled="getID(comisionReasegObj) !== 1 || getID(cesionCoberBasiObj) !== 0"
             item-title="title"
             chips
             return-object

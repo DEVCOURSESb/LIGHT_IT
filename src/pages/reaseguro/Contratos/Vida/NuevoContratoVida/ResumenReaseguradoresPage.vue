@@ -73,35 +73,11 @@
               <div class="text-subtitle-1 blue--text font-weight-bold">Detalle de Coberturas y Tarifas</div>
               <v-divider class="mb-2"></v-divider>
               <v-data-table
-                v-if="item.coberturas && item.coberturas.agrupaciones.length > 0"
-                :headers="[
-                  { title: 'Coberturas', key: 'listaCoberturas' },
-                  { title: 'Agrupar en:', key: 'madre.title' },
-                ]"
-                :items="item.coberturas.agrupaciones"
-                density="compact"
-                class="elevation-0 border"
-                hide-default-footer
-              >
-                <template #item.listaCoberturas="{ item: agrupacion }">
-                  <span>
-                    {{ agrupacion.coberturas.map((c) => c.title).join(', ') }}
-                  </span>
-                </template>
-
-                <template #item.madre.title="{ item: agrupacion }">
-                  <span>
-                    {{ agrupacion.madre?.title }}
-                  </span>
-                </template>
-              </v-data-table>
-
-              <br>
-              <v-data-table
                 v-if="item.coberturas && item.coberturas.tarifas.length > 0"
                 :headers="[
                   { title: 'Capa', key: 'detalleCapa' },
                   { title: 'Cobertura', key: 'cobertura' },
+                  { title: 'Tipo de cobertura', key: 'tipoCobertura'},
                   { title: 'Tipo Tarifa', key: 'tipoTarifa.title' },
                   { title: 'Prima tarifa', key: 'primaTarifa'},
                   { title: '% Por sobre prima', key: 'porSobrePrima' },
@@ -114,16 +90,45 @@
                 class="elevation-0 border"
               >
                 <template #item.valor="{ item: tarifa }">
-                  <span v-if="tarifa.tipoTarifa === 0">$ {{ tarifa.primaTarifa }}</span>
+                  <span v-if="tarifa.tipoTarifa === 0">{{ tarifa.primaTarifa }}</span>
                   <span v-else-if="tarifa.tipoTarifa === 1">{{ tarifa.porSobrePrima }}%</span>
                   <span v-else-if="tarifa.tipoTarifa === 3">{{ tarifa.tarifaFijaM }} (Millar)</span>
                   <span v-else-if="tarifa.tipoTarifa === 2">{{ tarifa.factorTap }}% (Propia)</span>
                   <span v-else-if="tarifa.tipoTarifa === 4">{{ tarifa.tarifaP }} (Millar)</span>
                 </template>
               </v-data-table>
-
               <v-alert v-else type="info" variant="tonal" density="compact">
                 No hay detalle de tarifas específicas para esta reaseguradora.
+              </v-alert>
+              </v-col>
+              <v-col cols="12" class="mt-1">
+                <div class="text-subtitle-2 blue--text font-weight-bold">Agrupación de coberturas</div>
+                <v-divider class="mb-2"></v-divider>
+                <v-data-table
+                  v-if="item.coberturas && item.coberturas.agrupaciones.length > 0"
+                  :headers="[
+                    { title: 'Coberturas', key: 'listaCoberturas' },
+                    { title: 'Agrupar en:', key: 'madre.title' },
+                  ]"
+                  :items="item.coberturas.agrupaciones"
+                  density="compact"
+                  class="elevation-0 border"
+                  hide-default-footer
+                >
+                  <template #item.listaCoberturas="{ item: agrupacion }">
+                    <span>
+                      {{ agrupacion.coberturas.map((c) => c.title).join(', ') }}
+                    </span>
+                  </template>
+
+                  <template #item.madre.title="{ item: agrupacion }">
+                    <span>
+                      {{ agrupacion.madre?.title }}
+                    </span>
+                  </template>
+                </v-data-table>
+              <v-alert v-else type="info" variant="tonal" density="compact">
+                No hay agrupación de coberturas para esta reaseguradora.
               </v-alert>
             </v-col>
 
@@ -149,7 +154,7 @@
               </v-data-table>
 
               <v-alert v-else type="info" variant="tonal" density="compact">
-                No se definieron comisiones escalonadas (aplica comisión fija de la configuración general).
+                No se definieron comisiones escalonadas (aplica comisión escalonada de la configuración general).
               </v-alert>
             </v-col>
 

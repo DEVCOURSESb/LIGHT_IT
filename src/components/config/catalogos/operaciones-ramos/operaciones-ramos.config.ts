@@ -6,7 +6,7 @@ const { minMaxString, validateBoolean, fillString, transformBooleanToNumber, tra
 
 export const operacionesRamosConfig = {
   entity: "operaciones-ramos",
-  title: "Operaciones y Ramos",
+  title: "Operación y Ramos",
   searchPlaceholder: "",
   addButtonText: "",
   modalTitle: "Agregar nuevo operación ramo",

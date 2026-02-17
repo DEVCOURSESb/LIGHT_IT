@@ -9,7 +9,7 @@
     <v-spacer class="mb-4" />
     <br />
     <div>
-      <v-expansion-panels>
+      <v-expansion-panels class="panel">
         <v-expansion-panel>
           <v-expansion-panel-title>
             <template #default="">
@@ -25,7 +25,9 @@
           </v-expansion-panel-text>
         </v-expansion-panel>
 
-        <v-expansion-panel>
+        <v-expansion-panel
+          @click="revisarExistenciaContrato"
+          :disabled="deshabilitarReasegurador">
           <v-expansion-panel-title>
             <template #default="">
               <v-row no-gutters>
@@ -74,6 +76,34 @@ import { DialogType, useDialog } from "@/stores/dialogStore";
 const contratoStore = useContratoStore();
 const dialog = useDialog();
 const disabledIntermediario = ref(true);
+const deshabilitarReasegurador = ref(true);
+
+const revisarExistenciaContrato = () => {
+  const datosContratos = contratoStore.general?.idContrato;
+
+  const polizasFacultativas = contratoStore.poli?.polizas;
+
+  if (!datosContratos) {
+    dialog.show({
+      type: DialogType.ERROR,
+      title: "Advertencia",
+      message:
+        "No se encontro algun contrato configurado en el apartado de Datos.",
+    });
+    // aqui esta bien y mal pues aunque el contrato no sea Facultativo este sigue esperando para tener datos en el store, y si desbloquea el segundo panel pero aparece el mensaje de error
+  } else if (!polizasFacultativas) {
+    dialog.show({
+      type: DialogType.ERROR,
+      title: "Advertencia",
+      message:
+        "No se agregaron datos en el apartado de polizas facultativas.",
+    });
+  }
+
+  deshabilitarReasegurador.value = !datosContratos;
+  // aqui si se comprueba que si existen datos en el store lo habilite en automatico y abra el segundo panel de expansion
+  // esto es lo que esta en ese tab en el archivo FormConfiguracionReaseguradores
+};
 
 const checkParticipationReaseg = () => {
   const isFullParticipation = contratoStore.totalParticipacion >= 100;
@@ -89,4 +119,6 @@ const checkParticipationReaseg = () => {
 
   disabledIntermediario.value = !isFullParticipation;
 };
+
+
 </script>
