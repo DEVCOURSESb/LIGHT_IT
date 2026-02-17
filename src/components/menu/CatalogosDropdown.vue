@@ -63,5 +63,9 @@ const listItems = [
   { name: "tipo_endoso", title: "Tipo de endoso" },
   { name: "tipo_reaseguro", title: "Tipo de reaseguro" },
   { name: "tipo_tarifa", title: "Tipo de tarifa" },
+  { name: "rr6_sector", title: "RR6 Selector"},
+  { name: "coberturas_aye", title: "Coberturas AYE"},
+  { name: "lim_corretaje", title: "Límite corretaje"},
+  { name: "calculo_comision", title: "Cálculo comisión"},
 ];
 </script>
