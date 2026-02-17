@@ -160,5 +160,29 @@ export const catalogosRoutes = {
       component: () => import("@/pages/catalogos/CriteriosCoberturaPage.vue"),
       meta: { title: "Criterio cobertura" },
     },
+    {
+      path: "rr6_sector",
+      name: "rr6_sector",
+      component: () => import("@/pages/catalogos/Rr6SectorPage.vue"),
+      meta: { title: "RR6 Sector" },
+    },
+    {
+      path: "coberturas_aye",
+      name: "coberturas_aye",
+      component: () => import("@/pages/catalogos/CoberturasAyePage.vue"),
+      meta: { title: "Coberturas AYE" },
+    },
+    {
+      path: "lim_corretaje",
+      name: "lim_corretaje",
+      component: () => import("@/pages/catalogos/LimCorretajePage.vue"),
+      meta: { title: "Límite Corretaje" },
+    },
+    {
+      path: "calculo_comision",
+      name: "calculo_comision",
+      component: () => import("@/pages/catalogos/CalculoComisionPage.vue"),
+      meta: { title: "Cálculo de comisión" },
+    },
   ],
 };

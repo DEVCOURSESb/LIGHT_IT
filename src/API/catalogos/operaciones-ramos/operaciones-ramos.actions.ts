@@ -14,6 +14,18 @@ export const OperacionesRamosActions = () => {
     }
   };
 
+  const fetchOperacionesRamosFiltered = async () => {
+    try {
+      const data = await fetchOperacionesRamos();
+  
+      return data
+            .filter((row) => row.cveExtCober === "2" && row.ramo === "010")
+            .map(({ descOperacionRamos, cveCobertura }) => ({ descOperacionRamos, cveCobertura }));
+    } catch (error) {
+      return [];
+    }
+  }
+
   const createOperacionRamo = async (data: Partial<OperacionRamo>): Promise<OperacionRamo[]> => {
     try {
       const response = await baseAPI.post<OperacionRamo[]>("insertRecord", data);
@@ -46,6 +58,7 @@ export const OperacionesRamosActions = () => {
 
   return {
     fetchOperacionesRamos,
+    fetchOperacionesRamosFiltered,
     createOperacionRamo,
     updateOperacionRamo,
     deleteOperacionRamo,

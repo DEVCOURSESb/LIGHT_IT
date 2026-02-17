@@ -1,7 +1,5 @@
 import { AuthStore } from '@/stores/authStore';
-import { DialogType, useDialog } from '@/stores/dialogStore';
 import axios, { type AxiosInstance } from 'axios'
-import router from '@/router';
 
 interface BaseAPIOptions {
   isBase?: boolean
@@ -18,7 +16,6 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
   })
 
   const authStore = AuthStore();
-  const dialog = useDialog();
 
   if (isPrivate) {
     instance.interceptors.request.use(
@@ -48,29 +45,12 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
         return response;
       },
       async error => {
-      console.log(error)
-      if (error.code === 'ERR_NETWORK') {
-
-        const { useAuth } = await import('@/composables/auth/useAuth');
-
-        const auth = useAuth();
-
-        await auth.logout();
-
-        dialog.show({
-          title: 'Sesión expirada',
-          message: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-          type: DialogType.ERROR,
-        });
-
-        setTimeout(() => {
-          dialog.cerrar();
-          router.replace({ path: "/" });
-        }, 800);
-        // aqui se debe verificar que el store quede limpio es
-        // decir que se eliminen el email y token una vez la cesión es cerrada
-      }
-      return Promise.reject(error)
+        console.log(error);        
+        if (error.code === 'ERR_NETWORK') {
+          const { SessionManager } = await import('@/utils/sessionManager');
+          await SessionManager.handleSessionExpiration();
+        }
+        return Promise.reject(error);
       },
     )
   }

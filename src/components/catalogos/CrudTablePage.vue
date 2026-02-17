@@ -23,7 +23,7 @@
         <v-col cols="4" class="d-flex justify-end align-top gap-2">
           <ModalComponent
             :is-active="activeModal"
-            :text-button="config?.addButtonText || 'Agregar'"
+            :text-button="config?.addButtonText || 'Registro individual'"
             :title="
               editingId
                 ? config.editModalTitle || config.modalTitle
@@ -115,7 +115,7 @@
 
       <v-data-table
         class="mt-4"
-        :headers="config.headers"
+        :headers="visibleHeaders"
         :items="items"
         :loading="loading"
         :search="search"
@@ -212,6 +212,11 @@ const {
 
 const visibleFields = computed(() =>
   props.config.fields.filter((field) => !field.hidden)
+);
+
+// Computed para filtrar headers visibles
+const visibleHeaders = computed(() =>
+  props.config.headers.filter((header) => !header.hidden)
 );
 
 // Helper para obtener valor del campo con transformación

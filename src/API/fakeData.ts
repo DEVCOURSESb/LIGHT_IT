@@ -25,6 +25,10 @@ import type { Estatus } from "./catalogos/estatus/estatus.interfaces";
 import type { Fumador } from "./catalogos/fumador/fumador.interfaces";
 import type { EntidadFederativa } from "./catalogos/entidad-federativa/entidad_federativa.interfaces";
 import type { CriterioCobertura } from "./catalogos/criterio_cobertura/criterio_cobertura.interfaces";
+import type { Rr6Sector } from "./catalogos/rr6_sector/rr6_sector.interfaces";
+import type { coberturasAye } from "./catalogos/coberturas_aye/coberturas_aye.interfaces";
+import type { LimCorretaje } from "./catalogos/lim_corretaje/lim_corretaje.interfaces";
+import type { CalculoComision } from "./catalogos/calculo_comision/calculo_comision.interfaces";
 
 export const fakeData = () => {
   const dataIntermediarios: Intermediario[] = [
@@ -22765,6 +22769,338 @@ export const fakeData = () => {
     },
   ];
 
+  const dataRR6Sector: Rr6Sector[] = [
+    {
+      id: 1,
+      cveSector: "1",
+      descSector: "FEDERAL",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:29:51.957",
+    },
+    {
+      id: 2,
+      cveSector: "2",
+      descSector: "ESTATAL",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:29:51.957",
+    },
+    {
+      id: 3,
+      cveSector: "3",
+      descSector: "MUNICIPAL",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:29:51.957",
+    },
+    {
+      id: 4,
+      cveSector: "4",
+      descSector: "PRIVADO",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:29:51.957",
+    },
+  ];
+
+  const dataCoberturasAye: coberturasAye[] = [
+    {
+      id: 1,
+      cveCobaye: 0,
+      descCobaye: "MUERTE ACCIDENTAL",
+      tCob: 769,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 2,
+      cveCobaye: 1,
+      descCobaye: "REEMBOLSO DE GASTOS MÉDICOS",
+      tCob: 877,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 3,
+      cveCobaye: 2,
+      descCobaye: "PÉRDIDAS ORGÁNICAS",
+      tCob: 1080,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 4,
+      cveCobaye: 3,
+      descCobaye: "GASTOS FUNERARIOS",
+      tCob: 1097,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 5,
+      cveCobaye: 4,
+      descCobaye: "INDEMNIZACIÓN DIARIA",
+      tCob: 1064,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 6,
+      cveCobaye: 5,
+      descCobaye: "MUERTE ACCIDENTAL COLECTIVA",
+      tCob: 975,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 7,
+      cveCobaye: 6,
+      descCobaye: 'PÉRDIDAS ORGÁNICAS COLECTIVO ESCALA "B"',
+      tCob: 1127,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 8,
+      cveCobaye: 7,
+      descCobaye: "CIRUGÍA ESTÉTICA REPARADORA",
+      tCob: 1168,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 9,
+      cveCobaye: 8,
+      descCobaye: "MUERTE VICTIMAS LATINO",
+      tCob: 1179,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 10,
+      cveCobaye: 9,
+      descCobaye: "PÉRDIDAS ORGÁNICAS VICTIVAS LATINO",
+      tCob: 1182,
+      cveCobertura: "331",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 11,
+      cveCobaye: 10,
+      descCobaye: "COBERTURA BÁSICA DE GASTOS MÉDICOS",
+      tCob: 1034,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 12,
+      cveCobaye: 11,
+      descCobaye: "AMPLIACIÓN EN EL EXTRANJERO",
+      tCob: 1035,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 13,
+      cveCobaye: 12,
+      descCobaye: "REINSTALACIÓN AUTOMÁTICA DE SUMA ASEGURADA BÁSICA",
+      tCob: 1058,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 14,
+      cveCobaye: 13,
+      descCobaye: "PARTICIPACIÓN MÍNIMA POR HOSPITALIZACIÓN",
+      tCob: 1062,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 15,
+      cveCobaye: 14,
+      descCobaye: "ASISTENCIA MÉDICA",
+      tCob: 1228,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 16,
+      cveCobaye: 15,
+      descCobaye: "ASISTENCIA MÉDICA CONT",
+      tCob: 1261,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 17,
+      cveCobaye: 16,
+      descCobaye: "GMM EN EXCESO",
+      tCob: 1266,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 18,
+      cveCobaye: 17,
+      descCobaye: "ASISTENCIA DENTAL",
+      tCob: 1270,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 19,
+      cveCobaye: 18,
+      descCobaye: "ASISTENCIA VISIÓN",
+      tCob: 1271,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 20,
+      cveCobaye: 19,
+      descCobaye: "ELIMINACION DEDUCIBLE POR ACCIDENTE",
+      tCob: 1263,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 21,
+      cveCobaye: 20,
+      descCobaye: "ASISTENCIA DENTAL Y VISIÓN",
+      tCob: 1267,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 22,
+      cveCobaye: 21,
+      descCobaye: "ASISTENCIA DENTAL UPGRADE",
+      tCob: 1268,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+    {
+      id: 23,
+      cveCobaye: 22,
+      descCobaye: "ELIMINACIÓN DE DEDUCIBLE Y COASEGURO POR ACCIDENTE",
+      tCob: 1272,
+      cveCobertura: "332",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:43:34.247",
+    },
+  ];
+
+  const dataLimiteCorretaje: LimCorretaje[] = [
+    {
+      id: 1,
+      cveLimcorretaje: 0,
+      limiteCorretaje:
+        "%PTU (PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 2,
+      cveLimcorretaje: 1,
+      limiteCorretaje: "%PTU (PRIMA CEDIDA - SINIESTROS RECUPERADOS)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 3,
+      cveLimcorretaje: 2,
+      limiteCorretaje: "%PTU (K * PRIMA CEDIDA - SINIESTROS RECUPERADOS)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 4,
+      cveLimcorretaje: 3,
+      limiteCorretaje:
+        "%PTU (PRIMA CEDIDA - COMISIÓN DE REASEGURO - SINIESTROS RECUPERADOS - ARRASTRE)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 5,
+      cveLimcorretaje: 4,
+      limiteCorretaje: "OTRA",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 6,
+      cveLimcorretaje: 5,
+      limiteCorretaje:
+        "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 7,
+      cveLimcorretaje: 6,
+      limiteCorretaje:
+        "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - COMISIÓN DE REASEGURO - SINIESTROS RECUPERADOS - ARRASTRE)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+    {
+      id: 8,
+      cveLimcorretaje: 7,
+      limiteCorretaje:
+        "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE HASTA EXTINCIÓN)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:49:19.037",
+    },
+  ];
+
+  const dataCalculoComision: CalculoComision[] = [
+    {
+      id: 1,
+      cveCalcomis: 0,
+      formulaComision:
+        "MINIMO(MAXIMO(90%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:54:20.647",
+    },
+    {
+      id: 2,
+      cveCalcomis: 1,
+      formulaComision:
+        "MINIMO(MAXIMO(95%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:54:20.647",
+    },
+    {
+      id: 3,
+      cveCalcomis: 2,
+      formulaComision:
+        "MINIMO(MAXIMO(92.5%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
+      esActivo: true,
+      fechaRegistro: "2026-02-03 10:54:20.647",
+    },
+  ];
+
   return {
     dataIntermediarios,
     dataReaseguradores,
@@ -22793,5 +23129,9 @@ export const fakeData = () => {
     dataFumador,
     dataEntidadFederativa,
     dataCriterioCobertura,
+    dataRR6Sector,
+    dataCoberturasAye,
+    dataLimiteCorretaje,
+    dataCalculoComision,
   };
 };

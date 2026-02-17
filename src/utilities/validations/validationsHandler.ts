@@ -10,7 +10,8 @@ export const validationsHandler = () => {
       .reduce((acc, value) => acc + value);
   };
 
-  const minMaxString = ( value: string, minLength: number, maxLength: number): boolean => {
+  const minMaxString = ( value: string | undefined | null, minLength: number, maxLength: number): boolean => {
+    if (!value) return false;
     const valueTrim = value.trim();
     return valueTrim.length >= minLength && valueTrim.length <= maxLength;
   }
@@ -35,6 +36,23 @@ export const validationsHandler = () => {
     return value.trim().toUpperCase();
   }
 
+  const allowUnderscore = ( value: string ): boolean => {
+    const regex = /^[A-Za-z0-9_]+$/;
+    return regex.test(value);
+  }
+
+  const noSpecialCharacters = ( value: string ): boolean => {
+    const regex = /^[A-Za-z0-9]+$/;
+    return regex.test(value);
+  }
+
+  const isValidDate = ( value: Date | null | undefined ): boolean => {
+    if (!value) return false;
+    
+    // check if date is valid in format DD/MM/YYYY
+    return value instanceof Date && !isNaN(value.getTime());
+  }
+
   return {
     fillString,
     minMaxString,
@@ -43,5 +61,8 @@ export const validationsHandler = () => {
     transformBooleanToNumber,
     transformNumberToBoolean,
     transformToUpperCase,
+    allowUnderscore,
+    noSpecialCharacters,
+    isValidDate,
   };
-};
+}
