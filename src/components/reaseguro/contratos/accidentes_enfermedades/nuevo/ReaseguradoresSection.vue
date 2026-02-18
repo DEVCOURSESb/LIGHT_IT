@@ -28,8 +28,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="participacion"
-                @update:model-value="onInput"
-                @blur="onBlur"
+                @update:model-value="onInputGeneric('participacion', $event)"
+                @blur="onBlurGeneric('participacion')"
                 :error-messages="showErrors ? formErrors['participacion'] : undefined"
               />
               <v-slider
@@ -65,8 +65,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="porcentajePtu"
-                @update:model-value="onInputPorcentajePtu"
-                @blur="onBlurPorcentajePtu"
+                @update:model-value="onInputGeneric('porcentajePtu', $event)"
+                @blur="onBlurGeneric('porcentajePtu')"
                 :error-messages="showErrors ? formErrors['porcentajePtu'] : undefined"
               />
               <v-slider
@@ -102,8 +102,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="porcentajeK"
-                @update:model-value="onInputPorcentajeK"
-                @blur="onBlurPorcentajeK"
+                @update:model-value="onInputGeneric('porcentajeK', $event)"
+                @blur="onBlurGeneric('porcentajeK')"
                 :error-messages="showErrors ? formErrors['porcentajeK'] : undefined"
               />
             </v-col>
@@ -115,8 +115,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="gastos"
-                @update:model-value="onInputGastos"
-                @blur="onBlurGastos"
+                @update:model-value="onInputGeneric('gastos', $event)"
+                @blur="onBlurGeneric('gastos')"
                 :error-messages="showErrors ? formErrors['gastos'] : undefined"
               />
             </v-col>
@@ -191,8 +191,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="comisRolFija"
-                @update:model-value="onInputComisRolFija"
-                @blur="onBlurComisRolFija"
+                @update:model-value="onInputGeneric('comisRolFija', $event)"
+                @blur="onBlurGeneric('comisRolFija')"
                 :error-messages="showErrors ? formErrors['comisRolFija'] : undefined"
               />
               <v-slider
@@ -212,8 +212,8 @@
                variant="solo-filled"
                type="text"
                :model-value="comisRolProvisional"
-               @update:model-value="onInputComisRolProvisional"
-               @blur="onBlurcomisRolProvisional"
+               @update:model-value="onInputGeneric('comisRolProvisional', $event)"
+               @blur="onBlurGeneric('comisRolProvisional')"
                :error-messages="showErrors ? formErrors['comisRolProvisional'] : undefined"
              />
              <v-slider
@@ -234,8 +234,8 @@
                variant="solo-filled"
                type="text"
                :model-value="comisRolMin"
-               @update:model-value="onInputComisRolMin"
-               @blur="onBlurComisRolMin"
+               @update:model-value="onInputGeneric('comisRolMin', $event)"
+               @blur="onBlurGeneric('comisRolMin')"
                :error-messages="showErrors ? formErrors['comisRolMin'] : undefined"
              />
              <v-slider
@@ -255,8 +255,8 @@
                variant="solo-filled"
                type="text"
                :model-value="comisRolMax"
-               @update:model-value="onInputComisRolMax"
-               @blur="onBlurComisRolMax"
+               @update:model-value="onInputGeneric('comisRolMax', $event)"
+               @blur="onBlurGeneric('comisRolMax')"
                :error-messages="showErrors ? formErrors['comisRolMax'] : undefined"
              />
              <v-slider
@@ -293,8 +293,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="prioridad"
-                @update:model-value="onInputPrioridad"
-                @blur="onBlurPrioridad"
+                @update:model-value="onInputGeneric('prioridad', $event)"
+                @blur="onBlurGeneric('prioridad')"
                 :error-messages="showErrors ? formErrors['prioridad'] : undefined"
               />
             </v-col>
@@ -306,8 +306,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="limResponsabilidad"
-                @update:model-value="onInputLimResponsabilidad"
-                @blur="onBlurLimResponsabilidad"
+                @update:model-value="onInputGeneric('limResponsabilidad', $event)"
+                @blur="onBlurGeneric('limResponsabilidad')"
                 :error-messages="showErrors ? formErrors['limResponsabilidad'] : undefined"
               />
             </v-col>
@@ -319,8 +319,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="limAgregado"
-                @update:model-value="onInputLimAgregado"
-                @blur="onBlurLimAgregado"
+                @update:model-value="onInputGeneric('limAgregado', $event)"
+                @blur="onBlurGeneric('limAgregado')"
                 :error-messages="showErrors ? formErrors['limAgregado'] : undefined"
               />
             </v-col>
@@ -367,8 +367,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="costoFijo"
-                @update:model-value="onInputCostoFijo"
-                @blur="onBlurCostoFijo"
+                @update:model-value="onInputGeneric('costoFijo', $event)"
+                @blur="onBlurGeneric('costoFijo')"
                 :error-messages="showErrors ? formErrors['costoFijo'] : undefined"
               />
             </v-col>
@@ -380,8 +380,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="pmd"
-                @update:model-value="onInputPmd"
-                @blur="onBlurPmd"
+                @update:model-value="onInputGeneric('pmd', $event)"
+                @blur="onBlurGeneric('pmd')"
                 :error-messages="showErrors ? formErrors['pmd'] : undefined"
               />
             </v-col>
@@ -393,8 +393,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="primaMin"
-                @update:model-value="onInputPrimaMin"
-                @blur="onBlurPrimaMin"
+                @update:model-value="onInputGeneric('primaMin', $event)"
+                @blur="onBlurGeneric('primaMin')"
                 :error-messages="showErrors ? formErrors['primaMin'] : undefined"
               />
             </v-col>
@@ -409,8 +409,8 @@
                 variant="solo-filled"
                 type="text"
                 :model-value="primaMax"
-                @update:model-value="onInputPrimaMax"
-                @blur="onBlurPrimaMax"
+                @update:model-value="onInputGeneric('primaMax', $event)"
+                @blur="onBlurGeneric('primaMax')"
                 :error-messages="showErrors ? formErrors['primaMax'] : undefined"
               />
             </v-col>
@@ -424,7 +424,8 @@
                 min="0"
                 max="99999"
                 :model-value="formData['facAjusteDividendo']"
-                @update:model-value="setFieldValue('facAjusteDividendo', $event)"
+                @update:model-value="onInputGeneric('facAjusteDividendo', $event)"
+                @blur="onBlurGeneric('facAjusteDividendo')"
                 :error-messages="showErrors ? formErrors['facAjusteDividendo'] : undefined"
               />
             </v-col>
@@ -438,7 +439,8 @@
                 min="0"
                 max="99999"
                 :model-value="formData['facAjusteDivisor']"
-                @update:model-value="setFieldValue('facAjusteDivisor', $event)"
+                @update:model-value="onInputGeneric('facAjusteDivisor', $event)"
+                @blur="onBlurGeneric('facAjusteDivisor')"
                 :error-messages="showErrors ? formErrors['facAjusteDivisor'] : undefined"
               />
             </v-col>
@@ -453,8 +455,8 @@
                 max="100.00"
                 step=".01"
                 :model-value="noClaims"
-                @update:model-value="onInputNoClaims"
-                @blur="onBlurNoClaims"
+                @update:model-value="onInputGeneric('noClaims', $event)"
+                @blur="onBlurGeneric('noClaims')"
                 :error-messages="showErrors ? formErrors['noClaims'] : undefined"
               />
             </v-col>
@@ -521,53 +523,23 @@ const {
   formErrors,
   showErrors,
   handleSubmit,
-  onInput,
-  onBlur,
+  onInputGeneric,
+  onBlurGeneric,
   isTypeProporcional,
   porcentajePtu,
-  onInputPorcentajePtu,
-  onBlurPorcentajePtu,
   porcentajeK,
-  onInputPorcentajeK,
-  onBlurPorcentajeK,
   gastos,
-  onInputGastos,
-  onBlurGastos,
   comisRolFija,
-  onInputComisRolFija,
-  onBlurComisRolFija,
   comisRolProvisional,
-  onInputComisRolProvisional,
-  onBlurcomisRolProvisional,
   comisRolMin,
-  onInputComisRolMin,
-  onBlurComisRolMin,
   comisRolMax,
-  onInputComisRolMax,
-  onBlurComisRolMax,
   prioridad,
-  onInputPrioridad,
-  onBlurPrioridad,
   limResponsabilidad,
-  onInputLimResponsabilidad,
-  onBlurLimResponsabilidad,
   limAgregado,
-  onInputLimAgregado,
-  onBlurLimAgregado,
   costoFijo, 
-  onInputCostoFijo,
-  onBlurCostoFijo,
   pmd,
-  onInputPmd,
-  onBlurPmd,
   primaMin,
-  onInputPrimaMin,
-  onBlurPrimaMin,
   primaMax,
-  onInputPrimaMax,
-  onBlurPrimaMax,
   noClaims,
-  onInputNoClaims,
-  onBlurNoClaims,
 } = useReaseguradoresSection();
 </script>
