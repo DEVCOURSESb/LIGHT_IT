@@ -260,7 +260,7 @@
                 variant="solo-filled"
                 clearable
                 multiple
-                :disabled="queryOperacionesRamos.isLoading.value || !formData['cveExtCober']"
+                :disabled="queryOperacionesRamos.isLoading.value || formData['cveExtCober'] == null"
                 :model-value="formData['cveCobertura']"
                 @update:model-value="setFieldValue('cveCobertura', $event)"
               />

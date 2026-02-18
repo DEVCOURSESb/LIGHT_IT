@@ -17,9 +17,7 @@
                 clearable
                 :model-value="formData['cveReasegurador']"
                 @update:model-value="setFieldValue('cveReasegurador', $event)"
-                :error-messages="
-                  showErrors ? formErrors['cveReasegurador'] : undefined
-                "
+                :error-messages="showErrors ? formErrors['cveReasegurador'] : undefined"
               />
             </v-col>
 
@@ -32,14 +30,20 @@
                 :model-value="participacion"
                 @update:model-value="onInput"
                 @blur="onBlur"
-                :error-messages="
-                  showErrors ? formErrors['participacion'] : undefined
-                "
+                :error-messages="showErrors ? formErrors['participacion'] : undefined"
+              />
+              <v-slider
+                v-model="participacion"
+                min="0.00"
+                max="100.00"
+                step=".01"
+                thumb-label
+                color="primary"
               />
             </v-col>
 
-            <!-- ¿OTORGA PTU? -->
-            <v-col cols="12" md="3">
+            <!-- ¿OTORGA PTU?  si es proporcional el contrato-->
+            <v-col cols="12" md="3" v-if="isTypeProporcional">
               <v-select
                 :items="['SÍ', 'NO']"
                 item-title=""
@@ -48,232 +52,399 @@
                 label="¿Otorga PTU?"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['otorgaPtu']"
+                @update:model-value="setFieldValue('otorgaPtu', $event)"
+                :error-messages="showErrors ? formErrors['otorgaPtu'] : undefined"
+              />
+            </v-col>
+
+            <!-- PORCENTAJE PTU si otorga ptu -->
+            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 'SÍ'">
+              <v-text-field
+                label="% PTU"
+                variant="solo-filled"
+                type="text"
+                :model-value="porcentajePtu"
+                @update:model-value="onInputPorcentajePtu"
+                @blur="onBlurPorcentajePtu"
+                :error-messages="showErrors ? formErrors['porcentajePtu'] : undefined"
+              />
+              <v-slider
+                v-model="porcentajePtu"
+                min="0.00"
+                max="100.00"
+                step=".01"
+                thumb-label
+                color="primary"
+              />
+            </v-col>
+
+             <!-- FÓRMULA CÁLCULO PTU si otorga ptu-->
+            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 'SÍ'">
+              <v-select
+                :items="queryPtu.data.value || []"
+                item-title="formulaPtu"
+                item-value="cvePtu"
+                :disabled="false"
+                label="Fórmula cálculo PTU"
+                variant="solo-filled"
+                clearable
+                :model-value="formData['formulaPtu']"
+                @update:model-value="setFieldValue('formulaPtu', $event)"
+                :error-messages="showErrors ? formErrors['formulaPtu'] : undefined"
+              />
+            </v-col>
+            
+            <!-- PORCENTAJE K si la formula de ptu es 2-->
+            <v-col cols="12" md="3" v-if="formData['formulaPtu'] == 2">
+              <v-text-field
+                label="% K"
+                variant="solo-filled"
+                type="text"
+                :model-value="porcentajeK"
+                @update:model-value="onInputPorcentajeK"
+                @blur="onBlurPorcentajeK"
+                :error-messages="showErrors ? formErrors['porcentajeK'] : undefined"
+              />
+            </v-col>
+
+            <!-- GASTOS si la formula de ptu de ptu es 5, 6 o 7 -->
+            <v-col cols="12" md="3" v-if="[5, 6, 7].includes(formData['formulaPtu'])">
+              <v-text-field
+                label="Gastos"
+                variant="solo-filled"
+                type="text"
+                :model-value="gastos"
+                @update:model-value="onInputGastos"
+                @blur="onBlurGastos"
+                :error-messages="showErrors ? formErrors['gastos'] : undefined"
+              />
+            </v-col>
+
+            <!-- AÑOS DE ARRASTRE si la formaula de ptu es  -->
+            <v-col cols="12" md="3" v-if="[0, 3, 5, 6].includes(formData['formulaPtu'])">
+              <v-text-field
+                label="Años de arrastre"
+                variant="solo-filled"
+                type="number"
+                min="0"
+                max="99"
+                :model-value="formData['aniosArrastre']"
+                @update:model-value="setFieldValue('aniosArrastre', $event)"
+                :error-messages="showErrors ? formErrors['aniosArrastre'] : undefined"
               />
             </v-col>
 
             <!-- COMISION / RATE ON LINE -->
             <v-col cols="12" md="3">
               <v-select
-                :items="[]"
-                item-title=""
-                item-value=""
+                :items="['SÍ', 'NO']"
                 :disabled="false"
                 label="¿Comisión / rate on line?"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['comisRolReaseguro']"
+                @update:model-value="setFieldValue('comisRolReaseguro', $event)"
+                :error-messages="showErrors ? formErrors['comisRolReaseguro'] : undefined"
               />
             </v-col>
 
-            <!-- TIPO DE COMISION / RATE ON LINE -->
-            <v-col cols="12" md="3">
+            <!-- TIPO DE COMISION / RATE ON LINE si comision / rate on line -->
+            <v-col cols="12" md="3" v-if="formData['comisRolReaseguro'] === 'SÍ'">
               <v-select
-                :items="[]"
-                item-title=""
-                item-value=""
-                :disabled="false"
+                :items="queryTipoAsignacion.data.value || []"
+                item-title="descAsignacion"
+                item-value="cveAsignacion"
+                :disabled="queryTipoAsignacion.isLoading.value"
                 label="Tipo de comisión / rate on line"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['cveAsignacionComisRol']"
+                @update:model-value="setFieldValue('cveAsignacionComisRol', $event)"
+                :error-messages="showErrors ? formErrors['cveAsignacionComisRol'] : undefined"
               />
             </v-col>
           </v-row>
 
           <!-- !ROW -->
           <v-row>
-            <!-- FÓRMULA COMISIÓN / RATE ON LINE -->
-            <v-col cols="12" md="3">
+            <!-- FÓRMULA COMISIÓN / RATE ON LINE si tipo de comision / rate online es 1 variable -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionComisRol'] == 1">
               <v-select
-                :items="[]"
-                item-title=""
-                item-value=""
-                :disabled="false"
+                :items="queryCalculoComision.data.value || []"
+                item-title="formulaComision"
+                item-value="cveCalcomis"
+                :disabled="queryCalculoComision.isLoading.value"
                 label="Fórmula comisión / rate on line"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['cveCalcomis']"
+                @update:model-value="setFieldValue('cveCalcomis', $event)"
+                :error-messages="showErrors ? formErrors['cveCalcomis'] : undefined"
               />
             </v-col>
 
-            <!-- % COMISIÓN / RATE ON LINE PROVISIONAL -->
-            <v-col cols="12" md="3">
+            <!-- COMISIÓN / RATE ON LINE FIJA cuando tipo de comision es fija  -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionComisRol'] == 0">
               <v-text-field
-                label="% Comisión / rate on line provisional"
+                label="% Comisión / rate on line fija"
                 variant="solo-filled"
-                type="number"
+                type="text"
+                :model-value="comisRolFija"
+                @update:model-value="onInputComisRolFija"
+                @blur="onBlurComisRolFija"
+                :error-messages="showErrors ? formErrors['comisRolFija'] : undefined"
+              />
+              <v-slider
+                v-model="comisRolFija"
                 min="0.00"
                 max="100.00"
                 step=".01"
+                thumb-label
+                color="primary"
               />
             </v-col>
+            
+            <!-- % COMISIÓN / RATE ON LINE PROVISIONAL si tipo de comision / rate online es 1 variable o 2 escalonada  -->
+            <v-col cols="12" md="3" v-if="[1, 2].includes(formData['cveAsignacionComisRol'])">
+             <v-text-field
+               label="% Comisión / rate on line provisional"
+               variant="solo-filled"
+               type="text"
+               :model-value="comisRolProvisional"
+               @update:model-value="onInputComisRolProvisional"
+               @blur="onBlurcomisRolProvisional"
+               :error-messages="showErrors ? formErrors['comisRolProvisional'] : undefined"
+             />
+             <v-slider
+               v-model="comisRolProvisional"
+               min="0.00"
+               max="100.00"
+               step=".01"
+               thumb-label
+               color="primary"
+             />
+            </v-col>
+            
 
-            <!-- % COMISIÓN / RATE ON LINE MÍNIMA -->
-            <v-col cols="12" md="3">
-              <v-text-field
-                label="% Comisión / rate on line mínima"
-                variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
-              />
+            <!-- % COMISIÓN / RATE ON LINE MÍNIMA si tipo de comision / rate online es 1 variable -->
+            <v-col cols="12" md="3" v-if="[1].includes(formData['cveAsignacionComisRol'])">
+             <v-text-field
+               label="% Comisión / rate on line mínima"
+               variant="solo-filled"
+               type="text"
+               :model-value="comisRolMin"
+               @update:model-value="onInputComisRolMin"
+               @blur="onBlurComisRolMin"
+               :error-messages="showErrors ? formErrors['comisRolMin'] : undefined"
+             />
+             <v-slider
+               v-model="comisRolMin"
+               min="0.00"
+               max="100.00"
+               step=".01"
+               thumb-label
+               color="primary"
+             />
             </v-col>
 
-            <!-- % COMISIÓN / RATE ON LINE MÁXIMA -->
-            <v-col cols="12" md="3">
-              <v-text-field
-                label="% Comisión / rate on line máxima"
-                variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
-              />
+            <!-- % COMISIÓN / RATE ON LINE MÁXIMA si tipo de comision / rate online es 1 variable -->
+           <v-col cols="12" md="3" v-if="[1].includes(formData['cveAsignacionComisRol'])">
+             <v-text-field
+               label="% Comisión / rate on line máxima"
+               variant="solo-filled"
+               type="text"
+               :model-value="comisRolMax"
+               @update:model-value="onInputComisRolMax"
+               @blur="onBlurComisRolMax"
+               :error-messages="showErrors ? formErrors['comisRolMax'] : undefined"
+             />
+             <v-slider
+               v-model="comisRolMax"
+               min="0.00"
+               max="100.00"
+               step=".01"
+               thumb-label
+               color="primary"
+             />
             </v-col>
           </v-row>
 
           <!-- !ROW -->
           <v-row>
             <!-- CAPA -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Capa"
                 variant="solo-filled"
                 type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                max="99999"
+                :model-value="formData['capa']"
+                @update:model-value="setFieldValue('capa', $event)"
+                :error-messages="showErrors ? formErrors['capa'] : undefined"
               />
             </v-col>
 
             <!-- PRIORIDAD -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Prioridad"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="prioridad"
+                @update:model-value="onInputPrioridad"
+                @blur="onBlurPrioridad"
+                :error-messages="showErrors ? formErrors['prioridad'] : undefined"
               />
             </v-col>
 
             <!-- LÍMITE DE RESPONSABILIDAD -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Límite de responsabilidad"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="limResponsabilidad"
+                @update:model-value="onInputLimResponsabilidad"
+                @blur="onBlurLimResponsabilidad"
+                :error-messages="showErrors ? formErrors['limResponsabilidad'] : undefined"
               />
             </v-col>
 
             <!-- LÍMITE AGREGADO -->
-            <v-col cols="12" md="3">
+             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Límite agregado"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="limAgregado"
+                @update:model-value="onInputLimAgregado"
+                @blur="onBlurLimAgregado"
+                :error-messages="showErrors ? formErrors['limAgregado'] : undefined"
               />
             </v-col>
           </v-row>
 
           <!-- !ROW -->
           <v-row>
-            <!-- TIPO LIMITE AGREGADO -->
-            <v-col cols="12" md="3">
+            <!-- TIPO LIMITE AGREGADO  si es no proporcional -->
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
-                :items="[]"
-                item-title=""
-                item-value=""
-                :disabled="false"
+                :items="queryCriterioAsignacion.data.value || []"
+                item-title="descCriterioAsig"
+                item-value="cveCriterioAsig"
+                :disabled="queryCriterioAsignacion.isLoading.value"
                 label="Tipo de límite agregado"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['cveCriterioAsigLimAgregado']"
+                @update:model-value="setFieldValue('cveCriterioAsigLimAgregado', $event)"
+                :error-messages="showErrors ? formErrors['cveCriterioAsigLimAgregado'] : undefined"
               />
             </v-col>
 
             <!-- TIPO DE COSTO -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
-                :items="[]"
-                item-title=""
-                item-value=""
-                :disabled="false"
+                :items="queryTipoAsignacion.data.value || []"
+                item-title="descAsignacion"
+                item-value="cveAsignacion"
+                :disabled="queryTipoAsignacion.isLoading.value"
                 label="Tipo de costo"
                 variant="solo-filled"
                 clearable
+                :model-value="formData['cveAsignacionCosto']"
+                @update:model-value="setFieldValue('cveAsignacionCosto', $event)"
+                :error-messages="showErrors ? formErrors['cveAsignacionCosto'] : undefined"
               />
             </v-col>
 
-            <!-- PRIMA MÍNIMA Y DE DEPOSITO -->
-            <v-col cols="12" md="3">
+            <!-- COSTO FIJO -->
+             <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 0">
+              <v-text-field
+                label="Costo fijo"
+                variant="solo-filled"
+                type="text"
+                :model-value="costoFijo"
+                @update:model-value="onInputCostoFijo"
+                @blur="onBlurCostoFijo"
+                :error-messages="showErrors ? formErrors['costoFijo'] : undefined"
+              />
+            </v-col>
+
+            <!-- PRIMA MÍNIMA Y DE DEPOSITO si asignacion costo es variable -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima mínima y de deposito"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="pmd"
+                @update:model-value="onInputPmd"
+                @blur="onBlurPmd"
+                :error-messages="showErrors ? formErrors['pmd'] : undefined"
               />
             </v-col>
 
-            <!-- PRIMA MÍNIMA -->
-            <v-col cols="12" md="3">
+            <!-- PRIMA MÍNIMA si asignacion costo es variable -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima mínima"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="primaMin"
+                @update:model-value="onInputPrimaMin"
+                @blur="onBlurPrimaMin"
+                :error-messages="showErrors ? formErrors['primaMin'] : undefined"
               />
             </v-col>
           </v-row>
 
           <!-- !ROW -->
           <v-row>
-            <!-- PRIMA MÁXIMA -->
-            <v-col cols="12" md="3">
+            <!-- PRIMA MÁXIMA si asignacion costo es variable -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima máxima"
                 variant="solo-filled"
-                type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                type="text"
+                :model-value="primaMax"
+                @update:model-value="onInputPrimaMax"
+                @blur="onBlurPrimaMax"
+                :error-messages="showErrors ? formErrors['primaMax'] : undefined"
               />
             </v-col>
 
-            <!-- FACTOR DE AJUSTE DIVIDENDO -->
-            <v-col cols="12" md="3">
+            <!-- FACTOR DE AJUSTE DIVIDENDO si asignacion costo es variable -->
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Factor de ajuste dividendo"
                 variant="solo-filled"
                 type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                max="99999"
+                :model-value="formData['facAjusteDividendo']"
+                @update:model-value="setFieldValue('facAjusteDividendo', $event)"
+                :error-messages="showErrors ? formErrors['facAjusteDividendo'] : undefined"
               />
             </v-col>
 
             <!-- FACTOR DE AJUSTE DIVISOR -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Factor de ajuste divisor"
                 variant="solo-filled"
                 type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                max="99999"
+                :model-value="formData['facAjusteDivisor']"
+                @update:model-value="setFieldValue('facAjusteDivisor', $event)"
+                :error-messages="showErrors ? formErrors['facAjusteDivisor'] : undefined"
               />
             </v-col>
 
             <!-- BONO POR NO RECLAMACIONES -->
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="% Bono por no reclamaciones"
                 variant="solo-filled"
@@ -281,6 +452,10 @@
                 min="0.00"
                 max="100.00"
                 step=".01"
+                :model-value="noClaims"
+                @update:model-value="onInputNoClaims"
+                @blur="onBlurNoClaims"
+                :error-messages="showErrors ? formErrors['noClaims'] : undefined"
               />
             </v-col>
           </v-row>
@@ -336,6 +511,10 @@ import { useReaseguradoresSection } from "@/composables/reaseguro/contratos/acci
 
 const {
   queryReaseguradoras,
+  queryPtu,
+  queryTipoAsignacion,
+  queryCalculoComision,
+  queryCriterioAsignacion,
   participacion,
   formData,
   setFieldValue,
@@ -344,5 +523,51 @@ const {
   handleSubmit,
   onInput,
   onBlur,
+  isTypeProporcional,
+  porcentajePtu,
+  onInputPorcentajePtu,
+  onBlurPorcentajePtu,
+  porcentajeK,
+  onInputPorcentajeK,
+  onBlurPorcentajeK,
+  gastos,
+  onInputGastos,
+  onBlurGastos,
+  comisRolFija,
+  onInputComisRolFija,
+  onBlurComisRolFija,
+  comisRolProvisional,
+  onInputComisRolProvisional,
+  onBlurcomisRolProvisional,
+  comisRolMin,
+  onInputComisRolMin,
+  onBlurComisRolMin,
+  comisRolMax,
+  onInputComisRolMax,
+  onBlurComisRolMax,
+  prioridad,
+  onInputPrioridad,
+  onBlurPrioridad,
+  limResponsabilidad,
+  onInputLimResponsabilidad,
+  onBlurLimResponsabilidad,
+  limAgregado,
+  onInputLimAgregado,
+  onBlurLimAgregado,
+  costoFijo, 
+  onInputCostoFijo,
+  onBlurCostoFijo,
+  pmd,
+  onInputPmd,
+  onBlurPmd,
+  primaMin,
+  onInputPrimaMin,
+  onBlurPrimaMin,
+  primaMax,
+  onInputPrimaMax,
+  onBlurPrimaMax,
+  noClaims,
+  onInputNoClaims,
+  onBlurNoClaims,
 } = useReaseguradoresSection();
 </script>
