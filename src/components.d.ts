@@ -19,7 +19,6 @@ declare module 'vue' {
     ComisionesRateOnLineSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/ComisionesRateOnLineSection.vue')['default']
     CorretajeSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/CorretajeSection.vue')['default']
     CrudTablePage: typeof import('./components/catalogos/CrudTablePage.vue')['default']
-    CrudTablePageTarifas: typeof import('./components/reaseguro/CrudTablePageTarifas.vue')['default']
     CumulosSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/CumulosSection.vue')['default']
     DetallesProporcionalesSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/DetallesProporcionalesSection.vue')['default']
     DialogGlobal: typeof import('./components/DialogGlobal.vue')['default']
