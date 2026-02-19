@@ -24,7 +24,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormDatosPageM :datos="datosContratoProcesados" />
+            <FormDatosPageM :datos="nombreContrato" />
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -39,7 +39,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormConfiguracionReaseguradoresPageM />
+            <FormConfiguracionReaseguradoresPageM :datos="nombreContrato"/>
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -54,7 +54,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormConfiguracionIntermediariosPageM />
+            <FormConfiguracionIntermediariosPageM :datos="nombreContrato" />
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -72,39 +72,30 @@
   import { BaseAPI } from '@/API/BaseAPI'
   import { useRoute } from 'vue-router'
 
-  const trip = ref({
-    name: '',
-  })
-  
   const route = useRoute()
   const cargando = ref(false)
   const nombreContrato = ref<string>('')
-  const itemsDetalle = ref<any[]>([])
   const datosContratoProcesados = ref<any>(null)
 
-
+  // estos campos a consultar para llenar los formularios que traen los paneles
+  // parte de FormDatosPageM
   const apiDatosContrato = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/DatosContratoRest', isBase: true, isPrivate: true });
+  const apiCapas = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/ExcedentePorCapasRest', isBase: true, isPrivate: true });
+  const apiPolizas = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/PolizasFacuRest', isBase: true, isPrivate: true });
+  // parte de FormConfiguracionReaseguradoresPageM
+  const apiReaseguradoras = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/ReaseguradorasRest', isBase: true, isPrivate: true });
+  const apiCoberturas = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/CoberturasRest', isBase: true, isPrivate: true });
+  const apiComision = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/ComisionRest', isBase: true, isPrivate: true });
+  const apiComisionEsc = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/ComisionEscalonadaRest', isBase: true, isPrivate: true });
+  // parte de FormConfiguracionIntermediariosPageM
+  const apiIntermediarios = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/IntermediariosRest', isBase: true, isPrivate: true });
+
 
   const cargarDetalles = async () => {
     cargando.value = true;
-    try {
-      const response = await apiDatosContrato.post('getAllRecords', {});
-      if (response.data && Array.isArray(response.data)) {
-        const filtro = nombreContrato.value;
-        const filtrados = response.data.filter((reg: any) => reg.nombreArchivo === filtro);
-
-        itemsDetalle.value = filtrados.map((reg: any) => ({
-          ...reg,
-          idInterno: reg.id || reg.cveTarifa || Math.random(),
-          fumadorTexto: reg.fumador === 1 ? 'S' : 'N'
-        }));
-      }
-    } catch (error) {
-      console.error("Error al cargar detalles:", error);
-    } finally {
-      cargando.value = false;
-    }
+    nombreContrato.value
   };
+  
 
   onMounted(() => {
     const nombreQuery = route.query.nombre as string;

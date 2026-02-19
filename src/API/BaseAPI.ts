@@ -21,7 +21,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
     instance.interceptors.request.use(
       config => {
         const token = isBase
-          ? (authStore.getTokenContratos || authStore.getToken)
+          ? (authStore.getToken)
           : authStore.getToken;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
@@ -45,7 +45,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
         return response;
       },
       async error => {
-        console.log(error);        
+        console.log(error);
         if (error.code === 'ERR_NETWORK') {
           const { SessionManager } = await import('@/utils/sessionManager');
           await SessionManager.handleSessionExpiration();

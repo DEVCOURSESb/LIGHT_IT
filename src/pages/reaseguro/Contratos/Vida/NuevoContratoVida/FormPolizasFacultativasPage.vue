@@ -83,6 +83,7 @@ import { computed, ref, watch } from 'vue'
 import { useContratoStore } from "@/stores/contratoStore"
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { NuevoContratoVida, type EmisionContable } from './NuevoContratoDG.actions'
+import { BaseAPI } from '@/API/BaseAPI'
 
 interface PolizaItem {
   poliza: string
@@ -116,6 +117,8 @@ const confirmarCarga = async () => {
   mostrarAdvertencia.value = false
   await ejecutarConsulta()
 }
+
+const apiPolizas = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/PolizasFacuRest', isBase: true, isPrivate: true });
 
 const ejecutarConsulta = async () => {
   const fInicio = fechaInicioContrato.value
@@ -202,30 +205,66 @@ const headers1 = [
   { title: 'Borrar', key: 'borrar', sortable: false },
 ]
 
-const agregarPoliza = () => {
+const verificarExistenciaEnBD = async (polizaBuscada: string | number, renovacionBuscada: number): Promise<boolean> => {
+  try {
+    const response = await apiPolizas.post('getAllRecords');
+
+    if (response.data && Array.isArray(response.data)) {
+      const pBuscar = Number(polizaBuscada);
+      const rBuscar = Number(renovacionBuscada);
+      const idContratoActual = contratoStore.general?.idContrato;
+
+      return response.data.some((reg: any) => {
+        const pBD = Number(reg.numPoliza);
+        const rBD = Number(reg.numRenovPol);
+        const idContratoBD = reg.idContrato;
+
+        if (pBD === pBuscar && rBD === rBuscar) {
+          return idContratoBD !== idContratoActual;
+        }
+        return false;
+      });
+    }
+    return false;
+  } catch (error) {
+    console.error("Error al validar:", error);
+    return false;
+  }
+};
+
+const agregarPoliza = async () => {
   if (!polizaInput.value || renovacionInput.value === null) return
 
   const polizaNueva = String(polizaInput.value).trim()
   const renovacionNueva = Number(renovacionInput.value)
 
-  // La validación ahora es por AMBOS campos estrictamente
-  const duplicadoExacto = polizas.value.some((p, index) => {
+  const duplicadoLocal = polizas.value.some((p, index) => {
     if (polizaEditando.value !== null && index === polizaEditando.value) return false
-
-    return String(p.poliza).trim() === polizaNueva &&
-           Number(p.renovacion) === renovacionNueva
+    return String(p.poliza).trim() === polizaNueva && Number(p.renovacion) === renovacionNueva
   })
 
-  if (duplicadoExacto) {
+  if (duplicadoLocal) {
     dialog.show({
       title: 'Registro Duplicado',
-      message: `La póliza ${polizaNueva} ya cuenta con la renovación ${renovacionNueva} en la lista.`,
+      message: `Esta póliza y renovación ya están en tu lista actual.`,
       type: DialogType.ERROR
     })
     return
   }
 
-  // Si llegamos aquí, es una renovación nueva (aunque la póliza sea repetida)
+  estaCargando.value = true;
+  const yaExisteEnBD = await verificarExistenciaEnBD(polizaNueva, renovacionNueva);
+  estaCargando.value = false;
+
+  if (yaExisteEnBD) {
+    dialog.show({
+      title: 'Póliza No Disponible',
+      message: `La póliza ${polizaNueva} con renovación ${renovacionNueva} ya está registrada en otro contrato.`,
+      type: DialogType.ERROR
+    });
+    return;
+  }
+
   const item: PolizaItem = {
     poliza: polizaNueva,
     renovacion: renovacionNueva
@@ -279,10 +318,10 @@ const hidratarPolizasDesdeStore = () => {
 }
 const hidratado = ref(false);
 
+
 watch(
   [() => emisiones.value.length, () => contratoStore.poli],
   ([len, poli]) => {
-    // Solo hidratamos si tenemos emisiones cargadas, hay datos en el store Y NO hemos hidratado ya
     if (len > 0 && poli?.polizas?.length && !hidratado.value) {
       hidratarPolizasDesdeStore();
       hidratado.value = true; // Marcamos como listo
