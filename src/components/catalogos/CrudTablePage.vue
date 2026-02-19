@@ -170,7 +170,6 @@
 
 <script lang="ts" setup>
 import { computed } from "vue";
-import ModalComponent from "@/components/catalogos/ModalComponent.vue";
 import SearchComponent from "@/components/catalogos/SearchComponent.vue";
 import { useCrudGeneric } from "@/composables/catalogos/useCrudGeneric";
 import { useSearch } from "@/composables/catalogos/useSearch";
