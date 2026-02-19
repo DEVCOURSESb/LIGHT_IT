@@ -43,7 +43,7 @@
 <script lang="ts" setup>
   import router from '@/router';
   import { BaseAPI } from '@/API/BaseAPI';
-  import { computed, onMounted, ref } from 'vue';
+  import { onMounted, ref } from 'vue';
   import { format, parseISO } from 'date-fns';
   import { NuevoContratoVida } from './NuevoContratoVida/NuevoContratoDG.actions';
   import { DialogType, useDialog } from "@/stores/dialogStore"

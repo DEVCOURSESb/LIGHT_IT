@@ -166,8 +166,6 @@
   const baseCesion = ref('')
   const monedaDetalle = ref('')
 
-  const dialog = ref(false)
-
   watch(detalles, value => {
     if (value === 'No') {
       tipoOperacionRamo.value = ''

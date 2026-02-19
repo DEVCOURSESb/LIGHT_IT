@@ -43,7 +43,6 @@
   import { onMounted, ref } from 'vue';
   import { format, parseISO } from 'date-fns';
   import { NuevoContratoVida } from './NuevoContratoVida/NuevoContratoDG.actions';
-  import { DialogType, useDialog } from "@/stores/dialogStore"
 
   const {
     subramoOptions, fetchSubramos
@@ -57,7 +56,6 @@
 
   const itemTablasDtG = ref<any[]>([])
   const search = ref('')
-  const dialog = useDialog()
 
   const apiDatosContrato = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/DatosContratoRest', isBase: true, isPrivate: true });
 

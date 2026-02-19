@@ -1,5 +1,3 @@
-import Papa from 'papaparse'
-
 export class ValidacionesCalculos {
 
   static required(message = 'Campo requerido') {
@@ -21,7 +19,7 @@ export class ValidacionesCalculos {
   static idContrato() {
     return this.required('Identificador de contrato requerido')
   }
-  
+
   // FECHAS
   static fechaInicio() {
     return this.required('Fecha inicio contrato requerida')

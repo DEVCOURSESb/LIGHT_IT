@@ -39,8 +39,6 @@ import FormPolizasFacultativasPageM from './FormPolizasFacultativasPageM.vue'
 const activeTab = ref('tab-1')
 const esFacultativo = ref(false)
 
-const identificador = ref<string>('');
-
 const emits = defineEmits(['on-save-complete']);
 
 const actualizarFormaContractual = (valor: number) => {

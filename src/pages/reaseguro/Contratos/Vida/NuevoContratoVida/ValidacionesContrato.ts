@@ -1,5 +1,3 @@
-import Papa from 'papaparse'
-
 // Validaciones para el formulario de nuevo contrato de vida
 export class ValidacionesContrato {
 

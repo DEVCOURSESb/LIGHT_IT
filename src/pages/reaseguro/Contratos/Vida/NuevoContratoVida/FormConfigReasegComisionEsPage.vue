@@ -167,7 +167,7 @@
 </template>
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue'
-import { useContratoStore, type ComisionReaseguro, type ContratoConfigReasCom } from '@/stores/contratoStore'
+import { useContratoStore, type ComisionReaseguro } from '@/stores/contratoStore'
 import { useDialog, DialogType } from '@/stores/dialogStore'
 import { NuevoContratoVidaConR } from './NuevoContratoConfigR.actions'
 

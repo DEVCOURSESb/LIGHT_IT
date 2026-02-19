@@ -202,7 +202,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useContratoStore } from '@/stores/contratoStore'
 import { storeToRefs } from 'pinia'
 

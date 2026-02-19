@@ -95,11 +95,9 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
-import { esArchivoCSVValido } from '@/utils/validateCSV'
 
 const route = useRoute()
 const dialogGlobal = useDialog()
-const dialog = useDialog()
 
 const modalEditar = ref(false)
 const idActual = ref<any>(null)

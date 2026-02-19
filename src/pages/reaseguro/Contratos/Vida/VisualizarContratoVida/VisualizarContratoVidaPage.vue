@@ -64,7 +64,4 @@
   import FormConfiguracionIntermediariosPageV from './FormConfiguracionIntermediariosPageV.vue'
   import FormConfiguracionReaseguradoresPageV from './FormConfiguracionReaseguradoresPageV.vue'
 
-  const trip = ref({
-    name: '',
-  })
 </script>
