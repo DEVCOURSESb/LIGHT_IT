@@ -52,6 +52,10 @@
           class="elevation-1"
           hide-default-footer
         >
+          <template #item.idRamo="{ item }">
+            {{ getSubramoName(item.idRamo) }}
+          </template>
+
           <template #item.fechaRegistro="{ item }">
             {{ formatDate(item.fechaRegistro) }}
           </template>
@@ -85,5 +89,6 @@ const {
   descargarItem,
   queryHistory,
   block,
+  getSubramoName
 } = useCalculoVidaPrimas();
 </script>

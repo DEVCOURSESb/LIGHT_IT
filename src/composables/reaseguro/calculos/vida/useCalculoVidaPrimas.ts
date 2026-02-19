@@ -53,8 +53,13 @@ export const useCalculoVidaPrimas = () => {
     {
       title: "ACCIONES",
       key: "actions",
+      sortable: false
     },
   ];
+
+  const getSubramoName = (idRamo: string) => {
+    return querySubramos.data.value?.filter((item) =>  item.cveCobertura ===  idRamo)[0]?.descOperacionRamos;
+  }
 
   const calcularPrimas = async () => {
     block.value = true;
@@ -119,5 +124,6 @@ export const useCalculoVidaPrimas = () => {
     descargarItem,
     queryHistory,
     block,
+    getSubramoName,
   };
 };
