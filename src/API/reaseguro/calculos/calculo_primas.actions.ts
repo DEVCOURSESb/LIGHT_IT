@@ -1,52 +1,42 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { downloadFileFromBase64 } from "@/utils/downloadFileFromBase64";
+import type { CalculoPrimasVidas } from "./calculo_primas.interface";
 
 export const calculoPrimasActions = () => {
-  const baseAPI = BaseAPI({ prefix: "/reaseguro/primas" });
+  const baseAPI = BaseAPI({ prefix: "ws_calculo_primas_reaseg_vida_grupo/api/v1/CalculoPrimasReasegVidaRest/" });
 
-  const fetchData = async () => {
+  const fetch = async () => {
     try {
-      const { data } = await baseAPI.post("/");
+      const { data } = await baseAPI.post<CalculoPrimasVidas[]>("getFileCalcResegPrim", {
+        subramo: "",
+        fechaCalculo: "",
+      });
       return data;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const calcular = async (subramo: string, fechaCalculo: Date) => {
+  const calcular = async (subramo: string, fechaEvaluacion: Date) => {
+    const fechaNormalizada = fechaEvaluacion.toISOString().split("T")[0];
     try {
-      const { data } = await baseAPI.post("/calcular", {
-        subramo,
-        fechaCalculo,
+      const response = await baseAPI.post("calcReasegPrimVida", {
+        idRamo: subramo,
+        fechaEvaluacion: fechaNormalizada,
       });
-      return data;
+      return response;
     } catch (error) {
       console.error("Error calculating data:", error);
     }
   };
 
-  const downloadExcel = async (subramo: string, fechaCalculo: Date) => {
+  const deleteCalculo = async (idRamo: string, fechaEvaluacion: Date) => {
     try {
-      const { data } = await baseAPI.post("/calcular/excel", {
-        subramo,
-        fechaCalculo,
+      const { data } = await baseAPI.delete("deleteCalcReasegPrimVida", {
+        data: {
+          idRamo,
+          fechaEvaluacion
+        }
       });
-
-      downloadFileFromBase64(
-        data.base64Data,
-        "archivo.xlsx",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      );
-
-      return data;
-    } catch (error) {
-      console.error("Error downloading excel:", error);
-    }
-  };
-
-  const deleteCalcule = async (id: number) => {
-    try {
-      const { data } = await baseAPI.delete(`/${id}`);
       return data;
     } catch (error) {
       console.error("Error deleting data:", error);
@@ -54,9 +44,8 @@ export const calculoPrimasActions = () => {
   };
 
   return {
-    fetchData,
+    fetch,
     calcular,
-    downloadExcel,
-    deleteCalcule,
+    deleteCalculo,
   };
 };
