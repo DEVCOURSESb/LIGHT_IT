@@ -10,13 +10,11 @@ const router = createRouter({
   routes,
 })
 
-// Navigation Guard
 router.beforeEach((to, from, next) => {
   const authStore = AuthStore()
-  
-  // Verificar autenticación del localStorage
+
   authStore.checkAuth()
-  
+
   const isAuthenticated = authStore.isLoggedIn
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   const isPublicRoute = to.matched.some(record => record.meta.public)
