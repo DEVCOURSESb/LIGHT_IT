@@ -93,7 +93,9 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormDatosPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormGeneralDatosPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/ModalEnviarDatosM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/ModalEnviarDatosM', '/reaseguro/Contratos/Vida/ModificarContratoVida/ModalEnviarDatosM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage', '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/Vida/ModificarContratoVida/ResumenReaseguradoresPageM': RouteRecordInfo<'/reaseguro/Contratos/Vida/ModificarContratoVida/ResumenReaseguradoresPageM', '/reaseguro/Contratos/Vida/ModificarContratoVida/ResumenReaseguradoresPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegComisionEsPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage': RouteRecordInfo<'/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', '/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegGeneralPage', Record<never, never>, Record<never, never>>,
@@ -431,8 +433,16 @@ declare module 'vue-router/auto-routes' {
       routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/FormPolizasFacultativasPageM'
       views: never
     }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/ModalEnviarDatosM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/ModalEnviarDatosM'
+      views: never
+    }
     'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage.vue': {
       routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/ModificarContVidaPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/Vida/ModificarContratoVida/ResumenReaseguradoresPageM.vue': {
+      routes: '/reaseguro/Contratos/Vida/ModificarContratoVida/ResumenReaseguradoresPageM'
       views: never
     }
     'src/pages/reaseguro/Contratos/Vida/NuevoContratoVida/FormConfigReasegCoberturaPage.vue': {

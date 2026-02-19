@@ -223,15 +223,15 @@ const procesarArchivoCSV = (file: File) => {
           return;
     }
     const encabezados = primeraLinea.toUpperCase().split(',').map(h => h.trim());
-    const idxReas = encabezados.indexOf('REASEGURADOR');
+    const idxReas = encabezados.indexOf('DESC_CLASIFCOBER');
     const idxInf = encabezados.indexOf('LIMITE_INF');
     const idxSup = encabezados.indexOf('LIMITE_SUP');
-    const idxCom = encabezados.indexOf('COMISION');
+    const idxCom = encabezados.indexOf('COMISION_DEFINITIVA');
 
     if (idxInf === -1 || idxSup === -1 || idxCom === -1) {
       dialog.show({
         type: DialogType.ERROR,
-        message: 'El CSV debe tener las columnas: Reasegurador, Limite_inf, Limite_sup, Comision',
+        message: 'El CSV debe tener las columnas: Desc_clasifCober, Limite_inf, Limite_sup, Comision_definitiva',
         title: 'Formato Incorrecto'
       });
       return;

@@ -56,6 +56,7 @@
             chips
             label="¿Detalle por cobertura?"
             variant="solo-filled"
+            :disabled="!cesionCoberB"
           />
         </v-col>
         <v-col cols="12" md="4" v-if="detalleCobertura === 1">
@@ -83,25 +84,25 @@
         </v-col>
 
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 0">
-          <v-text-field v-model.number="primaTarFi" label="Monto Fijo" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
+          <v-text-field v-model.number="primaTarFi" label="Prima de tarifa fija" type="number" variant="solo-filled" :rules="[ValidacionesContrato.numeroC21()]" />
         </v-col>
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 1">
-          <v-text-field v-model.number="porSobrePrimaE" label="% Prima" suffix="%" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
+          <v-text-field v-model.number="porSobrePrimaE" label="% sobre prima emitida" suffix="%" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 3">
-          <v-text-field v-model.number="tarifaFijaM" label="Tasa al millar" type="number" variant="solo-filled" :rules="[ValidacionesContrato.tasaAlMillar()]"/>
+          <v-text-field v-model.number="tarifaFijaM" label="Tarifa fija al millar" type="number" variant="solo-filled" :rules="[ValidacionesContrato.tasaAlMillar()]"/>
         </v-col>
         <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
-          <v-text-field v-model.number="factorTarifaP" label="Factor %" type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
+          <v-text-field v-model.number="factorTarifaP" label="Factor tarifa propia " type="number" variant="solo-filled" :rules="[ValidacionesContrato.participacion()]"/>
         </v-col>
 
-        <v-col cols="12" md="5" v-if="tipoTarifaObj?.value === 2">
+        <v-col cols="12" md="4" v-if="tipoTarifaObj?.value === 2">
           <v-select
             v-model="tarifaPropiaObj"
             :items="tarifasPropiasOptions"
             item-title="title"
             return-object
-            label="Tarifa propia"
+            label="Nombre tarifa propia"
             chips
             multiple
             clearable
@@ -295,7 +296,7 @@ const coberturasAdiciObj = ref<any[]>([])
 const detalleCapa = ref(0)
 const capaSeleccionada = ref<string | null>(null)
 
-const detalleCobertura = ref(0)
+const detalleCobertura = ref(1)
 const coberturaTarifaObj = ref<any>(null)
 const tipoTarifaObj = ref<any>(null)
 
@@ -358,6 +359,8 @@ const coberturasPermitidasParaTarifa = computed(() => {
 });
 
 const esExcedentePorCapas = computed(() => Number(getID(contratoStore.general?.idTContrato)) === 3);
+const cesionCoberB = computed(() => Number(getID(contratoStore.configReaseg?.cesionCoberBasi)) === 0);
+
 const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || []);
 
 watch(() => getID(tipoTarifaObj.value), (tipo) => {
@@ -385,6 +388,20 @@ watch([coberturasOptions, tipoTarifaOptions], ([c, t]) => {
   if (c.length > 0 && t.length > 0) hidratarDesdeStore();
 }, { immediate: true });
 
+watch(coberturasBasiObj, (newList) => {
+  if (newList && newList.length > 0 && !coberturaTarifaObj.value) {
+
+    const fallecimiento = newList.find(c =>
+      String(c.title).toUpperCase().includes('FALLECIMIENTO')
+    );
+
+    if (fallecimiento) {
+      coberturaTarifaObj.value = fallecimiento;
+    } else {
+      coberturaTarifaObj.value = newList[0];
+    }
+  }
+}, { deep: true });
 
 const agregarAgrupacion = () => {
   if (coberturasParaAgrupar.value.length === 0 || !coberturaMadreObj.value) {
@@ -600,7 +617,7 @@ const agregarTarifa = () => {
       });
     }
     } else {
-      capasAProcesar = ['NO'];
+      capasAProcesar = [''];
     }
 
   let coberturasAProcesar: any[] = [];
@@ -637,7 +654,7 @@ const agregarTarifa = () => {
           );
 
           const nuevaFila = {
-            detalleCapa: capaActual, // Se guarda el nombre de la capa (ej. "1er Excedente")
+            detalleCapa: capaActual,
             tipoCobertura: esBasica ? 'BASICA' : 'BADI',
             cobertura: cob.title || '',
             cveCob: idCob,
@@ -663,7 +680,7 @@ const agregarTarifa = () => {
 
   if (hayDuplicados) {
     const msg = detalleCapa.value === 0
-      ? 'Se actualizarán las tarifas para todas las capas existentes. ¿Desea continuar?'
+      ? 'Se encontro coincidencia en uno de los registros realizados. ¿Desea reemplazarlo por estos?'
       : 'Esta combinación de cobertura y capa ya existe. ¿Desea actualizarla?';
 
     dialog.show({
@@ -682,7 +699,14 @@ const limpiarTarifa = () => {
   tipoTarifaObj.value = null;
   primaTarFi.value = 0;
   tarifaPropiaObj.value = [];
-  capaSeleccionada.value = null;
+
+  if (coberturasBasiObj.value.length > 0) {
+    const defaultCob = coberturasBasiObj.value.find(c =>
+      String(c.title).toUpperCase().includes('FALLECIMIENTO')
+    ) || coberturasBasiObj.value[0];
+
+    coberturaTarifaObj.value = defaultCob;
+  }
 };
 
 const editarTarifa = (item: any, index: number) => {
@@ -693,7 +717,7 @@ const editarTarifa = (item: any, index: number) => {
     }
   });
 
-  detalleCobertura.value = item.detalleCapa === 'NO' ? 0 : 1;
+  detalleCobertura.value = item.detalleCapa === '' ? 0 : 1;
   coberturaTarifaObj.value = coberturasOptions.value.find(c => c.value === item.cveCob) || null;
   tipoTarifaObj.value = item.tipoTarifa;
   primaTarFi.value = item.primaTarifa;
@@ -767,7 +791,7 @@ const guardarTodoEnStore = async () => {
       const nombreRef = tarifaPropiaObj.value.length > 0 ? tarifaPropiaObj.value[0].title : null;
 
       return {
-        detalleCapa: detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : 'NO',
+        detalleCapa: detalleCapa.value === 1 ? (capaSeleccionada.value || 'SI') : '',
         tipoCobertura: esBasica ? 'BASICA' : 'BADI',
         cobertura: cobOriginal?.title || '',
         cveCob: id,
@@ -785,7 +809,7 @@ const guardarTodoEnStore = async () => {
   else {
     dialog.show({
       type: DialogType.ERROR,
-      message: 'Debe agregar al menos una tarifa a la tabla técnica.',
+      message: 'Debe asignar tarifas a las coberturas seleccionadas.',
       title: 'Faltan datos'
     });
     return;

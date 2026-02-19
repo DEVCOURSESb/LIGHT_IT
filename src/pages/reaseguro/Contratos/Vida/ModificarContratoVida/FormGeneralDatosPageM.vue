@@ -1,279 +1,565 @@
 <template>
-  <v-form>
-    <v-container>
-      <v-row >
-        <v-col
-          cols="12"
-          md="4"
-        >
+  <v-form ref="formRef">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" md="3">
           <v-select
             v-model="contratoProrrogado"
+            :items="siNoOptions"
             label="¿Contrato prorrogado?"
-            :items="['SI', 'NO']"
-            :rules="[v => !!v || 'Contrato prorrogado requerido']"
-            required
             variant="solo-filled"
+            chips
           />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3" v-if="contratoProrrogado === 1" >
+          <!--Solo será requerido si contrato prorrogado es si-->
+          <!--o	solo se podrá seleccionar una fecha mayor a la Fecha fin contrato (habilitar solo el calendario de acuerdo con esta condición)-->
           <v-date-input
-            v-model="fechaFinProrro"
+            v-model="fechaFinProrroga"
             label="Fecha fin prórroga"
-            :disabled="contratoProrrogado === 'NO'"
             prepend-icon=""
             prepend-inner-icon="$calendar"
-            :rules="[v => !!v || 'Fecha fin prórroga requerida']"
-            required
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="3">
           <v-select
             v-model="contratoCancelado"
+            :items="siNoOptions"
             label="¿Contrato cancelado?"
-            :items="['SI', 'NO']"
-            :rules="[v => !!v || 'Contrato cancelado requerido']"
-            required
             variant="solo-filled"
+            chips
           />
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3" v-if="contratoCancelado === 1 || contratoProrrogado === 0">
+          <!--Solo será requerido si contrato cancelado es si-->
+          <!--¿Contrato prorrogado? = NO,	solo se podrá seleccionar una fecha mayor a la Fecha fin contrato (habilitar solo el calendario de acuerdo con esta condición)-->
           <v-date-input
             v-model="fechaCancelacion"
             label="Fecha cancelación"
-            :disabled="contratoCancelado === 'NO'"
             prepend-icon=""
             prepend-inner-icon="$calendar"
-            :rules="[v => !!v || 'Fecha cancelación requerida']"
-            required
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="3">
           <v-select
-            v-model="subramo"
+            v-model="subramoObj"
+            :items="subramoOptions"
             label="Subramo"
-            :rules="[v => !!v || 'Subramo requerido']"
+            :rules="[ValidacionesContrato.subramo()]"
             required
             variant="solo-filled"
+            multiple
+            chips
+            return-object
           />
         </v-col>
-        <v-col cols="12" md="4">
+
+        <v-col cols="12" md="3">
           <v-text-field
             v-model="idContrato"
             label="Identificador de contrato"
-            :rules="[v => !!v || 'Identificador de contrato requerido']"
-            required
+            @input="idContrato = idContrato.toUpperCase()"
+            :rules="ValidacionesContrato.idContrato()"
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-text-field
             v-model="negociosCubiertos"
             label="Negocios cubiertos"
-            :rules="[v => !!v || 'Negocios cubiertos requerido']"
+            :rules="ValidacionesContrato.negociosCubiertos()"
             required
             variant="solo-filled"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="3">
           <v-select
-            v-model="moneda"
-            class="selectForm"
+            v-model="monedaObj"
+            :items="monedaOptions"
             label="Moneda"
-            :rules="[v => !!v || 'Moneda requerida']"
+            :rules="[ValidacionesContrato.moneda()]"
             required
             variant="solo-filled"
+            chips
+            return-object
           />
         </v-col>
-        <v-col cols="12" md="4">
+
+        <v-col cols="12" md="3">
           <v-date-input
             v-model="inicioContrato"
             label="Fecha inicio contrato"
             prepend-icon=""
             prepend-inner-icon="$calendar"
-            :rules="[v => !!v || 'Fecha inicio contrato requerida']"
+            :rules="[ValidacionesContrato.fechaInicio()]"
             required
             variant="solo-filled"
+            @update:model-value="calcularFechaFin"
           />
         </v-col>
 
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3">
           <v-date-input
             v-model="finContrato"
             label="Fecha fin contrato"
             prepend-icon=""
             prepend-inner-icon="$calendar"
-            :rules="[v => !!v || 'Fecha fin contrato requerida']"
+            :rules="[ValidacionesContrato.fechaFin(() => inicioContrato)]"
             required
             variant="solo-filled"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-select
-            v-model="formaContractual"
-            class="selectForm"
+            v-model="formaContractualObj"
+            :items="formaContractualOptions"
             label="Forma contractual"
-            :rules="[v => !!v || 'Forma contractual requerida']"
             required
+            chips
             variant="solo-filled"
+            return-object
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-select
-            v-model="tipoReaseguro"
+            v-model="tipoReaseguroObj"
             label="Tipo de reaseguro"
-            :rules="[v => !!v || 'Tipo de reaseguro requerido']"
+            :items="tipoReaseguroOptions"
             required
+            chips
             variant="solo-filled"
+            return-object
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-select
-            v-model="tipoContrato"
+            v-model="tipoContratoObj"
+            :items="tipoContratoFiltrado"
             label="Tipo de contrato"
-            :rules="[v => !!v || 'Tipo de contrato requerido']"
-            required
             variant="solo-filled"
+            chips
+            :rules="[ValidacionesContrato.tipoContrato()]"
+            :disabled="!tipoReaseguroObj"
+            return-object
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-select
-            v-model="criterioCobertura"
-            class="selectForm"
+            v-model="criterioCoberturaObj"
+            :items="criterioCoberturaOptions"
             label="Criterio de cobertura"
-            :rules="[v => !!v || 'Criterio de cobertura requerido']"
+            :rules="[v => !!v || 'Requerido']"
             required
+            chips
             variant="solo-filled"
+            return-object
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="3">
           <v-text-field
-            v-model="limiteMax"
+            v-model="displayLimiteMax"
             label="Limite máximo del contrato"
-            :rules="[v => !!v || 'Limite máximo del contrato requerido']"
-            required
             variant="solo-filled"
+            prefix="$"
+            :rules="[ValidacionesContrato.numeroC21()]"
           />
         </v-col>
 
-        <v-col
-          cols="12"
-          md="4"
-        >
+        <v-col cols="12" md="3">
           <v-text-field
-            v-model="limiteMaxResCR"
-            label="Limite máximo de responsabilidad de contrato por riesgo"
-            :rules="[v => !!v || 'Limite máximo de respon... requerido']"
-            required
+            v-model="displayLimiteMaxResCR"
+            label="Limite máximo de responsabilidad"
             variant="solo-filled"
+            prefix="$"
+            :rules="[ValidacionesContrato.numeroC21()]"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3">
           <v-text-field
-            v-model="retencionP"
+            v-model="displayRetencionP"
+            :disabled="Number(getID(tipoContratoObj)) === 3"
             label="Retención propia"
-            :rules="[v => !!v || 'Retención propia requerida']"
-            required
             variant="solo-filled"
+            prefix="$"
+            :rules="[ValidacionesContrato.numeroC21()]"
           />
         </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
+
+        <v-col cols="12" md="3" v-if="[1, 7, 9].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="cesion"
-            :disabled="tipoContrato === 'EXCEDENTE POR CAPAS'"
             label="Cesión"
-            prepend-icon=""
-            prepend-inner-icon="mdi mdi-percent-outline"
-            :rules="[v => !!v || 'Cesión requerida']"
-
-            required
             suffix="%"
-            type="number"
             variant="solo-filled"
+            :rules="[ValidacionesContrato.cesion(() => Number(getID(tipoContratoObj)))]"
           />
         </v-col>
+
+        <v-col cols="12" md="3" v-if="[2, 4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+          <v-text-field
+            v-model="displayPiso"
+            label="Piso"
+            variant="solo-filled"
+            prefix="$"
+            :rules="[ValidacionesContrato.piso(() => Number(getID(tipoContratoObj)))]"
+          />
+        </v-col>
+
+        <v-col cols="12" md="3" v-if="[2, 4, 5, 6].includes(Number(getID(tipoContratoObj)))">
+          <v-text-field
+            v-model="displayTecho"
+            label="Techo"
+            variant="solo-filled"
+            prefix="$"
+            :rules="[ValidacionesContrato.techo(() => Number(getID(tipoContratoObj)))]"
+          />
+        </v-col>
+
+        <v-divider v-if="Number(getID(tipoContratoObj)) === 3" class="my-4" />
+
+        <v-col cols="12" md="3" v-if="Number(getID(tipoContratoObj)) === 3">
+          <v-text-field
+            v-model="displayRetencionCapa"
+            label="Retención propia capa N"
+            variant="solo-filled"
+            prefix="$"
+          />
+        </v-col>
+        <v-col cols="12" md="3" v-if="Number(getID(tipoContratoObj)) === 3">
+          <v-text-field
+            v-model="displayTechoCapa"
+            label="Techo capa N"
+            variant="solo-filled"
+            prefix="$"
+          />
+        </v-col>
+        <v-col cols="12" md="1" v-if="Number(getID(tipoContratoObj)) === 3" class="d-flex align-center">
+          <v-btn color="indigo" icon @click="agregarCapa">
+            <v-icon>{{ capaEditando !== null ? 'mdi-check' : 'mdi-plus' }}</v-icon>
+            <v-tooltip activator="parent" location="top">
+              {{ capaEditando !== null ? 'Actualizar registro' : 'Agregar a la tabla' }}
+            </v-tooltip>
+          </v-btn>
+        </v-col>
       </v-row>
-      <v-spacer />
-      <br>
     </v-container>
+
+    <v-container v-if="Number(getID(tipoContratoObj)) === 3">
+      <v-data-table :headers="headers1" :items="capas" hide-default-footer class="elevation-1">
+        <template v-slot:item.retencionC="{ item }">
+          $ {{ formatNumber(item.retencionC) }}
+        </template>
+        <template v-slot:item.techoC="{ item }">
+          $ {{ formatNumber(item.techoC) }}
+        </template>
+        <template v-slot:item.acciones="{ item, index }">
+          <v-btn icon color="blue" variant="text" @click="editarCapa(item, index)"><v-icon>mdi-pencil</v-icon></v-btn>
+          <v-btn icon color="red" variant="text" @click="eliminarCapa(index)"><v-icon>mdi-delete</v-icon></v-btn>
+        </template>
+      </v-data-table>
+    </v-container>
+
+    <v-col class="text-center mt-4">
+      <v-btn class="btn-guardar" @click="guardarDatosGenerales">
+        Actualizar datos generales
+      </v-btn>
+    </v-col>
   </v-form>
-  <div>
-    <v-row >
-      <v-col>
-        <v-data-table :headers="headers1" hide-default-footer  />
-      </v-col>
-    </v-row>
-  </div>
-  <v-col class="text-center">
-    <v-btn class="btn-guardar">
-      Actualizar datos
-      <br> generales
-    </v-btn>
-  </v-col>
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue'
-  const contratoProrrogado = ref('')
-  const fechaFinProrro = ref('')
-  const contratoCancelado = ref('')
-  const fechaCancelacion = ref('')
-  const subramo = ref('')
-  const idContrato = ref('')
-  const inicioContrato = ref('')
-  const finContrato = ref('')
-  const tipoReaseguro = ref('')
-  const tipoContrato = ref('')
-  const formaContractual = ref('')
-  const criterioCobertura = ref('')
-  const negociosCubiertos = ref('')
-  const moneda = ref('')
-  const cesion = ref('')
-  const limiteMax = ref('')
-  const limiteMaxResCR = ref('')
-  const retencionP = ref('')
+import { computed, onMounted, ref, watch } from 'vue'
+import { NuevoContratoVida } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoDG.actions'
+import { useContratoStore, type ContratoGeneralDatos } from '@/stores/contratoStore'
+import { DialogType, useDialog } from '@/stores/dialogStore'
+import { ValidacionesContrato } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/ValidacionesContrato'
 
-  const headers1 = [
-    { title: 'Detalle de Capa',  key: 'detalleCapa' },
-    { title: 'Retención Propia capa N',  key: 'retencionC' },
-    { title: 'Techo Capa N',  key: 'techoC' },
-    { title: 'Modificar',  key: 'techoC' },
-    { title: 'Borrar',  key: 'techoC' },
-  ]
+const contratoStore = useContratoStore()
+const dialog = useDialog()
+const formRef = ref<any>(null)
+
+const {
+  subramoOptions, fetchSubramos,
+  monedaOptions, fetchMoneda,
+  formaContractualOptions, fetchFormaContractual,
+  tipoReaseguroOptions, fetchTipoReaseguro,
+  tipoContratoOptions, fetchTipoContrato,
+  criterioCoberturaOptions, fetchCriterioCobertura,
+  apiDatosContrato, fetchAllRecords,
+} = NuevoContratoVida()
+
+onMounted(async () => {
+  await Promise.all([
+    fetchSubramos(), fetchMoneda(), fetchFormaContractual(),
+    fetchTipoReaseguro(), fetchTipoContrato(), fetchCriterioCobertura(),
+    fetchAllRecords()
+  ])
+})
+
+const contratoProrrogado = ref(0)
+const fechaFinProrroga = ref('')
+const contratoCancelado = ref(0)
+const fechaCancelacion = ref('')
+const subramoObj = ref<any[]>([])
+const monedaObj = ref<any>(null)
+const formaContractualObj = ref<any>(0)
+const tipoReaseguroObj = ref<any>(0)
+const tipoContratoObj = ref<any>(null)
+const criterioCoberturaObj = ref<any>(0)
+
+const idContrato = ref('')
+const negociosCubiertos = ref('TODA LA CARTERA')
+const inicioContrato = ref<any>(null)
+const finContrato = ref<any>(null)
+
+const limiteMax = ref<number>(0)
+const limiteMaxResCR = ref<number>(0)
+const retencionP = ref<number>(0)
+const cesion = ref<string | number>('')
+const piso = ref<number>(0)
+const techo = ref<number>(0)
+
+const capas = ref<any[]>([])
+const retencionCapa = ref<number>(0)
+const techoCapa = ref<number>(0)
+const capaEditando = ref<number | null>(null)
+
+const emit = defineEmits<{
+  (e: 'actualizarFormaContractual', valor: number): void,
+  (e: 'onSuccessRegister'): void
+}>()
+
+const siNoOptions = [{ title: 'SI', value: 1 }, { title: 'NO', value: 0 }]
+
+
+const calcularFechaFin = (nuevaFechaInicio: Date | null) => {
+  if(nuevaFechaInicio){
+    const nuevaFI = new Date(nuevaFechaInicio);
+    nuevaFI.setFullYear(nuevaFI.getFullYear() + 1)
+    finContrato.value = nuevaFI;
+  } else {
+    finContrato.value = null;
+  }
+}
+
+const getID = (item: any) => (item && typeof item === 'object' ? item.value : item)
+
+const formatNumber = (val: any): string => {
+  if (val === null || val === undefined || val === '') return '';
+  let stringValue = String(val).replace(/[^0-9.]/g, '');
+  const parts = stringValue.split('.');
+  const entero = parts[0];
+    if (entero) {
+      parts[0] = entero.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+  return parts.join('.');
+};
+
+const parseNumber = (val: string | number): number => {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  const cleanValue = val.replace(/,/g, '');
+  return parseFloat(cleanValue) || 0;
+};
+
+const displayLimiteMax = computed({
+  get: () => formatNumber(limiteMax.value),
+  set: (val) => { limiteMax.value = parseNumber(val) }
+});
+
+const displayRetencionP = computed({
+  get: () => formatNumber(retencionP.value),
+  set: (val) => { retencionP.value = parseNumber(val) }
+});
+
+const displayLimiteMaxResCR = computed({
+  get: () => formatNumber(limiteMaxResCR.value),
+  set: (val) => { limiteMaxResCR.value = parseNumber(val) }
+});
+
+const displayPiso = computed({
+  get: () => formatNumber(piso.value),
+  set: (val) => { piso.value = parseNumber(val) }
+});
+
+const displayTecho = computed({
+  get: () => formatNumber(techo.value),
+  set: (val) => { techo.value = parseNumber(val) }
+});
+
+const displayRetencionCapa = computed({
+  get: () => formatNumber(retencionCapa.value),
+  set: (val) => { retencionCapa.value = parseNumber(val) }
+});
+
+const displayTechoCapa = computed({
+  get: () => formatNumber(techoCapa.value),
+  set: (val) => { techoCapa.value = parseNumber(val) }
+});
+
+watch(formaContractualObj, (newVal) => {
+  const id = getID(newVal);
+  emit('actualizarFormaContractual', Number(id));
+}, { immediate: true });
+
+const hidratarDesdeStore = () => {
+  const g = contratoStore.general
+  const e = contratoStore.expc
+  if (!g) return
+
+  idContrato.value = g.idContrato || ''
+  negociosCubiertos.value = g.negociosCubiertos || ''
+  inicioContrato.value = g.fechaInicio
+  finContrato.value = g.fechaFin
+
+  limiteMax.value = Number(g.limiteMax) || 0
+  limiteMaxResCR.value = Number(g.limiteMaxResCR) || 0
+  retencionP.value = Number(g.montoRetencion) || 0
+  cesion.value = g.porcentajeCesion || ''
+  piso.value = Number(g.piso) || 0
+  techo.value = Number(g.techo) || 0
+  capas.value = e?.capas || []
+
+  if (subramoOptions.value.length > 0) {
+    const ids = Array.isArray(g.subramo) ? g.subramo.map(getID) : []
+    subramoObj.value = subramoOptions.value.filter(o => ids.includes(o.value))
+  }
+  if (monedaOptions.value.length > 0) {
+    monedaObj.value = monedaOptions.value.find(o => o.value === getID(g.cveMoneda))
+  }
+  if (formaContractualOptions.value.length > 0) {
+    formaContractualObj.value = formaContractualOptions.value.find(o => o.value === getID(g.cveFormaContractual))
+  }
+  if (tipoReaseguroOptions.value.length > 0) {
+    tipoReaseguroObj.value = tipoReaseguroOptions.value.find(o => o.value === getID(g.cveTReaseguro))
+  }
+  if (tipoContratoOptions.value.length > 0) {
+    tipoContratoObj.value = tipoContratoOptions.value.find(o => Number(o.value) === Number(getID(g.idTContrato)))
+  }
+  if (criterioCoberturaOptions.value.length > 0) {
+    criterioCoberturaObj.value = criterioCoberturaOptions.value.find(o => o.value === getID(g.criterioCobertura))
+  }
+}
+
+watch(
+  [() => contratoStore.general, subramoOptions, monedaOptions, formaContractualOptions, tipoReaseguroOptions, tipoContratoOptions, criterioCoberturaOptions],
+  () => hidratarDesdeStore(),
+  { immediate: true, deep: true }
+)
+
+const tipoContratoFiltrado = computed(() => {
+  const idReaseguroSeleccionado = getID(tipoReaseguroObj.value);
+
+  if (idReaseguroSeleccionado === null) return [];
+
+  return tipoContratoOptions.value.filter((contrato: any) => {
+    return contrato.cveTreaseg === idReaseguroSeleccionado;
+  });
+});
+
+watch(() => tipoReaseguroObj.value, () => {
+  tipoContratoObj.value = null;
+});
+
+const agregarCapa = () => {
+  if (!retencionCapa.value || !techoCapa.value) return
+  const index = capaEditando.value !== null ? capaEditando.value + 1 : capas.value.length + 1
+  const detalle = `EXCEDENTE CAPA ${index}`
+  const nuevaCapa = { detalleCapa: detalle, retencionC: retencionCapa.value, techoC: techoCapa.value }
+
+  if (capaEditando.value !== null) {
+    capas.value[capaEditando.value] = nuevaCapa
+    capaEditando.value = null
+  } else {
+    capas.value.push(nuevaCapa)
+  }
+  retencionCapa.value = 0; techoCapa.value = 0
+}
+
+const editarCapa = (item: any, index: number) => {
+  retencionCapa.value = item.retencionC; techoCapa.value = item.techoC; capaEditando.value = index
+}
+
+const eliminarCapa = (index: number) => {
+  capas.value.splice(index, 1)
+  capas.value.forEach((c, i) => c.detalleCapa = `EXCEDENTE CAPA ${i + 1}`)
+}
+
+const guardarDatosGenerales = async () => {
+  const validation = await formRef.value?.validate()
+  if (!validation?.valid) {
+    dialog.show({ title: 'Atención', message: 'Complete los campos obligatorios', type: DialogType.ERROR })
+    return
+  }
+
+  try {
+    const response = await apiDatosContrato.post('getAllRecords');
+    const listaContratos = response.data || [];
+
+    const existe = listaContratos.some(
+      (contrato: any) => String(contrato.idContrato).trim().toLowerCase() === String(idContrato.value).trim().toLowerCase()
+    )
+
+    if (existe) {
+      dialog.show({
+        title: 'Contrato Existente',
+        message: `El nombre ingresado para el contrato "${idContrato.value}" ya se encuentra registrado.`,
+        type: DialogType.ERROR
+      })
+      return
+    }
+
+    const payload: ContratoGeneralDatos = {
+      idContrato: idContrato.value,
+      subramo: subramoObj.value,
+      negociosCubiertos: negociosCubiertos.value,
+      fechaInicio: inicioContrato.value,
+      fechaFin: finContrato.value,
+      cveMoneda: monedaObj.value,
+      cveFormaContractual: formaContractualObj.value,
+      cveTReaseguro: tipoReaseguroObj.value,
+      idTContrato: tipoContratoObj.value,
+      criterioCobertura: criterioCoberturaObj.value,
+      limiteMax: String(limiteMax.value),
+      limiteMaxResCR: String(limiteMaxResCR.value),
+      montoRetencion: String(retencionP.value),
+      piso: String(piso.value),
+      techo: String(techo.value),
+      porcentajeCesion: String(cesion.value),
+    }
+
+    contratoStore.setGeneral(payload)
+
+    if (getID(tipoContratoObj.value) === 3) {
+      contratoStore.setDatosExPC({ idContrato: idContrato.value, capas: capas.value })
+    }
+
+    dialog.show({ title: 'Éxito', message: 'Datos de contrato general guardados', type: DialogType.SUCCESS })
+    emit('onSuccessRegister')
+
+  } catch (error) {
+    dialog.show({
+      title: 'Error de Red',
+      message: 'No se pudo validar la existencia del contrato. Revise su conexión.',
+      type: DialogType.ERROR
+    })
+  }
+}
+
+const headers1 = [
+  { title: 'Detalle de Capa', key: 'detalleCapa' },
+  { title: 'Retención propia', key: 'retencionC' },
+  { title: 'Techo', key: 'techoC' },
+  { title: 'Acciones', key: 'acciones', sortable: false }
+]
 </script>

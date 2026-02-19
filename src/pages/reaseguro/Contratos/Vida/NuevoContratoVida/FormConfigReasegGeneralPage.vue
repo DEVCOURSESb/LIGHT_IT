@@ -91,7 +91,7 @@
             v-model="detalleCoberturaObj"
             :items="siNoOptions"
             label="¿Detalle por cobertura?"
-            :disabled="getID(comisionReasegObj) !== 1 || getID(cesionCoberBasiObj) !== 0"
+            :disabled="getID(comisionReasegObj) !== 1"
             item-title="title"
             chips
             return-object
@@ -414,17 +414,42 @@ watch(cesionCoberBasiObj, (value) => {
     indicadorDistrCObj.value = opcionDefault;
   }
 });
+const verificarCoberturasCompletas = (): boolean => {
+  if (getID(detalleCoberturaObj.value) !== 1) return true;
+
+  const coberturasAgregadas = itemsTablaCoberturas.value.map(item =>
+    item.tipoCoberturaNombre.toUpperCase().trim()
+  );
+
+  const tieneBasica = coberturasAgregadas.includes('BASICA');
+  const tieneBadi = coberturasAgregadas.includes('BADI');
+
+  return tieneBasica && tieneBadi;
+};
 
 const guardarConfigReaseguro = async () => {
-  const { valid } = await formRef.value.validate()
-  if (!valid) return
+  const { valid } = await formRef.value.validate();
+  if (!valid) return;
 
-  const idContrato = contratoStore.general?.idContrato
+  const idContrato = contratoStore.general?.idContrato;
   if (!idContrato) {
-    dialog.show({ title: 'Error', message: 'Falta ID de contrato.', type: DialogType.ERROR })
-    return
+    dialog.show({ title: 'Error', message: 'Falta ID de contrato.', type: DialogType.ERROR });
+    return;
   }
 
+  if (!verificarCoberturasCompletas()) {
+    dialog.show({
+      title: 'Confirmación',
+      message: 'No se ha asignado detalle de comisión a todos los tipos de cobertura. ¿Desea continuar?',
+      type: DialogType.CONFIRM,
+      onConfirm: () => validarParticipacionYGuardar(idContrato)
+    });
+  } else {
+    validarParticipacionYGuardar(idContrato);
+  }
+};
+
+const validarParticipacionYGuardar = (idContrato: string) => {
   const sumaPrevia = contratoStore.totalParticipacion;
   const participacionNueva = Number(participacion.value.toFixed(2));
   const totalConNuevo = sumaPrevia + participacionNueva;
@@ -434,12 +459,12 @@ const guardarConfigReaseguro = async () => {
       title: 'Confirmación de Participación',
       message: `La participación total acumulada será de ${totalConNuevo.toFixed(2)}%. ¿Desea continuar a pesar de exceder el 100%?`,
       type: DialogType.CONFIRM,
-      onConfirm: () => ejecutarGuardadoFinal(idContrato) // Función que ejecuta el proceso final
+      onConfirm: () => ejecutarGuardadoFinal(idContrato)
     });
   } else {
     ejecutarGuardadoFinal(idContrato);
   }
-}
+};
 
 const ejecutarGuardadoFinal = (idContrato: string) => {
   let coberturasFinal: TipoCoberturas[] = []

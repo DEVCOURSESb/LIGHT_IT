@@ -30,34 +30,44 @@
     <v-spacer class="mb-4" />
   </div>
 </template>
-
 <script lang="ts" setup>
 import { ref } from 'vue'
 import FormGeneralDatosPage from './FormGeneralDatosPage.vue'
 import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
+import { useContratoStore } from "@/stores/contratoStore";
 
+const contratoStore = useContratoStore();
 const activeTab = ref('tab-1')
 const esFacultativo = ref(false)
 
 const emits = defineEmits(['on-save-complete']);
 
+
 const actualizarFormaContractual = (valor: number) => {
-  esFacultativo.value = valor === 1
+  const antesEraFacultativo = esFacultativo.value;
+  esFacultativo.value = valor === 1;
+
+  if (antesEraFacultativo && !esFacultativo.value) {
+    const idContrato = contratoStore.general?.idContrato;
+
+    contratoStore.setPolizas({
+      idContrato: idContrato || '',
+      polizas: []
+    });
+
+    console.log("Se han eliminado las pólizas porque el contrato ya no es facultativo.");
+  }
 }
 
 const onSuccessRegisterDatosGenerales = () => {
   if (esFacultativo.value) {
     activeTab.value = 'tab-2'
   } else {
-    emits('on-save-complete', 'reaseguradores');
+    emits('on-save-complete');
   }
 }
 
 const onSuccessRegisterPolizasFacultativas = () => {
-  emits('on-save-complete', 'reaseguradores');
+  emits('on-save-complete');
 }
-
-// existe un nuevo detalle pues si el usuario decide que no va a llevar polizas facultativas en la selección de
-// contrato, si ya se asigno con anterioridad polizas pero se cambia la seleccion en general, entonces este
-// debera eliminarse del localstorage
 </script>

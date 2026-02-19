@@ -95,6 +95,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
+import { esArchivoCSVValido } from '@/utils/validateCSV'
 
 const route = useRoute()
 const dialogGlobal = useDialog()
@@ -175,30 +176,21 @@ const confirmarEdicion = () => {
 
 const validarRangoEdad = ref();
 
-const eliminarTarifa = async (item: any) => {
-  dialog.show({
-    title: 'Confirmar',
-    message: `¿Estás seguro de eliminar el archivo?`,
-    type: DialogType.CONFIRM,
-  }); // debe esperar primero la confirmación antes de proceder a eliminar
-
-  await apiConfigTarifa.delete(`deleteRecord/${item.id}`);
-  cargarDetalles();
-};
 
 const guardarEnBD = async () => {
   try {
     dialogGlobal.show({ title: 'Guardando', message: 'Actualizando registros...', type: DialogType.INFO });
 
     const promesas = itemsDetalle.value.map(item => {
-      return apiConfigTarifa.post(`insertRecord/${item.id}`, {
-        //id: item.id,
+      return apiConfigTarifa.post(`insertRecord`, [{
+        id: item.id,
         nombreArchivo: item.nombreArchivo,
         edad: item.edad,
         genero: item.genero,
-        fumador: item.fumador,
+        fumador: item.fumador === 'S' ? 0 : 1,
         primaRiesgo: item.primaRiesgo,
-      });
+        esActivo: item.esActivo
+      }]);
     });
 
     await Promise.all(promesas);

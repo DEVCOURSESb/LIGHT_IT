@@ -191,7 +191,7 @@ const tarifasTablaCompleta = computed(() => {
       todasLasTarifas.push({
         idContrato: item.general.idContrato,
         cveReasegurador: item.general.nombreReasegurador,
-        detalleCapa: t.detalleCapa || '-',
+        detalleCapa: t.detalleCapa || 'NO',
         descClasifCober: String(t.tipoCobertura),
         cveCob: String(t.cveCob),
         descCob: t.cobertura,
@@ -316,42 +316,6 @@ const headersIntermediarios = [
   { title: 'ASIGNACIÓN', key: 'cveCriterioAsig' }, { title: 'BROKER', key: 'cveIntermediario' }, { title: '¿CORRETAJE?', key: 'indCorretaje' },
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];
-
-// sigue pasando de que solo llegan algunos registros a las comisiones normales, hice dos pruebas si mando 4 registros solo llegan 3, y asi
-const procesarComisionesSecuencial = async (listaFinal: any[], idContrato: string) => {
-  for (const item of listaFinal) {
-    const g = item.general;
-    const com = item.comisiones;
-    const tieneComision = getID(g.comisionReaseg) == 1;
-    const esEscalonada = com?.comisiones && com.comisiones.length > 0;
-
-    if (tieneComision) {
-      if (esEscalonada) {
-        for (const ce of com.comisiones) {
-          await apiComisionEsc.post('register', {
-            idContrato: idContrato,
-            cveReasegurador: String(getID(g.cveReasegurador)),
-            descClasifCober: getTX(ce.tipoCobertura),
-            limiteInf: cleanN(ce.limiteInf),
-            limiteSup: cleanN(ce.limiteSup),
-            comisionDefinitiva: cleanN(ce.comisionDefinitiva)
-          });
-        }
-      } else if (g.coberturas && g.coberturas.length > 0) {
-        for (const cob of g.coberturas) {
-          await apiComision.post('register', {
-            idContrato: idContrato,
-            cveReasegurador: String(getID(g.cveReasegurador)),
-            descClasifCober: getTX(cob.tipoCobertura),
-            comisionPrimerAnioFijaProv: cleanN(cob.comisionPrimerAnio),
-            comisionRenovacionFijaProv: cleanN(cob.comisionRenovacion)
-          });
-        }
-      }
-    }
-  }
-};
-
 const guardarEnBD = async () => {
   const authStore = AuthStore();
   if (!authStore.getToken) return;
@@ -423,7 +387,7 @@ const guardarEnBD = async () => {
           promsCob.push(apiCoberturas.post('register', {
             idContrato: gen.idContrato,
             cveReasegurador: String(getID(g.cveReasegurador)),
-            detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "",
+            detalleCapa: t.detalleCapa ? String(t.detalleCapa).toUpperCase() : "NO",
             descClasifCober: getTX(t.tipoCobertura || "BASICA"),
             cveCob: String(getID(t.cveCob)),
             descCob: getTX(t.cobertura),
@@ -438,7 +402,41 @@ const guardarEnBD = async () => {
           }));
         });
       }
+
+      const tieneComision = getID(g.comisionReaseg) == 1;
+      const esEscalonada = com?.comisiones && com.comisiones.length > 0;
+      const esPorCobertura = getID(g.detalleCobertura) == 1;
+
+      if (tieneComision) {
+        if (esEscalonada) {
+
+          com.comisiones.forEach((ce: any) => {
+            promsComisiones.push(apiComisionEsc.post('register', {
+              idContrato: gen.idContrato,
+              cveReasegurador: String(getID(g.cveReasegurador)),
+              descClasifCober: String(ce.tipoCobertura),
+              limiteInf: cleanN(ce.limiteInf),
+              limiteSup: cleanN(ce.limiteSup),
+              comisionDefinitiva: cleanN(ce.comisionDefinitiva)
+            }));
+          });
+        } else {
+          if (g.coberturas && g.coberturas.length > 0) {
+            g.coberturas.forEach((cob: any) => {
+              promsComisiones.push(apiComision.post('register', {
+                idContrato: gen.idContrato,
+                cveReasegurador: String(getID(g.cveReasegurador)),
+                //descClasifCober: esPorCobertura ? getTX(cob.tipoCobertura) : "GENERAL", // aqui solo llega el general y no los demas, y no quiero que llegue solo el general
+                descClasifCober: getTX(cob.tipoCobertura), // aqui solo llega el general y no los demas, y no quiero que llegue solo el general
+                comisionPrimerAnioFijaProv: cleanN(cob.comisionPrimerAnio),
+                comisionRenovacionFijaProv: cleanN(cob.comisionRenovacion)
+              }));
+            });
+          }
+        }
+      }
     });
+
     const promsCapas = (contratoStore.expc?.capas || []).map(c => apiCapas.post('register', {
       idContrato: gen.idContrato,
       detalleCapa: c.detalleCapa,
@@ -484,15 +482,15 @@ const guardarEnBD = async () => {
         });
       }).filter(p => p !== null);
     });
-    await Promise.all([
-        ...promsReas,
-        ...promsCob,
-        ...promsCapas,
-        ...promsPolizas,
-        ...promsInter
-      ]);
 
-    await procesarComisionesSecuencial(listaFinal, gen.idContrato);
+    await Promise.all([
+      ...promsReas,
+      ...promsCob,
+      ...promsComisiones,
+      ...promsCapas,
+      ...promsPolizas,
+      ...promsInter
+    ]);
 
     await dialog.show({
       title: 'ÉXITO',

@@ -43,7 +43,7 @@
 <script lang="ts" setup>
   import router from '@/router';
   import { BaseAPI } from '@/API/BaseAPI';
-  import { onMounted, ref } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
   import { format, parseISO } from 'date-fns';
   import { NuevoContratoVida } from './NuevoContratoVida/NuevoContratoDG.actions';
   import { DialogType, useDialog } from "@/stores/dialogStore"
@@ -123,9 +123,9 @@
   }
 
   const editarContratoVida = (item: any) => {
-    const nombreParaEnviar = item.tarifaP || item.nombreTarifa || item.nombreArchivo;
+    const nombreParaEnviar = item.idContrato;
     router.push({
-      path: `/reaseguro/contratos/vida/modificarContratoVida/${item.id}`,
+      path: `/reaseguro/contratos/vida/modificarContratoVida/${item.idContrato}`,
       query: { nombre: nombreParaEnviar }
     });
   };
@@ -133,7 +133,7 @@
   const eliminarContratoVida = async (item: any) => {
     dialog.show({
       title: 'Confirmar',
-      message: `¿Estás seguro de eliminar el contrato "${item.idContrato}"? Una vez eliminado no podra ser recuperado`,
+      message: `¿Estás seguro de eliminar el contrato llamado "${item.idContrato}"? Una vez eliminado no podrá ser recuperado`,
       type: DialogType.CONFIRM,
       onConfirm: async () => {
         try {
