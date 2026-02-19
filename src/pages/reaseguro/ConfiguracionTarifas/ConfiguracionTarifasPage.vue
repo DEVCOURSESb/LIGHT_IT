@@ -139,15 +139,6 @@ const visualizarTarifa = (item: any) => {
   });
 };
 
-const cargarParaEditar = (item: any) => {
-  esModoEdicion.value = true;
-  idSeleccionado.value = item.id;
-  nombreTarifaPropia.value = item.nombreTarifa;
-  esActivo.value = item.esActivo;
-  tarifaPropiaFile.value = null;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
 const obtenerFechaHoy = (): string => {
   const hoy = new Date();
   return `${String(hoy.getDate()).padStart(2, '0')}${String(hoy.getMonth() + 1).padStart(2, '0')}${hoy.getFullYear()}`;

@@ -386,12 +386,10 @@ const guardarEnBD = async () => {
 
     const promsReas: any[] = [];
     const promsCob: any[] = [];
-    const promsComisiones: any[] = [];
 
     listaFinal.forEach((item: any) => {
       const g = item.general;
       const c = item.coberturas;
-      const com = item.comisiones;
       const p = item.ptu;
 
       promsReas.push(apiReaseguradoras.post('register', {

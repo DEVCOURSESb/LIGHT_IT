@@ -93,7 +93,6 @@ interface PolizaItem {
 const { fetchEmisionContable } = NuevoContratoVida()
 const contratoStore = useContratoStore()
 const dialog = useDialog()
-const formRef = ref<any>(null)
 
 const mostrarAdvertencia = ref(true)
 const estaCargando = ref(false)
@@ -324,7 +323,7 @@ watch(
   ([len, poli]) => {
     if (len > 0 && poli?.polizas?.length && !hidratado.value) {
       hidratarPolizasDesdeStore();
-      hidratado.value = true; // Marcamos como listo
+      hidratado.value = true;
     }
   },
   { immediate: true }

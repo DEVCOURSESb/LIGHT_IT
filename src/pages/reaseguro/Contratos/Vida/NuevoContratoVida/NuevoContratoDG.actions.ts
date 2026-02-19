@@ -55,9 +55,6 @@ export const NuevoContratoVida = () => {
   const tipoReaseguroOptions = ref<SelectOption<number>[]>([])
   const tipoContratoOptions = ref<SelectOption<number>[]>([])
   const criterioCoberturaOptions = ref<SelectOption<number>[]>([])
-  const polizaOptions = ref<SelectOption<string>[]>([])
-  const renovacionOptions = ref<SelectOption<number>[]>([])
-  const tipoContratoOptionsMaster = ref<any[]>([]);
 
   const baseAPIOperacion = BaseAPI({
     prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfintOperYRamosAnx3817Rest/"
@@ -176,7 +173,7 @@ export const NuevoContratoVida = () => {
     return data
   }
 
-  const fetchPolizasFacultativas = async (fi?: string, ff?: string) => {
+  const fetchPolizasFacultativas = async () => {
     try {
       const response = await apiPolizasFacul.post('getAllRecords');
       return response.data;

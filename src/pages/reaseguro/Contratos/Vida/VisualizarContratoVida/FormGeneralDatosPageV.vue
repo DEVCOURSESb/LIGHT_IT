@@ -225,7 +225,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, watch } from 'vue'
+  import { ref } from 'vue'
   const contratoProrrogado = ref('')
   const fechaFinProrro = ref('')
   const contratoCancelado = ref('')

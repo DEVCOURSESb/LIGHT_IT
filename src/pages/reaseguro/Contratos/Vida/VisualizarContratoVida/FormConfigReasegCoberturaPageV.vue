@@ -152,7 +152,6 @@
 
 <script lang="ts" setup>
   import { ref, watch } from 'vue'
-  const agrupacionCoberturas = ref('')
   const coberturasBasi = ref('')
   const coberturasAdici = ref('')
   const detalleCapa = ref('')

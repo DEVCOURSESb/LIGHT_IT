@@ -8,12 +8,6 @@ export function AuthActions() {
     isPrivate: false,
     isBase: true,
   });
-  const baseAPIContratos = BaseAPI({
-    prefix: "/ws_reaseguro_contratos_vida/api/v1/auth/login",
-    isPrivate: false,
-    isBase: true,
-  });
-
 
   const sendEmail = async (correoElectronico: string): Promise<AxiosResponse | AxiosError> => {
     try {

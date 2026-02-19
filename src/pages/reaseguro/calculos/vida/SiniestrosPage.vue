@@ -49,13 +49,12 @@
         <div class="mb-2">
           <h6>Historico de Siniestros</h6>
         </div>
-
         <v-data-table
           :headers="headers"
           class="elevation-1"
           hide-default-footer
         >
-          <template #item.acciones="{ item, index }">
+          <template>
           </template>
         </v-data-table>
     </v-card-title>

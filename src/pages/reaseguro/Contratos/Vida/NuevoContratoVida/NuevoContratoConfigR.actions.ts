@@ -69,7 +69,6 @@ export const NuevoContratoVidaConR = () => {
   const coberturasBasiOptions = ref<SelectOption<number>[]>([])
   const coberturasAdiciOptions = ref<SelectOption<number>[]>([])
   const metodoCalPTUOptions = ref<SelectOption<number>[]>([])
-  const polizasOptions = ref<SelectOption<number>[]>([])
   const tipoTarifaOptions = ref<SelectOption<number>[]>([])
   const tarifasPropiasOptions = ref<SelectOption[]> ([])
 

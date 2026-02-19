@@ -29,7 +29,7 @@
           <br>
         </template>
 
-        <template #item.actions="{ item }">
+        <template>
           <v-icon class="mr-2" size="small">
             mdi-pencil
           </v-icon>
@@ -47,6 +47,5 @@
   import { useCatalogos } from '@/composables/administracion/useCatalogos'
 
   const { search, catalogos, headers } = useCatalogos()
-  const dialog = ref(false)
 
   </script>

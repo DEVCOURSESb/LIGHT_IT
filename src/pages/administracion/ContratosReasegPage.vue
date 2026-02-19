@@ -31,7 +31,7 @@
         </v-toolbar>
       </template>
 
-      <template #item.actions="{ item }">
+      <template>
         <v-icon class="edit">
           mdi-pencil
         </v-icon>
@@ -45,7 +45,5 @@
   import { useContratosReaseguro } from '@/composables/administracion/useContratosReaseguro'
 
   const { search, contrato, headers } = useContratosReaseguro()
-  const dialog = ref(false)
-
 
 </script>

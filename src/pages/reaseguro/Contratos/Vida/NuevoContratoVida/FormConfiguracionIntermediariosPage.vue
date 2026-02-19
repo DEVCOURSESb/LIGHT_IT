@@ -160,7 +160,7 @@ const abrirModalResumen = () => {
 
 const {
   asignacionIntermediarioOptions, fetchAsignacionInt,
-  reaseguradoraOptions, fetchReasegurador,
+  fetchReasegurador,
   intermeOptions, fetchIntermediario,
   tipoCorretajeOptions, fetchTipoCorretaje
 } = NuevoContratoVidaConInt()
@@ -196,10 +196,6 @@ const findInOptions = (options: any[], value: any) => {
   return options.find(o => getID(o) == id) || null;
 }
 
-const isCorretajeFijo = computed(() => {
-  return getID(corretajePObj.value) === 0 && getID(tipoCorretajeObj.value) === 0
-})
-
 watch(corretajePorc, (newVal) => {
   if (isHydrating.value) return
 
@@ -226,7 +222,7 @@ watch(montoCorretaje, (newVal) => {
   }
 })
 
-watch(intermediarioObj, value => {
+watch(intermediarioObj, () => {
   if (isHydrating.value) return
   limpiarCamposCaptura()
 })

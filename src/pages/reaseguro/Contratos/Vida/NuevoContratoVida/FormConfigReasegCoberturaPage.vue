@@ -447,11 +447,6 @@ const eliminarAgrupacion = (index: number) => {
     }
   });
 };
-const limpiarFormularioAgrupacion = () => {
-  coberturaMadreObj.value = null;
-  coberturasParaAgrupar.value = [];
-  editandoAgrupacionIndex.value = null;
-};
 
 watch(agrupacionCoberturas, (newValue) => {
   if (newValue === 0) {

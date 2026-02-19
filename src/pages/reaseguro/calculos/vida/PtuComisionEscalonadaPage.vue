@@ -66,7 +66,7 @@
         class="elevation-1"
         hide-default-footer
       >
-        <template #item.acciones="{ item, index }">
+        <template>
         </template>
       </v-data-table>
 
@@ -80,7 +80,7 @@
         class="elevation-1"
         hide-default-footer
       >
-        <template #item.acciones="{ item, index }">
+        <template>
         </template>
       </v-data-table>
 
@@ -89,12 +89,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { CalcularSiniestros, type IdContrato } from './Data/CalculoPrimasSiniestrosPtu.actions'
 import { ValidacionesCalculos } from './Data/Validaciones.actions'
 import { format, parseISO } from 'date-fns';
 
-const formRef = ref()
 
 const idContratoObj = ref<IdContrato | null>(null);
 
@@ -128,7 +127,6 @@ const llenarCampos = (contrato: IdContrato | null) => {
     fechaFin.value = null;
   }*/
 };
-
 
 
 const headers = ref([

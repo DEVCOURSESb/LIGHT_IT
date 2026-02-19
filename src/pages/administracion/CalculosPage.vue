@@ -27,7 +27,7 @@
         </v-toolbar>
       </template>
 
-      <template #item.actions="{ item }">
+      <template>
         <v-icon class="edit" >
           mdi-pencil
         </v-icon>
@@ -41,6 +41,5 @@
   import { useReaseguradores } from '@/composables/catalogos/useReaseguradores'
 
   const { search, reaseguradores, headers } = useReaseguradores()
-  const dialog = ref(false)
 
   </script>
