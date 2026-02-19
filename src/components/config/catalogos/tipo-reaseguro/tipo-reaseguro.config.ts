@@ -2,7 +2,7 @@ import { TipoReaseguroActions } from "@/API/catalogos/tipo-reaseguro/tipo-reaseg
 import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = TipoReaseguroActions()
-const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
 
 export const tipoReaseguroConfig = {
   entity: "tipo-reaseguro",

@@ -131,7 +131,6 @@ const {
   loadingSiniestros,
   cargarCifrasEmision,
   cargarCifrasSiniestros,
-  cargarTodasLasCifras,
 } = useCifrasControl();
 
 // Breadcrumbs

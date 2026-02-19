@@ -1,7 +1,7 @@
 // utils/validateCSV.ts
 // utils/validateCSV.ts
 import type { ValidacionCSV } from "@/API/generic/carga-archivos";
-import { parseCSVLine, cleanCSVValue, getCSVColumns, validateCSVLineColumns } from "./csvParser";
+import { parseCSVLine, getCSVColumns, validateCSVLineColumns } from "./csvParser";
 
 /**
  * Valida un archivo CSV verificando su estructura y formato

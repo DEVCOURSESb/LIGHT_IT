@@ -18,7 +18,6 @@ export const usePolizasFacultativasSection = () => {
   const store = useContratoAEStore();
 
   const {
-    resetForm,
     setFieldValue,
     values: formData,
     errors: formErrors,
