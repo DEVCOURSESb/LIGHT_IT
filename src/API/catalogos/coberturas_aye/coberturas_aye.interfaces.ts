@@ -4,6 +4,6 @@ export interface coberturasAye {
   descCobaye: string;
   tCob: number;
   cveCobertura: string;
-  esActivo: boolean;
+  esActivo: number;
   fechaRegistro: string;
 }

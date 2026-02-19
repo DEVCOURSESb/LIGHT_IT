@@ -7,6 +7,7 @@ const {
   minMaxString,
   validateBoolean,
   transformBooleanToNumber,
+  transformNumberToBoolean,
   transformToUpperCase,
 } = validationsHandler();
 
@@ -22,7 +23,7 @@ export const limCorretajeConfig = {
   headers: [
     {
       title: "CLAVE",
-      key: "cveLimcorretaje",
+      key: "cveLimCorretaje",
       sortable: true,
       headerProps: {
         style: "font-weight: bold",
@@ -67,11 +68,11 @@ export const limCorretajeConfig = {
       hidden: true,
     },
     {
-      name: "cveLimcorretaje",
+      name: "cveLimCorretaje",
       label: "Clave",
       type: "number",
       required: true,
-      dataKey: "cveLimcorretaje",
+      dataKey: "cveLimCorretaje",
       defaultValue: "",
       disabled:true
     },
@@ -83,6 +84,7 @@ export const limCorretajeConfig = {
       dataKey: "limiteCorretaje",
       defaultValue: "",
       transformToAPI: (value: string) => transformToUpperCase(value),
+
     },
     {
       name: "esActivo",
@@ -93,11 +95,12 @@ export const limCorretajeConfig = {
       displayType: "checkbox",
       defaultValue: true,
       transformToAPI: (value: boolean) => transformBooleanToNumber(value),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
     },
   ],
 
   validationSchema: {
-    //cveLimcorretaje: (value: number) => minMax(value, 1, 9) || "La clave es requerida",
+    //cveLimCorretaje: (value: number) => minMax(value, 1, 9) || "La clave es requerida",
     limiteCorretaje: (value: string) =>
       minMaxString(value, 1, 1000) || "La descripción es requerida",
     esActivo: (value: boolean) =>

@@ -7,6 +7,7 @@ const {
   minMaxString,
   validateBoolean,
   transformBooleanToNumber,
+  transformNumberToBoolean,
   transformToUpperCase,
 } = validationsHandler();
 
@@ -93,6 +94,7 @@ export const calculoComisionConfig = {
       displayType: "checkbox",
       defaultValue: true,
       transformToAPI: (value: boolean) => transformBooleanToNumber(value),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
     },
   ],
 

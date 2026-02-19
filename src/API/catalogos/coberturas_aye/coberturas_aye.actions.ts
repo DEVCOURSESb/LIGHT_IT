@@ -1,15 +1,13 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { coberturasAye } from "./coberturas_aye.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 export const CoberturasAyeActions = () => {
   const baseAPI = BaseAPI({
-    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturasAyeRest/",
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntCoberturasAyERest/",
   });
 
   const fetch = async (): Promise<coberturasAye[]> => {
     try {
-      return fakeData().dataCoberturasAye
       const response = await baseAPI.post<coberturasAye[]>("getAllRecords");
       return response.data;
     } catch (error) {

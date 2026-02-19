@@ -2,6 +2,6 @@ export interface CalculoComision {
   id: number;
   cveCalcomis: number;
   formulaComision: string;
-  esActivo: boolean;
+  esActivo: number;
   fechaRegistro: string;
 }

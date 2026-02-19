@@ -8,6 +8,7 @@ const {
   minMax,
   validateBoolean,
   transformBooleanToNumber,
+  transformNumberToBoolean,
   transformToUpperCase,
 } = validationsHandler();
 
@@ -128,6 +129,7 @@ export const coberturasAyeConfig = {
       displayType: "checkbox",
       defaultValue: true,
       transformToAPI: (value: boolean) => transformBooleanToNumber(value),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
     },
   ],
 

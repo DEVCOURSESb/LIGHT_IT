@@ -22774,28 +22774,28 @@ export const fakeData = () => {
       id: 1,
       cveSector: "1",
       descSector: "FEDERAL",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:29:51.957",
     },
     {
       id: 2,
       cveSector: "2",
       descSector: "ESTATAL",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:29:51.957",
     },
     {
       id: 3,
       cveSector: "3",
       descSector: "MUNICIPAL",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:29:51.957",
     },
     {
       id: 4,
       cveSector: "4",
       descSector: "PRIVADO",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:29:51.957",
     },
   ];
@@ -22807,7 +22807,7 @@ export const fakeData = () => {
       descCobaye: "MUERTE ACCIDENTAL",
       tCob: 769,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22816,7 +22816,7 @@ export const fakeData = () => {
       descCobaye: "REEMBOLSO DE GASTOS MÉDICOS",
       tCob: 877,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22825,7 +22825,7 @@ export const fakeData = () => {
       descCobaye: "PÉRDIDAS ORGÁNICAS",
       tCob: 1080,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22834,7 +22834,7 @@ export const fakeData = () => {
       descCobaye: "GASTOS FUNERARIOS",
       tCob: 1097,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22843,7 +22843,7 @@ export const fakeData = () => {
       descCobaye: "INDEMNIZACIÓN DIARIA",
       tCob: 1064,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22852,7 +22852,7 @@ export const fakeData = () => {
       descCobaye: "MUERTE ACCIDENTAL COLECTIVA",
       tCob: 975,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22861,7 +22861,7 @@ export const fakeData = () => {
       descCobaye: 'PÉRDIDAS ORGÁNICAS COLECTIVO ESCALA "B"',
       tCob: 1127,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22870,7 +22870,7 @@ export const fakeData = () => {
       descCobaye: "CIRUGÍA ESTÉTICA REPARADORA",
       tCob: 1168,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22879,7 +22879,7 @@ export const fakeData = () => {
       descCobaye: "MUERTE VICTIMAS LATINO",
       tCob: 1179,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22888,7 +22888,7 @@ export const fakeData = () => {
       descCobaye: "PÉRDIDAS ORGÁNICAS VICTIVAS LATINO",
       tCob: 1182,
       cveCobertura: "331",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22897,7 +22897,7 @@ export const fakeData = () => {
       descCobaye: "COBERTURA BÁSICA DE GASTOS MÉDICOS",
       tCob: 1034,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22906,7 +22906,7 @@ export const fakeData = () => {
       descCobaye: "AMPLIACIÓN EN EL EXTRANJERO",
       tCob: 1035,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22915,7 +22915,7 @@ export const fakeData = () => {
       descCobaye: "REINSTALACIÓN AUTOMÁTICA DE SUMA ASEGURADA BÁSICA",
       tCob: 1058,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22924,7 +22924,7 @@ export const fakeData = () => {
       descCobaye: "PARTICIPACIÓN MÍNIMA POR HOSPITALIZACIÓN",
       tCob: 1062,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22933,7 +22933,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA MÉDICA",
       tCob: 1228,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22942,7 +22942,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA MÉDICA CONT",
       tCob: 1261,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22951,7 +22951,7 @@ export const fakeData = () => {
       descCobaye: "GMM EN EXCESO",
       tCob: 1266,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22960,7 +22960,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA DENTAL",
       tCob: 1270,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22969,7 +22969,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA VISIÓN",
       tCob: 1271,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22978,7 +22978,7 @@ export const fakeData = () => {
       descCobaye: "ELIMINACION DEDUCIBLE POR ACCIDENTE",
       tCob: 1263,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22987,7 +22987,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA DENTAL Y VISIÓN",
       tCob: 1267,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -22996,7 +22996,7 @@ export const fakeData = () => {
       descCobaye: "ASISTENCIA DENTAL UPGRADE",
       tCob: 1268,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
     {
@@ -23005,7 +23005,7 @@ export const fakeData = () => {
       descCobaye: "ELIMINACIÓN DE DEDUCIBLE Y COASEGURO POR ACCIDENTE",
       tCob: 1272,
       cveCobertura: "332",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:43:34.247",
     },
   ];
@@ -23013,63 +23013,63 @@ export const fakeData = () => {
   const dataLimiteCorretaje: LimCorretaje[] = [
     {
       id: 1,
-      cveLimcorretaje: 0,
+      cveLimCorretaje: 0,
       limiteCorretaje:
         "%PTU (PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 2,
-      cveLimcorretaje: 1,
+      cveLimCorretaje: 1,
       limiteCorretaje: "%PTU (PRIMA CEDIDA - SINIESTROS RECUPERADOS)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 3,
-      cveLimcorretaje: 2,
+      cveLimCorretaje: 2,
       limiteCorretaje: "%PTU (K * PRIMA CEDIDA - SINIESTROS RECUPERADOS)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 4,
-      cveLimcorretaje: 3,
+      cveLimCorretaje: 3,
       limiteCorretaje:
         "%PTU (PRIMA CEDIDA - COMISIÓN DE REASEGURO - SINIESTROS RECUPERADOS - ARRASTRE)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 5,
-      cveLimcorretaje: 4,
+      cveLimCorretaje: 4,
       limiteCorretaje: "OTRA",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 6,
-      cveLimcorretaje: 5,
+      cveLimCorretaje: 5,
       limiteCorretaje:
         "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 7,
-      cveLimcorretaje: 6,
+      cveLimCorretaje: 6,
       limiteCorretaje:
         "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - COMISIÓN DE REASEGURO - SINIESTROS RECUPERADOS - ARRASTRE)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
     {
       id: 8,
-      cveLimcorretaje: 7,
+      cveLimCorretaje: 7,
       limiteCorretaje:
         "%PTU ( (1-%GASTOS) * PRIMA CEDIDA - SINIESTROS RECUPERADOS - ARRASTRE HASTA EXTINCIÓN)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:49:19.037",
     },
   ];
@@ -23080,7 +23080,7 @@ export const fakeData = () => {
       cveCalcomis: 0,
       formulaComision:
         "MINIMO(MAXIMO(90%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:54:20.647",
     },
     {
@@ -23088,7 +23088,7 @@ export const fakeData = () => {
       cveCalcomis: 1,
       formulaComision:
         "MINIMO(MAXIMO(95%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:54:20.647",
     },
     {
@@ -23096,7 +23096,7 @@ export const fakeData = () => {
       cveCalcomis: 2,
       formulaComision:
         "MINIMO(MAXIMO(92.5%-%SINIESTRALIDAD,COMISIÓN MÍNIMA),COMISIÓN MÁXIMA)",
-      esActivo: true,
+      esActivo: 1,
       fechaRegistro: "2026-02-03 10:54:20.647",
     },
   ];
