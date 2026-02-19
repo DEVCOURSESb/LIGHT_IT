@@ -1,6 +1,6 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { TipoCambio } from "./tipo_cambio.interfaces";
-import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions";
+//import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions";
 
 export function TipoCambioActions() {
   const baseAPI = BaseAPI({ prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntTipoCambioRest/" });
@@ -8,7 +8,7 @@ export function TipoCambioActions() {
   const fetch = async (): Promise<TipoCambio[]> => {
     try {
       const response = await baseAPI.post<TipoCambio[]>("getAllRecords");
-      const monedaActions = MonedaActions();
+      //const monedaActions = MonedaActions();
       return response.data;
     } catch (error) {
       console.error("Error fetching TipoCambios:", error);

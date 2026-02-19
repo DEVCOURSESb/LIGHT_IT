@@ -64,7 +64,6 @@ export const useReaseguradoresSection = () => {
     values: formData,
     errors: formErrors,
     validate,
-    resetForm,
   } = useForm({
     validationSchema: useReaseguradoresSectionValidations({
       isTypeProporcional: isTypeProporcional.value,

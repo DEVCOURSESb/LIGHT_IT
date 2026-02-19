@@ -225,7 +225,6 @@ export const useGeneralSection = () => {
   };
 
   const {
-    resetForm,
     setFieldValue,
     values: formData,
     errors: formErrors,

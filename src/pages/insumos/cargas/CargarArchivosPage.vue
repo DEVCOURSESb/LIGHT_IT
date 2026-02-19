@@ -141,7 +141,7 @@
 
 <script setup lang="ts">
 import type { useCargaArchivos } from '@/composables/archivos/useCargaArchivos';
-import { onMounted, computed, ref as vueRef, watch } from 'vue';
+import { onMounted, ref as vueRef, watch } from 'vue';
 
 interface Props {
   titulo: string;

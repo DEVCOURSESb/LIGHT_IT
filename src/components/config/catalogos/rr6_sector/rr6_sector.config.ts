@@ -3,7 +3,7 @@ import { validationsHandler } from "@/utilities/validations/validationsHandler";
 
 const actions = Rr6SectorActions();
 
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformToUpperCase } = validationsHandler();
 
 export const rr6SectorConfig = {
   entity: "rr6_sector",
