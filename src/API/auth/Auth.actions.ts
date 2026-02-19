@@ -32,13 +32,6 @@ export function AuthActions() {
     }
   };
 
-  const sendCredentialsContratos = async (body: dataCredentials) => {
-    try {
-      return await baseAPIContratos.post<loginSuccess>(`/login`, body);
-    } catch (error: any) {
-      throw error;
-    }
-  };
 
   const logout = async (email: string) => {
     try {
@@ -51,7 +44,6 @@ export function AuthActions() {
   return {
     sendEmail,
     sendCredentials,
-    sendCredentialsContratos,
     logout,
   };
 }

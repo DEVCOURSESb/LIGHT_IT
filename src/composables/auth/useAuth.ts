@@ -103,27 +103,6 @@ export const useAuth = () => {
     }
   };
 
-  const sendCredentialsContratos = async (
-    body: dataCredentials
-  ): Promise<Partial<ResponseInterinal>> => {
-    try {
-      const response = await authActions.sendCredentialsContratos(body);
-
-      authStore.loginContratos(response.data.token); // 👈 AQUÍ
-
-      return {
-        success: true,
-        message: "Acceso a contratos validado correctamente",
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        message:
-          error.response?.data?.message || "Error al validar contratos",
-      };
-    }
-  };
-
 
   const logout = async (): Promise<Partial<ResponseInterinal>> => {
     try {
@@ -147,7 +126,6 @@ export const useAuth = () => {
   return {
     sendEmail,
     sendCredentials,
-    sendCredentialsContratos,
     logout,
   };
 };
