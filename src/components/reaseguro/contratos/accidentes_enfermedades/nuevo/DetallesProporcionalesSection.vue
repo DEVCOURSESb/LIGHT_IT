@@ -144,7 +144,7 @@
             <!-- CRITERIO DE CAPACIDAD -->
             <v-col cols="12" md="3">
               <v-select
-                :items="queryCriterioAsignacion.data.value ?? []"
+                :items="queryCriterioAsignacion.data.value?.filter( item => [5, 10].includes(item.cveCriterioAsig) ) ?? []"
                 item-title="descCriterioAsig"
                 item-value="cveCriterioAsig"
                 label="Criterio de capacidad"

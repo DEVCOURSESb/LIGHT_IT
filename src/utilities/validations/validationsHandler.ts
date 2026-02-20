@@ -42,7 +42,7 @@ export const validationsHandler = () => {
   }
 
   const noSpecialCharacters = ( value: string ): boolean => {
-    const regex = /^[A-Za-z0-9]+$/;
+    const regex = /^[A-Za-z0-9\s]+$/;
     return regex.test(value);
   }
 
