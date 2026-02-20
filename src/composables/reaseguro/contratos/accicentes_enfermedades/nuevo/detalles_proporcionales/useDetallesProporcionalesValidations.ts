@@ -35,8 +35,8 @@ export const useDetallesProporcionalesValidations = () => {
         return (val.minMax(value, 0, 9999999999999999999.99) || "El monto de retención es obligatorio y debe ser un número positivo.");
       }
     },
-    montoRetencionContrato: (value: number, context: any) => {
-      const numericValue = round2(Number(value));
+    montoRetencionContrato: (value: number, /* context: any */) => {
+      /* const numericValue = round2(Number(value));
       if (!(value != null && numericValue >= 0)) {
         return "El monto de retención del contrato es obligatorio y debe ser un número positivo.";
         //! SI PORCENTAJE DE RETENCION NO ES NULO, EL MONTO DE RETENCION DEL CONTRATO DEBE SER IGUAL AL PORCENTAJE DE RETENCION Y LA CAPACIDAD DEL CONTRATO
@@ -47,10 +47,16 @@ export const useDetallesProporcionalesValidations = () => {
           return `El monto de retención del contrato no corresponde con el porcentaje de retención y la capacidad del contrato (${montoEsperado}).`;
       } else {
         return true;
-      }
+      } */
+
+        if (!(value != null && value >= 0)) {
+          return (val.minMax(value, 0, 9999999999999999999.99) || "Monto de retención contrato es obligatorio.");
+        }
+
+        return true;
     },
     montoCesion: (value: number, context: any) => {
-      const numericValue = round2(Number(value));
+      /* const numericValue = round2(Number(value));
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
         return "El monto de cesión es obligatorio y debe ser un número positivo.";
         //! SI EL PORCENTAJE DE CESION NO ES NULO, EL MONTO DE CESION DEBE SER IGUAL AL PORCENTAJE DE CESION Y LA CAPACIDAD DEL CONTRATO
@@ -61,10 +67,15 @@ export const useDetallesProporcionalesValidations = () => {
           return `El monto de cesión no corresponde con el porcentaje de cesión y la capacidad del contrato (${montoEsperdo}).`;
       } else {
         return true;
-      }
+      } */
+      if (!(value != null && value >= 0)) {
+          return (val.minMax(value, 0, 9999999999999999999.99) || "Monto de cesión contrato es obligatorio.");
+        }
+
+        return true;
     },
     capacidadContrato: (value: number, context: any) => {
-        const numericValue = round2(Number(value));
+      /* const numericValue = round2(Number(value));
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
         return "La capacidad del contrato es obligatoria, debe ser un número positivo y no puede ser mayor al monto de cesión.";
         //! SI PORCENTAJE DE RETENCION ES NULO, LA CAPACIDAD DEL CONTRATO DEBE SER IGUAL AL MONTO DE CESION Y EL MONTO DE RETENCION
@@ -79,7 +90,12 @@ export const useDetallesProporcionalesValidations = () => {
           return `La capacidad del contrato no corresponde con el monto de cesión y retención (${montoEsperado}).`;
       } else {
         return true;
-      }
+      } */
+      if (!(value != null && value >= 0)) {
+          return (val.minMax(value, 0, 9999999999999999999.99) || "Monto de retención contrato es obligatorio.");
+        }
+
+      return true;
     },
     cveCriterioAsigCapacidad: (value: string | null) => {
       return ( (value != null && value !== "") || "El criterio de capacidad es obligatorio." );

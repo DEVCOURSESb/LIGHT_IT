@@ -14,7 +14,7 @@
                 variant="solo-filled"
                 clearable
                 multiple
-                :disabled="queryEmisionContableAYE.isLoading.value || tipoContrato !== 3"
+                :disabled="queryEmisionContableAYE.isLoading.value"
                 :model-value="formData['noPoliza']"
                 @update:model-value="setFieldValue('noPoliza', $event)"
                 :error-messages="
@@ -67,8 +67,6 @@
 
 <script lang="ts" setup>
 import { usePolizasFacultativasSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/polizas_facultativas/usePolizasFacultativasSection";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
-import { storeToRefs } from "pinia";
 
 const {
   handleSubmit,
@@ -82,7 +80,4 @@ const {
   sendSelect,
   togglePolizaStatus,
 } = usePolizasFacultativasSection();
-
-const useAEStore = useContratoAEStore();
-const { tipoContrato } = storeToRefs(useAEStore);
 </script>

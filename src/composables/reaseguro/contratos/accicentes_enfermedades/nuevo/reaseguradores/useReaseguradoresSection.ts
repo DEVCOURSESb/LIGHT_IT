@@ -210,6 +210,50 @@ export const useReaseguradoresSection = () => {
     },
   );
 
+  /* reset de form cuando cambie x campo */
+  watch(
+    () => isTypeProporcional,
+    (newValue) => {
+      /* si no es proporcional */
+      if(!newValue) {
+        setFieldValue("otorgaPtu", null);
+        setFieldValue("capa", null);
+        setFieldValue("prioridad", null);
+        setFieldValue("limResponsabilidad", null);
+        setFieldValue("limAgregado", null);
+        setFieldValue("cveCriterioAsigLimAgregado", null);
+        setFieldValue("cveCriterioAsigLimAgregado", null);
+        setFieldValue("cveAsignacionCosto", null);
+        setFieldValue("noClaims", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.otorgaPtu,
+    (newValue) => {
+      if(newValue === "NO") {
+        setFieldValue("porcentajePtu", null);
+        setFieldValue("formulaPtu", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.formulaPtu,
+    (newValue) => {
+      if(newValue != 2) {
+        setFieldValue("porcentajeK", null);
+      } else if(! [5, 6, 7].includes(newValue) ) {
+        setFieldValue("gastos", null);
+      } else if(! [0, 3, 5, 6].includes(newValue) ) {
+        setFieldValue("aniosArrastre", null);
+      }
+    }
+  );
+
+  // todo comisRolReaseguro
+
   const handleSubmit = async () => {
     showErrors.value = true;
     const { valid } = await validate();

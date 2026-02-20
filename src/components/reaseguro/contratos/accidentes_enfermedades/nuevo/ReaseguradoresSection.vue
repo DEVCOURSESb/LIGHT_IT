@@ -121,7 +121,7 @@
               />
             </v-col>
 
-            <!-- AÑOS DE ARRASTRE si la formaula de ptu es  -->
+            <!-- AÑOS DE ARRASTRE si la formaula de ptu es 0, 3, 5 o 6 -->
             <v-col cols="12" md="3" v-if="[0, 3, 5, 6].includes(formData['formulaPtu'])">
               <v-text-field
                 label="Años de arrastre"
@@ -272,7 +272,7 @@
 
           <!-- !ROW -->
           <v-row>
-            <!-- CAPA -->
+            <!-- CAPA si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Capa"
@@ -286,7 +286,7 @@
               />
             </v-col>
 
-            <!-- PRIORIDAD -->
+            <!-- PRIORIDAD si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Prioridad"
@@ -299,7 +299,7 @@
               />
             </v-col>
 
-            <!-- LÍMITE DE RESPONSABILIDAD -->
+            <!-- LÍMITE DE RESPONSABILIDAD si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Límite de responsabilidad"
@@ -312,7 +312,7 @@
               />
             </v-col>
 
-            <!-- LÍMITE AGREGADO -->
+            <!-- LÍMITE AGREGADO si el contrato es no proporcional -->
              <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-text-field
                 label="Límite agregado"
@@ -328,7 +328,7 @@
 
           <!-- !ROW -->
           <v-row>
-            <!-- TIPO LIMITE AGREGADO  si es no proporcional -->
+            <!-- TIPO LIMITE AGREGADO si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
                 :items="queryCriterioAsignacion.data.value || []"
@@ -344,7 +344,7 @@
               />
             </v-col>
 
-            <!-- TIPO DE COSTO -->
+            <!-- TIPO DE COSTO si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
                 :items="queryTipoAsignacion.data.value || []"
@@ -360,7 +360,7 @@
               />
             </v-col>
 
-            <!-- COSTO FIJO -->
+            <!-- COSTO FIJO si tipo de costo es fijo -->
              <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 0">
               <v-text-field
                 label="Costo fijo"
@@ -373,7 +373,7 @@
               />
             </v-col>
 
-            <!-- PRIMA MÍNIMA Y DE DEPOSITO si asignacion costo es variable -->
+            <!-- PRIMA MÍNIMA Y DE DEPOSITO si tipo de costo es variable -->
             <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima mínima y de deposito"
@@ -386,7 +386,7 @@
               />
             </v-col>
 
-            <!-- PRIMA MÍNIMA si asignacion costo es variable -->
+            <!-- PRIMA MÍNIMA si tipo de costo es variable -->
             <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima mínima"
@@ -402,7 +402,7 @@
 
           <!-- !ROW -->
           <v-row>
-            <!-- PRIMA MÁXIMA si asignacion costo es variable -->
+            <!-- PRIMA MÁXIMA si tipo de costo es variable -->
             <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Prima máxima"
@@ -415,7 +415,7 @@
               />
             </v-col>
 
-            <!-- FACTOR DE AJUSTE DIVIDENDO si asignacion costo es variable -->
+            <!-- FACTOR DE AJUSTE DIVIDENDO si tipo de costo es variable -->
             <v-col cols="12" md="3" v-if="formData['cveAsignacionCosto'] === 1">
               <v-text-field
                 label="Factor de ajuste dividendo"
