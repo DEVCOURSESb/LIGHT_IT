@@ -52,6 +52,12 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
     window.localStorage.setItem("contratoAE_generales", JSON.stringify(data));
 
+    setTipoReaseguro(Number(data.cveTreaseg));
+    setTipoContrato(Number(data.idTcontrato));
+    setIsFacultativo(Number(data.cveFcontrac));
+
+
+
     // ahora isTypeProporcional ya tiene el valor correcto
     activeTab.value = isTypeProporcional.value ? "tab-2" : "tab-3";
 
