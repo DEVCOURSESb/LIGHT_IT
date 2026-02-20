@@ -103,7 +103,7 @@
           fechaInicioContrato: normalizarFecha(t.fechaInicioContrato),
           fechaFinContrato: normalizarFecha(t.fechaFinContrato),
           contratoProrrogado: t.contratoProrrogado === 1 ? 'SI' : 'NO',
-          fechaFinProrrogada: normalizarFecha(t.fechaFinProrrogada) || 'NO DEFINIDO'
+          fechaFinProrrogada: normalizarFecha(t.fechaFinProrrogada) || '-'
         }));
       }
     } catch (error) {
@@ -133,11 +133,11 @@
   const eliminarContratoVida = async (item: any) => {
     dialog.show({
       title: 'Confirmar',
-      message: `¿Estás seguro de eliminar el contrato llamado "${item.idContrato}"? Una vez eliminado no podrá ser recuperado`,
+      message: `¿Estás seguro de eliminar el contrato llamado "${item.idContrato}"? Una vez eliminado no podrá ser recuperado.`,
       type: DialogType.CONFIRM,
       onConfirm: async () => {
         try {
-          await apiDatosContrato.delete(`deleteRecord/${item.id}`);
+          await apiDatosContrato.delete(`deleteRecord/${item.idContrato}`);
           dialog.show({
             title: 'ELIMINADO',
             message: 'Registro borrado con éxito.',

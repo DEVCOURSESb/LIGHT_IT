@@ -31,6 +31,7 @@ export interface TipoContrato {
   idTcontrato: number
   descTcontrato: string
   cveTreaseg : number
+  esActivo: number
 }
 
 interface CriterioCobertura {
@@ -147,7 +148,9 @@ export const NuevoContratoVida = () => {
   const fetchTipoContrato = async () => {
     const { data } = await baseAPITipoContrato.post<TipoContrato[]>("getAllRecords")
 
-    tipoContratoOptions.value = data.map(i => ({
+    tipoContratoOptions.value = data
+    .filter(i => i.esActivo === 1)
+    .map(i => ({
       title: i.descTcontrato,
       value: Number(i.idTcontrato),
       cveTreaseg: Number(i.cveTreaseg)
