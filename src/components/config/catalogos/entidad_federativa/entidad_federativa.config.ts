@@ -35,7 +35,6 @@ export const EntidadFederativaConfig = {
         style: 'font-weight: bold',
       },
     },
-    /**
     { title: 'LÍMITE INF.', key: 'limiteInfCp', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
@@ -46,7 +45,6 @@ export const EntidadFederativaConfig = {
         style: 'font-weight: bold',
       },
     },
-     */
     { title: 'ACTIVO', key: 'esActivo', sortable: true,
       headerProps: {
         style: 'font-weight: bold',

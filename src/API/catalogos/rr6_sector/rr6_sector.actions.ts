@@ -4,12 +4,11 @@ import { fakeData } from "@/API/fakeData";
 
 export const Rr6SectorActions = () => {
   const baseAPI = BaseAPI({
-    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatIntRr6SectorRest/",
+    prefix: "ws_catalogos_reaseguro/api/v1/ReasegCatCnsfRr6SectorRest/",
   });
 
   const fetch = async (): Promise<Rr6Sector[]> => {
     try {
-      return fakeData().dataRR6Sector;
       const response = await baseAPI.post<Rr6Sector[]>("getAllRecords");
       return response.data;
     } catch (error) {

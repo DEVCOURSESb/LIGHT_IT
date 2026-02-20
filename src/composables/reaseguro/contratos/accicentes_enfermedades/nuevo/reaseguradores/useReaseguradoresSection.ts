@@ -210,6 +210,91 @@ export const useReaseguradoresSection = () => {
     },
   );
 
+  /* reset de form cuando cambie x campo */
+  watch(
+    () => isTypeProporcional,
+    (newValue) => {
+      /* si no es proporcional */
+      if(!newValue) {
+        setFieldValue("otorgaPtu", null);
+        setFieldValue("capa", null);
+        setFieldValue("prioridad", null);
+        setFieldValue("limResponsabilidad", null);
+        setFieldValue("limAgregado", null);
+        setFieldValue("cveCriterioAsigLimAgregado", null);
+        setFieldValue("cveCriterioAsigLimAgregado", null);
+        setFieldValue("cveAsignacionCosto", null);
+        setFieldValue("noClaims", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.otorgaPtu,
+    (newValue) => {
+      if(newValue === "NO") {
+        setFieldValue("porcentajePtu", null);
+        setFieldValue("formulaPtu", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.formulaPtu,
+    (newValue) => {
+      if(newValue != 2) {
+        setFieldValue("porcentajeK", null);
+      } else if(! [5, 6, 7].includes(newValue) ) {
+        setFieldValue("gastos", null);
+      } else if(! [0, 3, 5, 6].includes(newValue) ) {
+        setFieldValue("aniosArrastre", null);
+      }
+    }
+  );
+  
+  watch(
+    () => formData.comisRolReaseguro,
+    (newValue) => {
+      if(newValue === "NO") {
+        setFieldValue("cveAsignacionComisRol", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.cveAsignacionComisRol,
+    (newValue) => {
+      if(newValue != 1) {
+        setFieldValue("comisRolFija", null);
+        setFieldValue("comisRolMin", null);
+        setFieldValue("comisRolMax", null);
+      } else if (newValue != 2) {
+        setFieldValue("cveCalcomis", null);
+      } else if (newValue != 1 && newValue != 2) {
+        setFieldValue("comisRolProvisional", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.cveAsignacionCosto,
+    (newValue) => {
+      if(newValue != 1) {
+        setFieldValue("costoFijo", null);
+        setFieldValue("primaMin", null);
+        setFieldValue("primaMax", null);
+        setFieldValue("facAjusteDividendo", null);
+        setFieldValue("facAjusteDivisor", null);
+      } else if ( newValue != 0) {
+        setFieldValue("pmd", null);
+      }
+    }
+  );
+
+  const tableHeaders = [
+    
+  ];
+
   const handleSubmit = async () => {
     showErrors.value = true;
     const { valid } = await validate();

@@ -18,7 +18,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       else return val.minMax(value, 0, 100) || "La participación es obligatoria con un rango de 0.00 a 100.00"
     },
     otorgaPtu: (value: string) => {
-      if ( isTypeProporcional ) return true;
+      if ( !isTypeProporcional ) return true;
       else return !!value || "Otorga PTU es obligatorio"
     },
     porcentajePtu: (value: number, context: any) => {

@@ -33,7 +33,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
     const informacionMoneda = data.dataTableMoneda.map((moneda: any) => {
       return {
-        cveContrato: data.idContrato,
+        idContrato: data.idContrato,
         cveMonedaContrato: moneda.cveMoneda,
         monActiva: moneda.monActiva,
       };
@@ -42,7 +42,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
     const informacionOperacionRamo = data.dataTableOperacionRamo.map((operacionRamo: any) => {
       return {
-        cveContrato: data.idContrato,
+        idContrato: data.idContrato,
         cveExtCoberContrato: operacionRamo.cveExtCober,
         cveOperRamo: operacionRamo.cveCobertura,
         operRamoActivo: operacionRamo.operRamoActivo,
@@ -100,12 +100,11 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   };
 
   const guardarDetallesProporcionales = (data: Record<string, any>[]) => {
-    // TODO, CLAVE DE CONTRATO, DE MOMENTO SE ASIGNA EL ID
     const generales = obtenerGenerales();
-    const cveContrato = generales.idContrato;
+    const idContrato = generales.idContrato;
     const dataWithContrato = data.map((item) => ({
       ...item,
-      cveContrato,
+      idContrato,
     }));
     window.localStorage.setItem("CAE_DETALLES_CONTRATO", JSON.stringify(dataWithContrato));
     activeTab.value = isFacultativo.value ? "tab-3" : "tab-4";

@@ -10,7 +10,6 @@ export const LimCorretajeActions = () => {
 
   const fetch = async (): Promise<LimCorretaje[]> => {
     try {
-      return fakeData().dataLimiteCorretaje;
       const response = await baseAPI.post<LimCorretaje[]>("getAllRecords");
       return response.data;
     } catch (error) {

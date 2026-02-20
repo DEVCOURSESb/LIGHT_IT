@@ -63,6 +63,12 @@ export const tiposContratoConfig = {
       headerProps: { style: "font-weight: bold" },
     },
     {
+      title: "ID TIPO DE CONTRATO",
+      key: "idTcontrato",
+      sortable: true,
+      headerProps: { style: "font-weight: bold" },
+    },
+    {
       title: "TIPO DE CONTRATO",
       key: "descTcontrato",
       sortable: true,

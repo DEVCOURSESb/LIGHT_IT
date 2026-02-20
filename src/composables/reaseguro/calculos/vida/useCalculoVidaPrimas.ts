@@ -79,6 +79,8 @@ export const useCalculoVidaPrimas = () => {
     if(response?.status === 200) {
       queryClient.invalidateQueries({ queryKey: ["calculo-vida-primas-history"] })
       snackbar.mostrarMensajeSnackbar("Cálculo ralizado con éxito", "success");
+      subramo.value = null;
+      fechaEvaluada.value = undefined;
     } else if (response?.status === 208) {
       dialog.show({
         title: "Cálculo existente",
@@ -102,8 +104,6 @@ export const useCalculoVidaPrimas = () => {
     }
     
     block.value = false;
-    subramo.value = null;
-    fechaEvaluada.value = undefined;
   };
 
   const descargarItem = (item: CalculoPrimasVidas) => {

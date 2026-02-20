@@ -1,7 +1,7 @@
 export interface LimCorretaje {
   id: number;
-  cveLimcorretaje: number;
+  cveLimCorretaje: number;
   limiteCorretaje: string;
-  esActivo: boolean;
+  esActivo: number;
   fechaRegistro: string;
 }

@@ -9,7 +9,6 @@ export const CalculoComisionActions = () => {
 
   const fetch = async (): Promise<CalculoComision[]> => {
     try {
-      return fakeData().dataCalculoComision
       const response = await baseAPI.post<CalculoComision[]>("getAllRecords");
       return response.data;
     } catch (error) {

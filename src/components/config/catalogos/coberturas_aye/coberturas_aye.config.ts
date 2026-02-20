@@ -8,6 +8,7 @@ const {
   minMax,
   validateBoolean,
   transformBooleanToNumber,
+  transformNumberToBoolean,
   transformToUpperCase,
 } = validationsHandler();
 
@@ -39,14 +40,14 @@ export const coberturasAyeConfig = {
     },
     {
       title: "CLAVE COBERTURA LATINO",
-      key: "tCob",
+      key: "tcob",
       sortable: true,
       headerProps: {
         style: "font-weight: bold",
       },
     },
     {
-      title: "CLAVE COBERTURA",
+      title: "OPERACIÓN / RAMO",
       key: "cveCobertura",
       sortable: true,
       headerProps: {
@@ -102,11 +103,11 @@ export const coberturasAyeConfig = {
       transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
-      name: "tCob",
+      name: "tcob",
       label: "Tipo Cobertura",
       type: "number",
       required: true,
-      dataKey: "tCob",
+      dataKey: "tcob",
       defaultValue: "",
     },
     //TODO: “REASEG_CAT_CNSFINT_OPER_Y_RAMOS_ANX38_1_7”
@@ -128,13 +129,14 @@ export const coberturasAyeConfig = {
       displayType: "checkbox",
       defaultValue: true,
       transformToAPI: (value: boolean) => transformBooleanToNumber(value),
+      transformFromAPI: (value: number) => transformNumberToBoolean(value),
     },
   ],
 
   validationSchema: {
     //cveCobaye: (value: number) => !!value || "La clave es requerida",
     descCobaye: (value: string) => minMaxString(value, 1, 1000) || "La descripción es requerida",
-    tCob: (value: number) => minMax(value, 1, 99999),
+    tcob: (value: number) => minMax(value, 1, 99999),
     cveCobertura: (value: string) => minMaxString(value, 1, 1) || "clave de covertura es requerido",
     esActivo: (value: boolean) => validateBoolean(value) || "El campo activo es requerido",
   },
