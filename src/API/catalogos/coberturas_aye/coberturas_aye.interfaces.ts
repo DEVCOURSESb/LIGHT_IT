@@ -2,7 +2,7 @@ export interface coberturasAye {
   id: number;
   cveCobaye: number;
   descCobaye: string;
-  tCob: number;
+  tcob: number;
   cveCobertura: string;
   esActivo: number;
   fechaRegistro: string;
