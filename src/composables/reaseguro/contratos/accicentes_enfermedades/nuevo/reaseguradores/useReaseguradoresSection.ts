@@ -251,8 +251,49 @@ export const useReaseguradoresSection = () => {
       }
     }
   );
+  
+  watch(
+    () => formData.comisRolReaseguro,
+    (newValue) => {
+      if(newValue === "NO") {
+        setFieldValue("cveAsignacionComisRol", null);
+      }
+    }
+  );
 
-  // todo comisRolReaseguro
+  watch(
+    () => formData.cveAsignacionComisRol,
+    (newValue) => {
+      if(newValue != 1) {
+        setFieldValue("comisRolFija", null);
+        setFieldValue("comisRolMin", null);
+        setFieldValue("comisRolMax", null);
+      } else if (newValue != 2) {
+        setFieldValue("cveCalcomis", null);
+      } else if (newValue != 1 && newValue != 2) {
+        setFieldValue("comisRolProvisional", null);
+      }
+    }
+  );
+
+  watch(
+    () => formData.cveAsignacionCosto,
+    (newValue) => {
+      if(newValue != 1) {
+        setFieldValue("costoFijo", null);
+        setFieldValue("primaMin", null);
+        setFieldValue("primaMax", null);
+        setFieldValue("facAjusteDividendo", null);
+        setFieldValue("facAjusteDivisor", null);
+      } else if ( newValue != 0) {
+        setFieldValue("pmd", null);
+      }
+    }
+  );
+
+  const tableHeaders = [
+    
+  ];
 
   const handleSubmit = async () => {
     showErrors.value = true;

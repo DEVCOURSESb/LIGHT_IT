@@ -18,7 +18,6 @@ export const ExtensionesConfig = {
       headerProps: {
         style: "font-weight: bold",
       },
-      hidden: true,
     },
     { title: "EXTENSIÓN DE LA COBERTURA", key: "descExtCober", sortable: true,
       headerProps: {

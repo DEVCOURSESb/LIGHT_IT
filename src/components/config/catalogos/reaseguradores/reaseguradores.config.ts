@@ -19,11 +19,12 @@ export const reaseguradoresConfig = {
         style: "font-weight: bold",
       },
     },
-    /* { title: "CLAVE REASEGURADOR", key: "cveReasegurador", sortable: true,
+    { title: "CLAVE REASEGURADOR", key: "cveReasegurador", sortable: true,
       headerProps: {
         style: "font-weight: bold",
-      },
-    },
+        },
+    },  
+    /* 
     { title: "FECHA DE REGISTRO", key: "fechaRegistro", sortable: true,
       headerProps: {
         style: "font-weight: bold",
