@@ -9,7 +9,7 @@
     <v-window-item value="tab-3" v-show="isFacultativo">
       <polizas-facultativas-section />
     </v-window-item>
-    <v-window-item value="tab-4">
+    <v-window-item value="tab-4" v-show="haveComisionEscalonada">
       <reaseguradores-section />
     </v-window-item>
     <v-window-item value="tab-5">
@@ -63,5 +63,5 @@ import IntermediariosSection from "./IntermediariosSection.vue";
 import CorretajeSection from "./CorretajeSection.vue";
 import AdministracionSection from "./AdministracionSection.vue";
 const useAEStore = useContratoAEStore();
-const { activeTab, isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo, haveComisionEscalonada, } = storeToRefs(useAEStore);
 </script>

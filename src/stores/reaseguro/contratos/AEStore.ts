@@ -15,6 +15,7 @@ const STORAGE_KEYS = {
   detallesContrato: "CAE_DETALLES_CONTRATO",
   polizasFacultativasContrato: "CAE_POL_FAC_CONTRATO",
   reaseguradores: "CAE_REASEGURADORES",
+  isComisionEscalonada: "isComisionEscalonada",
 } as const;
 
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
@@ -26,6 +27,10 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   const isTypeProporcional = ref<boolean>(
     localStorage.getItem(STORAGE_KEYS.isProporcional) === "true",
+  );
+
+  const haveComisionEscalonada = ref<boolean>(
+    localStorage.getItem(STORAGE_KEYS.isComisionEscalonada) === "true",
   );
 
   const isFacultativo = ref<boolean>(
@@ -49,6 +54,11 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   const setTipoContrato = (idTcontrato: number) => {
     tipoContrato.value = idTcontrato;
     localStorage.setItem(STORAGE_KEYS.tipoContrato, tipoContrato.value.toString());
+  };
+
+  const setHaveComisionEscalonada = (isEscalonada: boolean) => {
+    haveComisionEscalonada.value = isEscalonada;
+    localStorage.setItem(STORAGE_KEYS.isComisionEscalonada, haveComisionEscalonada.value.toString());
   };
 
   // !GENERALES
@@ -153,6 +163,13 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     const { idContrato } = obtenerGenerales();
     const reaseguradoresConContrato = data.map((item) => ({ ...item, idContrato }));
     localStorage.setItem(STORAGE_KEYS.reaseguradores, JSON.stringify(reaseguradoresConContrato));
+
+    const haveComisionEscalonada = data.some((item) => item?.cveAsignacionComisRol === 2);
+
+    setHaveComisionEscalonada(haveComisionEscalonada);
+
+    // TODO: verificar tabs
+    activeTab.value = haveComisionEscalonada ? "tab-5" : "tab-6";
   };
 
   const recuperarReaseguradores = () => {
@@ -170,9 +187,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     isTypeProporcional,
     isFacultativo,
     tipoContrato,
-    setTipoReaseguro,
-    setIsFacultativo,
-    setTipoContrato,
+    haveComisionEscalonada,
     guardarGenerales,
     obtenerGenerales,
     guardarDetallesProporcionales,

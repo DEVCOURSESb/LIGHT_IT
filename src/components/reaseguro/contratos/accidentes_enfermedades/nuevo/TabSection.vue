@@ -4,7 +4,7 @@
     <v-tab value="tab-2" v-if="isTypeProporcional">Detalles Proporcionales</v-tab>
     <v-tab value="tab-3" v-if="isFacultativo">Pólizas Facultativas</v-tab>
     <v-tab value="tab-4">Reaseguradores</v-tab>
-    <v-tab value="tab-5">Comisiones / Rate on line</v-tab>
+    <v-tab value="tab-5" v-if="haveComisionEscalonada">Comisiones / Rate on line</v-tab>
     <v-tab value="tab-6">Coberturas</v-tab>
     <v-tab value="tab-7">Excedentes</v-tab>
     <v-tab value="tab-8">Cúmulos</v-tab>
@@ -21,5 +21,5 @@ import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { storeToRefs } from "pinia";
 
 const useAEStore = useContratoAEStore();
-const { activeTab, isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo, haveComisionEscalonada } = storeToRefs(useAEStore);
 </script>
