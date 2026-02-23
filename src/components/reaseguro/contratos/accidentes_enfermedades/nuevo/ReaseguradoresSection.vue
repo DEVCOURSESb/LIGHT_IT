@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <v-container>
-        <v-form @submit.prevent="handleSubmit">
+        <v-form @submit.prevent="">
           <!-- !ROW -->
           <v-row>
             <!-- REASEGURADORA -->
@@ -89,14 +89,14 @@
                 label="Fórmula cálculo PTU"
                 variant="solo-filled"
                 clearable
-                :model-value="formData['formulaPtu']"
-                @update:model-value="setFieldValue('formulaPtu', $event)"
-                :error-messages="showErrors ? formErrors['formulaPtu'] : undefined"
+                :model-value="formData['cvePtu']"
+                @update:model-value="setFieldValue('cvePtu', $event)"
+                :error-messages="showErrors ? formErrors['cvePtu'] : undefined"
               />
             </v-col>
             
             <!-- PORCENTAJE K si la formula de ptu es 2-->
-            <v-col cols="12" md="3" v-if="formData['formulaPtu'] == 2">
+            <v-col cols="12" md="3" v-if="formData['cvePtu'] == 2">
               <v-text-field
                 label="% K"
                 variant="solo-filled"
@@ -109,7 +109,7 @@
             </v-col>
 
             <!-- GASTOS si la formula de ptu de ptu es 5, 6 o 7 -->
-            <v-col cols="12" md="3" v-if="[5, 6, 7].includes(formData['formulaPtu'])">
+            <v-col cols="12" md="3" v-if="[5, 6, 7].includes(formData['cvePtu'])">
               <v-text-field
                 label="Gastos"
                 variant="solo-filled"
@@ -122,7 +122,7 @@
             </v-col>
 
             <!-- AÑOS DE ARRASTRE si la formaula de ptu es 0, 3, 5 o 6 -->
-            <v-col cols="12" md="3" v-if="[0, 3, 5, 6].includes(formData['formulaPtu'])">
+            <v-col cols="12" md="3" v-if="[0, 3, 5, 6].includes(formData['cvePtu'])">
               <v-text-field
                 label="Años de arrastre"
                 variant="solo-filled"
@@ -331,7 +331,7 @@
             <!-- TIPO LIMITE AGREGADO si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
-                :items="queryCriterioAsignacion.data.value || []"
+                :items="queryCriterioAsignacion.data.value?.filter(item => [1,2,5,10].includes(item.cveCriterioAsig)) || []"
                 item-title="descCriterioAsig"
                 item-value="cveCriterioAsig"
                 :disabled="queryCriterioAsignacion.isLoading.value"
@@ -347,7 +347,7 @@
             <!-- TIPO DE COSTO si el contrato es no proporcional -->
             <v-col cols="12" md="3" v-if="!isTypeProporcional">
               <v-select
-                :items="queryTipoAsignacion.data.value || []"
+                :items="queryTipoAsignacion.data.value?.filter(item => [0,1].includes(item.cveAsignacion)) || []"
                 item-title="descAsignacion"
                 item-value="cveAsignacion"
                 :disabled="queryTipoAsignacion.isLoading.value"
@@ -424,8 +424,7 @@
                 min="0"
                 max="99999"
                 :model-value="formData['facAjusteDividendo']"
-                @update:model-value="onInputGeneric('facAjusteDividendo', $event)"
-                @blur="onBlurGeneric('facAjusteDividendo')"
+                @update:model-value="setFieldValue('facAjusteDividendo', $event)"
                 :error-messages="showErrors ? formErrors['facAjusteDividendo'] : undefined"
               />
             </v-col>
@@ -439,8 +438,7 @@
                 min="0"
                 max="99999"
                 :model-value="formData['facAjusteDivisor']"
-                @update:model-value="onInputGeneric('facAjusteDivisor', $event)"
-                @blur="onBlurGeneric('facAjusteDivisor')"
+                @update:model-value="setFieldValue('facAjusteDivisor', $event)"
                 :error-messages="showErrors ? formErrors['facAjusteDivisor'] : undefined"
               />
             </v-col>
@@ -466,7 +464,7 @@
           <v-row class="flex justify-end">
             <!-- AGREGAR REASEGURADOR -->
             <v-col cols="12" md="3" class="d-flex gap-2 justify-end">
-              <v-btn type="submit" size="large" variant="outlined">
+              <v-btn size="large" variant="outlined" @click="handleSendToTable">
                 Agregar reasegurador
               </v-btn>
               <!-- GUARDAR REASEGURADORES -->
@@ -474,7 +472,7 @@
                 size="large"
                 variant="outlined"
                 class="btn-guardar"
-                @click="() => {}"
+                @click="handleSubmit"
               >
                 Guardar reaseguradores
               </v-btn>
@@ -482,10 +480,10 @@
           </v-row>
 
           <!-- !ROW TABLE -->
-          <!-- 
+          
            <v-row>
             <v-col cols="12" md="12">
-              <v-data-table class="mt-4" :headers="polizasHeader" :items="dataTableItems"
+              <v-data-table class="mt-4" :headers="tableHeaders" :items="dataTable"
                 :loading="false" striped="odd">
                 <template #top>
                   <v-toolbar class="encabezado" flat>
@@ -494,14 +492,19 @@
                   </v-toolbar>
                 </template>
                 <template #no-data> No hay datos disponibles </template>
-                <template #item.polActiva="{ item }">
-                  <v-checkbox :model-value="item?.polActiva" @update:model-value="() => togglePolizaStatus(item)" hide-details
+                <template #item.reasegActiva="{ item }">
+                  <v-checkbox :model-value="item?.reasegActiva" @update:model-value="toggleActive(item)" hide-details
                     density="compact" />
                 </template>
+                <template #item.editar="{ item }">
+                  <v-icon class="edit" size="large" @click="editRow(item)">
+                    mdi-pencil
+                  </v-icon>
+              </template>
               </v-data-table>
             </v-col>
            </v-row>
-           -->
+          
         </v-form>
       </v-container>
     </v-card-text>
@@ -522,6 +525,7 @@ const {
   setFieldValue,
   formErrors,
   showErrors,
+  handleSendToTable,
   handleSubmit,
   onInputGeneric,
   onBlurGeneric,
@@ -541,5 +545,9 @@ const {
   primaMin,
   primaMax,
   noClaims,
+  dataTable,
+  tableHeaders,
+  toggleActive,
+  editRow,
 } = useReaseguradoresSection();
 </script>

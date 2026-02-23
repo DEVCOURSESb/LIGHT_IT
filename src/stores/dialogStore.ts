@@ -19,6 +19,7 @@ interface ShowProps {
   message: string
   type?: DialogType
   ExtraAction?: Action
+  autoCloseExtraAction?: boolean
   onConfirm?: () => void
   onCancel?: () => void
 }
@@ -30,6 +31,7 @@ export const useDialog = defineStore('dialog', () => {
   const type = ref<DialogType>(DialogType.INFO)
 
   const ExtraAction = ref<Action | undefined>(undefined)
+  const autoCloseExtraAction = ref(true)
 
   const onConfirm = ref<(() => void) | null>(null)
   const onCancel = ref<(() => void) | null>(null)
@@ -42,6 +44,8 @@ export const useDialog = defineStore('dialog', () => {
 
     onConfirm.value = opts.onConfirm ?? null
     onCancel.value = opts.onCancel ?? null
+
+    autoCloseExtraAction.value = opts.autoCloseExtraAction ?? true
 
     visible.value = true
   }
@@ -69,6 +73,7 @@ export const useDialog = defineStore('dialog', () => {
     message,
     type,
     ExtraAction,
+    autoCloseExtraAction,
     show,
     confirmar,
     cancelar,

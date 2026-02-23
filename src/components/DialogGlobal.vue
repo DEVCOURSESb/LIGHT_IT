@@ -19,7 +19,8 @@
 
       <!-- MENSAJE -->
       <v-card-text>
-        {{ dialog.message }}
+        <span v-if="dialog.message.includes('<br')" v-html="dialog.message"></span>
+        <span v-else>{{ dialog.message }}</span>
       </v-card-text>
 
       <!-- ACCIONES -->
@@ -90,7 +91,12 @@ const iconName = computed(() => {
 })
 
 const handleExtraAction = () => {
+  const shouldAutoClose = dialog.autoCloseExtraAction
+
   dialog.ExtraAction?.handler()
-  dialog.cerrar()
+
+  if (shouldAutoClose) {
+    dialog.cerrar()
+  }
 }
 </script>

@@ -10,12 +10,12 @@ interface PolizasFacultativasForm {
 }
 
 export const usePolizasFacultativasSection = () => {
+  const store = useContratoAEStore();
   const { queryEmisionContableAYE } = othersActions();
-  const dataTableItems = ref<PolizasFacultativasForm[]>([]);
+  const dataTableItems = ref<PolizasFacultativasForm[]>(store.obtenerPolizasFacultativas() || []);
 
   const showErrors = ref(false);
   const dialog = useDialog();
-  const store = useContratoAEStore();
 
   const {
     setFieldValue,
@@ -33,7 +33,7 @@ export const usePolizasFacultativasSection = () => {
     ExtraAction: {
       text: "Aceptar",
       handler: () => {
-        store.guardarPolizasFacultativas();
+        store.guardarPolizasFacultativas(dataTableItems.value);
       }
     }
    });

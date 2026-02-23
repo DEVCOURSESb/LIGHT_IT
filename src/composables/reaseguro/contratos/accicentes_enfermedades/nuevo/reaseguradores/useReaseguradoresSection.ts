@@ -6,14 +6,61 @@ import { useForm } from "vee-validate";
 import { ref, watch, type Ref } from "vue";
 import { formattNumber } from "@/utils/formattNumber";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { DialogType, useDialog } from "@/stores/dialogStore";
 
 interface FormatNumberOptions {
   [key: string]: Ref<string>;
 }
 
+interface FormPlain {
+  cveReasegurador: number;
+  participacion: number;
+  otorgaPtu: string | null;
+  porcentajePtu: number | null;
+  cvePtu: number | null;
+  gastos: number | null;
+  porcentajeK: number | null;
+  aniosArrastre: number | null;
+  comisRolReaseguro: string | null;
+  cveAsignacionComisRol: number | null;
+  cveCalcomis: number | null;
+  comisRolFija: number | null;
+  comisRolProvisional: number | null;
+  comisRolMin: number | null;
+  comisRolMax: number | null;
+  capa: number | null;
+  prioridad: number | null;
+  limResponsabilidad: number | null;
+  limAgregado: number | null;
+  cveCriterioAsigLimAgregado: number | null;
+  cveAsignacionCosto: number | null;
+  costoFijo: number | null;
+  pmd: number | null;
+  primaMin: number | null;
+  primaMax: number | null;
+  facAjusteDividendo: number | null;
+  facAjusteDivisor: number | null;
+  noClaims: number | null;
+  reasegActiva: boolean;
+}
+
+interface dataTableToDisplay extends FormPlain {
+  nombreReasegurador: string;
+}
+
 export const useReaseguradoresSection = () => {
   const aeStore = useContratoAEStore();
   const { isTypeProporcional } = storeToRefs(aeStore);
+
+  const dataTable = ref<dataTableToDisplay[]>([]);
+
+  // datos previos
+  const datosGuardados = aeStore.recuperarReaseguradores();
+  if (Array.isArray(datosGuardados) && datosGuardados.length > 0) {
+    dataTable.value = datosGuardados;
+  }
+
+  const dialog = useDialog();
 
   const {
     queryReaseguradoras,
@@ -64,6 +111,7 @@ export const useReaseguradoresSection = () => {
     values: formData,
     errors: formErrors,
     validate,
+    resetForm,
   } = useForm({
     validationSchema: useReaseguradoresSectionValidations({
       isTypeProporcional: isTypeProporcional.value,
@@ -103,10 +151,8 @@ export const useReaseguradoresSection = () => {
       setFieldValue(key, null);
       return;
     }
-
     // Almacenar en el formulario
     setFieldValue(key, numericValue);
-
     // Formatear para visualización con comas y dos decimales
     option.value = formatCurrency(numericValue);
   };
@@ -210,52 +256,54 @@ export const useReaseguradoresSection = () => {
     },
   );
 
-  /* reset de form cuando cambie x campo */
+  //! Reset de form cuando cambie isTypeProporcional
   watch(
     () => isTypeProporcional,
     (newValue) => {
-      /* si no es proporcional */
-      if(!newValue) {
+      /* si es no proporcional */
+      if (newValue) {
         setFieldValue("otorgaPtu", null);
         setFieldValue("capa", null);
         setFieldValue("prioridad", null);
         setFieldValue("limResponsabilidad", null);
         setFieldValue("limAgregado", null);
         setFieldValue("cveCriterioAsigLimAgregado", null);
-        setFieldValue("cveCriterioAsigLimAgregado", null);
         setFieldValue("cveAsignacionCosto", null);
         setFieldValue("noClaims", null);
       }
-    }
+    },
+    { immediate: true }
   );
 
   watch(
     () => formData.otorgaPtu,
     (newValue) => {
-      if(newValue === "NO") {
+      if (newValue == null || newValue === "NO") {
         setFieldValue("porcentajePtu", null);
-        setFieldValue("formulaPtu", null);
+        setFieldValue("cvePtu", null);
       }
     }
   );
 
   watch(
-    () => formData.formulaPtu,
+    () => formData.cvePtu,
     (newValue) => {
-      if(newValue != 2) {
+      if (newValue == null || newValue != 2) {
         setFieldValue("porcentajeK", null);
-      } else if(! [5, 6, 7].includes(newValue) ) {
+      }
+      if (newValue == null || ![5, 6, 7].includes(newValue)) {
         setFieldValue("gastos", null);
-      } else if(! [0, 3, 5, 6].includes(newValue) ) {
+      }
+      if (newValue == null || ![0, 3, 5, 6].includes(newValue)) {
         setFieldValue("aniosArrastre", null);
       }
     }
   );
-  
+
   watch(
     () => formData.comisRolReaseguro,
     (newValue) => {
-      if(newValue === "NO") {
+      if (newValue == null || newValue === "NO") {
         setFieldValue("cveAsignacionComisRol", null);
       }
     }
@@ -264,13 +312,16 @@ export const useReaseguradoresSection = () => {
   watch(
     () => formData.cveAsignacionComisRol,
     (newValue) => {
-      if(newValue != 1) {
+      if (newValue == null || newValue != 0) {
         setFieldValue("comisRolFija", null);
+      }
+      if (newValue == null || newValue != 1) {
+        setFieldValue("cveCalcomis", null);
+        setFieldValue("comisRolProvisional", null);
         setFieldValue("comisRolMin", null);
         setFieldValue("comisRolMax", null);
-      } else if (newValue != 2) {
-        setFieldValue("cveCalcomis", null);
-      } else if (newValue != 1 && newValue != 2) {
+      }
+      if (newValue != 2) {
         setFieldValue("comisRolProvisional", null);
       }
     }
@@ -279,27 +330,372 @@ export const useReaseguradoresSection = () => {
   watch(
     () => formData.cveAsignacionCosto,
     (newValue) => {
-      if(newValue != 1) {
-        setFieldValue("costoFijo", null);
+      if (newValue == null || newValue != 1) {
         setFieldValue("primaMin", null);
         setFieldValue("primaMax", null);
         setFieldValue("facAjusteDividendo", null);
         setFieldValue("facAjusteDivisor", null);
-      } else if ( newValue != 0) {
         setFieldValue("pmd", null);
+      }
+      if (newValue == null || newValue != 0) {
+        setFieldValue("costoFijo", null);
       }
     }
   );
 
+  const headerProps = { style: "font-weight: bold" };
+
   const tableHeaders = [
-    
+    { title: "Reaseguradora", key: "nombreReasegurador", sortable: true, headerProps },
+    { title: "Participación", key: "participacion", sortable: true, headerProps },
+    { title: "Comisión Rate Online", key: "comisRolReaseguro", sortable: true, headerProps },
+    { title: "Límite Responsabilidad", key: "limResponsabilidad", sortable: true, headerProps },
+    { title: "Activa", key: "reasegActiva", sortable: true, headerProps },
+    { title: "Editar", key: "editar", sortable: false, headerProps },
   ];
 
-  const handleSubmit = async () => {
+  const toggleActive = (item: FormPlain) => {
+      // const someActive = dataTable.value.some( row => row.reasegActiva && row.cveReasegurador != item.cveReasegurador );
+
+    //if( !someActive ) {
+      /* dialog.show({
+        title: "Atención",
+        message:"Debe existir almenos una reaseguradora activa para el contrato",
+        type: DialogType.ERROR
+      }); */
+      //return;
+    //}
+    const index = dataTable.value.findIndex(row => row.cveReasegurador === item.cveReasegurador);
+
+    if (index !== -1) {
+      dataTable.value[index]!.reasegActiva = !dataTable.value[index]!.reasegActiva;
+    }
+  };
+
+  const compareRows = (row: dataTableToDisplay, compare: dataTableToDisplay) => {
+      return (row.cveReasegurador === compare.cveReasegurador &&
+        row.participacion === compare.participacion &&
+        row.otorgaPtu === compare.otorgaPtu &&
+        row.porcentajePtu === compare.porcentajePtu &&
+        row.cvePtu === compare.cvePtu &&
+        row.gastos === compare.gastos &&
+        row.porcentajeK === compare.porcentajeK &&
+        row.aniosArrastre === compare.aniosArrastre &&
+        row.comisRolReaseguro === compare.comisRolReaseguro &&
+        row.cveAsignacionComisRol === compare.cveAsignacionComisRol &&
+        row.cveCalcomis === compare.cveCalcomis &&
+        row.comisRolFija === compare.comisRolFija &&
+        row.comisRolProvisional === compare.comisRolProvisional &&
+        row.comisRolMin === compare.comisRolMin &&
+        row.comisRolMax === compare.comisRolMax &&
+        row.capa === compare.capa &&
+        row.prioridad === compare.prioridad &&
+        row.limResponsabilidad === compare.limResponsabilidad &&
+        row.limAgregado === compare.limAgregado &&
+        row.cveCriterioAsigLimAgregado === compare.cveCriterioAsigLimAgregado &&
+        row.cveAsignacionCosto === compare.cveAsignacionCosto &&
+        row.costoFijo === compare.costoFijo &&
+        row.pmd === compare.pmd &&
+        row.primaMin === compare.primaMin &&
+        row.primaMax === compare.primaMax &&
+        row.facAjusteDividendo === compare.facAjusteDividendo &&
+        row.facAjusteDivisor === compare.facAjusteDivisor &&
+        row.noClaims === compare.noClaims &&
+        row.nombreReasegurador === compare.nombreReasegurador &&
+        row.reasegActiva === compare.reasegActiva)
+  }
+
+  const resetFormAndRefs = () => {
+  resetForm();
+
+  const numericFields: (keyof FormatNumberOptions)[] = [
+    "participacion",
+    "porcentajePtu",
+    "porcentajeK",
+    "gastos",
+    "comisRolFija",
+    "comisRolProvisional",
+    "comisRolMin",
+    "comisRolMax",
+    "prioridad",
+    "limResponsabilidad",
+    "limAgregado",
+    "costoFijo",
+    "pmd",
+    "primaMin",
+    "primaMax",
+    "noClaims",
+  ];
+
+  numericFields.forEach((key) => {
+    const ref = formatNumberOptions[key];
+    if (ref) {
+      ref.value = "";
+    }
+  });
+};
+
+  const editRow = (row: dataTableToDisplay) => {
+    console.log(row);
+    // elimina de la tabla
+    dataTable.value = dataTable.value.filter(rowT => !compareRows(rowT, row));
+
+    // llena el form
+    setFieldValue("cveReasegurador", row?.cveReasegurador);
+    setFieldValue("participacion", row?.participacion);
+    setFieldValue("otorgaPtu", row?.otorgaPtu);
+    setFieldValue("porcentajePtu", row?.porcentajePtu);
+    setFieldValue("cvePtu", row?.cvePtu);
+    setFieldValue("gastos", row?.gastos);
+    setFieldValue("porcentajeK", row?.porcentajeK);
+    setFieldValue("aniosArrastre", row?.aniosArrastre);
+    setFieldValue("comisRolReaseguro", row?.comisRolReaseguro);
+    setFieldValue("cveAsignacionComisRol", row?.cveAsignacionComisRol);
+    setFieldValue("cveCalcomis", row?.cveCalcomis);
+    setFieldValue("comisRolFija", row?.comisRolFija);
+    setFieldValue("comisRolProvisional", row?.comisRolProvisional);
+    setFieldValue("comisRolMin", row?.comisRolMin);
+    setFieldValue("comisRolMax", row?.comisRolMax);
+    setFieldValue("capa", row?.capa);
+    setFieldValue("prioridad", row?.prioridad);
+    setFieldValue("limResponsabilidad", row?.limResponsabilidad);
+    setFieldValue("limAgregado", row?.limAgregado);
+    setFieldValue("cveCriterioAsigLimAgregado", row?.cveCriterioAsigLimAgregado);
+    setFieldValue("cveAsignacionCosto", row?.cveAsignacionCosto);
+    setFieldValue("costoFijo", row?.costoFijo);
+    setFieldValue("pmd", row?.pmd);
+    setFieldValue("primaMin", row?.primaMin);
+    setFieldValue("primaMax", row?.primaMax);
+    setFieldValue("facAjusteDividendo", row?.facAjusteDividendo);
+    setFieldValue("facAjusteDivisor", row?.facAjusteDivisor);
+    setFieldValue("noClaims", row?.noClaims);
+    setFieldValue("nombreReasegurador", row?.nombreReasegurador);
+    setFieldValue("reasegActiva", row?.reasegActiva);
+
+    const numericFields: (keyof FormatNumberOptions)[] = [
+      "participacion",
+      "porcentajePtu",
+      "porcentajeK",
+      "gastos",
+      "comisRolFija",
+      "comisRolProvisional",
+      "comisRolMin",
+      "comisRolMax",
+      "prioridad",
+      "limResponsabilidad",
+      "limAgregado",
+      "costoFijo",
+      "pmd",
+      "primaMin",
+      "primaMax",
+      "noClaims",
+    ];
+
+    numericFields.forEach((key) => {
+      const value = row[key as keyof dataTableToDisplay];
+      const ref = formatNumberOptions[key];
+      if (ref) {
+        ref.value = value != null ? formatCurrency(value as number) : "";
+      }
+    });
+  };
+
+  const handleSendToTable = () => {
+    dialog.show({
+      title: "Confirmación",
+      message: "¿Confirma que desea agregar la reaseguradora capturada?",
+      type: DialogType.ERROR,
+      ExtraAction: {
+        text: "Sí, agregar",
+        color: "primary",
+        handler: confirmSend
+      }
+    });
+  };
+
+  const confirmSend = async () => {
+    // Disparar watch de isTypeProporcional sin mutar innecesariamente
+    isTypeProporcional.value = isTypeProporcional.value;
     showErrors.value = true;
     const { valid } = await validate();
+
     if (valid) {
-      console.log(formData);
+      const reaseguradora = queryReaseguradoras.data.value?.find(
+        (r) => r.cveReasegurador === formData.cveReasegurador
+      );
+
+      
+      const newRow: dataTableToDisplay = {
+        cveReasegurador: formData.cveReasegurador,
+        participacion: formData.participacion,
+        otorgaPtu: formData.otorgaPtu ?? null,
+        porcentajePtu: formData.porcentajePtu ?? null,
+        cvePtu: formData.cvePtu ?? null,
+        gastos: formData.gastos ?? null,
+        porcentajeK: formData.porcentajeK ?? null,
+        aniosArrastre: formData.aniosArrastre ?? null,
+        comisRolReaseguro: formData.comisRolReaseguro ?? null,
+        cveAsignacionComisRol: formData.cveAsignacionComisRol ?? null,
+        cveCalcomis: formData.cveCalcomis ?? null,
+        comisRolFija: formData.comisRolFija ?? null,
+        comisRolProvisional: formData.comisRolProvisional ?? null,
+        comisRolMin: formData.comisRolMin ?? null,
+        comisRolMax: formData.comisRolMax ?? null,
+        capa: formData.capa ?? null,
+        prioridad: formData.prioridad ?? null,
+        limResponsabilidad: formData.limResponsabilidad ?? null,
+        limAgregado: formData.limAgregado ?? null,
+        cveCriterioAsigLimAgregado: formData.cveCriterioAsigLimAgregado ?? null,
+        cveAsignacionCosto: formData.cveAsignacionCosto ?? null,
+        costoFijo: formData.costoFijo ?? null,
+        pmd: formData.pmd ?? null,
+        primaMin: formData.primaMin ?? null,
+        primaMax: formData.primaMax ?? null,
+        facAjusteDividendo: formData.facAjusteDividendo ?? null,
+        facAjusteDivisor: formData.facAjusteDivisor ?? null,
+        noClaims: formData.noClaims ?? null,
+        nombreReasegurador: reaseguradora?.nombreReasegurador ?? "",
+        reasegActiva: true,
+      };
+
+
+      console.log("es proporcional", isTypeProporcional.value);
+
+      // SI ES PROPORCIONAL, no se debe agregar una reaseguradora duplicada
+      if (isTypeProporcional.value) {
+        const isAlreadyAdded = dataTable.value.some(row => row.cveReasegurador === newRow.cveReasegurador);
+
+        if (isAlreadyAdded) {
+          dialog.show({
+            title: "Error",
+            message: "La reaseguradora que intenta agregar ya existe, verifique la información...",
+            type: DialogType.ERROR,
+          });
+
+          return;
+        }
+        // si es NO PROPORCIONAL no se debe agregar un mismo reasegurador con misma capa
+      } else {
+        const exist = dataTable.value.some(row => row.cveReasegurador === newRow.cveReasegurador && row.capa === newRow.capa )
+        if (exist) {
+          dialog.show({
+            title: "Atención",
+            message: `La capa para la reaseguradora que intenta agregar ya fue registrada anteriormente, verifique la información...`,
+            type: DialogType.ERROR
+          });
+
+          return
+        }
+
+        /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
+        if(newRow.capa && newRow.capa != 1) {
+          const lastCapa = dataTable.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!)[dataTable.value.length -1];
+
+          const prioridadEsperada = lastCapa?.prioridad! + lastCapa?.limResponsabilidad!;
+          // si la prioridad es distinto de la suma de prioridad y limite de responsabilidad anterior
+          if( newRow.prioridad != prioridadEsperada ) {
+            dialog.show({
+              title: "Atención",
+              message: `La prioridad no coincide con el registro de la capa anterior, favor de verificar. ${prioridadEsperada}`,
+              type: DialogType.ERROR
+            });
+
+            return;
+          }
+        }
+
+        if(!(newRow?.prioridad! + newRow?.limResponsabilidad! <= newRow?.limAgregado!)){
+          dialog.show({
+            title: "Atención",
+            message: `El limite agregado es menor a la capacidad total del contrato, favor de verificar.`,
+            type: DialogType.ERROR,
+          });
+
+          return;
+        }
+        
+      }
+
+      dataTable.value.push(newRow);
+      resetFormAndRefs();
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (dataTable.value.length <= 0) {
+      dialog.show({
+        title: "Error",
+        message: "La tabla debe de contener almenos un registro para continuar, verifique por favor...",
+        type: DialogType.ERROR,
+      });
+
+      return;
+    }
+
+    dialog.show({
+      title: "Confirmación",
+      message: "¿Confirma que los datos ingresados de reaseguradoras del contrato son correctos?",
+      type: DialogType.ERROR,
+      autoCloseExtraAction: false,
+      ExtraAction: {
+        text: "Sí, agregar",
+        color: "primary",
+        handler: checkAgregarStore
+      }
+    });
+  };
+
+  const checkAgregarStore = () => {
+    const reaseguradoresActivos = dataTable.value.filter(row => row.reasegActiva);
+
+    const sumaParticipacion = reaseguradoresActivos.reduce((acc, currentRow) => {
+      return acc + currentRow.participacion;
+    }, 0);
+
+    // si es PROPORCIONAL
+    if (isTypeProporcional.value && sumaParticipacion < 100) {
+      dialog.show({
+        title: "Atención",
+        message: `¿Desea continuar sin que el contrato esté cubierto al 100%?. Participación actual de ${sumaParticipacion}%`,
+        type: DialogType.ERROR,
+        ExtraAction: {
+          text: "Sí, continuar",
+          color: "primary",
+          handler: () => {
+            aeStore.guardarReaseguradores(reaseguradoresActivos);
+            return;
+          }
+        }
+      });
+      // ¿SI ES NO PROPORCIONAL?
+    }else if( !isTypeProporcional.value) {
+      reaseguradoresActivos.sort((a, b) => a.capa! - b.capa!)
+
+      let messages: string[] = [];
+
+      for (let index = 0; index < reaseguradoresActivos[reaseguradoresActivos.length - 1]?.capa!; index++) {
+        if (!reaseguradoresActivos[index] || reaseguradoresActivos[index]?.participacion === null ) {
+          messages.push(`La capa ${index + 1} no existe o su participación es nula, verifique antes de continuar...`)
+        }
+
+        if (reaseguradoresActivos[index]?.participacion! < 100){
+          messages.push(`La participación de la capa ${index + 1} no esta cubierta al 100%, verifique antes de continuar por favor...`)
+        }
+      }
+
+      if ( messages.length > 0  ) {
+        const messagesText = messages.join("<br/><br/>");
+
+        dialog.show({
+          title: "Atención",
+          message: messagesText,
+          type: DialogType.ERROR
+        });
+
+        return;
+      }
+      aeStore.guardarReaseguradores(reaseguradoresActivos)
+      dialog.cerrar();
     }
   };
 
@@ -315,6 +711,7 @@ export const useReaseguradoresSection = () => {
     formData,
     formErrors,
     showErrors,
+    handleSendToTable,
     handleSubmit,
     onInputGeneric,
     onBlurGeneric,
@@ -333,5 +730,9 @@ export const useReaseguradoresSection = () => {
     primaMin,
     primaMax,
     noClaims,
+    tableHeaders,
+    dataTable,
+    toggleActive,
+    editRow,
   };
 };

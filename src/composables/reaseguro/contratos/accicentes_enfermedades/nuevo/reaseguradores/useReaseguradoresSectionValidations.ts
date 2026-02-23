@@ -29,7 +29,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       }
       return true;
     },
-    formulaPtu: (value: number, context: any) => {
+    cvePtu: (value: number, context: any) => {
       const otorgaPTU = context.form?.otorgaPtu;
       if ( otorgaPTU === "SÍ" ) {
         return value != null && value >= 0 || "Fórmula cálculo es obligatorio"
@@ -37,7 +37,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     porcentajeK: (value: number, context: any) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( cvFormula === 2 ) {
         if (value === null || value === undefined) return "El porcentaje es obligatorio.";
@@ -47,7 +47,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     gastos: (value: number, context: any) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( [5, 6, 7].includes(cvFormula) ) {
         if (value === null || value === undefined) return "Gastos son obligatorios.";
@@ -57,7 +57,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     aniosArrastre: ( value: number, context: any ) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( [0, 3, 5, 6].includes(cvFormula) ) {
         if (value === null || value === undefined) return "Años arrastre son obligatorios.";
