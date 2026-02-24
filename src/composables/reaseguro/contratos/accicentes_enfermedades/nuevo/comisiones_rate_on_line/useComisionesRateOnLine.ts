@@ -32,7 +32,7 @@ export const useComisionesRateOnLine = () => {
   const { queryReaseguradoras } = useAccidentesEnfermedades();
 
 
-  const dataTable = ref<ComisionRateOnLineRow[]>([]);
+  const dataTable = ref<ComisionRateOnLineRow[]>(aeStore.recuperarComisionesRateOnLine());
 
 
   const showCsvDialog = ref(false);
@@ -138,7 +138,7 @@ export const useComisionesRateOnLine = () => {
   };
 
   /** Devuelve true si el rango del nuevo registro se traslapa con alguno existente de la misma reaseguradora */
-  const hasOverlap = (
+  /* const hasOverlap = (
     newRow: ComisionRateOnLineRow,
     existingRows: ComisionRateOnLineRow[]
   ): boolean =>
@@ -146,10 +146,7 @@ export const useComisionesRateOnLine = () => {
       .filter((r) => r.cveReaseguradorComisRol === newRow.cveReaseguradorComisRol)
       .some(
         (r) => newRow.limiteInf! < r.limiteSup! && newRow.limiteSup! > r.limiteInf!
-      );
-
-
-
+      ); */
 
   const handleAgregarComision = () => {
     dialog.show({
@@ -178,7 +175,7 @@ export const useComisionesRateOnLine = () => {
       comisRolActiva: true,
     };
 
-    if (hasOverlap(newRow, dataTable.value)) {
+    /* if (hasOverlap(newRow, dataTable.value)) {
       dialog.show({
         title: "Atención",
         message:
@@ -186,27 +183,19 @@ export const useComisionesRateOnLine = () => {
         type: DialogType.ERROR,
       });
       return;
-    }
+    } */
 
     dataTable.value.push(newRow);
     resetFormAndRefs();
   };
 
-
-
-
   const handleFileUpload = () => {
     document.querySelector<HTMLInputElement>("#file-input")?.click();
   };
 
-
-
-
-
   const handleFileChange = async (file: File | File[] | null) => {
     const f = Array.isArray(file) ? file[0] : file;
     if (!f) return;
-
   
     if (!esArchivoCSVValido(f)) {
       dialog.show({
@@ -218,9 +207,6 @@ export const useComisionesRateOnLine = () => {
     }
 
     csvLoading.value = true;
-
-  
-  
   
     const validacion = await validarCSV(f);
 
@@ -233,17 +219,13 @@ export const useComisionesRateOnLine = () => {
       });
       return;
     }
-
   
     try {
       const text = await f.text();
       const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-
-    
     
       const headers = getCSVColumns(lines[0]!).map((h) => h.trim().toUpperCase());
 
-    
       const faltantes = COLUMNAS_CSV.filter((col) => !headers.includes(col));
       if (faltantes.length > 0) {
         dialog.show({
@@ -261,7 +243,6 @@ export const useComisionesRateOnLine = () => {
       const idxComis  = headers.indexOf("COMISION");
 
       const allReaseguradoras = queryReaseguradoras.data.value ?? [];
-
     
       const parsed: ComisionRateOnLineRow[] = lines.slice(1).map((line) => {
         const cols = parseCSVLine(line);
@@ -296,7 +277,6 @@ export const useComisionesRateOnLine = () => {
     }
   };
 
-
   const handleCsvAccept = () => {
     const errores: string[] = [];
     const aAgregar: ComisionRateOnLineRow[] = [];
@@ -308,12 +288,12 @@ export const useComisionesRateOnLine = () => {
         );
         return;
       }
-      if (hasOverlap(row, [...dataTable.value, ...aAgregar])) {
+      /* if (hasOverlap(row, [...dataTable.value, ...aAgregar])) {
         errores.push(
           `Fila ${i + 1}: el rango [${row.limiteInf}, ${row.limiteSup}] se traslapa con un registro existente de "${row.nombreReasegurador}".`
         );
         return;
-      }
+      } */
       aAgregar.push(row);
     });
 
@@ -341,9 +321,6 @@ export const useComisionesRateOnLine = () => {
     csvSelectedRows.value = selectAll ? [...csvRows.value] : [];
   };
 
-
-
-
   const toggleAllActiva = () => {
     const allActive = dataTable.value.every((r) => r.comisRolActiva);
     dataTable.value = dataTable.value.map((r) => ({ ...r, comisRolActiva: !allActive }));
@@ -355,9 +332,6 @@ export const useComisionesRateOnLine = () => {
       dataTable.value[index]!.comisRolActiva = !dataTable.value[index]!.comisRolActiva;
     }
   };
-
-
-
 
   const editRow = (row: ComisionRateOnLineRow) => {
     const index = dataTable.value.indexOf(row);
@@ -373,9 +347,6 @@ export const useComisionesRateOnLine = () => {
     comisRolDefinitiva.value = row.comisRolDefinitiva != null ? formatCurrency(row.comisRolDefinitiva) : "";
   };
 
-
-
-
   const handleGuardarComisiones = () => {
     if (dataTable.value.length === 0) {
       dialog.show({
@@ -385,7 +356,6 @@ export const useComisionesRateOnLine = () => {
       });
       return;
     }
-
   
     const cvesRequeridos = reaseguradoresEscalonadas.value.map((r) => r.cveReasegurador);
     const cvesEnTabla    = [...new Set(dataTable.value.map((r) => r.cveReaseguradorComisRol))];
@@ -423,25 +393,9 @@ export const useComisionesRateOnLine = () => {
   };
 
   const doGuardarComisiones = () => {
-    const { idContrato } = aeStore.obtenerGenerales();
-
-    const payload = dataTable.value.map((r) => ({
-      idContrato,
-      cveReaseguradorComisRol: r.cveReaseguradorComisRol,
-      limiteInf:               r.limiteInf,
-      limiteSup:               r.limiteSup,
-      comisRolDefinitiva:      r.comisRolDefinitiva,
-      comisRolActiva:          r.comisRolActiva ? 1 : 2,
-    }));
-
-    localStorage.setItem("CAE_COMIS_ROL_CONTRATO", JSON.stringify(payload));
-    aeStore.activeTab = "tab-6";
-
+    aeStore.guardarComisionesRateOnLine(dataTable.value);
     dialog.cerrar();
   };
-
-
-
 
   const headerProps = { style: "font-weight: bold" };
 
@@ -454,33 +408,23 @@ export const useComisionesRateOnLine = () => {
     { title: "Editar",                            key: "editar",              sortable: false, headerProps },
   ];
 
-
   const csvTableHeaders = tableHeaders.filter((h) => h.key !== "editar");
 
-
-
-
   return {
-  
     dataTable,
     showErrors,
     formData,
     formErrors,
-  
     limiteInf,
     limiteSup,
     comisRolDefinitiva,
-  
     reaseguradoresEscalonadas,
-  
     tableHeaders,
-  
     showCsvDialog,
     csvRows,
     csvSelectedRows,
     csvTableHeaders,
     csvLoading,
-  
     setFieldValue,
     onInputGeneric,
     onBlurGeneric,

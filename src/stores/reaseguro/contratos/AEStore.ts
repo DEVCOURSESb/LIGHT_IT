@@ -14,8 +14,9 @@ const STORAGE_KEYS = {
   generalesCompletos: "AE_GENERALES_COMPLETOS",
   detallesContrato: "CAE_DETALLES_CONTRATO",
   polizasFacultativasContrato: "CAE_POL_FAC_CONTRATO",
-  reaseguradores: "CAE_REASEGURADORES",
+  reaseguradores: "CAE_REASEGURADORES_CONTRATO",
   isComisionEscalonada: "isComisionEscalonada",
+  comisionesRol: "CAE_COMIS_ROL_CONTRATO"
 } as const;
 
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
@@ -177,6 +178,21 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     return JSON.parse(dataRaw);
   }
 
+  // !COMISIONES RATE ON LINE
+  const guardarComisionesRateOnLine = (data: Record<string, any>[]) => {
+    const { idContrato } = obtenerGenerales();
+    const rows = data.map(row => ({...row, idContrato}));
+
+    localStorage.setItem(STORAGE_KEYS.comisionesRol, JSON.stringify(rows));
+
+    activeTab.value = "tab-6";
+  }
+
+  const recuperarComisionesRateOnLine = () => {
+    const data = localStorage.getItem(STORAGE_KEYS.comisionesRol) || "[]";
+    return JSON.parse(data);
+  }
+
 
   watch(activeTab, (nuevoTab) => {
     localStorage.setItem(STORAGE_KEYS.activeTab, nuevoTab);
@@ -196,5 +212,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     obtenerPolizasFacultativas,
     guardarReaseguradores,
     recuperarReaseguradores,
+    guardarComisionesRateOnLine,
+    recuperarComisionesRateOnLine
   };
 });

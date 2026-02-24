@@ -246,8 +246,7 @@
       <v-card-actions class="justify-end pa-4 gap-2">
         <v-btn variant="outlined" @click="handleCsvCancel">Cancelar</v-btn>
         <v-btn
-          color="primary"
-          variant="flat"
+          variant="outlined" class="btn-guardar"
           :disabled="csvSelectedRows.length === 0"
           @click="handleCsvAccept"
         >
