@@ -9,7 +9,7 @@ export const useDetallesProporcionalesValidations = () => {
 
 
   return {
-    detallesOperRamo: (value: string) => value === "SI" || value === "NO" || "El detalle de operación ramo es obligatorio.",
+    detallesOperRamo: (value: string) => !!value || "El detalle de operación ramo es obligatorio.",
     cveExtCoberDetalles: (value: number | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
       if (detallesOperRamo === "SI") {

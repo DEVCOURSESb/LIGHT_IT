@@ -12,7 +12,6 @@ export const useCoberturasSection = () => {
     useAccidentesEnfermedades();
 
   const operacionesRamosData = ref<{ title: string; value: string }[]>([]);
-  const coberturasData = ref<{ title: string; value: string }[]>([]);
 
   const {
     validate,
@@ -61,7 +60,6 @@ export const useCoberturasSection = () => {
             });
           }
         });
-
         operacionesRamosData.value = arrayHelper;
         arrayHelper = [];
 
@@ -93,10 +91,34 @@ export const useCoberturasSection = () => {
     { immediate: true },
   );
 
+  /** */
+
   watch(
     () => formData.cveCriterioAsigCobertura,
     (newValue) => {
-      
+      let valuesRecuperados;
+
+      /**
+       * Si el valor del campo cveCriterioAsigCobertura es: (3) POR OPERACIÓN o (6) POR REASEGURADOR Y OPERACIÓN / RAMO
+       * El sistema deberá recuperar los valores registrados en la columna cveCriterioAsigCobertura
+       */
+      if ([3, 6].includes(newValue)) {
+        valuesRecuperados = formData.cveCriterioAsigCobertura;
+      } else {
+        // !NO PROPORCIONAL
+        if (!isTypeProporcional) {
+          // El sistema deberá consulta la tabla DETALLES_CONTRATO y recuperar el valor del campo DETALLES_OPER_RAMO
+          /* valuesRecuperados = aeStore
+            .obtenerDetallesProporcionales()
+            .map(({ detallesOperRamo }) => ({ detallesOperRamo })); */
+        } else {
+          const detalle = aeStore.obtenerDetallesProporcionales()[0]?.detallesOperRamo == "SI";
+
+          if (detalle) {
+          } else {
+          }
+        }
+      }
     },
   );
 

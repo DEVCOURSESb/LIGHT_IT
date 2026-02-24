@@ -60,8 +60,8 @@ export const useDetallesProporcionalesSection = () => {
   const capacidadContrato = ref("");
 
   
-  const lastDetalleOperacionRamoSelected = ref<string>(obtenerDetallesProporcionales()[0].detallesOperRamo);
-  const isDetallesOperacionRamoDisabled = ref<boolean>(lastDetalleOperacionRamoSelected != null);
+  const lastDetalleOperacionRamoSelected = ref<string | null>(obtenerDetallesProporcionales()[0]?.detallesOperRamo || null);
+  const isDetallesOperacionRamoDisabled = ref<boolean>(lastDetalleOperacionRamoSelected === null);
 
   const detallesProporcionalesTable = ref<DetallesProporcionalesFormTable[]>(obtenerDetallesProporcionales() || []);
 
