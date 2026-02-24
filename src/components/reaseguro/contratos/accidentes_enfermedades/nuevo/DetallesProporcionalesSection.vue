@@ -8,13 +8,15 @@
             <!-- DETALLES POR OPERACION RAMO -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SI', 'NO']"
+                v-model="lastDetalleOperacionRamoSelected"
+                :items="['SÍ', 'NO']"
                 label="¿Detalles por operación / ramo?"
                 variant="solo-filled"
                 clearable
                 :model-value="formData['detallesOperRamo']"
                 @update:model-value="setFieldValue('detallesOperRamo', $event)"
                 :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
+                :disabled="isDetallesOperacionRamoDisabled"
               />
             </v-col>
 
@@ -289,6 +291,8 @@ const {
   sendDataToTable,
   editRow,
   toggleActive,
+  lastDetalleOperacionRamoSelected,
+  isDetallesOperacionRamoDisabled
 } = useDetallesProporcionalesSection();
 
 </script>

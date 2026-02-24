@@ -696,7 +696,10 @@ export const useReaseguradoresSection = () => {
       }
       aeStore.guardarReaseguradores(reaseguradoresActivos)
       dialog.cerrar();
+      return;
     }
+      aeStore.guardarReaseguradores(reaseguradoresActivos)
+      dialog.cerrar();
   };
 
   return {

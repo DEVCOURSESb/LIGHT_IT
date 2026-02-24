@@ -59,6 +59,10 @@ export const useDetallesProporcionalesSection = () => {
   const montoCesion = ref("");
   const capacidadContrato = ref("");
 
+  
+  const lastDetalleOperacionRamoSelected = ref<string>(obtenerDetallesProporcionales()[0].detallesOperRamo);
+  const isDetallesOperacionRamoDisabled = ref<boolean>(lastDetalleOperacionRamoSelected != null);
+
   const detallesProporcionalesTable = ref<DetallesProporcionalesFormTable[]>(obtenerDetallesProporcionales() || []);
 
   // Función para calcular las extensiones de cobertura a mostrar a traves de la consulta de extensiones de cobertura y operación ramo
@@ -101,6 +105,14 @@ export const useDetallesProporcionalesSection = () => {
     validationSchema: useDetallesProporcionalesValidations(),
     validateOnMount: false,
   });
+
+  watch(
+    () => lastDetalleOperacionRamoSelected,
+    (newVal) => {
+        setFieldValue("detallesOperRamo", newVal);
+    },
+    { immediate: true }
+  );
 
   watch(
     () => formData.detallesOperRamo,
@@ -358,7 +370,7 @@ export const useDetallesProporcionalesSection = () => {
   const sendDataToTable = () => {
     dialog.show({
       title: "Confirmación",
-      message: "¿Estás seguro de agregar este detalle proporcional a la tabla?",
+      message: "¿Confirma que desea agregar los detalles del contrato capturados?",
       type: DialogType.ERROR,
       ExtraAction: {
         text: "Sí, agregar",
@@ -369,6 +381,15 @@ export const useDetallesProporcionalesSection = () => {
   }
 
   const confirmSendDataToTable = async () => {
+    if(isDetallesOperacionRamoDisabled.value && formData.detallesOperRamo === "NO" && detallesProporcionalesTable.value.length >= 1){
+      dialog.show({
+        title: "Atención",
+        message: "No se puede agregar más de un registro a la tabla",
+        type: DialogType.ERROR
+      });
+      return
+    }
+
     if (!formData.porcentajeRetencion) {
       setFieldValue("porcentajeRetencion", null);
     }
@@ -379,8 +400,6 @@ export const useDetallesProporcionalesSection = () => {
     showErrors.value = true;
     const { valid } = await validate();
     if (valid) {
-      console.log(formData);
-
       const newRow = {...formData, detalleActivo: true} as DetallesProporcionalesFormTable;
 
       // verificar que no exista una fila con la misma informacion
@@ -390,8 +409,10 @@ export const useDetallesProporcionalesSection = () => {
 
       if(!exists) {
         detallesProporcionalesTable.value.push(newRow);
+        lastDetalleOperacionRamoSelected.value = formData.detallesOperRamo;
         // limpiar formulario
         resetForm();
+        setFieldValue("detallesOperRamo", lastDetalleOperacionRamoSelected.value);
         showErrors.value = false;
         porcentajeRetencion.value = null;
         porcentajeCesion.value = null;
@@ -406,6 +427,7 @@ export const useDetallesProporcionalesSection = () => {
           type: DialogType.ERROR,
         });
       }
+      isDetallesOperacionRamoDisabled.value = true;
     }
   };
 
@@ -617,5 +639,7 @@ export const useDetallesProporcionalesSection = () => {
     sendDataToTable,
     editRow,
     toggleActive,
+    lastDetalleOperacionRamoSelected,
+    isDetallesOperacionRamoDisabled,
   };
 };

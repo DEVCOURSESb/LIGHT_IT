@@ -1,6 +1,31 @@
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
+export interface TablaOperacionRamoContratoInterface {
+  idContrato:          string;
+  cveExtCoberContrato: number;
+  cveOperRamo:         string;
+  operRamoActivo:      boolean;
+}
+
+export interface TablaDetallesContrato {
+  detallesOperRamo:         string;
+  cveExtCoberDetalles:      number;
+  cveOperRamoDetalles:      string;
+  montoRetencion:           number;
+  montoRetencionContrato:   number;
+  montoCesion:              number;
+  capacidadContrato:        number;
+  cveCriterioAsigCapacidad: number;
+  cveDistrCesion:           number;
+  cveMonedaDetalles:        number;
+  cumulos:                  string;
+  porcentajeRetencion:      number;
+  porcentajeCesion:         number;
+  detalleActivo:            boolean;
+  idContrato:               string;
+}
+
 
 // claves para localStorage
 const STORAGE_KEYS = {
@@ -140,7 +165,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   const obtenerDetallesProporcionales = () => {
     const rawData = localStorage.getItem(STORAGE_KEYS.detallesContrato) || "[]";
-    return JSON.parse(rawData);
+    return JSON.parse(rawData) as TablaDetallesContrato[];
   };
 
   // !PÓLIZAS FACULTATIVAS
@@ -161,6 +186,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   // ! REASEGURADORES
   const guardarReaseguradores = (data: Record<string, any>[]) => {
+    console.log("reaseg cargados")
     const { idContrato } = obtenerGenerales();
     const reaseguradoresConContrato = data.map((item) => ({ ...item, idContrato }));
     localStorage.setItem(STORAGE_KEYS.reaseguradores, JSON.stringify(reaseguradoresConContrato));
@@ -194,6 +220,12 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   }
 
 
+  const recuperarTablaOperacionRamoContrato = () => {
+    const raw = localStorage.getItem(STORAGE_KEYS.operacionRamoContrato) || "[]";
+    return JSON.parse(raw) as TablaOperacionRamoContratoInterface[];
+  }
+
+
   watch(activeTab, (nuevoTab) => {
     localStorage.setItem(STORAGE_KEYS.activeTab, nuevoTab);
   });
@@ -213,6 +245,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     guardarReaseguradores,
     recuperarReaseguradores,
     guardarComisionesRateOnLine,
-    recuperarComisionesRateOnLine
+    recuperarComisionesRateOnLine,
+    recuperarTablaOperacionRamoContrato
   };
 });
