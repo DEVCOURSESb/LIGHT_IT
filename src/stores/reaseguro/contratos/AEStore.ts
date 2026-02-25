@@ -43,7 +43,8 @@ const STORAGE_KEYS = {
   isComisionEscalonada: "isComisionEscalonada",
   comisionesRol: "CAE_COMIS_ROL_CONTRATO",
   coberturasContrato: "CAE_COBERTURAS_CONTRATO",
-  excedentesContratos: "CAE_EXCEDENTES_CONTRATO"
+  excedentesContratos: "CAE_EXCEDENTES_CONTRATO",
+  
 } as const;
 
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
