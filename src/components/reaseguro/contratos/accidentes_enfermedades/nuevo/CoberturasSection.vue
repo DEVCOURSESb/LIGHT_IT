@@ -3,25 +3,29 @@
     <v-card-text>
       <v-container>
         <v-form @submit.prevent="">
+
+          <!-- ! ROW — Campos de captura -->
           <v-row>
             <!-- ASIGNACIÓN DE COBERTURAS -->
             <v-col cols="12" md="3">
               <v-select
-                :items="queryCriterioAsignacion.data.value?.filter( item => [0, 1, 3, 6].includes(item.cveCriterioAsig) ) ?? []"
+                :items="queryCriterioAsignacion.data.value?.filter((item) => [0, 1, 3, 6].includes(item.cveCriterioAsig)) ?? []"
                 item-title="descCriterioAsig"
                 item-value="cveCriterioAsig"
                 label="Asignación de coberturas"
                 variant="solo-filled"
                 clearable
-                :disabled="queryCriterioAsignacion.isLoading.value"
+                :disabled="queryCriterioAsignacion.isLoading.value || criterioEstaFijo"
                 :model-value="formData['cveCriterioAsigCobertura']"
                 @update:model-value="setFieldValue('cveCriterioAsigCobertura', $event)"
                 :error-messages="showErrors ? formErrors['cveCriterioAsigCobertura'] : undefined"
+                :hint="criterioEstaFijo ? 'El criterio está fijo. Inactiva todos los registros para cambiarlo.' : undefined"
+                :persistent-hint="criterioEstaFijo"
               />
             </v-col>
-            
-            <!-- REASEGURADORA -->
-            <v-col cols="12" md="3" v-if="[0, 6].includes(formData['cveCriterioAsigCobertura'])">
+
+            <!-- REASEGURADORA (solo si criterio = 0 o 6) -->
+            <v-col cols="12" md="3" v-if="[0, 6].includes(formData['cveCriterioAsigCobertura']!)">
               <v-select
                 :items="reaseguradoraData"
                 item-title="nombreReasegurador"
@@ -35,13 +39,13 @@
               />
             </v-col>
 
-            <!-- OPERACION / RAMO -->
-            <v-col cols="12" md="3" v-if="[3, 6].includes(formData['cveCriterioAsigCobertura'])">
+            <!-- OPERACIÓN / RAMO (solo si criterio = 3 o 6) -->
+            <v-col cols="12" md="3" v-if="[3, 6].includes(formData['cveCriterioAsigCobertura']!)">
               <v-select
                 :items="operacionesRamosData"
                 item-title="title"
                 item-value="value"
-                label="Operación ramo"
+                label="Operación / Ramo"
                 variant="solo-filled"
                 clearable
                 :model-value="formData['cveOperRamoCobertura']"
@@ -53,9 +57,9 @@
             <!-- COBERTURA -->
             <v-col cols="12" md="3">
               <v-select
-                :items="[]"
-                item-title="title"
-                item-value="value"
+                :items="coberturasDisponibles"
+                item-title="descCobaye"
+                item-value="cveCobaye"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
@@ -65,24 +69,148 @@
               />
             </v-col>
 
-            
+            <!-- ¿PROPIA SUMA ASEGURADA MÁXIMA? -->
+            <v-col cols="12" md="3">
+              <v-select
+                :items="[{ title: 'SÍ', value: 'SI' }, { title: 'NO', value: 'NO' }]"
+                item-title="title"
+                item-value="value"
+                label="¿Propia suma asegurada máxima?"
+                variant="solo-filled"
+                :model-value="formData['propiaSaMax']"
+                @update:model-value="setFieldValue('propiaSaMax', $event)"
+                :error-messages="showErrors ? formErrors['propiaSaMax'] : undefined"
+              />
+            </v-col>
 
+            <!-- SUMA ASEGURADA MÁXIMA (solo si propiaSaMax = SI) -->
+            <v-col cols="12" md="3" v-if="formData['propiaSaMax'] === 'SI'">
+              <v-text-field
+                label="Suma asegurada máxima"
+                variant="solo-filled"
+                :model-value="saMax"
+                @update:model-value="onInputSaMax($event)"
+                @blur="onBlurSaMax"
+                :error-messages="showErrors ? formErrors['saMax'] : undefined"
+                hint="Formato: ###,###.##"
+                persistent-hint
+              />
+            </v-col>
           </v-row>
+
+          <!-- ! ROW — Botones principales -->
+          <v-row class="d-flex gap-2 justify-end">
+            <v-btn size="large" variant="outlined" @click="handleAgregarCobertura">
+              Agregar coberturas
+            </v-btn>
+            <v-btn size="large" variant="outlined" class="btn-guardar" @click="handleGuardarCoberturas">
+              Guardar coberturas
+            </v-btn>
+          </v-row>
+
+          <br /><br />
+
+          <!-- ! ROW — Filtros de tabla -->
+          <v-row align="center">
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="filtroReaseguradora"
+                label="Filtrar por reaseguradora"
+                variant="outlined"
+                density="compact"
+                clearable
+                prepend-inner-icon="mdi-magnify"
+              />
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="filtroOperRamo"
+                label="Filtrar por operación / ramo"
+                variant="outlined"
+                density="compact"
+                clearable
+                prepend-inner-icon="mdi-magnify"
+              />
+            </v-col>
+            <v-col cols="12" md="2">
+              <v-btn variant="outlined" @click="limpiarFiltros">
+                Limpiar filtros
+              </v-btn>
+            </v-col>
+          </v-row>
+
+          <!-- ! ROW — Tabla principal -->
+          <v-row>
+            <v-col cols="12">
+              <v-data-table
+                class="mt-2"
+                :headers="tableHeaders"
+                :items="dataTableFiltrada"
+                striped="odd"
+              >
+                <template #top>
+                  <v-toolbar class="encabezado" flat>
+                    <v-toolbar-title>
+                      Solo los registros de esta tabla se registrarán
+                    </v-toolbar-title>
+                    <v-spacer />
+                  </v-toolbar>
+                </template>
+
+                <template #no-data>No hay datos disponibles</template>
+
+                <template #item.saMax="{ item }">
+                  {{ item.saMax != null ? item.saMax.toLocaleString("es-MX", { minimumFractionDigits: 2 }) : "—" }}
+                </template>
+
+                <template #item.coberActiva="{ item }">
+                  <v-checkbox
+                    :model-value="item.coberActiva"
+                    @update:model-value="toggleRowActiva(item)"
+                    hide-details
+                    density="compact"
+                  />
+                </template>
+
+                <template #item.editar="{ item }">
+                  <v-icon class="edit" size="large" @click="editRow(item)">
+                    mdi-pencil
+                  </v-icon>
+                </template>
+              </v-data-table>
+            </v-col>
+          </v-row>
+
         </v-form>
       </v-container>
     </v-card-text>
   </v-card>
 </template>
+
 <script lang="ts" setup>
-import { useCoberturasSection } from '@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/coberturas/useCoberturasSection';
+import { useCoberturasSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/coberturas/useCoberturasSection";
 
 const {
   formData,
   formErrors,
-  setFieldValue,
   showErrors,
+  setFieldValue,
+  saMax,
+  onInputSaMax,
+  onBlurSaMax,
   queryCriterioAsignacion,
-  reaseguradoraData ,
+  reaseguradoraData,
   operacionesRamosData,
- } = useCoberturasSection();
+  coberturasDisponibles,
+  tableHeaders,
+  dataTableFiltrada,
+  filtroReaseguradora,
+  filtroOperRamo,
+  limpiarFiltros,
+  criterioEstaFijo,
+  handleAgregarCobertura,
+  handleGuardarCoberturas,
+  toggleRowActiva,
+  editRow,
+} = useCoberturasSection();
 </script>

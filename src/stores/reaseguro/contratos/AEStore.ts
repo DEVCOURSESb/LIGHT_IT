@@ -41,7 +41,9 @@ const STORAGE_KEYS = {
   polizasFacultativasContrato: "CAE_POL_FAC_CONTRATO",
   reaseguradores: "CAE_REASEGURADORES_CONTRATO",
   isComisionEscalonada: "isComisionEscalonada",
-  comisionesRol: "CAE_COMIS_ROL_CONTRATO"
+  comisionesRol: "CAE_COMIS_ROL_CONTRATO",
+  coberturasContrato: "CAE_COBERTURAS_CONTRATO",
+  excedentesContratos: "CAE_EXCEDENTES_CONTRATO"
 } as const;
 
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
@@ -219,6 +221,36 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     return JSON.parse(data);
   }
 
+  // !COBERTURAS
+  const guardarCoberturas = (data: Record<string, any>[]) => {
+    const { idContrato } = obtenerGenerales();
+    const rows = data.map(row => ({...row, idContrato}));
+
+    localStorage.setItem(STORAGE_KEYS.coberturasContrato, JSON.stringify(rows));
+
+    activeTab.value = "tab-6";
+  }
+
+  const recuperarCoberturas = () => {
+    const data = localStorage.getItem(STORAGE_KEYS.coberturasContrato) || "[]";
+    return JSON.parse(data);
+  }
+
+  // !COBERTURAS
+  const guardarExcedentes = (data: Record<string, any>[]) => {
+    const { idContrato } = obtenerGenerales();
+    const rows = data.map(row => ({...row, idContrato}));
+
+    localStorage.setItem(STORAGE_KEYS.excedentesContratos, JSON.stringify(rows));
+
+    activeTab.value = "tab-6";
+  }
+
+  const recuperarExcedentes = () => {
+    const data = localStorage.getItem(STORAGE_KEYS.excedentesContratos) || "[]";
+    return JSON.parse(data);
+  }
+
 
   const recuperarTablaOperacionRamoContrato = () => {
     const raw = localStorage.getItem(STORAGE_KEYS.operacionRamoContrato) || "[]";
@@ -246,6 +278,10 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     recuperarReaseguradores,
     guardarComisionesRateOnLine,
     recuperarComisionesRateOnLine,
-    recuperarTablaOperacionRamoContrato
+    recuperarTablaOperacionRamoContrato,
+    guardarCoberturas,
+    recuperarCoberturas,
+    guardarExcedentes,
+    recuperarExcedentes
   };
 });
