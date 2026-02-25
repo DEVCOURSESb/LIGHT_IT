@@ -1,56 +1,42 @@
 <template>
-  <v-form>
-    <v-container>
-      <v-row >
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-select
-            v-model="poliza"
-            label="Póliza"
-            readonly
-            variant="solo-filled"
-          />
-        </v-col>
-        <v-col
-          cols="12"
-          md="4"
-        >
-          <v-select
-            v-model="renovacion"
-            class="selectForm"
-            label="Renovación"
-            readonly
-            variant="solo-filled"
-          />
-        </v-col>
-      </v-row>
-      <v-spacer />
-      <br>
-    </v-container>
-  </v-form>
-  <div>
-    <v-row >
-      <v-col>
-        <v-data-table :headers="headers1" hide-default-footer  />
-      </v-col>
-    </v-row>
-  </div>
-  <v-col class="text-center">
-    <v-btn class="btn-guardar" >
-      Actualizar pólizas
-    </v-btn>
-  </v-col>
+  <v-data-table :headers="headers1" class="elevation-1 mt-4" hide-default-footer />
 </template>
 
-<script lang="ts"setup>
-  import { ref } from 'vue'
-  const poliza = ref('')
-  const renovacion = ref('')
+<script lang="ts" setup>
+import { NuevoContratoVida } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoDG.actions'
+import { BaseAPI } from '@/API/BaseAPI'
+import { onMounted, ref } from 'vue';
 
-  const headers1 = [
-    { title: 'Póliza',  key: 'poliza' },
-    { title: 'Renovación',  key: 'renovacion' },
-  ]
+const apiPolizasFacultativas = BaseAPI({ prefix: 'ws_reaseguro_contratos_vida/api/v1/PolizasFacultativasRest', isBase: true, isPrivate: true });
+
+const { fetchEmisionContable } = NuevoContratoVida()
+
+const headers1 = [
+  { title: 'Póliza', key: 'poliza' },
+  { title: 'Renovación', key: 'renovacion' },
+]
+
+const polizasFacultativasTabla = ref<any[]>([])
+
+const cargarPolizasFacultativas = async () => {
+  try {
+    const response = await apiPolizasFacultativas.post('getAllRecords', {});
+    if (response.data && Array.isArray(response.data)) {
+      polizasFacultativasTabla.value = response.data.map((item: any) => ({
+        ...item,
+        display: {
+          poliza: item.cvePoliza,
+          renovacion: item.renovacion ? 'Sí' : 'No'
+        }
+      }));
+    }
+  } catch (error) {
+    console.error("Error al cargar pólizas facultativas:", error);
+  }
+};
+onMounted(async () => {
+  await Promise.all([
+    cargarPolizasFacultativas()
+  ])
+})
 </script>

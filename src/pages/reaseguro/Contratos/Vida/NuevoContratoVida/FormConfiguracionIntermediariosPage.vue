@@ -14,7 +14,7 @@
           />
         </v-col>
 
-        <v-col v-if="getID(asignacionIntermObj) === 0" cols="12" md="2" class="d-flex align-center">
+        <!--<v-col v-if="getID(asignacionIntermObj) === 0" cols="12" md="2" class="d-flex align-center">
           <v-checkbox
             v-model="invertir"
             label="¿Invertir?"
@@ -22,7 +22,7 @@
             hide-details
           />
           <v-tooltip activator="parent" location="top" max-width="350">Seleccione en caso de requerir capturar más de un intermediario por reaseguradora o contrato</v-tooltip>
-        </v-col>
+        </v-col>-->
 
         <v-col cols="12" md="4">
           <v-select
@@ -42,7 +42,7 @@
 
       <v-row class="align-center d-flex justify-center align-center">
         <!-- Reaseguradora - order 2 cuando invertir=true, order 1 cuando invertir=false -->
-        <v-col cols="12" md="6" :order="invertir ? 2 : 1">
+        <v-col cols="12" md="6">
           <v-select
             v-model="reaseguradoraObj"
             :items="reaseguradorasDisponibles"
@@ -57,7 +57,7 @@
         </v-col>
 
         <!-- Intermediario/Broker - order 1 cuando invertir=true, order 2 cuando invertir=false -->
-        <v-col cols="12" md="6" :order="invertir ? 1 : 2">
+        <v-col cols="12" md="6">
           <v-autocomplete
             v-model="brokerObj"
             :items="intermeOptions"

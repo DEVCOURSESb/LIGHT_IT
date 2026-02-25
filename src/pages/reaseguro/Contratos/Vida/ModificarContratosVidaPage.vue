@@ -133,7 +133,7 @@
   const eliminarContratoVida = async (item: any) => {
     dialog.show({
       title: 'Confirmar',
-      message: `¿Estás seguro de eliminar el contrato llamado "${item.idContrato}"? Una vez eliminado no podrá ser recuperado.`,
+      message: `¿Estás seguro de eliminar el contrato con nombre "${item.idContrato}" ? Una vez eliminado no podrá ser recuperado.`,
       type: DialogType.CONFIRM,
       onConfirm: async () => {
         try {

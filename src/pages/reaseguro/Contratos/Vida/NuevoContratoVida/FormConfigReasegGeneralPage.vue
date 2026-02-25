@@ -454,7 +454,7 @@ const validarParticipacionYGuardar = (idContrato: string) => {
   const participacionNueva = Number(participacion.value.toFixed(2));
   const totalConNuevo = sumaPrevia + participacionNueva;
 
-  if (totalConNuevo > 100.01) {
+  if (totalConNuevo > 100) {
     dialog.show({
       title: 'Confirmación de Participación',
       message: `La participación total acumulada será de ${totalConNuevo.toFixed(2)}%. ¿Desea continuar a pesar de exceder el 100%?`,

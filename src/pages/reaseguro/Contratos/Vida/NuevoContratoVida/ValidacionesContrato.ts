@@ -111,22 +111,23 @@ export class ValidacionesContrato {
     };
   }
 
-
-  //CESION
+  // CESION
   static cesion(tipoContrato: () => number | null) {
-    const permitidos = [1, 7, 9]
+    const permitidos = [1, 7, 9];
 
-    const regex = /^(100(\.00)?|(\d{1,2})(\.\d{2})?)$/
+    const regex = /^(100(\.0{1,2})?|(\d{1,2})(\.\d{1,2})?)$/;
 
     return (v: string) => {
-      const tipo = tipoContrato()
+      const tipo = tipoContrato();
 
-      if (tipo === null || !permitidos.includes(tipo)) return true
-      if (!v) return 'Cesión requerida'
-      if (!regex.test(v)) return 'Rango permitido 0.00 – 100.00'
-      return true
-    }
+      if (tipo === null || !permitidos.includes(tipo)) return true;
+      if (!v) return 'Cesión requerida';
+      if (!regex.test(v)) return 'Rango permitido 0.00 – 100.00';
+
+      return true;
+    };
   }
+  
   // Piso (SEGUNDO, TERCER, CUARTO EXCEDENTE)
   static piso(tipoContrato: () => number | null) {
     const permitidos = [4, 5, 6]

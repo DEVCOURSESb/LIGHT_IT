@@ -155,7 +155,7 @@
           />
         </v-col>
 
-        <v-col cols="12" md="4" v-if="[1, 7, 9].includes(Number(getID(tipoContratoObj)))">
+        <v-col cols="12" md="4" v-if="[1, 7, 9, 26].includes(Number(getID(tipoContratoObj)))">
           <v-text-field
             v-model="cesion"
             label="Cesión"
@@ -453,6 +453,16 @@ const guardarDatosGenerales = async () => {
   if (!validation?.valid) {
     dialog.show({ title: 'Atención', message: 'Complete los campos obligatorios', type: DialogType.ERROR })
     return
+  }
+
+  const esExcedentePorCapas = getID(tipoContratoObj.value) === 3;
+  if (esExcedentePorCapas && capas.value.length === 0) {
+    dialog.show({
+      title: 'Datos Faltantes',
+      message: 'Se seleccionó el tipo de contrato de "EXCEDENTE POR CAPAS", por lo tanto debe agregar al menos una capa para continuar.',
+      type: DialogType.ERROR
+    });
+    return;
   }
 
   try {

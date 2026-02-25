@@ -1,8 +1,14 @@
 <template>
   <div>
-    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Vida', 'Modificar contrato','[ID_CONTRATO]']" />
+    <v-breadcrumbs :items="['Reaseguro', 'Contratos de reaseguro', 'Vida', 'Visualizar contrato', nombreContrato ]" />
+    <br>
+    <v-btn color="blue" rounded="xl" to="/reaseguro/contratos/vida/visualizarContratoVida" variant="text">
+      <v-icon start>mdi-arrow-left</v-icon>
+      Volver
+    </v-btn>
+    <br>
     <v-card-title class="d-flex align-center">
-      Visualizar Contrato Vida [ID_CONTRATO]
+      Visualizar Contrato Vida {{ nombreContrato || 'Cargando...' }}
     </v-card-title>
     <v-spacer class="mb-4" />
     <div>
@@ -18,7 +24,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormDatosPageV />
+            <FormDatosPageV :datos="nombreContrato" />
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -33,7 +39,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormConfiguracionReaseguradoresPageV />
+            <FormConfiguracionReaseguradoresPageV :datos="nombreContrato"/>
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -48,7 +54,7 @@
             </template>
           </v-expansion-panel-title>
           <v-expansion-panel-text>
-            <FormConfiguracionIntermediariosPageV />
+            <FormConfiguracionIntermediariosPageV :datos="nombreContrato" />
           </v-expansion-panel-text>
         </v-expansion-panel>
 
@@ -59,9 +65,29 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
   import FormDatosPageV from './FormDatosPageV.vue'
   import FormConfiguracionIntermediariosPageV from './FormConfiguracionIntermediariosPageV.vue'
   import FormConfiguracionReaseguradoresPageV from './FormConfiguracionReaseguradoresPageV.vue'
+  import { BaseAPI } from '@/API/BaseAPI'
+  import { useRoute } from 'vue-router'
+
+  const route = useRoute()
+  const cargando = ref(false)
+  const nombreContrato = ref<string>('')
+
+  const cargarDetalles = async () => {
+    cargando.value = true;
+    nombreContrato.value
+  };
+
+
+  onMounted(() => {
+    const nombreQuery = route.query.nombre as string;
+    if (nombreQuery) {
+      nombreContrato.value = nombreQuery;
+      cargarDetalles();
+    }
+  });
 
 </script>

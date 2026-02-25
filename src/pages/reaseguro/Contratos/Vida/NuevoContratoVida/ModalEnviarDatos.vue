@@ -66,6 +66,7 @@ import { useContratoStore } from '@/stores/contratoStore'
 import { DialogType, useDialog } from "@/stores/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
 import { AuthStore } from '@/stores/authStore'
+import { format, parseISO } from 'date-fns';
 
 const contratoStore = useContratoStore()
 const modalResumen = ref(false)
@@ -103,6 +104,7 @@ const formatF = (f: string | Date) => {
   return d.toISOString().split('T')[0] + " 00:00:00.0";
 };
 
+
 const datosContratoResumen = computed(() => {
   const g = contratoStore.general; if (!g) return [];
   return [{
@@ -131,8 +133,8 @@ const excedenteCapasResumen = computed(() => {
   return (contratoStore.expc?.capas || []).map(c => ({
     idContrato: id,
     detalleCapa: c.detalleCapa,
-    montoRetencionCapa: cleanN(c.retencionC),
-    techoCapa: cleanN(c.techoC)
+    montoRetencionCapa: '$ ' + cleanN(c.retencionC).toLocaleString(),
+    techoCapa: '$ ' + cleanN(c.techoC).toLocaleString()
   }))
 });
 
@@ -317,36 +319,39 @@ const headersIntermediarios = [
   { title: 'TIPO CORRETAJE', key: 'cveAsignacion' }, { title: '% CORRETAJE', key: 'porcentajeCorretaje' }, { title: 'MONTO CORRETAJE', key: 'montoCorretaje' }
 ];
 
-// sigue pasando de que solo llegan algunos registros a las comisiones normales, hice dos pruebas si mando 4 registros solo llegan 3, y asi
 const procesarComisionesSecuencial = async (listaFinal: any[], idContrato: string) => {
   for (const item of listaFinal) {
     const g = item.general;
     const com = item.comisiones;
     const tieneComision = getID(g.comisionReaseg) == 1;
-    const esEscalonada = com?.comisiones && com.comisiones.length > 0;
 
-    if (tieneComision) {
-      if (esEscalonada) {
-        for (const ce of com.comisiones) {
-          await apiComisionEsc.post('register', {
-            idContrato: idContrato,
-            cveReasegurador: String(getID(g.cveReasegurador)),
-            descClasifCober: getTX(ce.tipoCobertura),
-            limiteInf: cleanN(ce.limiteInf),
-            limiteSup: cleanN(ce.limiteSup),
-            comisionDefinitiva: cleanN(ce.comisionDefinitiva)
-          });
-        }
-      } else if (g.coberturas && g.coberturas.length > 0) {
-        for (const cob of g.coberturas) {
-          await apiComision.post('register', {
-            idContrato: idContrato,
-            cveReasegurador: String(getID(g.cveReasegurador)),
-            descClasifCober: getTX(cob.tipoCobertura),
-            comisionPrimerAnioFijaProv: cleanN(cob.comisionPrimerAnio),
-            comisionRenovacionFijaProv: cleanN(cob.comisionRenovacion)
-          });
-        }
+    if (!tieneComision) continue;
+
+
+    const esEscalonada = com?.comisiones && com.comisiones.length > 0;
+    if (esEscalonada) {
+      for (const ce of com.comisiones) {
+        await apiComisionEsc.post('register', {
+          idContrato: idContrato,
+          cveReasegurador: String(getID(g.cveReasegurador)),
+          descClasifCober: getTX(ce.tipoCobertura),
+          limiteInf: cleanN(ce.limiteInf),
+          limiteSup: cleanN(ce.limiteSup),
+          comisionDefinitiva: cleanN(ce.comisionDefinitiva)
+        });
+      }
+    }
+
+    const tieneCoberturas = g.coberturas && g.coberturas.length > 0;
+    if (tieneCoberturas) {
+      for (const cob of g.coberturas) {
+        await apiComision.post('register', {
+          idContrato: idContrato,
+          cveReasegurador: String(getID(g.cveReasegurador)),
+          descClasifCober: getTX(cob.tipoCobertura),
+          comisionPrimerAnioFijaProv: cleanN(cob.comisionPrimerAnio),
+          comisionRenovacionFijaProv: cleanN(cob.comisionRenovacion)
+        });
       }
     }
   }

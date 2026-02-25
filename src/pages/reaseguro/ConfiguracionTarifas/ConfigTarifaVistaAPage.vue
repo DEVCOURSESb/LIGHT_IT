@@ -12,11 +12,27 @@
   </v-card-title>
 
   <br>
+
+  <v-row justify="end">
+      <v-col cols="5" md="4">
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Buscar detalle tarifa"
+          single-line
+          hide-details
+          class="mb-4"
+          variant="solo-filled"
+        />
+      </v-col>
+  </v-row>
   <v-row>
     <v-col cols="12">
       <v-data-table
         :headers="headers2"
         :items="itemsDetalle"
+        :search="search"
+        :custom-filter="filtrarBusqueda"
         :loading="cargando"
         class="elevation-1"
         no-data-text="No se encontraron registros para este archivo"
@@ -101,6 +117,7 @@ const dialogGlobal = useDialog()
 
 const modalEditar = ref(false)
 const idActual = ref<any>(null)
+const search = ref('')
 const form = reactive({
   edad: '',
   genero: '',
@@ -174,6 +191,14 @@ const confirmarEdicion = () => {
 
 const validarRangoEdad = ref();
 
+function filtrarBusqueda (value: any, query: string | null, _item: any) {
+  if (value == null || query == null) return false;
+
+  const valorTexto = value.toString().toLowerCase();
+  const busquedaTexto = query.toLowerCase();
+
+  return valorTexto.indexOf(busquedaTexto) !== -1;
+}
 
 const guardarEnBD = async () => {
   try {
