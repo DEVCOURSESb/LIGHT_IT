@@ -7,10 +7,6 @@ import { formattNumber } from "@/utils/formattNumber";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useExcedentesValidations } from "./useExcedentesValidations ";
 
-// ─────────────────────────────────────────────
-// Interfaces
-// ─────────────────────────────────────────────
-
 interface ExcedenteForm {
   cveCriterioAsigCapa: number | null;
   cveCobayeCapa: number | null;
@@ -19,14 +15,10 @@ interface ExcedenteForm {
 }
 
 interface ExcedenteRow extends ExcedenteForm {
-  noCapa: number;         // asignado automáticamente
+  noCapa: number;         
   descCobaye: string;
-  capaActiva: boolean;    // true = 1 ACTIVO | false = 2 INACTIVO
+  capaActiva: boolean;    
 }
-
-// ─────────────────────────────────────────────
-// Composable
-// ─────────────────────────────────────────────
 
 export const useExcedentesSection = () => {
   const aeStore = useContratoAEStore();
@@ -34,11 +26,9 @@ export const useExcedentesSection = () => {
 
   const { queryCriterioAsignacion, queryCoberturasAyE } =
     useAccidentesEnfermedades();
-
-  // ── Tabla principal ────────────────────────────────────────────────────
-  const dataTable = ref<ExcedenteRow[]>([]);
-
-  // ── Refs de campos numéricos (formateo visual) ─────────────────────────
+ 
+  const dataTable = ref<ExcedenteRow[]>(aeStore.recuperarExcedentes());
+  
   const retencionCapa = ref("");
   const cesionCapa = ref("");
 
@@ -46,8 +36,7 @@ export const useExcedentesSection = () => {
     retencionCapa,
     cesionCapa,
   };
-
-  // ── Formulario ─────────────────────────────────────────────────────────
+  
   const {
     validate,
     resetForm,
@@ -58,7 +47,7 @@ export const useExcedentesSection = () => {
     validationSchema: useExcedentesValidations(),
     validateOnMount: false,
     initialValues: {
-      cveCriterioAsigCapa: 1, // default: POR CONTRATO
+      cveCriterioAsigCapa: 1, 
       cveCobayeCapa: null,
       retencionCapa: null,
       cesionCapa: null,
@@ -66,47 +55,34 @@ export const useExcedentesSection = () => {
   });
 
   const showErrors = ref(false);
-
-  // ─────────────────────────────────────────────
-  // Criterio fijo (igual que en Coberturas)
-  // Se bloquea mientras haya registros activos
-  // ─────────────────────────────────────────────
+  
   const criterioFijo = computed(() => {
     const activos = dataTable.value.filter((r) => r.capaActiva);
     return activos.length > 0 ? activos[0]!.cveCriterioAsigCapa : null;
   });
 
   const criterioEstaFijo = computed(() => criterioFijo.value != null);
-
-  // ─────────────────────────────────────────────
-  // Número de capa automático
-  // ─────────────────────────────────────────────
+  
   const calcularNoCapa = (cveCriterio: number | null, cveCobaye: number | null): number => {
     if (cveCriterio === 1) {
-      // POR CONTRATO → secuencial global
+      
       return dataTable.value.length + 1;
     } else {
-      // POR COBERTURA → secuencial por cobertura
+      
       const registrosMismaCobertura = dataTable.value.filter(
         (r) => r.cveCobayeCapa === cveCobaye
       );
       return registrosMismaCobertura.length + 1;
     }
   };
-
-  // ─────────────────────────────────────────────
-  // Limpiar cobertura al cambiar criterio
-  // ─────────────────────────────────────────────
+  
   watch(
     () => formData.cveCriterioAsigCapa,
     () => {
       setFieldValue("cveCobayeCapa", null);
     }
   );
-
-  // ─────────────────────────────────────────────
-  // Helpers de formateo numérico
-  // ─────────────────────────────────────────────
+  
   const onInputGeneric = (key: string, value: string) => {
     const clean = formattNumber(value);
     const fieldRef = formatNumberRefs[key];
@@ -135,9 +111,6 @@ export const useExcedentesSection = () => {
     fieldRef.value = formatCurrency(numeric);
   };
 
-  // ─────────────────────────────────────────────
-  // Reset
-  // ─────────────────────────────────────────────
   const resetFormAndRefs = () => {
     const criterioActual = criterioFijo.value ?? formData.cveCriterioAsigCapa;
     resetForm();
@@ -146,10 +119,7 @@ export const useExcedentesSection = () => {
     cesionCapa.value = "";
     showErrors.value = false;
   };
-
-  // ─────────────────────────────────────────────
-  // Helper descripción de cobertura
-  // ─────────────────────────────────────────────
+  
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
@@ -158,9 +128,6 @@ export const useExcedentesSection = () => {
     );
   };
 
-  // ─────────────────────────────────────────────
-  // Botón "Agregar Excedente"
-  // ─────────────────────────────────────────────
   const handleAgregarExcedente = () => {
     dialog.show({
       title: "Confirmación",
@@ -193,9 +160,6 @@ export const useExcedentesSection = () => {
     resetFormAndRefs();
   };
 
-  // ─────────────────────────────────────────────
-  // Toggle activa (individual)
-  // ─────────────────────────────────────────────
   const toggleRowActiva = (item: ExcedenteRow) => {
     const index = dataTable.value.indexOf(item);
     if (index !== -1) {
@@ -203,11 +167,6 @@ export const useExcedentesSection = () => {
     }
   };
 
-  // ─────────────────────────────────────────────
-  // Editar fila
-  // Al editar se recalculará el noCapa al volver a agregar,
-  // por eso se elimina de la tabla y se repuebla el form
-  // ─────────────────────────────────────────────
   const editRow = (row: ExcedenteRow) => {
     const index = dataTable.value.indexOf(row);
     if (index !== -1) dataTable.value.splice(index, 1);
@@ -221,9 +180,6 @@ export const useExcedentesSection = () => {
     cesionCapa.value    = row.cesionCapa    != null ? formatCurrency(row.cesionCapa)    : "";
   };
 
-  // ─────────────────────────────────────────────
-  // Botón "Guardar Excedente"
-  // ─────────────────────────────────────────────
   const handleGuardarExcedente = () => {
     if (dataTable.value.length === 0) {
       dialog.show({
@@ -248,45 +204,10 @@ export const useExcedentesSection = () => {
   };
 
   const doGuardarExcedente = () => {
-    const payload = dataTable.value.map((r) => ({
-      cveCriterioAsigCapa: r.cveCriterioAsigCapa,
-      cveCobayeCapa:       r.cveCobayeCapa,
-      noCapa:              r.noCapa,
-      retencionCapa:       r.retencionCapa,
-      cesionCapa:          r.cesionCapa,
-      capaActiva:          r.capaActiva ? 1 : 2,
-    }));
-
-    aeStore.guardarExcedentes(payload);
+    aeStore.guardarExcedentes(dataTable.value);
     dialog.cerrar();
   };
 
-  // ─────────────────────────────────────────────
-  // Filtros de tabla
-  // ─────────────────────────────────────────────
-  const filtroCobaye = ref("");
-  const filtroNoCapa = ref("");
-
-  const dataTableFiltrada = computed(() =>
-    dataTable.value.filter((row) => {
-      const matchCobaye =
-        !filtroCobaye.value ||
-        row.descCobaye.toLowerCase().includes(filtroCobaye.value.toLowerCase());
-      const matchNoCapa =
-        !filtroNoCapa.value ||
-        String(row.noCapa).includes(filtroNoCapa.value);
-      return matchCobaye && matchNoCapa;
-    })
-  );
-
-  const limpiarFiltros = () => {
-    filtroCobaye.value = "";
-    filtroNoCapa.value = "";
-  };
-
-  // ─────────────────────────────────────────────
-  // Headers
-  // ─────────────────────────────────────────────
   const headerProps = { style: "font-weight: bold" };
 
   const tableHeaders = [
@@ -298,34 +219,20 @@ export const useExcedentesSection = () => {
     { title: "Editar",          key: "editar",        sortable: false, headerProps },
   ];
 
-  // ─────────────────────────────────────────────
-  // Exposición
-  // ─────────────────────────────────────────────
   return {
-    // form
     formData,
     formErrors,
     showErrors,
     setFieldValue,
-    // campos numéricos
     retencionCapa,
     cesionCapa,
     onInputGeneric,
     onBlurGeneric,
-    // opciones
     queryCriterioAsignacion,
     queryCoberturasAyE,
-    // tabla
     tableHeaders,
     dataTable,
-    dataTableFiltrada,
-    // filtros
-    filtroCobaye,
-    filtroNoCapa,
-    limpiarFiltros,
-    // estado
     criterioEstaFijo,
-    // handlers
     handleAgregarExcedente,
     handleGuardarExcedente,
     toggleRowActiva,

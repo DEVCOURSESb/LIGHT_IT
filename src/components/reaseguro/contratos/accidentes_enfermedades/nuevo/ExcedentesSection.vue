@@ -19,8 +19,6 @@
                 :model-value="formData['cveCriterioAsigCapa']"
                 @update:model-value="setFieldValue('cveCriterioAsigCapa', $event)"
                 :error-messages="showErrors ? formErrors['cveCriterioAsigCapa'] : undefined"
-                :hint="criterioEstaFijo ? 'El criterio está fijo. Inactiva todos los registros para cambiarlo.' : undefined"
-                :persistent-hint="criterioEstaFijo"
               />
             </v-col>
 
@@ -47,8 +45,6 @@
                 variant="solo-filled"
                 :model-value="noCapa"
                 readonly
-                hint="Asignado automáticamente"
-                persistent-hint
               />
             </v-col>
 
@@ -61,8 +57,6 @@
                 @update:model-value="onInputGeneric('retencionCapa', $event)"
                 @blur="onBlurGeneric('retencionCapa')"
                 :error-messages="showErrors ? formErrors['retencionCapa'] : undefined"
-                hint="Formato: ###,###.##"
-                persistent-hint
               />
             </v-col>
 
@@ -75,8 +69,6 @@
                 @update:model-value="onInputGeneric('cesionCapa', $event)"
                 @blur="onBlurGeneric('cesionCapa')"
                 :error-messages="showErrors ? formErrors['cesionCapa'] : undefined"
-                hint="Formato: ###,###.##"
-                persistent-hint
               />
             </v-col>
           </v-row>
@@ -93,42 +85,13 @@
 
           <br /><br />
 
-          <!-- ! ROW — Filtros -->
-          <v-row align="center">
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="filtroCobaye"
-                label="Filtrar por cobertura"
-                variant="outlined"
-                density="compact"
-                clearable
-                prepend-inner-icon="mdi-magnify"
-              />
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="filtroNoCapa"
-                label="Filtrar por No. de capa"
-                variant="outlined"
-                density="compact"
-                clearable
-                prepend-inner-icon="mdi-magnify"
-              />
-            </v-col>
-            <v-col cols="12" md="2">
-              <v-btn variant="outlined" @click="limpiarFiltros">
-                Limpiar filtros
-              </v-btn>
-            </v-col>
-          </v-row>
-
           <!-- ! ROW — Tabla principal -->
           <v-row>
             <v-col cols="12">
               <v-data-table
                 class="mt-2"
                 :headers="tableHeaders"
-                :items="dataTableFiltrada"
+                :items="dataTable"
                 striped="odd"
               >
                 <template #top>
@@ -194,11 +157,7 @@ const {
   queryCriterioAsignacion,
   queryCoberturasAyE,
   tableHeaders,
-  dataTableFiltrada,
   dataTable,
-  filtroCobaye,
-  filtroNoCapa,
-  limpiarFiltros,
   criterioEstaFijo,
   handleAgregarExcedente,
   handleGuardarExcedente,

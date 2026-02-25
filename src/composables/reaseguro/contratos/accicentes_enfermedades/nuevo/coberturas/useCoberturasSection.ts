@@ -69,14 +69,6 @@ export const useCoberturasSection = () => {
   } = useForm<CoberturaForm>({
     validationSchema: useCoberturasValidations(),
     validateOnMount: false,
-    initialValues: {
-      cveCriterioAsigCobertura: null, 
-      cveReaseguradorCobertura: null,
-      cveOperRamoCobertura: null,
-      cveCobaye: null,
-      propiaSaMax: "",
-      saMax: null,
-    },
   });
 
   const showErrors = ref(false);

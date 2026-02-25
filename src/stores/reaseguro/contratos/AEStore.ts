@@ -241,7 +241,7 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
     localStorage.setItem(STORAGE_KEYS.excedentesContratos, JSON.stringify(rows));
 
-    activeTab.value = "tab-6";
+    activeTab.value = "tab-8";
   }
 
   const recuperarExcedentes = () => {
