@@ -89,58 +89,61 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { CalcularSiniestros, type IdContrato } from './Data/CalculoPrimasSiniestrosPtu.actions'
-import { ValidacionesCalculos } from './Data/Validaciones.actions'
-import { format, parseISO } from 'date-fns';
+  import { onMounted, ref } from 'vue'
+  import { CalcularSiniestros, type IdContrato } from './Data/CalculoPrimasSiniestrosPtu.actions'
+  import { ValidacionesCalculos } from './Data/Validaciones.actions'
+  import { format, parseISO } from 'date-fns';
 
+  const idContratoObj = ref<IdContrato | null>(null);
 
-const idContratoObj = ref<IdContrato | null>(null);
+  const fechaInicio = ref<Date | null>(null)
+  const fechaFin = ref<Date | null>(null)
 
-type NewType = Date;
+  const {
+    idContratoOptions, fetchIdContratos,
+  } = CalcularSiniestros()
 
-const fechaInicio = ref<NewType | null>(null)
-const fechaFin = ref<Date | null>(null)
+  onMounted(async () => {
+    await Promise.all([
+      fetchIdContratos()
+    ])
+  })
 
-const {
-  idContratoOptions, fetchIdContratos,
-} = CalcularSiniestros()
-
-onMounted(async () => {
-  await Promise.all([
-    fetchIdContratos()
-  ])
-})
-
-const normalizarFecha = (fecha: string | undefined | null): string => {
-    if (!fecha) return ''
+  const normalizarFecha = (fecha: string | Date | undefined | null): string => {
+    if (!fecha) return '';
+    if (fecha instanceof Date) {
+      return format(fecha, 'dd/MM/yyyy');
+    }
     return format(parseISO(fecha), 'dd/MM/yyyy');
-    //return new Date(fecha).toISOString().split('T')[0] ?? ''
   }
 
-const llenarCampos = (contrato: IdContrato | null) => {
-  /*if (contrato) {
-    fechaInicio.value = normalizarFecha(contrato.fechaInicioContrato as unknown as string);
-    fechaFin.value = normalizarFecha(contrato.fechaFinContrato as unknown as string);
-  } else {
-    fechaInicio.value = null;
-    fechaFin.value = null;
-  }*/
-};
+  const llenarCampos = (contrato: IdContrato | null) => {
+    if (contrato) {
+      const fechaIni = contrato.fechaInicioContrato ? parseISO(normalizarFecha(contrato.fechaInicioContrato)) : null;
+      const fechaF = contrato.fechaFinContrato ? parseISO(normalizarFecha(contrato.fechaFinContrato)) : null;
 
+      fechaInicio.value = fechaIni;
+      fechaFin.value = fechaF;
 
-const headers = ref([
-  { title: 'Identificador de contrato', key: 'idContrato' },
-  { title: 'Fecha inicio contrato', key: 'fechaIniC' },
-  { title: 'Fecha fin contrato', key: 'fechaFinC' },
-  { title: 'Fecha fin prorroga', key: 'fechaFinP'},
-  { title: 'Fecha de cancelación', key: 'fechaCancel'},
-])
+      console.log("Fechas cargadas:", fechaInicio.value, fechaFin.value);
+    } else {
+      fechaInicio.value = null;
+      fechaFin.value = null;
+    }
+  };
 
-const headers1 = ref([
-  { title: 'Identificador de contrato', key: 'idContrato' },
-  { title: 'Fecha inicio cálculo', key: 'fechaIniCal' },
-  { title: 'Fecha fin cálculo', key: 'fechaFinCal' },
-  { title: 'Acciones', key: 'acciones', sortable: false },
-])
+  const headers = ref([
+    { title: 'Identificador de contrato', key: 'idContrato' },
+    { title: 'Fecha inicio contrato', key: 'fechaIniC' },
+    { title: 'Fecha fin contrato', key: 'fechaFinC' },
+    { title: 'Fecha fin prorroga', key: 'fechaFinP'},
+    { title: 'Fecha de cancelación', key: 'fechaCancel'},
+  ])
+
+  const headers1 = ref([
+    { title: 'Identificador de contrato', key: 'idContrato' },
+    { title: 'Fecha inicio cálculo', key: 'fechaIniCal' },
+    { title: 'Fecha fin cálculo', key: 'fechaFinCal' },
+    { title: 'Acciones', key: 'acciones', sortable: false },
+  ])
 </script>

@@ -107,6 +107,12 @@ const renovacionInput = ref<number | null>(null)
 const fechaInicioContrato = computed(() => contratoStore.general?.fechaInicio)
 const fechaFinContrato = computed(() => contratoStore.general?.fechaFin)
 
+const emit = defineEmits<{
+  (e: 'actualizarFormaContractual', valor: number): void,
+  (e: 'onSuccessRegister'): void
+}>()
+
+
 const normalizarFecha = (fecha: string | undefined | null): string => {
   if (!fecha) return ''
   return new Date(fecha).toISOString().split('T')[0] ?? ''
@@ -296,6 +302,7 @@ const guardarDatosGenerales = async () => {
 
   contratoStore.setPolizas({ idContrato, polizas: polizas.value })
   dialog.show({ title: 'Éxito', message: 'Pólizas guardadas', type: DialogType.SUCCESS })
+  emit('onSuccessRegister')
 }
 
 const hidratarPolizasDesdeStore = () => {

@@ -18,7 +18,7 @@
       </v-card-title>
 
       <!-- MENSAJE -->
-      <v-card-text>
+      <v-card-text class="text-center">
         {{ dialog.message }}
       </v-card-text>
 

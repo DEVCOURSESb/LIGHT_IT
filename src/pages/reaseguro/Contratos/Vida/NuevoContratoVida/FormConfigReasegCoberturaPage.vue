@@ -56,7 +56,6 @@
             chips
             label="¿Detalle por cobertura?"
             variant="solo-filled"
-            :disabled="!cesionCoberB"
           />
         </v-col>
         <v-col cols="12" md="4" v-if="detalleCobertura === 1">
@@ -359,7 +358,6 @@ const coberturasPermitidasParaTarifa = computed(() => {
 });
 
 const esExcedentePorCapas = computed(() => Number(getID(contratoStore.general?.idTContrato)) === 3);
-const cesionCoberB = computed(() => Number(getID(contratoStore.configReaseg?.cesionCoberBasi)) === 0);
 
 const detalleCOptions = computed(() => contratoStore.expc?.capas.map(c => ({ title: c.detalleCapa, value: c.detalleCapa })) || []);
 
@@ -675,11 +673,11 @@ const agregarTarifa = () => {
 
   if (hayDuplicados) {
     const msg = detalleCapa.value === 0
-      ? 'Se encontro coincidencia en uno de los registros realizados. ¿Desea reemplazarlo por estos?'
+      ? 'Se actualizara(n) la(s) tarifa(s) para la(s) cobertura(s) existente(s). ¿Desea continuar?'
       : 'Esta combinación de cobertura y capa ya existe. ¿Desea actualizarla?';
 
     dialog.show({
-      title: 'Confirmar Actualización',
+      title: 'Coincidencia detectada',
       message: msg,
       type: DialogType.CONFIRM,
       onConfirm: ejecutarGuardado
@@ -762,8 +760,8 @@ const guardarTodoEnStore = async () => {
     if (faltantes.length > 0) {
       dialog.show({
         type: DialogType.ERROR,
-        title: 'Coberturas sin Tarifa',
-        message: 'Existen coberturas seleccionadas que no tienen una tarifa asignada.'
+        title: 'Faltan datos',
+        message: 'No se ha definido un tipo de tarifa para asignar a la(s) cobertura(s) seleccionada(s).'
       });
       return;
     }
@@ -774,7 +772,7 @@ const guardarTodoEnStore = async () => {
     if (!idTipoTarifa) {
       dialog.show({
         type: DialogType.ERROR,
-        message: 'No se ha definido un tipo de tarifa para asignar a las coberturas seleccionadas.',
+        message: 'No se ha definido un tipo de tarifa para asignar a la(s) cobertura(s) seleccionada(s).',
         title: 'Faltan datos'
       });
       return;

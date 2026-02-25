@@ -118,13 +118,13 @@
                 .map((clave: string) => mapaNombres[clave.trim()] || clave)
                 .join(', ')
             : '',
-
+          // aqui voy a ir a consultar la tabla de catalogo para obtener el nombre a partir de la clave, por ahora lo dejo asi
           cveFContrac: (t.cveFContrac == 0) ? 'AUTOMATICO' : 'FACULTATIVO',
           idContrato: t.idContrato,
           fechaInicioContrato: normalizarFecha(t.fechaInicioContrato),
           fechaFinContrato: normalizarFecha(t.fechaFinContrato),
           contratoProrrogado: t.contratoProrrogado === 1 ? 'SI' : 'NO',
-          fechaFinProrrogada: normalizarFecha(t.fechaFinProrrogada) || 'NO APLICA'
+          fechaFinProrrogada: normalizarFecha(t.fechaFinProrrogada) || '-'
         }));
       }
     } catch (error) {
@@ -144,9 +144,9 @@
   }
 
   const visualizarDatosContrato = (item: any) => {
-    const nombreParaEnviar = item.tarifaP || item.nombreTarifa || item.nombreArchivo;
+    const nombreParaEnviar = item.idContrato;
     router.push({
-      path: `/reaseguro/contratos/vida/modificarContratoVida/${item.id}`,
+      path: `/reaseguro/contratos/vida/visualizarContratoVida/${item.idContrato}`,
       query: { nombre: nombreParaEnviar }
     });
   };

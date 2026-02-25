@@ -231,7 +231,7 @@ const procesarArchivoCSV = (file: File) => {
     if (idxInf === -1 || idxSup === -1 || idxCom === -1) {
       dialog.show({
         type: DialogType.ERROR,
-        message: 'El CSV debe tener las columnas: Desc_clasifCober, Limite_inf, Limite_sup, Comision_definitiva',
+        message: 'El CSV debe tener las columnas: DESC_CLASIFCOBER, LIMITE_INF, LIMITE_SUP, COMISION_DEFINITIVA',
         title: 'Formato Incorrecto'
       });
       return;
