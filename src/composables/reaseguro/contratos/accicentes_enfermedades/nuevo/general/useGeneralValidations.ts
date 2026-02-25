@@ -35,7 +35,7 @@ export const useGeneralValidations = () => {
     traspasoCartera: (value: string, context: any) => {
       const cveTreaseg = context.form?.cveTreaseg;
       if (cveTreaseg === 0) {
-        return (value === "SI" || value === "NO") || "El traspaso de cartera es obligatorio.";
+        return (value === "SÍ" || value === "NO") || "El traspaso de cartera es obligatorio.";
       }
       return true;
     },

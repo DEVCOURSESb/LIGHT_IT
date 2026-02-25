@@ -19,8 +19,6 @@
                 :model-value="formData['cveCriterioAsigCobertura']"
                 @update:model-value="setFieldValue('cveCriterioAsigCobertura', $event)"
                 :error-messages="showErrors ? formErrors['cveCriterioAsigCobertura'] : undefined"
-                :hint="criterioEstaFijo ? 'El criterio está fijo. Inactiva todos los registros para cambiarlo.' : undefined"
-                :persistent-hint="criterioEstaFijo"
               />
             </v-col>
 
@@ -72,7 +70,7 @@
             <!-- ¿PROPIA SUMA ASEGURADA MÁXIMA? -->
             <v-col cols="12" md="3">
               <v-select
-                :items="[{ title: 'SÍ', value: 'SI' }, { title: 'NO', value: 'NO' }]"
+                :items="[{ title: 'SÍ', value: 'SÍ' }, { title: 'NO', value: 'NO' }]"
                 item-title="title"
                 item-value="value"
                 label="¿Propia suma asegurada máxima?"
@@ -84,7 +82,7 @@
             </v-col>
 
             <!-- SUMA ASEGURADA MÁXIMA (solo si propiaSaMax = SI) -->
-            <v-col cols="12" md="3" v-if="formData['propiaSaMax'] === 'SI'">
+            <v-col cols="12" md="3" v-if="formData['propiaSaMax'] === 'SÍ'">
               <v-text-field
                 label="Suma asegurada máxima"
                 variant="solo-filled"
@@ -92,8 +90,6 @@
                 @update:model-value="onInputSaMax($event)"
                 @blur="onBlurSaMax"
                 :error-messages="showErrors ? formErrors['saMax'] : undefined"
-                hint="Formato: ###,###.##"
-                persistent-hint
               />
             </v-col>
           </v-row>
@@ -110,42 +106,13 @@
 
           <br /><br />
 
-          <!-- ! ROW — Filtros de tabla -->
-          <v-row align="center">
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="filtroReaseguradora"
-                label="Filtrar por reaseguradora"
-                variant="outlined"
-                density="compact"
-                clearable
-                prepend-inner-icon="mdi-magnify"
-              />
-            </v-col>
-            <v-col cols="12" md="4">
-              <v-text-field
-                v-model="filtroOperRamo"
-                label="Filtrar por operación / ramo"
-                variant="outlined"
-                density="compact"
-                clearable
-                prepend-inner-icon="mdi-magnify"
-              />
-            </v-col>
-            <v-col cols="12" md="2">
-              <v-btn variant="outlined" @click="limpiarFiltros">
-                Limpiar filtros
-              </v-btn>
-            </v-col>
-          </v-row>
-
           <!-- ! ROW — Tabla principal -->
           <v-row>
             <v-col cols="12">
               <v-data-table
                 class="mt-2"
                 :headers="tableHeaders"
-                :items="dataTableFiltrada"
+                :items="dataTable"
                 striped="odd"
               >
                 <template #top>
@@ -203,10 +170,7 @@ const {
   operacionesRamosData,
   coberturasDisponibles,
   tableHeaders,
-  dataTableFiltrada,
-  filtroReaseguradora,
-  filtroOperRamo,
-  limpiarFiltros,
+  dataTable,
   criterioEstaFijo,
   handleAgregarCobertura,
   handleGuardarCoberturas,

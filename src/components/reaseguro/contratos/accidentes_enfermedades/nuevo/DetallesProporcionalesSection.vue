@@ -21,7 +21,7 @@
             </v-col>
 
             <!-- TIPO DE OPERCIÓN / RAMO DETALLADA -->
-            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 'SI'">
+            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 'SÍ'">
               <v-select
                 :items="extensionesCoberturaToShow || []"
                 item-title="descExtCober"
@@ -37,7 +37,7 @@
             </v-col>
 
             <!-- OPERCIÓN / RAMO DETALLADA si detalles por operacion ramo es si -->
-            <v-col cols="12" md="3"  v-show="formData['detallesOperRamo'] === 'SI'">
+            <v-col cols="12" md="3"  v-show="formData['detallesOperRamo'] === 'SÍ'">
               <v-select
                 :items="queryOperacionesRamos.data.value?.filter((op: any) => op.cveExtCober == formData['cveExtCoberDetalles']) || []"
                 item-title="descOperacionRamos"
@@ -196,7 +196,7 @@
             <!-- CÚMULOS -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SI', 'NO']"
+                :items="['SÍ', 'NO']"
                 label="¿Cúmulos?"
                 variant="solo-filled"
                 clearable

@@ -188,7 +188,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
   // ! REASEGURADORES
   const guardarReaseguradores = (data: Record<string, any>[]) => {
-    console.log("reaseg cargados")
     const { idContrato } = obtenerGenerales();
     const reaseguradoresConContrato = data.map((item) => ({ ...item, idContrato }));
     localStorage.setItem(STORAGE_KEYS.reaseguradores, JSON.stringify(reaseguradoresConContrato));
@@ -197,7 +196,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
 
     setHaveComisionEscalonada(haveComisionEscalonada);
 
-    // TODO: verificar tabs
     activeTab.value = haveComisionEscalonada ? "tab-5" : "tab-6";
   };
 

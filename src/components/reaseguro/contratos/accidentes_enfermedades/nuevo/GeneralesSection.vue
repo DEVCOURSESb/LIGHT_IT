@@ -129,7 +129,7 @@
             <!-- TRASPASO DE CARTERA si reaseguro es proporcional-->
             <v-col cols="12" md="3" v-if="formData['cveTreaseg'] == 0">
               <v-select
-                :items="['SI', 'NO']"
+                :items="['SÍ', 'NO']"
                 label="¿Traspaso de cartera?"
                 variant="solo-filled"
                 clearable

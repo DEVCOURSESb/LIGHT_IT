@@ -42,14 +42,14 @@ export const useCoberturasValidations = () => {
 
     propiaSaMax: (value: string | null) => {
       return (
-        (value === "SI" || value === "NO") ||
+        (value === "SÍ" || value === "NO") ||
         "El campo ¿Propia suma asegurada máxima? es obligatorio."
       );
     },
 
     saMax: (value: number | null, context: any) => {
       const propiaSaMax = context.form?.propiaSaMax;
-      if (propiaSaMax === "SI") {
+      if (propiaSaMax === "SÍ") {
         if (value === null || value === undefined) {
           return "La suma asegurada máxima es obligatoria.";
         }
