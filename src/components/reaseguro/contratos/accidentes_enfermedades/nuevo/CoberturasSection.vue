@@ -70,7 +70,7 @@
             <!-- ¿PROPIA SUMA ASEGURADA MÁXIMA? -->
             <v-col cols="12" md="3">
               <v-select
-                :items="[{ title: 'SÍ', value: 'SÍ' }, { title: 'NO', value: 'NO' }]"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
                 item-title="title"
                 item-value="value"
                 label="¿Propia suma asegurada máxima?"
@@ -82,7 +82,7 @@
             </v-col>
 
             <!-- SUMA ASEGURADA MÁXIMA (solo si propiaSaMax = SI) -->
-            <v-col cols="12" md="3" v-if="formData['propiaSaMax'] === 'SÍ'">
+            <v-col cols="12" md="3" v-if="formData['propiaSaMax'] === 1">
               <v-text-field
                 label="Suma asegurada máxima"
                 variant="solo-filled"

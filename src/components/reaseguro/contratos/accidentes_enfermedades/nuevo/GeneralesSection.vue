@@ -129,7 +129,9 @@
             <!-- TRASPASO DE CARTERA si reaseguro es proporcional-->
             <v-col cols="12" md="3" v-if="formData['cveTreaseg'] == 0">
               <v-select
-                :items="['SÍ', 'NO']"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 label="¿Traspaso de cartera?"
                 variant="solo-filled"
                 clearable
@@ -166,7 +168,6 @@
               />
             </v-col>
 
-            <!-- TODO: sector aun no tiene su rest -->
             <!-- TIPO DE SECTOR si forma contractual es facultativa-->
             <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
               <v-select

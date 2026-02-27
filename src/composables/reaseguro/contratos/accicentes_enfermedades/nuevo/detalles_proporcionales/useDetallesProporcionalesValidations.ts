@@ -9,10 +9,10 @@ export const useDetallesProporcionalesValidations = () => {
 
 
   return {
-    detallesOperRamo: (value: string) => !!value || "El detalle de operación ramo es obligatorio.",
+    detallesOperRamo: (value: number) => val.isFalsyExceptZero(value) || "El detalle de operación ramo es obligatorio.",
     cveExtCoberDetalles: (value: number | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
-      if (detallesOperRamo === "SÍ") {
+      if (detallesOperRamo === 1) {
         return ( (value != null && value >= 0) || "El tipo de operación / ramo es obligatorio." );
       } else {
         return true;
@@ -20,7 +20,7 @@ export const useDetallesProporcionalesValidations = () => {
     },
     cveOperRamoDetalles: (value: number | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
-      if (detallesOperRamo === "SÍ") {
+      if (detallesOperRamo === 1) {
         return ((value != null && value >= 0) || "La operación / ramo es obligatoria.");
       } else {
         return true;
@@ -100,8 +100,8 @@ export const useDetallesProporcionalesValidations = () => {
     cveMonedaDetalles: (value: string | null) => {
       return ( (value != null && value !== "") || "La moneda de los detalles es obligatoria." );
     },
-    cumulos: (value: string | null) => {
-      return ( (value === "SÍ" || value === "NO") || "El campo de cúmulos es obligatorio." );
+    cumulos: (value: number | null) => {
+      return val.isFalsyExceptZero(value) || "El campo de cúmulos es obligatorio.";
     },
   };
 };

@@ -19,11 +19,11 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     },
     otorgaPtu: (value: string) => {
       if ( !isTypeProporcional ) return true;
-      else return !!value || "Otorga PTU es obligatorio"
+      else return val.isFalsyExceptZero(value) || "Otorga PTU es obligatorio"
     },
     porcentajePtu: (value: number, context: any) => {
       const otorgaPTU = context.form?.otorgaPtu;
-      if ( otorgaPTU === "SÍ" ) {
+      if ( otorgaPTU === 1 ) {
         if (value === null || value === undefined) return "El porcentaje es obligatorio.";
         else return val.minMax(value, 0, 100) || "El porcentaje es obligatorio con un rango de 0.00 a 100.00"
       }
@@ -31,7 +31,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     },
     cvePtu: (value: number, context: any) => {
       const otorgaPTU = context.form?.otorgaPtu;
-      if ( otorgaPTU === "SÍ" ) {
+      if ( otorgaPTU === 1 ) {
         return value != null && value >= 0 || "Fórmula cálculo es obligatorio"
       }
       return true;
@@ -70,7 +70,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     /* tipo de comision rate on line */
     cveAsignacionComisRol: (value: number, context: any) => {
       const comisRol = context.form?.comisRolReaseguro;
-      if ( comisRol === "SÍ" ) {
+      if ( comisRol === 1 ) {
         return value != null && value >= 0 || "Tipo de comisión / rate on line es obligatorio"
       }
       return true;

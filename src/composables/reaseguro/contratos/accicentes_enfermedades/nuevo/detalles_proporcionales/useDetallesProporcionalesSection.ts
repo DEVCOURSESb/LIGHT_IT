@@ -16,7 +16,7 @@ interface DetallesProporcionalesFormTable {
   cveExtCoberDetalles: number;
   cveMonedaDetalles: number;
   cveOperRamoDetalles: string;
-  detallesOperRamo: string;
+  detallesOperRamo: number;
   montoCesion: number;
   montoRetencion: number;
   montoRetencionContrato: number;
@@ -60,7 +60,7 @@ export const useDetallesProporcionalesSection = () => {
   const capacidadContrato = ref("");
 
   
-  const lastDetalleOperacionRamoSelected = ref<string | null>(obtenerDetallesProporcionales()[0]?.detallesOperRamo || null);
+  const lastDetalleOperacionRamoSelected = ref<number | null>(obtenerDetallesProporcionales()[0]?.detallesOperRamo || null);
   const isDetallesOperacionRamoDisabled = ref<boolean>(lastDetalleOperacionRamoSelected === null);
 
   const detallesProporcionalesTable = ref<DetallesProporcionalesFormTable[]>(obtenerDetallesProporcionales() || []);
@@ -117,7 +117,7 @@ export const useDetallesProporcionalesSection = () => {
   watch(
     () => formData.detallesOperRamo,
     (newVal) => {
-      if (newVal === "NO") {
+      if (newVal === 0) {
         setFieldValue("cveExtCoberDetalles", null);
         setFieldValue("cveOperRamoDetalles", null);
       }
@@ -381,7 +381,7 @@ export const useDetallesProporcionalesSection = () => {
   }
 
   const confirmSendDataToTable = async () => {
-    if(isDetallesOperacionRamoDisabled.value && formData.detallesOperRamo === "NO" && detallesProporcionalesTable.value.length >= 1){
+    if(isDetallesOperacionRamoDisabled.value && formData.detallesOperRamo === 0 && detallesProporcionalesTable.value.length >= 1){
       dialog.show({
         title: "Atención",
         message: "No se puede agregar más de un registro a la tabla",

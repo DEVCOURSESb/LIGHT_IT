@@ -9,7 +9,7 @@ export interface TablaOperacionRamoContratoInterface {
 }
 
 export interface TablaDetallesContrato {
-  detallesOperRamo:         string;
+  detallesOperRamo:         number;
   cveExtCoberDetalles:      number;
   cveOperRamoDetalles:      string;
   montoRetencion:           number;

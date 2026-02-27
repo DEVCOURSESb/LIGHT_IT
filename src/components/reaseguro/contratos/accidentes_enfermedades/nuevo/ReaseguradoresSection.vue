@@ -45,9 +45,9 @@
             <!-- ¿OTORGA PTU?  si es proporcional el contrato-->
             <v-col cols="12" md="3" v-if="isTypeProporcional">
               <v-select
-                :items="['SÍ', 'NO']"
-                item-title=""
-                item-value=""
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 :disabled="false"
                 label="¿Otorga PTU?"
                 variant="solo-filled"
@@ -59,7 +59,7 @@
             </v-col>
 
             <!-- PORCENTAJE PTU si otorga ptu -->
-            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 'SÍ'">
+            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 1">
               <v-text-field
                 label="% PTU"
                 variant="solo-filled"
@@ -80,7 +80,7 @@
             </v-col>
 
              <!-- FÓRMULA CÁLCULO PTU si otorga ptu-->
-            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 'SÍ'">
+            <v-col cols="12" md="3" v-if="formData['otorgaPtu'] == 1">
               <v-select
                 :items="queryPtu.data.value || []"
                 item-title="formulaPtu"
@@ -138,7 +138,9 @@
             <!-- COMISION / RATE ON LINE -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SÍ', 'NO']"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 :disabled="false"
                 label="¿Comisión / rate on line?"
                 variant="solo-filled"
@@ -150,7 +152,7 @@
             </v-col>
 
             <!-- TIPO DE COMISION / RATE ON LINE si comision / rate on line -->
-            <v-col cols="12" md="3" v-if="formData['comisRolReaseguro'] === 'SÍ'">
+            <v-col cols="12" md="3" v-if="formData['comisRolReaseguro'] === 1">
               <v-select
                 :items="queryTipoAsignacion.data.value || []"
                 item-title="descAsignacion"

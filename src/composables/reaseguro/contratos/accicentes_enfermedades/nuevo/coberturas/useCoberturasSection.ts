@@ -32,7 +32,7 @@ interface CoberturaForm {
   cveReaseguradorCobertura: number | null;
   cveOperRamoCobertura: string | null;
   cveCobaye: number | null;
-  propiaSaMax: string;
+  propiaSaMax: number;
   saMax: number | null;
 }
 
@@ -119,7 +119,7 @@ export const useCoberturasSection = () => {
         // si es proporcional
       } else {
         const detalles = aeStore.obtenerDetallesProporcionales();
-        const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === "SÍ";
+        const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === 1;
 
         if (tieneDetalleOperRamo) {
           
@@ -208,7 +208,7 @@ export const useCoberturasSection = () => {
   watch(
     () => formData.propiaSaMax,
     (newValue) => {
-      if (newValue !== "SÍ") {
+      if (newValue !== 1) {
         setFieldValue("saMax", null);
         saMax.value = "";
       }
@@ -266,7 +266,7 @@ export const useCoberturasSection = () => {
     const criterioActual = criterioFijo.value ?? formData.cveCriterioAsigCobertura;
     resetForm();
     setFieldValue("cveCriterioAsigCobertura", criterioActual);
-    setFieldValue("propiaSaMax", "NO");
+    setFieldValue("propiaSaMax", 0);
     saMax.value = "";
     showErrors.value = false;
   };
@@ -458,7 +458,7 @@ export const useCoberturasSection = () => {
 
     
     const detalles = aeStore.obtenerDetallesProporcionales() as any[];
-    const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === "SÍ";
+    const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === 1;
 
     if (tieneDetalleOperRamo) {
       

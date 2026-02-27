@@ -9,7 +9,9 @@
             <v-col cols="12" md="3">
               <v-select
                 v-model="lastDetalleOperacionRamoSelected"
-                :items="['SÍ', 'NO']"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 label="¿Detalles por operación / ramo?"
                 variant="solo-filled"
                 clearable
@@ -21,7 +23,7 @@
             </v-col>
 
             <!-- TIPO DE OPERCIÓN / RAMO DETALLADA -->
-            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 'SÍ'">
+            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 1">
               <v-select
                 :items="extensionesCoberturaToShow || []"
                 item-title="descExtCober"
@@ -37,7 +39,7 @@
             </v-col>
 
             <!-- OPERCIÓN / RAMO DETALLADA si detalles por operacion ramo es si -->
-            <v-col cols="12" md="3"  v-show="formData['detallesOperRamo'] === 'SÍ'">
+            <v-col cols="12" md="3"  v-show="formData['detallesOperRamo'] === 1">
               <v-select
                 :items="queryOperacionesRamos.data.value?.filter((op: any) => op.cveExtCober == formData['cveExtCoberDetalles']) || []"
                 item-title="descOperacionRamos"
@@ -196,7 +198,9 @@
             <!-- CÚMULOS -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SÍ', 'NO']"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 label="¿Cúmulos?"
                 variant="solo-filled"
                 clearable
