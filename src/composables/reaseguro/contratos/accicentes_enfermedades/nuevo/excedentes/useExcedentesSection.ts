@@ -2,94 +2,102 @@ import { useForm } from "vee-validate";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { ref, computed, watch } from "vue";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { storeToRefs } from "pinia";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formattNumber } from "@/utils/formattNumber";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useExcedentesValidations } from "./useExcedentesValidations ";
+import type { ExcedentesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
-interface ExcedenteForm {
-  cveCriterioAsigCapa: number | null;
-  cveCobayeCapa: number | null;
-  retencionCapa: number | null;
-  cesionCapa: number | null;
-}
+// Tipo del formulario — sin idContrato, noCapa y capaActiva (los calcula/agrega el composable)
+type ExcedentesForm = Omit<ExcedentesSection, "idContrato" | "noCapa" | "capaActiva">;
 
-interface ExcedenteRow extends ExcedenteForm {
-  noCapa: number;         
+// Tipo display — extiende la interfaz con el campo calculado para la tabla
+type ExcedentesDisplay = ExcedentesSection & {
   descCobaye: string;
-  capaActiva: boolean;    
-}
+};
 
 export const useExcedentesSection = () => {
   const aeStore = useContratoAEStore();
-  const dialog = useDialog();
+  const dialog  = useDialog();
 
-  const { queryCriterioAsignacion, queryCoberturasAyE } =
-    useAccidentesEnfermedades();
- 
-  const dataTable = ref<ExcedenteRow[]>(aeStore.recuperarExcedentes());
-  
+  const { excedentes } = storeToRefs(aeStore);
+
+  const { queryCriterioAsignacion, queryCoberturasAyE } = useAccidentesEnfermedades();
+
+  // Tabla base mutable
+  const originalDataTable = ref<ExcedentesSection[]>([...excedentes.value]);
+
+  // Computed display — agrega descCobaye, es solo lectura
+  const dataTable = computed<ExcedentesDisplay[]>(() =>
+    originalDataTable.value.map((row) => ({
+      ...row,
+      descCobaye: getDescCobaye(row.cveCobayeCapa),
+    }))
+  );
+
+  // Refs numéricos
   const retencionCapa = ref("");
-  const cesionCapa = ref("");
+  const cesionCapa    = ref("");
 
   const formatNumberRefs: Record<string, typeof retencionCapa> = {
     retencionCapa,
     cesionCapa,
   };
-  
+
+  // Formulario
   const {
     validate,
     resetForm,
     setFieldValue,
     values: formData,
     errors: formErrors,
-  } = useForm<ExcedenteForm>({
+  } = useForm<ExcedentesForm>({
     validationSchema: useExcedentesValidations(),
     validateOnMount: false,
     initialValues: {
-      cveCriterioAsigCapa: 1, 
-      cveCobayeCapa: null,
-      retencionCapa: null,
-      cesionCapa: null,
+      cveCriterioAsigCapa: 1,
     },
   });
 
   const showErrors = ref(false);
-  
-  const criterioFijo = computed(() => {
-    const activos = dataTable.value.filter((r) => r.capaActiva);
-    return activos.length > 0 ? activos[0]!.cveCriterioAsigCapa : null;
-  });
+
+  // Criterio fijo mientras haya registros activos
+  const criterioFijo = computed<number | null>(() =>
+    originalDataTable.value.find((r) => r.capaActiva)?.cveCriterioAsigCapa ?? null
+  );
 
   const criterioEstaFijo = computed(() => criterioFijo.value != null);
-  
-  const calcularNoCapa = (cveCriterio: number | null, cveCobaye: number | null): number => {
+
+  // noCapa automático según criterio
+  const calcularNoCapa = (
+    cveCriterio: number | null,
+    cveCobaye: number | null
+  ): number => {
     if (cveCriterio === 1) {
-      
-      return dataTable.value.length + 1;
-    } else {
-      
-      const registrosMismaCobertura = dataTable.value.filter(
-        (r) => r.cveCobayeCapa === cveCobaye
-      );
-      return registrosMismaCobertura.length + 1;
+      // POR CONTRATO: secuencial global
+      return originalDataTable.value.length + 1;
     }
+    // POR COBERTURA: secuencial por cobertura
+    return (
+      originalDataTable.value.filter((r) => r.cveCobayeCapa === cveCobaye).length + 1
+    );
   };
-  
+
+  // Watch: limpiar cveCobayeCapa al cambiar criterio
   watch(
     () => formData.cveCriterioAsigCapa,
-    () => {
-      setFieldValue("cveCobayeCapa", null);
-    }
+    () => { setFieldValue("cveCobayeCapa", null); }
   );
-  
+
+  // Handlers genéricos numéricos
   const onInputGeneric = (key: string, value: string) => {
-    const clean = formattNumber(value);
+    const clean    = formattNumber(value);
     const fieldRef = formatNumberRefs[key];
     if (fieldRef) {
       fieldRef.value = clean;
       setFieldValue(
-        key as keyof ExcedenteForm,
+        key as keyof ExcedentesForm,
         clean === "" ? null : parseFloat(clean)
       );
     }
@@ -98,36 +106,38 @@ export const useExcedentesSection = () => {
   const onBlurGeneric = (key: string) => {
     const fieldRef = formatNumberRefs[key];
     if (!fieldRef?.value) {
-      setFieldValue(key as keyof ExcedenteForm, null);
+      setFieldValue(key as keyof ExcedentesForm, null);
       return;
     }
     const numeric = parseFloat(fieldRef.value);
     if (isNaN(numeric)) {
       fieldRef.value = "";
-      setFieldValue(key as keyof ExcedenteForm, null);
+      setFieldValue(key as keyof ExcedentesForm, null);
       return;
     }
-    setFieldValue(key as keyof ExcedenteForm, numeric);
+    setFieldValue(key as keyof ExcedentesForm, numeric);
     fieldRef.value = formatCurrency(numeric);
   };
 
+  // Reset
   const resetFormAndRefs = () => {
     const criterioActual = criterioFijo.value ?? formData.cveCriterioAsigCapa;
     resetForm();
     setFieldValue("cveCriterioAsigCapa", criterioActual);
     retencionCapa.value = "";
-    cesionCapa.value = "";
-    showErrors.value = false;
+    cesionCapa.value    = "";
+    showErrors.value    = false;
   };
-  
+
+  // Helper descripción
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      (queryCoberturasAyE.data.value ?? []).find((c) => c.cveCobaye === cve)
-        ?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
     );
   };
 
+  // Agregar excedente
   const handleAgregarExcedente = () => {
     dialog.show({
       title: "Confirmación",
@@ -146,45 +156,65 @@ export const useExcedentesSection = () => {
     const { valid } = await validate();
     if (!valid) return;
 
-    const newRow: ExcedenteRow = {
-      cveCriterioAsigCapa: formData.cveCriterioAsigCapa,
-      cveCobayeCapa: formData.cveCobayeCapa,
-      noCapa: calcularNoCapa(formData.cveCriterioAsigCapa, formData.cveCobayeCapa),
-      retencionCapa: formData.retencionCapa,
-      cesionCapa: formData.cesionCapa,
-      descCobaye: getDescCobaye(formData.cveCobayeCapa),
-      capaActiva: true,
+    const newRow: ExcedentesSection = {
+      idContrato:          "",
+      cveCriterioAsigCapa: formData.cveCriterioAsigCapa!,
+      cveCobayeCapa:       formData.cveCobayeCapa ?? null,
+      noCapa:              calcularNoCapa(formData.cveCriterioAsigCapa, formData.cveCobayeCapa),
+      retencionCapa:       formData.retencionCapa ?? 0,
+      cesionCapa:          formData.cesionCapa ?? 0,
+      capaActiva:          true,
     };
 
-    dataTable.value.push(newRow);
+    originalDataTable.value.push(newRow);
     resetFormAndRefs();
   };
 
-  const toggleRowActiva = (item: ExcedenteRow) => {
-    const index = dataTable.value.indexOf(item);
+  // Toggle activo
+  // Busca en originalDataTable por clave compuesta (criterio + cobertura + noCapa)
+  const toggleRowActiva = (item: ExcedentesDisplay) => {
+    const index = originalDataTable.value.findIndex(
+      (r) =>
+        r.cveCriterioAsigCapa === item.cveCriterioAsigCapa &&
+        r.cveCobayeCapa       === item.cveCobayeCapa &&
+        r.noCapa              === item.noCapa
+    );
     if (index !== -1) {
-      dataTable.value[index]!.capaActiva = !dataTable.value[index]!.capaActiva;
+      originalDataTable.value[index]!.capaActiva =
+        !originalDataTable.value[index]!.capaActiva;
     }
   };
 
-  const editRow = (row: ExcedenteRow) => {
-    const index = dataTable.value.indexOf(row);
-    if (index !== -1) dataTable.value.splice(index, 1);
+  // Editar fila
+  const editRow = (item: ExcedentesDisplay) => {
+    const index = originalDataTable.value.findIndex(
+      (r) =>
+        r.cveCriterioAsigCapa === item.cveCriterioAsigCapa &&
+        r.cveCobayeCapa       === item.cveCobayeCapa &&
+        r.noCapa              === item.noCapa
+    );
+    if (index === -1) return;
+
+    const row = originalDataTable.value[index]!;
 
     setFieldValue("cveCriterioAsigCapa", row.cveCriterioAsigCapa);
     setFieldValue("cveCobayeCapa",       row.cveCobayeCapa);
     setFieldValue("retencionCapa",       row.retencionCapa);
     setFieldValue("cesionCapa",          row.cesionCapa);
 
-    retencionCapa.value = row.retencionCapa != null ? formatCurrency(row.retencionCapa) : "";
-    cesionCapa.value    = row.cesionCapa    != null ? formatCurrency(row.cesionCapa)    : "";
+    retencionCapa.value = row.retencionCapa ? formatCurrency(row.retencionCapa) : "";
+    cesionCapa.value    = row.cesionCapa    ? formatCurrency(row.cesionCapa)    : "";
+
+    originalDataTable.value.splice(index, 1);
+    showErrors.value = false;
   };
 
+  // Guardar
   const handleGuardarExcedente = () => {
-    if (dataTable.value.length === 0) {
+    if (originalDataTable.value.length === 0) {
       dialog.show({
         title: "Error",
-        message: "La tabla debe contener al menos un registro para continuar. Verifique por favor.",
+        message: "La tabla debe contener al menos un registro para continuar.",
         type: DialogType.ERROR,
       });
       return;
@@ -204,19 +234,20 @@ export const useExcedentesSection = () => {
   };
 
   const doGuardarExcedente = () => {
-    aeStore.guardarExcedentes(dataTable.value);
+    aeStore.guardarExcedentes(originalDataTable.value);
     dialog.cerrar();
   };
 
-  const headerProps = { style: "font-weight: bold" };
+  // Headers
+  const hp = { style: "font-weight: bold" };
 
   const tableHeaders = [
-    { title: "No. Capa",        key: "noCapa",        sortable: true,  headerProps },
-    { title: "Cobertura",       key: "descCobaye",    sortable: true,  headerProps },
-    { title: "Retención capa",  key: "retencionCapa", sortable: true,  headerProps },
-    { title: "Cesión capa",     key: "cesionCapa",    sortable: true,  headerProps },
-    { title: "Activa",          key: "capaActiva",    sortable: true,  headerProps },
-    { title: "Editar",          key: "editar",        sortable: false, headerProps },
+    { title: "NO. CAPA",       key: "noCapa",        sortable: true,  headerProps: hp },
+    { title: "COBERTURA",      key: "descCobaye",    sortable: true,  headerProps: hp },
+    { title: "RETENCIÓN CAPA", key: "retencionCapa", sortable: true,  headerProps: hp },
+    { title: "CESIÓN CAPA",    key: "cesionCapa",    sortable: true,  headerProps: hp },
+    { title: "ACTIVA",         key: "capaActiva",    sortable: true,  headerProps: hp },
+    { title: "EDITAR",         key: "editar",        sortable: false, headerProps: hp },
   ];
 
   return {

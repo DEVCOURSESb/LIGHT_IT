@@ -7,12 +7,12 @@
     <v-tab value="tab-5" v-if="haveComisionEscalonada">Comisiones / Rate on line</v-tab>
     <v-tab value="tab-6">Coberturas</v-tab>
     <v-tab value="tab-7" v-if="tipoContrato == 3">Excedentes</v-tab>
-    <v-tab value="tab-8">Cúmulos</v-tab>
-    <v-tab value="tab-9">Tarifa</v-tab>
-    <v-tab value="tab-10">Proporción de prima</v-tab>
-    <v-tab value="tab-11">Reinstalaciones</v-tab>
+    <v-tab value="tab-8" v-if="haveCumulos">Cúmulos</v-tab>
+    <v-tab value="tab-9" v-if="isTypeProporcional">Tarifa</v-tab>
+    <v-tab value="tab-10" v-if="haveProporcionDias">Proporción de prima</v-tab>
+    <v-tab value="tab-11" v-if="!isTypeProporcional">Reinstalaciones</v-tab>
     <v-tab value="tab-12">Intermediarios</v-tab>
-    <v-tab value="tab-13">Corretaje</v-tab>
+    <v-tab value="tab-13" v-if="haveCorretajeEscalonado">Corretaje</v-tab>
     <v-tab value="tab-14">Administración</v-tab>
   </v-tabs>
 </template>
@@ -21,5 +21,5 @@ import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { storeToRefs } from "pinia";
 
 const useAEStore = useContratoAEStore();
-const { activeTab, isTypeProporcional, isFacultativo, haveComisionEscalonada, tipoContrato } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo, haveComisionEscalonada, tipoContrato, haveCumulos, haveProporcionDias, haveCorretajeEscalonado } = storeToRefs(useAEStore);
 </script>

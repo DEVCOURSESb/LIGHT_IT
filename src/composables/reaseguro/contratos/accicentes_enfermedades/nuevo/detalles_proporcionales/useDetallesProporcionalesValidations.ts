@@ -79,7 +79,7 @@ export const useDetallesProporcionalesValidations = () => {
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
         return "La capacidad del contrato es obligatoria, debe ser un número positivo y no puede ser mayor al monto de cesión.";
         // SI PORCENTAJE RETENCION ES VACIO 	CAPACIDAD_CONTRATO = PORCENTAJE_CESION * CAPACIDAD_CONTRATO + PORCENTAJE_RETENCION * CAPACIDAD_CONTRATO = MONTO_RETENCION_CONTRATO + MONTO_CESION
-      } else if (context.form?.porcentajeRetencion === null) {
+      } else if (val.isFalsyExceptZero(context.form?.porcentajeRetencion)) {
         const montoEsperado = round2(
           Number(context.form?.montoCesion) +
           Number(context.form?.montoRetencionContrato)

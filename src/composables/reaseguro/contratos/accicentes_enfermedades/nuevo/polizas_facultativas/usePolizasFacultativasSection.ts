@@ -1,18 +1,16 @@
 import { othersActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/others.actions";
+import type { PolizasFacultativasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { storeToRefs } from "pinia";
 import { useForm } from "vee-validate";
 import { ref } from "vue";
-
-interface PolizasFacultativasForm {
-  noPoliza: string;
-  polActiva: boolean;
-}
 
 export const usePolizasFacultativasSection = () => {
   const store = useContratoAEStore();
   const { queryEmisionContableAYE } = othersActions();
-  const dataTableItems = ref<PolizasFacultativasForm[]>(store.obtenerPolizasFacultativas() || []);
+  const { polizasFacultativas } = storeToRefs(store);
+  const dataTableItems = ref<PolizasFacultativasSection[]>(polizasFacultativas.value || []);
 
   const showErrors = ref(false);
   const dialog = useDialog();
@@ -58,6 +56,7 @@ export const usePolizasFacultativasSection = () => {
         text: "Aceptar",
         handler: () => {
           const newItems = polizas.map((poliza: string) => ({
+            idContrato: "",
             noPoliza: poliza,
             polActiva: true,
           }));
@@ -71,7 +70,7 @@ export const usePolizasFacultativasSection = () => {
     });
   };
 
-  const togglePolizaStatus = (item: PolizasFacultativasForm) => {
+  const togglePolizaStatus = (item: PolizasFacultativasSection) => {
     // alguna activa
     const algunaActiva = dataTableItems.value.some(
       (p) => p.polActiva && p.noPoliza !== item.noPoliza,

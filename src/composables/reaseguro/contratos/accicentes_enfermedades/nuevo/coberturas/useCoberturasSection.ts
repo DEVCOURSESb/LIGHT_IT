@@ -7,12 +7,14 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { formattNumber } from "@/utils/formattNumber";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useCoberturasValidations } from "./useCoberturasValidations";
+import type { CoberturasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
-// TODO: 
-
+//
+// Mapa de coberturas permitidas por operación/ramo
+//
 const COBERTURAS_POR_OPER_RAMO: Record<string, string[]> = {
-  "3000": [], 
-  "030":  [], 
+  "3000": [],
+  "030":  [],
   "331":  ["3000", "030", "331", "0031", "0032", "0033"],
   "332":  ["3000", "030", "332", "0034", "0035", "0036"],
   "333":  ["3000", "030", "333", "0037", "0038", "0039"],
@@ -27,26 +29,24 @@ const COBERTURAS_POR_OPER_RAMO: Record<string, string[]> = {
   "0039": ["3000", "030", "333", "0039"],
 };
 
-interface CoberturaForm {
-  cveCriterioAsigCobertura: number | null;
-  cveReaseguradorCobertura: number | null;
-  cveOperRamoCobertura: string | null;
-  cveCobaye: number | null;
-  propiaSaMax: number;
-  saMax: number | null;
-}
+// Tipo del formulario — sin idContrato ni coberActiva (los agrega el composable al construir la fila)
+type CoberturasForm = Omit<CoberturasSection, "idContrato" | "coberActiva">;
 
-interface CoberturaRow extends CoberturaForm {
+// Tipo display — extiende la interfaz con campos calculados para la tabla
+type CoberturasDisplay = CoberturasSection & {
   nombreReasegurador: string;
   descOperRamo: string;
   descCobaye: string;
-  coberActiva: boolean; 
-}
+  descPropiaSaMax: string;
+};
 
 export const useCoberturasSection = () => {
   const aeStore = useContratoAEStore();
-  const { isTypeProporcional } = storeToRefs(aeStore);
-  const dialog = useDialog();
+  const dialog  = useDialog();
+
+  // Refs reactivos del store
+  const { isTypeProporcional, coberturas, reaseguradores, detallesProporcionales } =
+    storeToRefs(aeStore);
 
   const {
     queryCriterioAsignacion,
@@ -55,31 +55,49 @@ export const useCoberturasSection = () => {
     queryReaseguradoras,
   } = useAccidentesEnfermedades();
 
-  
-  const dataTable = ref<CoberturaRow[]>(aeStore.recuperarCoberturas());
+  // Tabla base mutable — todas las mutaciones van aquí
+  const originalDataTable = ref<CoberturasSection[]>([...coberturas.value]);
 
+  // Computed display — agrega campos de descripción, es solo lectura
+  const dataTable = computed<CoberturasDisplay[]>(() =>
+    originalDataTable.value.map((row) => ({
+      ...row,
+      nombreReasegurador: getNombreReasegurador(row.cveReaseguradorCobertura),
+      descOperRamo:       getDescOperRamo(row.cveOperRamoCobertura),
+      descCobaye:         getDescCobaye(row.cveCobaye),
+      descPropiaSaMax:    row.propiaSaMax === 1 ? "SÍ" : "NO",
+    }))
+  );
+
+  // Ref numérico para saMax
   const saMax = ref("");
 
+  const showErrors = ref(false);
+
+  // Criterio fijo mientras haya registros activos
+  const criterioFijo = computed<number | null>(() => {
+    const primerActivo = originalDataTable.value.find((r) => r.coberActiva);
+    return primerActivo?.cveCriterioAsigCobertura ?? null;
+  });
+
+  const criterioEstaFijo = computed(() => criterioFijo.value != null);
+
+    // Formulario
   const {
     validate,
     resetForm,
     setFieldValue,
     values: formData,
     errors: formErrors,
-  } = useForm<CoberturaForm>({
+  } = useForm<CoberturasForm>({
     validationSchema: useCoberturasValidations(),
     validateOnMount: false,
+    initialValues: {
+      cveCriterioAsigCobertura: criterioFijo.value ?? 0,
+    }
   });
 
-  const showErrors = ref(false);
-  
-  const criterioFijo = computed(() => {
-    const activos = dataTable.value.filter((r) => r.coberActiva);
-    return activos.length > 0 ? activos[0]!.cveCriterioAsigCobertura : null;
-  });
-
-  const criterioEstaFijo = computed(() => criterioFijo.value != null);
-
+  // Operaciones/ramos disponibles según tipo de reaseguro
   const operacionesRamosData = ref<{ title: string; value: string }[]>([]);
 
   watch(
@@ -91,11 +109,10 @@ export const useCoberturasSection = () => {
     ([proporcional, _, isLoading]) => {
       if (proporcional == null || isLoading) return;
 
-      // array de ayuda
       const helper: { title: string; value: string }[] = [];
 
-      // fnc agrega al helper operaciones buscando en el query de operaciones ramos
-      const pushOperacion = (cveCobertura: string) => {
+      const pushOperacion = (cveCobertura: string | null) => {
+        if (!cveCobertura) return;
         const operacion = queryOperacionesRamos.data.value?.find(
           (el) => el.cveCobertura === cveCobertura
         );
@@ -107,33 +124,23 @@ export const useCoberturasSection = () => {
         }
       };
 
-      // si es no proporcional el contrato entonces
       if (!proporcional) {
-        
-        // recupera los registros de la tabla y los agrega al helper por medio de la funcion
-        aeStore.recuperarTablaOperacionRamoContrato().forEach((row) => {
-          console.log(row.cveOperRamo)
+        // No proporcional: usa CAE_OPERACION_RAMO de generales
+        aeStore.generales.CAE_OPERACION_RAMO?.forEach((row) => {
           pushOperacion(row.cveOperRamo);
         });
-
-        // si es proporcional
       } else {
-        const detalles = aeStore.obtenerDetallesProporcionales();
-        const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === 1;
+        // Proporcional: usa detallesProporcionales si tiene detalle por oper/ramo
+        const tieneDetalleOperRamo = detallesProporcionales.value[0]?.detallesOperRamo === 1;
 
         if (tieneDetalleOperRamo) {
-          
-          detalles.forEach((row) => {
-            console.log(row.cveOperRamoDetalles)
+          detallesProporcionales.value.forEach((row) => {
             pushOperacion(row.cveOperRamoDetalles);
           });
-        } //else {
-          /* aeStore.recuperarTablaOperacionRamoContrato().forEach((row) => {
-            pushOperacion(row.cveOperRamo);
-          }); */
-        //}
+        }
       }
 
+      // Eliminar duplicados
       operacionesRamosData.value = helper.filter(
         (item, index, self) => self.findIndex((t) => t.value === item.value) === index
       );
@@ -141,68 +148,55 @@ export const useCoberturasSection = () => {
     { immediate: true }
   );
 
+  // Coberturas disponibles según criterio y operación/ramo
   const coberturasDisponibles = computed(() => {
     const todasLasCoberturas = queryCoberturasAyE.data.value ?? [];
     const criterio = formData.cveCriterioAsigCobertura;
-    
-    // helper para almacenar las claves
+
     let cvesOperRamo: string[] = [];
 
-    // si cveCriterioAsigCobertura es 3 o 6 debe de recuperarse
-    // los valores de la columna cveOperRamoCobertura
     if ([3, 6].includes(criterio!)) {
-      
-      if (formData.cveOperRamoCobertura) {
-        cvesOperRamo = [formData.cveOperRamoCobertura];
-        console.log("claves porque es 3 o 6 el criterio asignacion", cvesOperRamo);
+      // Criterio 3 o 6: filtra por la oper/ramo seleccionada en el form
+      if (formData.cveOperRamoCobertura != null) {
+        cvesOperRamo = [String(formData.cveOperRamoCobertura)];
       }
     } else {
-      // recupera los valores de operacionesRamosData ya que ya tienen un filtrado
+      // Resto: usa las operaciones/ramos disponibles del contrato
       cvesOperRamo = operacionesRamosData.value.map((o) => o.value);
-      console.log("claves porque depende de detallesOperRamo y son parte del filtro anterior", {cvesOperRamo})
     }
 
     if (cvesOperRamo.length === 0) return todasLasCoberturas;
 
-    // si en los recuperados hay 3000 o 030 se muestran todos
+    // Si hay "3000" o "030" se muestran todas las coberturas
     if (cvesOperRamo.some((c) => ["3000", "030"].includes(c))) {
       return todasLasCoberturas;
     }
 
-    // set que no permite duplicados
     const cvesPermitidos = new Set<string>();
-
     cvesOperRamo.forEach((cve) => {
-      const permitidos = COBERTURAS_POR_OPER_RAMO[cve];
-      console.log("permitidos", permitidos)
-      if (permitidos) {
-        permitidos.forEach((permitido) => cvesPermitidos.add(permitido));
-      }
+      COBERTURAS_POR_OPER_RAMO[cve]?.forEach((p) => cvesPermitidos.add(p));
     });
 
     if (cvesPermitidos.size === 0) return todasLasCoberturas;
 
     return todasLasCoberturas.filter((c) =>
-      {
-        return cvesPermitidos.has(String(c.cveCobertura))
-      }
+      cvesPermitidos.has(String(c.cveCobertura))
     );
   });
-  
+
+  // Watches de limpieza
   watch(
     () => formData.cveCriterioAsigCobertura,
     () => {
       setFieldValue("cveReaseguradorCobertura", null);
       setFieldValue("cveOperRamoCobertura", null);
-      setFieldValue("cveCobaye", null);
+      setFieldValue("cveCobaye", 0);
     }
   );
 
   watch(
     () => formData.cveOperRamoCobertura,
-    () => {
-      setFieldValue("cveCobaye", null);
-    }
+    () => { setFieldValue("cveCobaye", 0); }
   );
 
   watch(
@@ -215,6 +209,7 @@ export const useCoberturasSection = () => {
     }
   );
 
+  // Handler numérico para saMax
   const onInputSaMax = (value: string) => {
     const clean = formattNumber(value);
     saMax.value = clean;
@@ -236,41 +231,38 @@ export const useCoberturasSection = () => {
     saMax.value = formatCurrency(numeric);
   };
 
+  // Helpers de descripción (para el computed display)
   const getNombreReasegurador = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      (queryReaseguradoras.data.value ?? []).find(
-        (r) => r.cveReasegurador === cve
-      )?.nombreReasegurador ?? ""
+      queryReaseguradoras.data.value?.find((r) => r.cveReasegurador === cve)
+        ?.nombreReasegurador ?? ""
     );
   };
 
-  const getDescOperRamo = (cve: string | null): string => {
-    if (!cve) return "";
-    return (
-      operacionesRamosData.value.find((o) => o.value === cve)?.title ?? ""
-    );
+  const getDescOperRamo = (cve: number | string | null): string => {
+    if (cve == null) return "";
+    return operacionesRamosData.value.find((o) => o.value === String(cve))?.title ?? "";
   };
 
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      (queryCoberturasAyE.data.value ?? []).find(
-        (c) => c.cveCobaye === cve
-      )?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
     );
   };
-  
+
+  // Reset
   const resetFormAndRefs = () => {
-    
     const criterioActual = criterioFijo.value ?? formData.cveCriterioAsigCobertura;
     resetForm();
     setFieldValue("cveCriterioAsigCobertura", criterioActual);
     setFieldValue("propiaSaMax", 0);
-    saMax.value = "";
+    saMax.value      = "";
     showErrors.value = false;
   };
-  
+
+  // Agregar cobertura
   const handleAgregarCobertura = () => {
     dialog.show({
       title: "Confirmación",
@@ -289,49 +281,68 @@ export const useCoberturasSection = () => {
     const { valid } = await validate();
     if (!valid) return;
 
-    const newRow: CoberturaRow = {
-      cveCriterioAsigCobertura: formData.cveCriterioAsigCobertura,
-      cveReaseguradorCobertura: formData.cveReaseguradorCobertura,
-      cveOperRamoCobertura: formData.cveOperRamoCobertura,
-      cveCobaye: formData.cveCobaye,
-      propiaSaMax: formData.propiaSaMax,
-      saMax: formData.saMax,
-      nombreReasegurador: getNombreReasegurador(formData.cveReaseguradorCobertura),
-      descOperRamo: getDescOperRamo(formData.cveOperRamoCobertura),
-      descCobaye: getDescCobaye(formData.cveCobaye),
-      coberActiva: true,
+    const newRow: CoberturasSection = {
+      idContrato:               aeStore.generales.idContrato,
+      cveCriterioAsigCobertura: formData.cveCriterioAsigCobertura!,
+      cveReaseguradorCobertura: formData.cveReaseguradorCobertura ?? null,
+      cveOperRamoCobertura:     formData.cveOperRamoCobertura ?? null,
+      cveCobaye:                formData.cveCobaye!,
+      propiaSaMax:              formData.propiaSaMax,
+      saMax:                    formData.saMax ?? null,
+      coberActiva:              true,
     };
 
-    dataTable.value.push(newRow);
+    originalDataTable.value.push(newRow);
     resetFormAndRefs();
   };
 
-  const toggleRowActiva = (item: CoberturaRow) => {
-    const index = dataTable.value.indexOf(item);
+  // Toggle activo
+  const toggleRowActiva = (item: CoberturasDisplay) => {
+    const index = originalDataTable.value.findIndex(
+      (r) =>
+        r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
+        r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
+        r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
+        r.cveCobaye                === item.cveCobaye
+    );
     if (index !== -1) {
-      dataTable.value[index]!.coberActiva = !dataTable.value[index]!.coberActiva;
+      originalDataTable.value[index]!.coberActiva =
+        !originalDataTable.value[index]!.coberActiva;
     }
   };
 
-  const editRow = (row: CoberturaRow) => {
-    const index = dataTable.value.indexOf(row);
-    if (index !== -1) dataTable.value.splice(index, 1);
+  // Editar fila
+  const editRow = (item: CoberturasDisplay) => {
+    const index = originalDataTable.value.findIndex(
+      (r) =>
+        r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
+        r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
+        r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
+        r.cveCobaye                === item.cveCobaye
+    );
+    if (index === -1) return;
+
+    const row = originalDataTable.value[index]!;
 
     setFieldValue("cveCriterioAsigCobertura", row.cveCriterioAsigCobertura);
     setFieldValue("cveReaseguradorCobertura", row.cveReaseguradorCobertura);
-    setFieldValue("cveOperRamoCobertura", row.cveOperRamoCobertura);
-    setFieldValue("cveCobaye", row.cveCobaye);
-    setFieldValue("propiaSaMax", row.propiaSaMax);
-    setFieldValue("saMax", row.saMax);
+    setFieldValue("cveOperRamoCobertura",     row.cveOperRamoCobertura);
+    setFieldValue("cveCobaye",                row.cveCobaye);
+    setFieldValue("propiaSaMax",              row.propiaSaMax);
+    setFieldValue("saMax",                    row.saMax);
 
     saMax.value = row.saMax != null ? formatCurrency(row.saMax) : "";
+
+    originalDataTable.value.splice(index, 1);
+    showErrors.value = false;
   };
 
+  // Guardar
   const handleGuardarCoberturas = () => {
-    if (dataTable.value.length === 0) {
+    if (originalDataTable.value.length === 0) {
       dialog.show({
         title: "Error",
-        message: "La tabla debe contener al menos un registro para continuar. Verifique por favor.",
+        message: "La tabla debe contener al menos un registro para continuar.",
         type: DialogType.ERROR,
       });
       return;
@@ -351,183 +362,144 @@ export const useCoberturasSection = () => {
   };
 
   const validarYGuardar = () => {
-    const criterio = dataTable.value[0]?.cveCriterioAsigCobertura;
-    const activas = dataTable.value.filter((r) => r.coberActiva);
-    const error = ejecutarValidacionPorCriterio(criterio, activas);
+    const criterio = originalDataTable.value[0]?.cveCriterioAsigCobertura;
+    const activas  = originalDataTable.value.filter((r) => r.coberActiva);
+    const error    = ejecutarValidacionPorCriterio(criterio, activas);
 
     if (error) {
-      dialog.show({
-        title: "Error",
-        message: error,
-        type: DialogType.ERROR,
-      });
+      dialog.show({ title: "Error", message: error, type: DialogType.ERROR });
       return;
     }
 
     doGuardarCoberturas();
   };
 
-  /**
-   * Ejecuta la validación correspondiente según CVE_CRITERIOASIG_COBERTURA
-   * Devuelve el mensaje de error o null si pasa.
-   */
+  // Validaciones por criterio
   const ejecutarValidacionPorCriterio = (
     criterio: number | null | undefined,
-    activas: CoberturaRow[]
+    activas: CoberturasSection[]
   ): string | null => {
 
-    
     if (criterio === 1) {
-      const cvesCobertura = activas.map((r) => r.cveCobaye);
-      const hayDuplicados = cvesCobertura.length !== new Set(cvesCobertura).size;
-      if (hayDuplicados) {
-        return "Solo se permite un registro por cobertura para el contrato.";
-      }
-      return null;
+      const cves        = activas.map((r) => r.cveCobaye);
+      const hayDuplicados = cves.length !== new Set(cves).size;
+      return hayDuplicados
+        ? "Solo se permite un registro por cobertura para el contrato."
+        : null;
     }
 
-    
     if (criterio === 0) {
-      const reaseguradoresContrato = (aeStore.recuperarReaseguradores() as any[]).map(
-        (r) => r.cveReasegurador
-      );
-      const cvesEnTabla = [...new Set(activas.map((r) => r.cveReaseguradorCobertura))];
-      const faltantes = reaseguradoresContrato.filter((cve) => !cvesEnTabla.includes(cve));
-
-      if (faltantes.length > 0) {
-        return "Se debe registrar al menos una cobertura por cada reaseguradora.";
-      }
-      return null;
+      const cvesContrato = reaseguradores.value.map((r) => r.cveReasegurador);
+      const cvesEnTabla  = [...new Set(activas.map((r) => r.cveReaseguradorCobertura))];
+      const faltantes    = cvesContrato.filter((cve) => !cvesEnTabla.includes(cve));
+      return faltantes.length > 0
+        ? "Se debe registrar al menos una cobertura por cada reaseguradora."
+        : null;
     }
 
-    
     if (criterio === 3) {
-      const cvesOperRamoRequeridos = _obtenerCvesOperRamoRequeridos();
-      const cvesEnTabla = [...new Set(activas.map((r) => r.cveOperRamoCobertura))];
-      const faltantes = cvesOperRamoRequeridos.filter((cve) => !cvesEnTabla.includes(cve));
-
-      if (faltantes.length > 0) {
-        return "Se debe registrar al menos una cobertura por cada operación / ramo.";
-      }
-      return null;
+      const requeridos  = _obtenerCvesOperRamoRequeridos();
+      const cvesEnTabla = [...new Set(activas.map((r) => String(r.cveOperRamoCobertura)))];
+      const faltantes   = requeridos.filter((cve) => !cvesEnTabla.includes(cve));
+      return faltantes.length > 0
+        ? "Se debe registrar al menos una cobertura por cada operación / ramo."
+        : null;
     }
 
-    
     if (criterio === 6) {
-      const cvesOperRamoRequeridos = _obtenerCvesOperRamoRequeridos();
-      const reaseguradoresContrato = (aeStore.recuperarReaseguradores() as any[]).map(
-        (r) => r.cveReasegurador as number
-      );
+      const cvesOperRamo = _obtenerCvesOperRamoRequeridos();
+      const cvesReaseg   = reaseguradores.value.map((r) => r.cveReasegurador);
 
-      
-      const combinacionesFaltantes: string[] = [];
-
-      reaseguradoresContrato.forEach((cveReaseg) => {
-        cvesOperRamoRequeridos.forEach((cveOper) => {
-          const existe = activas.some(
+      const falta = cvesReaseg.some((cveReaseg) =>
+        cvesOperRamo.some((cveOper) =>
+          !activas.some(
             (r) =>
               r.cveReaseguradorCobertura === cveReaseg &&
-              r.cveOperRamoCobertura === cveOper
-          );
-          if (!existe) {
-            combinacionesFaltantes.push(`Reaseg ${cveReaseg} – Oper/Ramo ${cveOper}`);
-          }
-        });
-      });
+              String(r.cveOperRamoCobertura) === cveOper
+          )
+        )
+      );
 
-      if (combinacionesFaltantes.length > 0) {
-        return "Se debe registrar al menos una cobertura por cada operación / ramo.";
-      }
-      return null;
+      return falta
+        ? "Se debe registrar al menos una cobertura por cada combinación reaseguradora / operación / ramo."
+        : null;
     }
 
     return null;
   };
 
-  /**
-   * Obtiene los CVE_OPER_RAMO requeridos según tipo de reaseguro y detalles del contrato.
-   * Reutilizado para criterios 3 y 6.
-   */
+  // Helper: CVEs de operación/ramo requeridos según tipo de contrato
   const _obtenerCvesOperRamoRequeridos = (): string[] => {
     if (!isTypeProporcional.value) {
-      
-      return (aeStore.recuperarTablaOperacionRamoContrato() as any[]).map(
-        (r) => r.cveOperRamo as string
+      return (
+        aeStore.generales.CAE_OPERACION_RAMO?.map((r) => r.cveOperRamo) ?? []
       );
     }
 
-    
-    const detalles = aeStore.obtenerDetallesProporcionales() as any[];
-    const tieneDetalleOperRamo = detalles[0]?.detallesOperRamo === 1;
+    const tieneDetalleOperRamo =
+      detallesProporcionales.value[0]?.detallesOperRamo === 1;
 
     if (tieneDetalleOperRamo) {
-      
-      return detalles.map((d) => d.cveOperRamoDetalles as string);
-    } else {
-      
-      return (aeStore.recuperarTablaOperacionRamoContrato() as any[]).map(
-        (r) => r.cveOperRamo as string
-      );
+      return detallesProporcionales.value
+        .map((d) => d.cveOperRamoDetalles)
+        .filter((v): v is string => v != null);
     }
+
+    return aeStore.generales.CAE_OPERACION_RAMO?.map((r) => r.cveOperRamo) ?? [];
   };
 
   const doGuardarCoberturas = () => {
-    aeStore.guardarCoberturas(dataTable.value);
-
+    aeStore.guardarCoberturas(originalDataTable.value);
     dialog.show({
-      title: "Atención",
-      message: "Información de coberturas guardadas con éxito",
-    })
-
+      title: "Éxito",
+      message: "Información de coberturas guardada con éxito.",
+      type: DialogType.SUCCESS,
+    });
     dialog.cerrar();
   };
-  
-  const headerProps = { style: "font-weight: bold" };
 
-  const tableHeaders = [
-    { title: "Reaseguradora",       key: "nombreReasegurador",    sortable: true,  headerProps },
-    { title: "Operación / Ramo",    key: "descOperRamo",          sortable: true,  headerProps },
-    { title: "Cobertura",           key: "descCobaye",            sortable: true,  headerProps },
-    { title: "¿Propia SA máx.?",    key: "propiaSaMax",           sortable: true,  headerProps },
-    { title: "Suma asegurada máx.", key: "saMax",                 sortable: true,  headerProps },
-    { title: "Activa",              key: "coberActiva",           sortable: true,  headerProps },
-    { title: "Editar",              key: "editar",                sortable: false, headerProps },
-  ];
-  
+  // Reaseguradoras del contrato (filtradas por las del store)
   const reaseguradoraData = computed(() => {
-    const reaseguradoresContrato = aeStore.recuperarReaseguradores() as Array<{
-      cveReasegurador: number;
-      nombreReasegurador?: string;
-    }>;
-
-    const cvesContrato = reaseguradoresContrato.map((r) => r.cveReasegurador);
-
+    const cvesContrato = reaseguradores.value.map((r) => r.cveReasegurador);
     return (queryReaseguradoras.data.value ?? []).filter((r) =>
       cvesContrato.includes(r.cveReasegurador)
     );
   });
 
+  // Headers
+  const hp = { style: "font-weight: bold" };
+
+  const tableHeaders = [
+    { title: "REASEGURADORA",       key: "nombreReasegurador", sortable: true,  headerProps: hp },
+    { title: "OPERACIÓN / RAMO",    key: "descOperRamo",       sortable: true,  headerProps: hp },
+    { title: "COBERTURA",           key: "descCobaye",         sortable: true,  headerProps: hp },
+    { title: "¿PROPIA SA MÁX.?",    key: "descPropiaSaMax",        sortable: true,  headerProps: hp },
+    { title: "SUMA ASEGURADA MÁX.", key: "saMax",              sortable: true,  headerProps: hp },
+    { title: "ACTIVA",              key: "coberActiva",        sortable: true,  headerProps: hp },
+    { title: "EDITAR",              key: "editar",             sortable: false, headerProps: hp },
+  ];
+
   return {
-    
+    // formulario
     formData,
     formErrors,
     showErrors,
     setFieldValue,
-    
+    // saMax
     saMax,
     onInputSaMax,
     onBlurSaMax,
-    
+    // catálogos
     queryCriterioAsignacion,
     reaseguradoraData,
     operacionesRamosData,
     coberturasDisponibles,
-    
+    // tabla
     tableHeaders,
     dataTable,
-    
+    // criterio
     criterioEstaFijo,
-    
+    // acciones
     handleAgregarCobertura,
     handleGuardarCoberturas,
     toggleRowActiva,

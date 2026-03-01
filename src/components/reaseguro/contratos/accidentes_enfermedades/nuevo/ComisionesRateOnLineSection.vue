@@ -30,7 +30,6 @@
                 @update:model-value="onInputGeneric('limiteInf', $event)"
                 @blur="onBlurGeneric('limiteInf')"
                 :error-messages="showErrors ? formErrors['limiteInf'] : undefined"
-                persistent-hint
               />
             </v-col>
 
@@ -43,7 +42,6 @@
                 @update:model-value="onInputGeneric('limiteSup', $event)"
                 @blur="onBlurGeneric('limiteSup')"
                 :error-messages="showErrors ? formErrors['limiteSup'] : undefined"
-                persistent-hint
               />
             </v-col>
 
@@ -56,7 +54,6 @@
                 @update:model-value="onInputGeneric('comisRolDefinitiva', $event)"
                 @blur="onBlurGeneric('comisRolDefinitiva')"
                 :error-messages="showErrors ? formErrors['comisRolDefinitiva'] : undefined"
-                persistent-hint
               />
               <v-slider
                 :model-value="formData.comisRolDefinitiva ?? 0"

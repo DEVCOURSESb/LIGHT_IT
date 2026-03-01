@@ -74,5 +74,6 @@ export const useGeneralValidations = () => {
     negociosCubiertos: (value: string) => {
         return (val.minMaxString(value, 1, 1000) && val.noSpecialCharacters(value) ) || "Máximo 1000 caracteres, sin especiales.";
     },
+    contratoActivo: (value: boolean) => value != null || "El estatus del contrato es obligatorio.",
   };
 };

@@ -3,148 +3,200 @@
     <v-card-text>
       <v-container>
         <v-form @submit.prevent="">
-          <!-- ! ROW-->
+
           <v-row>
-            <!-- ASIGNACION DE PROPORCION DE PRIMA -->
+
+            <!-- ASIGNACIÓN DE PROPORCIÓN DE PRIMA -->
             <v-col cols="12" md="3">
               <v-select
-                :items="[]"
+                :model-value="formData.cveCriterioAsigPrimaPropor"
+                @update:model-value="setFieldValue('cveCriterioAsigPrimaPropor', $event)"
+                :items="queryCriterioAsignacion.data.value?.filter(row => [1,0,4,3,6,7,8,9].includes(row.cveCriterioAsig)) ?? []"
                 item-title="descCriterioAsig"
                 item-value="cveCriterioAsig"
-                label="Asignación de proporción de prima"
+                label="Asignación de proporción de prima "
                 variant="solo-filled"
                 clearable
-                :disabled="false"
+                :disabled="criterioEstaFijo"
+                :error-messages="showErrors ? formErrors.cveCriterioAsigPrimaPropor : ''"
               />
             </v-col>
 
             <!-- REASEGURADORA -->
-            <v-col cols="12" md="3">
+            <v-col v-if="showReasegurador" cols="12" md="3">
               <v-select
-                :items="[]"
-                item-title="descCriterioAsig"
-                item-value="cveCriterioAsig"
-                label="Reaseguradora"
+                :model-value="formData.cveReaseguradorPrimaPropor"
+                @update:model-value="setFieldValue('cveReaseguradorPrimaPropor', $event)"
+                :items="reaseguradoraData"
+                item-title="nombreReasegurador"
+                item-value="cveReasegurador"
+                label="Reaseguradora "
                 variant="solo-filled"
                 clearable
-                :disabled="false"
+                :error-messages="showErrors ? formErrors.cveReaseguradorPrimaPropor : ''"
               />
             </v-col>
 
-            <!-- OPERACION / RAMO -->
-            <v-col cols="12" md="3">
+            <!-- OPERACIÓN / RAMO -->
+            <v-col v-if="showOperRamo" cols="12" md="3">
               <v-select
-                :items="[]"
-                item-title="descCriterioAsig"
-                item-value="cveCriterioAsig"
-                label="Operación / Ramo"
+                :model-value="formData.cveOperRamoPrimaPropor"
+                @update:model-value="setFieldValue('cveOperRamoPrimaPropor', $event)"
+                :items="operacionesRamosData"
+                item-title="title"
+                item-value="value"
+                label="Operación / Ramo "
                 variant="solo-filled"
                 clearable
-                :disabled="false"
+                :error-messages="showErrors ? formErrors.cveOperRamoPrimaPropor : ''"
               />
             </v-col>
 
             <!-- COBERTURA -->
-            <v-col cols="12" md="3">
+            <v-col v-if="showCobertura" cols="12" md="3">
               <v-select
-                :items="[]"
-                item-title="descCriterioAsig"
-                item-value="cveCriterioAsig"
-                label="Cobertura"
+                :model-value="formData.cveCobayePrimaPropor"
+                @update:model-value="setFieldValue('cveCobayePrimaPropor', $event)"
+                :items="coberturasDisponibles"
+                item-title="descCobaye"
+                item-value="cveCobaye"
+                label="Cobertura "
                 variant="solo-filled"
                 clearable
-                :disabled="false"
+                :error-messages="showErrors ? formErrors.cveCobayePrimaPropor : ''"
               />
             </v-col>
 
             <!-- NÚMERO DE DÍAS CUBIERTOS -->
             <v-col cols="12" md="3">
               <v-text-field
-                label="Número de días cubiertos"
+                :model-value="formData.noDiasCubiertos"
+                @update:model-value="setFieldValue('noDiasCubiertos', $event ? parseInt($event): 0)"
+                label="Número de días cubiertos "
                 variant="solo-filled"
                 type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                step="1"
+                :error-messages="showErrors ? formErrors.noDiasCubiertos : ''"
               />
             </v-col>
 
             <!-- % PRIMA ANUAL -->
             <v-col cols="12" md="3">
               <v-text-field
-                label="% Prima Anual"
+                :model-value="porcentajePrimaAnual"
+                @update:model-value="porcentajePrimaAnual = $event !== '' ? parseFloat($event) : null"
+                label="% Prima anual "
                 variant="solo-filled"
                 type="number"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                max="100"
+                step="0.01"
+                :suffix="porcentajePrimaAnual != null ? '%' : ''"
+                :error-messages="showErrors ? formErrors.porcentajePrimaAnual : ''"
+              />
+              <v-slider
+                :model-value="porcentajePrimaAnual ?? 0"
+                @update:model-value="porcentajePrimaAnual = $event"
+                min="0"
+                max="100"
+                step="0.01"
+                color="primary"
+                thumb-label
+                class="mt-1"
               />
             </v-col>
+
           </v-row>
-          <!-- ! ROW-->
+
+          <!-- BOTONES -->
           <v-row class="d-flex gap-2 justify-end">
-            <v-btn size="large" variant="outlined" @click="() => {}">
+            <v-btn size="large" variant="outlined" @click="handleAgregarProporcion">
               Agregar proporción
             </v-btn>
             <v-btn
               size="large"
               variant="outlined"
               class="btn-guardar"
-              @click="() => {}"
+              @click="handleGuardarProporciones"
             >
               Guardar proporciones
             </v-btn>
           </v-row>
 
+          <!-- TABLA -->
           <v-col cols="12" md="12">
             <v-data-table
               class="mt-4"
               :headers="tableHeaders"
-              :items="[]"
+              :items="dataTable"
               :loading="false"
               striped="odd"
             >
               <template #top>
                 <v-toolbar class="encabezado" flat>
-                  <v-toolbar-title
-                    >Solo los registros de esta tabla se
-                    registrarán</v-toolbar-title
-                  >
+                  <v-toolbar-title>
+                    Solo los registros de esta tabla se registrarán
+                  </v-toolbar-title>
                   <v-spacer />
                 </v-toolbar>
               </template>
-              <template #no-data> No hay datos disponibles </template>
-              <!-- 
-                  <template #item.detalleActivo="{ item }">
-                    <v-checkbox
-                    :model-value="item?.detalleActivo"
-                    @update:model-value="() => toggleActive(item)"
-                    hide-details
-                    density="compact"
-                    />
-                  </template>
-                  <template #item.actions="{ item }">
-                    <v-icon class="edit" size="large" @click="editRow(item)">
-                      mdi-pencil
-                    </v-icon>
-                  </template>
-                  -->
+
+              <template #no-data>No hay datos disponibles</template>
+
+              <!-- % Prima anual con símbolo -->
+              <template #item.porcentajePrimaAnual="{ item }">
+                {{ item.porcentajePrimaAnual != null ? `${item.porcentajePrimaAnual.toFixed(2)} %` : '—' }}
+              </template>
+
+              <!-- Checkbox activo -->
+              <template #item.proporcionActiva="{ item }">
+                <v-checkbox
+                  :model-value="item.proporcionActiva"
+                  @update:model-value="toggleRowActiva(item)"
+                  hide-details
+                  density="compact"
+                />
+              </template>
+
+              <!-- Editar -->
+              <template #item.editar="{ item }">
+                <v-icon class="edit" size="large" @click="editRow(item)">
+                  mdi-pencil
+                </v-icon>
+              </template>
+
             </v-data-table>
           </v-col>
+
         </v-form>
       </v-container>
     </v-card-text>
   </v-card>
 </template>
+
 <script lang="ts" setup>
-import { useComisionesRateOnLine } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/comisiones_rate_on_line/useComisionesRateOnLine";
+import { useProporcionPrimas } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/proporcion_primas/useProporcionPrimas";
 
-/* :model-value="formData['cveCriterioAsigCapacidad']"
-@update:model-value="setFieldValue('cveCriterioAsigCapacidad', $event)"
-:error-messages="showErrors ? formErrors['cveCriterioAsigCapacidad'] : undefined" 
-
-v-model.number="porcentajeRetencion"
-*/
-
-const { tableHeaders } = useComisionesRateOnLine();
+const {
+  formData,
+  formErrors,
+  showErrors,
+  setFieldValue,
+  porcentajePrimaAnual,
+  criterioEstaFijo,
+  showReasegurador,
+  showOperRamo,
+  showCobertura,
+  queryCriterioAsignacion,
+  reaseguradoraData,
+  operacionesRamosData,
+  coberturasDisponibles,
+  tableHeaders,
+  dataTable,
+  handleAgregarProporcion,
+  handleGuardarProporciones,
+  toggleRowActiva,
+  editRow,
+} = useProporcionPrimas();
 </script>

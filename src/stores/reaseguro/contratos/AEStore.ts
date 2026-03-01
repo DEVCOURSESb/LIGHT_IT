@@ -1,38 +1,17 @@
+import type { BorPrimasSection, BorSiniestrosSection, CoberturasSection, ComisionesRateOnLineSection, CorretajeSection, CumulosSection, DetallesProporcionalesSection, EdoSection, ExcedentesSection, GeneralesSection, GeneralSectionCompleteData, GeneralSectionTableMoneda, GeneralSectionTableOperacionRamo, IntermediarioSection, PagoSection, PolizasFacultativasSection, ProporcionPrimasSection, ReaseguradoresSection, ReinstalacionesSection, TarifasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 export interface TablaOperacionRamoContratoInterface {
-  idContrato:          string;
+  idContrato: string;
   cveExtCoberContrato: number;
-  cveOperRamo:         string;
-  operRamoActivo:      boolean;
+  cveOperRamo: string;
+  operRamoActivo: boolean;
 }
-
-export interface TablaDetallesContrato {
-  detallesOperRamo:         number;
-  cveExtCoberDetalles:      number;
-  cveOperRamoDetalles:      string;
-  montoRetencion:           number;
-  montoRetencionContrato:   number;
-  montoCesion:              number;
-  capacidadContrato:        number;
-  cveCriterioAsigCapacidad: number;
-  cveDistrCesion:           number;
-  cveMonedaDetalles:        number;
-  cumulos:                  string;
-  porcentajeRetencion:      number;
-  porcentajeCesion:         number;
-  detalleActivo:            boolean;
-  idContrato:               string;
-}
-
 
 // claves para localStorage
 const STORAGE_KEYS = {
   activeTab: "activeTab",
-  isProporcional: "isTypeProporcional",
-  isFacultativo: "isFacultativo",
-  tipoContrato: "tipoContrato",
   generalesContrato: "CAE_GENERALES_CONTRATO",
   monedaContrato: "CAE_MONEDA_CONTRATO",
   operacionRamoContrato: "CAE_OPERACION_RAMO_CONTRATO",
@@ -40,222 +19,386 @@ const STORAGE_KEYS = {
   detallesContrato: "CAE_DETALLES_CONTRATO",
   polizasFacultativasContrato: "CAE_POL_FAC_CONTRATO",
   reaseguradores: "CAE_REASEGURADORES_CONTRATO",
-  isComisionEscalonada: "isComisionEscalonada",
   comisionesRol: "CAE_COMIS_ROL_CONTRATO",
   coberturasContrato: "CAE_COBERTURAS_CONTRATO",
   excedentesContratos: "CAE_EXCEDENTES_CONTRATO",
-  
+  cumulosContratos: "CAE_CUMULOS_CONTRATO",
+  tarifasContrato: "CAE_TARIFAS_CONTRATO",
+  proporcionPrimasContrato: "CAE_PROPORCION_CONTRATO",
+  reinstalacionesContrato: "CAE_REINSTALACIONES_CONTRATO",
+  intermediariosContrato: "CAE_INTERMEDIARIOS_CONTRATO",
+  corretajeContrato: "CAE_CORRETAJE_CONTRATO",
+  pagos:                 "CAE_PAGOS_CONTRATO",
+  edoCuenta:             "CAE_EDO_CONTRATO",
+  borPrimas:             "CAE_BOR_PRIMAS_CONTRATO",
+  borSiniestros:         "CAE_BOR_SINIESTROS_CONTRATO"
 } as const;
 
 export const useContratoAEStore = defineStore("contratoAccEnf", () => {
   const dialog = useDialog();
 
-  const activeTab = ref<string>(
-    localStorage.getItem(STORAGE_KEYS.activeTab) ?? "tab-1",
-  );
-
-  const isTypeProporcional = ref<boolean>(
-    localStorage.getItem(STORAGE_KEYS.isProporcional) === "true",
-  );
-
-  const haveComisionEscalonada = ref<boolean>(
-    localStorage.getItem(STORAGE_KEYS.isComisionEscalonada) === "true",
-  );
-
-  const isFacultativo = ref<boolean>(
-    localStorage.getItem(STORAGE_KEYS.isFacultativo) === "true",
-  );
-
-  const tipoContrato = ref<number | null>(
-    JSON.parse(localStorage.getItem(STORAGE_KEYS.tipoContrato)!) || null,
-  );
-
-  const setTipoReaseguro = (cveReaseguro: number) => {
-    isTypeProporcional.value = cveReaseguro === 0;
-    localStorage.setItem(STORAGE_KEYS.isProporcional, isTypeProporcional.value.toString());
-  };
-
-  const setIsFacultativo = (cveFcontrac: number) => {
-    isFacultativo.value = cveFcontrac === 1;
-    localStorage.setItem(STORAGE_KEYS.isFacultativo, isFacultativo.value.toString());
-  };
-
-  const setTipoContrato = (idTcontrato: number) => {
-    tipoContrato.value = idTcontrato;
-    localStorage.setItem(STORAGE_KEYS.tipoContrato, tipoContrato.value.toString());
-  };
-
-  const setHaveComisionEscalonada = (isEscalonada: boolean) => {
-    haveComisionEscalonada.value = isEscalonada;
-    localStorage.setItem(STORAGE_KEYS.isComisionEscalonada, haveComisionEscalonada.value.toString());
-  };
+  const activeTab = ref<string>(localStorage.getItem(STORAGE_KEYS.activeTab) ?? "tab-1",);
 
   // !GENERALES
+  const generalesData = JSON.parse(localStorage.getItem(STORAGE_KEYS.generalesCompletos) || "{}") as GeneralSectionCompleteData;
+  const generales = ref<GeneralSectionCompleteData>({...generalesData, fechaFinContrato: new Date(generalesData.fechaFinContrato), fechaInicioContrato: new Date(generalesData.fechaInicioContrato)});
+ 
+  const isTypeProporcional = computed<boolean>(() => {
+    return generales.value.cveTreaseg === 0;
+  });
 
-  const guardarGenerales = (data: Record<string, any>) => {
-    // Actualizar estado derivado
-    setTipoReaseguro(Number(data.cveTreaseg));
-    setIsFacultativo(Number(data.cveFcontrac));
-    setTipoContrato(Number(data.idTcontrato));
+  const isFacultativo = computed<boolean>(() => {
+    return generales.value.cveFcontrac === 1;
+  });
 
-    // Guardar datos del formulario (sin las tablas)
-    const { dataTableMoneda, dataTableOperacionRamo, ...generalesSinTablas } = data;
-    localStorage.setItem(STORAGE_KEYS.generalesContrato, JSON.stringify(generalesSinTablas));
-
-    // Guardar monedas del contrato
-    const monedasContrato = dataTableMoneda.map((moneda: any) => ({
-      idContrato: data.idContrato,
-      cveMonedaContrato: moneda.cveMoneda,
-      monActiva: moneda.monActiva,
+  const tipoContrato = computed<number | null>(() => {
+    return generales.value.idTcontrato ?? null;
+  });
+  
+  //const guardarGenerales = (data: Record<string, any>) => {
+  const guardarGenerales = (data: GeneralesSection, tableMonedas: GeneralSectionTableMoneda[], tableOperacionesRamos: GeneralSectionTableOperacionRamo[]) => {
+    tableMonedas = tableMonedas.map((item) => ({ ...item, idContrato: data.idContrato }));
+    tableOperacionesRamos = tableOperacionesRamos.map((item) => ({ ...item, idContrato: data.idContrato }));
+    
+    // actualizar estado reactivo
+    generales.value = {
+      ...generales.value,
+      ...data,
+      fechaInicioContrato: new Date(data.fechaInicioContrato),
+      fechaFinContrato: new Date(data.fechaFinContrato),
+      CAE_MONEDA_CONTRATO: tableMonedas,
+      CAE_OPERACION_RAMO: tableOperacionesRamos,
+    };
+    // Guardar generales
+    localStorage.setItem(STORAGE_KEYS.generalesContrato, JSON.stringify(data));
+    // Guardar tablas relacionadas
+    localStorage.setItem(STORAGE_KEYS.monedaContrato, JSON.stringify(tableMonedas));
+    localStorage.setItem(STORAGE_KEYS.operacionRamoContrato, JSON.stringify(tableOperacionesRamos));
+    
+    // guardar juntos
+    localStorage.setItem(STORAGE_KEYS.generalesCompletos, JSON.stringify({
+      ...data,
+      CAE_MONEDA_CONTRATO: tableMonedas,
+      CAE_OPERACION_RAMO: tableOperacionesRamos
     }));
-    localStorage.setItem(STORAGE_KEYS.monedaContrato, JSON.stringify(monedasContrato));
-
-    // Guardar operaciones/ramos del contrato
-    const operacionesRamoContrato = dataTableOperacionRamo.map((operacionRamo: any) => ({
-      idContrato: data.idContrato,
-      cveExtCoberContrato: operacionRamo.cveExtCober,
-      cveOperRamo: operacionRamo.cveCobertura,
-      operRamoActivo: operacionRamo.operRamoActivo,
-    }));
-    localStorage.setItem(STORAGE_KEYS.operacionRamoContrato, JSON.stringify(operacionesRamoContrato));
-
-    // Guardar snapshot completo para recuperación del formulario
-    localStorage.setItem(STORAGE_KEYS.generalesCompletos, JSON.stringify(data));
-
+    
+    
     // Navegar al siguiente tab según el tipo de reaseguro
-    activeTab.value = isTypeProporcional.value ? "tab-2" : "tab-3";
-
+    activeTab.value = isTypeProporcional.value ? "tab-2" : ( isFacultativo.value ? "tab-3" : "tab-4");
+    
     dialog.show({
       title: "Datos guardados",
       message: "Los datos generales han sido guardados exitosamente.",
       type: DialogType.SUCCESS,
     });
   };
+    
+    // !DETALLES PROPORCIONALES
+  const detallesProporcionales = ref<DetallesProporcionalesSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.detallesContrato) || "[]"),);
 
-  const obtenerGenerales = () => {
-    const rawData = localStorage.getItem(STORAGE_KEYS.generalesCompletos) || "{}";
-    const parsed = JSON.parse(rawData);
-
-    // Sincronizar estado derivado con lo que haya en el storage
-    if (parsed.cveTreaseg != null) {
-      isTypeProporcional.value = Number(parsed.cveTreaseg) === 0;
-    }
-    if (parsed.cveFcontrac != null) {
-      isFacultativo.value = Number(parsed.cveFcontrac) === 1;
-    }
-
-    return {
-      ...parsed,
-      fechaInicioContrato: parsed.fechaInicioContrato
-        ? new Date(parsed.fechaInicioContrato)
-        : null,
-      fechaFinContrato: parsed.fechaFinContrato
-        ? new Date(parsed.fechaFinContrato)
-        : null,
-    };
-  };
-
-  // !DETALLES PROPORCIONALES
-
+  const haveCumulos = computed<boolean>(() => {
+    return detallesProporcionales.value.some((item) => item.cumulos === 1);
+  });
+  
   const guardarDetallesProporcionales = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
+    const { idContrato } = generales.value;
 
-    const detallesConContrato = data.map((item) => ({ ...item, idContrato }));
-    localStorage.setItem(STORAGE_KEYS.detallesContrato, JSON.stringify(detallesConContrato));
-
+    const detallesConContrato = data.map((item) => ({
+      ...item,
+      idContrato,
+    })) as DetallesProporcionalesSection[];
+    
+    // actualizacion de estado reactivo
+    detallesProporcionales.value = detallesConContrato;
+    
+    // Persistimos
+    localStorage.setItem(
+      STORAGE_KEYS.detallesContrato,
+      JSON.stringify(detallesConContrato),
+    );
+    
     activeTab.value = isFacultativo.value ? "tab-3" : "tab-4";
   };
-
-  const obtenerDetallesProporcionales = () => {
-    const rawData = localStorage.getItem(STORAGE_KEYS.detallesContrato) || "[]";
-    return JSON.parse(rawData) as TablaDetallesContrato[];
-  };
-
+  
   // !PÓLIZAS FACULTATIVAS
-
-  const guardarPolizasFacultativas = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
+  const polizasFacultativas = ref<PolizasFacultativasSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.polizasFacultativasContrato) || "[]"),);
+  const guardarPolizasFacultativas = (data: PolizasFacultativasSection[]) => {
+    const { idContrato } = generales.value;
 
     const polizasConContrato = data.map((item) => ({ ...item, idContrato }));
 
-    localStorage.setItem(STORAGE_KEYS.polizasFacultativasContrato, JSON.stringify(polizasConContrato));
+    // actualizacion de estado reactivo
+    polizasFacultativas.value = polizasConContrato;
+
+    localStorage.setItem(STORAGE_KEYS.polizasFacultativasContrato, JSON.stringify(polizasConContrato),);
     activeTab.value = "tab-4";
   };
 
-  const obtenerPolizasFacultativas = () => {
-    const rawData = localStorage.getItem(STORAGE_KEYS.polizasFacultativasContrato) || "[]";
-    return JSON.parse(rawData);
-  }
-
   // ! REASEGURADORES
-  const guardarReaseguradores = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
-    const reaseguradoresConContrato = data.map((item) => ({ ...item, idContrato }));
-    localStorage.setItem(STORAGE_KEYS.reaseguradores, JSON.stringify(reaseguradoresConContrato));
+  const reaseguradores = ref<ReaseguradoresSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.reaseguradores) || "[]"),);
 
-    const haveComisionEscalonada = data.some((item) => item?.cveAsignacionComisRol === 2);
+  const haveComisionEscalonada = computed<boolean>(() => {
+    return reaseguradores.value.some((item) => item?.cveAsignacionComisRol === 2);
+  });
 
-    setHaveComisionEscalonada(haveComisionEscalonada);
+  const guardarReaseguradores = (data: ReaseguradoresSection[]) => {
+    const { idContrato } = generales.value;
+    const reaseguradoresConContrato = data.map((item) => ({
+      ...item,
+      idContrato,
+    }));
+    localStorage.setItem(
+      STORAGE_KEYS.reaseguradores,
+      JSON.stringify(reaseguradoresConContrato),
+    );
+    // actualizacion de estado reactivo
+    reaseguradores.value = reaseguradoresConContrato;
 
-    activeTab.value = haveComisionEscalonada ? "tab-5" : "tab-6";
+    activeTab.value = haveComisionEscalonada.value ? "tab-5" : "tab-6";
   };
 
-  const recuperarReaseguradores = () => {
-    const dataRaw = localStorage.getItem(STORAGE_KEYS.reaseguradores) || "[]";
-    return JSON.parse(dataRaw);
-  }
-
   // !COMISIONES RATE ON LINE
-  const guardarComisionesRateOnLine = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
-    const rows = data.map(row => ({...row, idContrato}));
+  const comisionesRateOnLine = ref<ComisionesRateOnLineSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.comisionesRol) || "[]"));
+
+  const guardarComisionesRateOnLine = (data: ComisionesRateOnLineSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+    comisionesRateOnLine.value = rows;
 
     localStorage.setItem(STORAGE_KEYS.comisionesRol, JSON.stringify(rows));
 
     activeTab.value = "tab-6";
-  }
-
-  const recuperarComisionesRateOnLine = () => {
-    const data = localStorage.getItem(STORAGE_KEYS.comisionesRol) || "[]";
-    return JSON.parse(data);
-  }
+  };
 
   // !COBERTURAS
-  const guardarCoberturas = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
-    const rows = data.map(row => ({...row, idContrato}));
+  const coberturas = ref<CoberturasSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.coberturasContrato) || "[]"));
+
+  const guardarCoberturas = (data: CoberturasSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+    coberturas.value = rows;
 
     localStorage.setItem(STORAGE_KEYS.coberturasContrato, JSON.stringify(rows));
 
-    activeTab.value = "tab-6";
+    activeTab.value = tipoContrato.value == 3 ? "tab-7" : ( haveCumulos.value ? "tab-8" : "tab-9");
+  };
+
+  // TODO: validar active tabs
+  // !EXCEDENTES
+  const excedentes = ref<ExcedentesSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.excedentesContratos) || "[]"));
+
+  const guardarExcedentes = (data: ExcedentesSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+    excedentes.value = rows;
+
+    localStorage.setItem(
+      STORAGE_KEYS.excedentesContratos,
+      JSON.stringify(rows),
+    );
+
+    activeTab.value = haveCumulos.value ? "tab-8" : (isTypeProporcional.value ? "tab-9" : haveProporcionDias.value ? "tab-10" : ( !isTypeProporcional.value ? "tab-11" : "tab-12" ));
+  };
+
+  // !CÚMULOS
+  const cumulos = ref<CumulosSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.cumulosContratos) || "[]"));
+
+  const guardarCumulos = (data: CumulosSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+    cumulos.value = rows;
+
+    localStorage.setItem(
+      STORAGE_KEYS.cumulosContratos,
+      JSON.stringify(rows),
+    );
+
+    activeTab.value = isTypeProporcional.value ? "tab-9" : haveProporcionDias.value ? "tab-10" : ( !isTypeProporcional.value ? "tab-11" : "tab-12" );
+  };
+
+  // !TARIFAS
+  const tarifas = ref<TarifasSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.tarifasContrato) || "[]"));
+
+  const haveProporcionDias = computed<boolean>(() => {
+    return tarifas.value.some((item) => item.proporcionDias !== null && item.proporcionDias !== undefined && item.proporcionDias === 1);
+  });
+
+  const guardarTarifas = (data: TarifasSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+
+    tarifas.value = rows;
+
+    localStorage.setItem(
+      STORAGE_KEYS.tarifasContrato,
+      JSON.stringify(rows),
+    );
+
+    activeTab.value = haveProporcionDias.value ? "tab-10" : ( !isTypeProporcional.value ? "tab-11" : "tab-12" );
+  };
+
+  // !PROPORCION PRIMAS
+  const proporcionPrimas = ref<ProporcionPrimasSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.proporcionPrimasContrato) || "[]"));
+
+  const guardarProporcionPrimas = (data: ProporcionPrimasSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+
+    proporcionPrimas.value = rows;
+
+    localStorage.setItem(
+      STORAGE_KEYS.proporcionPrimasContrato,
+      JSON.stringify(rows),
+    );
+
+    activeTab.value = !isTypeProporcional.value ? "tab-11" : "tab-12" ;
+  };
+
+  //! REINSTALACIONES
+  const reinstalaciones = ref<ReinstalacionesSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.reinstalacionesContrato) || "[]"));
+
+  const guardarReinstalaciones = (data: ReinstalacionesSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+
+    reinstalaciones.value = rows;
+
+    localStorage.setItem(STORAGE_KEYS.reinstalacionesContrato, JSON.stringify(rows));
+    activeTab.value = "tab-12";
+  };
+
+  // ! INTERMEDIARIOS
+  const intermediarios = ref<IntermediarioSection[]>(JSON.parse(localStorage.getItem(STORAGE_KEYS.intermediariosContrato) || "[]"));
+  const guardarIntermediarios = (data: IntermediarioSection[]) => {
+    const { idContrato } = generales.value;
+    const rows = data.map((row) => ({ ...row, idContrato }));
+    intermediarios.value = rows;
+    localStorage.setItem(STORAGE_KEYS.intermediariosContrato, JSON.stringify(rows));
+    activeTab.value = haveCorretajeEscalonado.value ? "tab-13" : "tab-14";
   }
 
-  const recuperarCoberturas = () => {
-    const data = localStorage.getItem(STORAGE_KEYS.coberturasContrato) || "[]";
-    return JSON.parse(data);
+  const haveCorretajeEscalonado = computed<boolean>(() => {
+    return intermediarios.value.some((item) => item?.cveAsignacionCorretaje === 2);
+  });
+
+  //!CORRETAJE
+  const corretajes = ref<CorretajeSection[]>(
+  JSON.parse(localStorage.getItem(STORAGE_KEYS.corretajeContrato) || "[]")
+  );
+
+  const guardarCorretajes = (data: CorretajeSection[]) => {
+    const { idContrato } = generales.value;
+
+    const rows = data.map(row => ({
+      ...row,
+      idContrato
+    }));
+
+    corretajes.value = rows;
+
+    localStorage.setItem(
+      STORAGE_KEYS.corretajeContrato,
+      JSON.stringify(rows)
+    );
+    activeTab.value = "tab-14";
+  };
+
+  function fromStorage<T>(key: string, fallback: T): T {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? (JSON.parse(raw) as T) : fallback;
+    } catch {
+      return fallback;
+    }
   }
 
-  // !COBERTURAS
-  const guardarExcedentes = (data: Record<string, any>[]) => {
-    const { idContrato } = obtenerGenerales();
-    const rows = data.map(row => ({...row, idContrato}));
+  //! ADMINISTRACION
+  const pagos         = ref<PagoSection[]>(fromStorage(STORAGE_KEYS.pagos,         []));
+  const edoCuenta     = ref<EdoSection[]>(fromStorage(STORAGE_KEYS.edoCuenta,      []));
+  const borPrimas     = ref<BorPrimasSection[]>(fromStorage(STORAGE_KEYS.borPrimas,    []));
+  const borSiniestros = ref<BorSiniestrosSection[]>(fromStorage(STORAGE_KEYS.borSiniestros, []));
 
-    localStorage.setItem(STORAGE_KEYS.excedentesContratos, JSON.stringify(rows));
+  const guardarAdministracion = (
+    dataPagos:      PagoSection[],
+    dataEdo:        EdoSection[],
+    dataPrimas:     BorPrimasSection[],
+    dataSiniestros: BorSiniestrosSection[]
+  ) => {
+    const id = generales.value.idContrato;
+    pagos.value         = dataPagos.map((r) => ({ ...r, idContrato: id }));
+    edoCuenta.value     = dataEdo.map((r) => ({ ...r, idContrato: id }));
+    borPrimas.value     = dataPrimas.map((r) => ({ ...r, idContrato: id }));
+    borSiniestros.value = dataSiniestros.map((r) => ({ ...r, idContrato: id }));
+    localStorage.setItem(STORAGE_KEYS.pagos,         JSON.stringify(pagos.value));
+    localStorage.setItem(STORAGE_KEYS.edoCuenta,     JSON.stringify(edoCuenta.value));
+    localStorage.setItem(STORAGE_KEYS.borPrimas,     JSON.stringify(borPrimas.value));
+    localStorage.setItem(STORAGE_KEYS.borSiniestros, JSON.stringify(borSiniestros.value));
+  };
 
-    activeTab.value = "tab-8";
-  }
+  const obtenerPayloadBackend = () => {
+    const payload: Record<string, any> = {
+      GENERALES: generales.value,
+      REASEGURADORES: reaseguradores.value,
+      COBERTURAS: coberturas.value,
+      INTERMEDIARIOS: intermediarios.value,
+      ADMINISTRACION: {
+        PAGOS: pagos.value,
+        ESTADO_CUENTA: edoCuenta.value,
+        BOR_PRIMAS: borPrimas.value,
+        BOR_SINIESTROS: borSiniestros.value,
+      },
+    };
 
-  const recuperarExcedentes = () => {
-    const data = localStorage.getItem(STORAGE_KEYS.excedentesContratos) || "[]";
-    return JSON.parse(data);
-  }
+    // 🔹 Tipo proporcional
+    if (isTypeProporcional.value) {
+      payload.DETALLES_PROPORCIONALES = detallesProporcionales.value;
+      payload.TARIFAS = tarifas.value;
+    }
 
+    // 🔹 Facultativo
+    if (isFacultativo.value) {
+      payload.POLIZAS_FACULTATIVAS = polizasFacultativas.value;
+    }
 
-  const recuperarTablaOperacionRamoContrato = () => {
-    const raw = localStorage.getItem(STORAGE_KEYS.operacionRamoContrato) || "[]";
-    return JSON.parse(raw) as TablaOperacionRamoContratoInterface[];
-  }
+    // 🔹 Comisión escalonada
+    if (haveComisionEscalonada.value) {
+      payload.COMISIONES_RATE_ON_LINE = comisionesRateOnLine.value;
+    }
 
+    // 🔹 Excedentes
+    if (tipoContrato.value === 3) {
+      payload.EXCEDENTES = excedentes.value;
+    }
+
+    // 🔹 Cúmulos
+    if (haveCumulos.value) {
+      payload.CUMULOS = cumulos.value;
+    }
+
+    // 🔹 Proporción de prima
+    if (haveProporcionDias.value) {
+      payload.PROPORCION_PRIMAS = proporcionPrimas.value;
+    }
+
+    // 🔹 Reinstalaciones (solo si NO es proporcional)
+    if (!isTypeProporcional.value) {
+      payload.REINSTALACIONES = reinstalaciones.value;
+    }
+
+    // 🔹 Corretaje escalonado
+    if (haveCorretajeEscalonado.value) {
+      payload.CORRETAJE = corretajes.value;
+    }
+
+    console.log("📦 Payload a enviar al backend:");
+    console.log(JSON.stringify(payload, null, 2));
+
+    return payload;
+  };
+
+  const crearContrato = () => {
+    obtenerPayloadBackend();
+  };
 
   watch(activeTab, (nuevoTab) => {
     localStorage.setItem(STORAGE_KEYS.activeTab, nuevoTab);
@@ -267,20 +410,40 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     isFacultativo,
     tipoContrato,
     haveComisionEscalonada,
+    haveCumulos,
     guardarGenerales,
-    obtenerGenerales,
+    generales,
     guardarDetallesProporcionales,
-    obtenerDetallesProporcionales,
+    detallesProporcionales,
     guardarPolizasFacultativas,
-    obtenerPolizasFacultativas,
+    polizasFacultativas,
     guardarReaseguradores,
-    recuperarReaseguradores,
+    reaseguradores,
     guardarComisionesRateOnLine,
-    recuperarComisionesRateOnLine,
-    recuperarTablaOperacionRamoContrato,
+    comisionesRateOnLine,
     guardarCoberturas,
-    recuperarCoberturas,
+    coberturas,
     guardarExcedentes,
-    recuperarExcedentes
+    excedentes,
+    guardarCumulos,
+    cumulos,
+    guardarTarifas,
+    tarifas,
+    haveProporcionDias,
+    proporcionPrimas,
+    guardarProporcionPrimas,
+    reinstalaciones,
+    guardarReinstalaciones,
+    intermediarios,
+    guardarIntermediarios,
+    corretajes,
+    guardarCorretajes,
+    haveCorretajeEscalonado,
+    pagos,
+    edoCuenta,
+    borPrimas,
+    borSiniestros,
+    guardarAdministracion,
+    crearContrato
   };
 });

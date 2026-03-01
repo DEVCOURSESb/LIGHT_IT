@@ -17,7 +17,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       if (value === null || value === undefined) return "La participación es obligatoria.";
       else return val.minMax(value, 0, 100) || "La participación es obligatoria con un rango de 0.00 a 100.00"
     },
-    otorgaPtu: (value: string) => {
+    otorgaPtu: (value: number) => {
       if ( !isTypeProporcional ) return true;
       else return val.isFalsyExceptZero(value) || "Otorga PTU es obligatorio"
     },
@@ -66,7 +66,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
 
       return true;
     },
-    comisRolReaseguro: (value: string) => !!value || "Comisión / Rol Reaseguro es obligatorio",
+    comisRolReaseguro: (value: number) => val.isFalsyExceptZero(value) || "Comisión / Rol Reaseguro es obligatorio",
     /* tipo de comision rate on line */
     cveAsignacionComisRol: (value: number, context: any) => {
       const comisRol = context.form?.comisRolReaseguro;

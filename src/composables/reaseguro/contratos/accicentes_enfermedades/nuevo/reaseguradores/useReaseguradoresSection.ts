@@ -3,64 +3,24 @@ import { storeToRefs } from "pinia";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { useReaseguradoresSectionValidations } from "./useReaseguradoresSectionValidations";
 import { useForm } from "vee-validate";
-import { ref, watch, type Ref } from "vue";
+import { computed, nextTick, ref, watch, type Ref } from "vue";
 import { formattNumber } from "@/utils/formattNumber";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { DialogType, useDialog } from "@/stores/dialogStore";
+import type { ReaseguradoresSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
 interface FormatNumberOptions {
   [key: string]: Ref<string>;
 }
 
-interface FormPlain {
-  cveReasegurador: number;
-  participacion: number;
-  otorgaPtu: string | null;
-  porcentajePtu: number | null;
-  cvePtu: number | null;
-  gastos: number | null;
-  porcentajeK: number | null;
-  aniosArrastre: number | null;
-  comisRolReaseguro: string | null;
-  cveAsignacionComisRol: number | null;
-  cveCalcomis: number | null;
-  comisRolFija: number | null;
-  comisRolProvisional: number | null;
-  comisRolMin: number | null;
-  comisRolMax: number | null;
-  capa: number | null;
-  prioridad: number | null;
-  limResponsabilidad: number | null;
-  limAgregado: number | null;
-  cveCriterioAsigLimAgregado: number | null;
-  cveAsignacionCosto: number | null;
-  costoFijo: number | null;
-  pmd: number | null;
-  primaMin: number | null;
-  primaMax: number | null;
-  facAjusteDividendo: number | null;
-  facAjusteDivisor: number | null;
-  noClaims: number | null;
-  reasegActiva: boolean;
-}
-
-interface dataTableToDisplay extends FormPlain {
+interface dataTableToDisplay extends ReaseguradoresSection {
   nombreReasegurador: string;
+  descComisionRolReaseguro: string;
 }
 
 export const useReaseguradoresSection = () => {
   const aeStore = useContratoAEStore();
-  const { isTypeProporcional } = storeToRefs(aeStore);
-
-  const dataTable = ref<dataTableToDisplay[]>([]);
-
-  // datos previos
-  const datosGuardados = aeStore.recuperarReaseguradores();
-  if (Array.isArray(datosGuardados) && datosGuardados.length > 0) {
-    dataTable.value = datosGuardados;
-  }
-
-  const dialog = useDialog();
+  const { isTypeProporcional, reaseguradores } = storeToRefs(aeStore);
 
   const {
     queryReaseguradoras,
@@ -69,6 +29,21 @@ export const useReaseguradoresSection = () => {
     queryCalculoComision,
     queryCriterioAsignacion,
   } = useAccidentesEnfermedades();
+
+  const dataTableOriginal = ref<ReaseguradoresSection[]>([...reaseguradores.value]);
+
+  const dataTable = computed(() => {
+    return dataTableOriginal.value.map((r) => {
+      const reaseguradora = queryReaseguradoras.data.value?.find((reaseg) => reaseg.cveReasegurador === r.cveReasegurador);
+      return {
+        ...r,
+        nombreReasegurador: reaseguradora?.nombreReasegurador || "",
+        descComisionRolReaseguro: r.comisRolReaseguro == 1 ? "SÍ" : "NO"
+      };
+    })
+  });
+
+  const dialog = useDialog();
 
   const participacion = ref("");
   const porcentajePtu = ref("");
@@ -346,15 +321,15 @@ export const useReaseguradoresSection = () => {
   const headerProps = { style: "font-weight: bold" };
 
   const tableHeaders = [
-    { title: "Reaseguradora", key: "nombreReasegurador", sortable: true, headerProps },
-    { title: "Participación", key: "participacion", sortable: true, headerProps },
-    { title: "Comisión Rate Online", key: "comisRolReaseguro", sortable: true, headerProps },
-    { title: "Límite Responsabilidad", key: "limResponsabilidad", sortable: true, headerProps },
-    { title: "Activa", key: "reasegActiva", sortable: true, headerProps },
-    { title: "Editar", key: "editar", sortable: false, headerProps },
+    { title: "REASEGURADORA", key: "nombreReasegurador", sortable: true, headerProps },
+    { title: "PARTICIPACIÓN", key: "participacion", sortable: true, headerProps },
+    { title: "COMISIÓN RATE ONLINE", key: "descComisionRolReaseguro", sortable: true, headerProps },
+    { title: "LÍMITE RESPONSABILIDAD", key: "limResponsabilidad", sortable: true, headerProps },
+    { title: "ACTIVA", key: "reasegActiva", sortable: true, headerProps },
+    { title: "EDITAR", key: "editar", sortable: false, headerProps },
   ];
 
-  const toggleActive = (item: FormPlain) => {
+  const toggleActive = (item: ReaseguradoresSection) => {
       // const someActive = dataTable.value.some( row => row.reasegActiva && row.cveReasegurador != item.cveReasegurador );
 
     //if( !someActive ) {
@@ -365,10 +340,10 @@ export const useReaseguradoresSection = () => {
       }); */
       //return;
     //}
-    const index = dataTable.value.findIndex(row => row.cveReasegurador === item.cveReasegurador);
+    const index = dataTableOriginal.value.findIndex(row => row.cveReasegurador === item.cveReasegurador);
 
     if (index !== -1) {
-      dataTable.value[index]!.reasegActiva = !dataTable.value[index]!.reasegActiva;
+      dataTableOriginal.value[index]!.reasegActiva = !dataTableOriginal.value[index]!.reasegActiva;
     }
   };
 
@@ -438,7 +413,7 @@ export const useReaseguradoresSection = () => {
   const editRow = (row: dataTableToDisplay) => {
     console.log(row);
     // elimina de la tabla
-    dataTable.value = dataTable.value.filter(rowT => !compareRows(rowT, row));
+    dataTableOriginal.value = dataTable.value.filter(rowT => !compareRows(rowT, row));
 
     // llena el form
     setFieldValue("cveReasegurador", row?.cveReasegurador);
@@ -469,7 +444,6 @@ export const useReaseguradoresSection = () => {
     setFieldValue("facAjusteDividendo", row?.facAjusteDividendo);
     setFieldValue("facAjusteDivisor", row?.facAjusteDivisor);
     setFieldValue("noClaims", row?.noClaims);
-    setFieldValue("nombreReasegurador", row?.nombreReasegurador);
     setFieldValue("reasegActiva", row?.reasegActiva);
 
     const numericFields: (keyof FormatNumberOptions)[] = [
@@ -514,8 +488,6 @@ export const useReaseguradoresSection = () => {
   };
 
   const confirmSend = async () => {
-    // Disparar watch de isTypeProporcional sin mutar innecesariamente
-    isTypeProporcional.value = isTypeProporcional.value;
     showErrors.value = true;
     const { valid } = await validate();
 
@@ -525,7 +497,8 @@ export const useReaseguradoresSection = () => {
       );
 
       
-      const newRow: dataTableToDisplay = {
+      const newRow: ReaseguradoresSection = {
+        idContrato: "",
         cveReasegurador: formData.cveReasegurador,
         participacion: formData.participacion,
         otorgaPtu: formData.otorgaPtu ?? null,
@@ -554,16 +527,12 @@ export const useReaseguradoresSection = () => {
         facAjusteDividendo: formData.facAjusteDividendo ?? null,
         facAjusteDivisor: formData.facAjusteDivisor ?? null,
         noClaims: formData.noClaims ?? null,
-        nombreReasegurador: reaseguradora?.nombreReasegurador ?? "",
         reasegActiva: true,
       };
 
-
-      console.log("es proporcional", isTypeProporcional.value);
-
       // SI ES PROPORCIONAL, no se debe agregar una reaseguradora duplicada
       if (isTypeProporcional.value) {
-        const isAlreadyAdded = dataTable.value.some(row => row.cveReasegurador === newRow.cveReasegurador);
+        const isAlreadyAdded = dataTableOriginal.value.some(row => row.cveReasegurador === newRow.cveReasegurador);
 
         if (isAlreadyAdded) {
           dialog.show({
@@ -576,7 +545,7 @@ export const useReaseguradoresSection = () => {
         }
         // si es NO PROPORCIONAL no se debe agregar un mismo reasegurador con misma capa
       } else {
-        const exist = dataTable.value.some(row => row.cveReasegurador === newRow.cveReasegurador && row.capa === newRow.capa )
+        const exist = dataTableOriginal.value.some(row => row.cveReasegurador === newRow.cveReasegurador && row.capa === newRow.capa )
         if (exist) {
           dialog.show({
             title: "Atención",
@@ -589,7 +558,7 @@ export const useReaseguradoresSection = () => {
 
         /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
         if(newRow.capa && newRow.capa != 1) {
-          const lastCapa = dataTable.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!)[dataTable.value.length -1];
+          const lastCapa = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!)[dataTableOriginal.value.length -1];
 
           const prioridadEsperada = lastCapa?.prioridad! + lastCapa?.limResponsabilidad!;
           // si la prioridad es distinto de la suma de prioridad y limite de responsabilidad anterior
@@ -616,44 +585,24 @@ export const useReaseguradoresSection = () => {
         
       }
 
-      dataTable.value.push(newRow);
+      dataTableOriginal.value.push(newRow);
       resetFormAndRefs();
     }
   };
 
-  const handleSubmit = async () => {
-    if (dataTable.value.length <= 0) {
-      dialog.show({
-        title: "Error",
-        message: "La tabla debe de contener almenos un registro para continuar, verifique por favor...",
-        type: DialogType.ERROR,
-      });
-
-      return;
-    }
-
-    dialog.show({
-      title: "Confirmación",
-      message: "¿Confirma que los datos ingresados de reaseguradoras del contrato son correctos?",
-      type: DialogType.ERROR,
-      autoCloseExtraAction: false,
-      ExtraAction: {
-        text: "Sí, agregar",
-        color: "primary",
-        handler: checkAgregarStore
-      }
-    });
-  };
-
+  
   const checkAgregarStore = () => {
-    const reaseguradoresActivos = dataTable.value.filter(row => row.reasegActiva);
+    const reaseguradoresActivos = dataTableOriginal.value.filter(row => row.reasegActiva);
 
     const sumaParticipacion = reaseguradoresActivos.reduce((acc, currentRow) => {
       return acc + currentRow.participacion;
     }, 0);
 
     // si es PROPORCIONAL
-    if (isTypeProporcional.value && sumaParticipacion < 100) {
+   if (isTypeProporcional.value && sumaParticipacion < 100) {
+    dialog.cerrar();
+
+    nextTick(() => {
       dialog.show({
         title: "Atención",
         message: `¿Desea continuar sin que el contrato esté cubierto al 100%?. Participación actual de ${sumaParticipacion}%`,
@@ -663,12 +612,13 @@ export const useReaseguradoresSection = () => {
           color: "primary",
           handler: () => {
             aeStore.guardarReaseguradores(reaseguradoresActivos);
-            return;
           }
         }
       });
-      // ¿SI ES NO PROPORCIONAL?
-    }else if( !isTypeProporcional.value) {
+    });
+
+    return;
+  }else if( !isTypeProporcional.value) {
       reaseguradoresActivos.sort((a, b) => a.capa! - b.capa!)
 
       let messages: string[] = [];
@@ -700,6 +650,30 @@ export const useReaseguradoresSection = () => {
     }
       aeStore.guardarReaseguradores(reaseguradoresActivos)
       dialog.cerrar();
+  };
+
+  const handleSubmit = async () => {
+    if (dataTableOriginal.value.length <= 0) {
+      dialog.show({
+        title: "Error",
+        message: "La tabla debe de contener almenos un registro para continuar, verifique por favor...",
+        type: DialogType.ERROR,
+      });
+
+      return;
+    }
+
+    dialog.show({
+      title: "Confirmación",
+      message: "¿Confirma que los datos ingresados de reaseguradoras del contrato son correctos?",
+      type: DialogType.ERROR,
+      autoCloseExtraAction: false,
+      ExtraAction: {
+        text: "Sí, agregar",
+        color: "primary",
+        handler: checkAgregarStore
+      }
+    });
   };
 
   return {

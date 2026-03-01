@@ -3,29 +3,15 @@ import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { useDetallesProporcionalesValidations } from "./useDetallesProporcionalesValidations";
 import { ref, watch, computed } from "vue";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { storeToRefs } from "pinia";
+import type { DetallesProporcionalesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 import type { Extension } from "@/API/catalogos/extensiones/extensiones.interfaces";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { formattNumber } from "@/utils/formattNumber";
 import { formatCurrency } from "@/utils/formatCurrency";
 
-interface DetallesProporcionalesFormTable {
-  capacidadContrato: number;
-  cumulos: string;
-  cveCriterioAsigCapacidad: number;
-  cveDistrCesion: number;
-  cveExtCoberDetalles: number;
-  cveMonedaDetalles: number;
-  cveOperRamoDetalles: string;
-  detallesOperRamo: number;
-  montoCesion: number;
-  montoRetencion: number;
-  montoRetencionContrato: number;
-  porcentajeRetencion: number | null;
-  porcentajeCesion: number | null;
-  detalleActivo: boolean;
-}
-
-interface DetallesProporcionalesTableDisplay extends DetallesProporcionalesFormTable {
+// Tipo display: extiende la interfaz con campos calculados para la tabla
+type DetallesProporcionalesDisplay = DetallesProporcionalesSection & {
   descExtCoberDetalles: string;
   descOperRamoDetalles: string;
   descCriterioAsigCapacidad: string;
@@ -35,12 +21,16 @@ interface DetallesProporcionalesTableDisplay extends DetallesProporcionalesFormT
   montoRetencionContratoFormatted: string;
   montoCesionFormatted: string;
   capacidadContratoFormatted: string;
-}
+};
+
+// Tipo del formulario — sin idContrato (lo agrega el store al guardar)
+type DetallesProporcionalesForm = Omit<DetallesProporcionalesSection, "idContrato">;
 
 export const useDetallesProporcionalesSection = () => {
-  const { obtenerGenerales, guardarDetallesProporcionales, obtenerDetallesProporcionales } = useContratoAEStore();
-  const generales = obtenerGenerales();
-  const dialog = useDialog();
+  const aeStore = useContratoAEStore();
+  const dialog  = useDialog();
+
+  const { generales, detallesProporcionales } = storeToRefs(aeStore);
 
   const {
     queryExtensionesCobertura,
@@ -50,49 +40,78 @@ export const useDetallesProporcionalesSection = () => {
     queryMoneda,
   } = useAccidentesEnfermedades();
 
+  //  Extensiones filtradas por el mínimo de CAE_OPERACION_RAMO 
   const extensionesCoberturaToShow = ref<Extension[]>([]);
 
-  const porcentajeRetencion = ref();
-  const porcentajeCesion = ref();
-  const montoRetencion = ref("");
-  const montoRetencionContrato = ref("");
-  const montoCesion = ref("");
-  const capacidadContrato = ref("");
-
-  
-  const lastDetalleOperacionRamoSelected = ref<number | null>(obtenerDetallesProporcionales()[0]?.detallesOperRamo || null);
-  const isDetallesOperacionRamoDisabled = ref<boolean>(lastDetalleOperacionRamoSelected === null);
-
-  const detallesProporcionalesTable = ref<DetallesProporcionalesFormTable[]>(obtenerDetallesProporcionales() || []);
-
-  // Función para calcular las extensiones de cobertura a mostrar a traves de la consulta de extensiones de cobertura y operación ramo
   const calcularExtensiones = () => {
-    const operaciones = generales?.dataTableOperacionRamo ?? [];
-
+    const operaciones = generales.value.CAE_OPERACION_RAMO ?? [];
     const minExtCober =
-      operaciones.length > 0
-        ? Math.min(...operaciones.map((op: any) => op.cveExtCober))
-        : null;
-
+    operaciones.length > 0
+    ? Math.min(...operaciones.map((op) => op.cveExtCoberContrato))
+    : null;
+    
+    
     extensionesCoberturaToShow.value =
-      queryExtensionesCobertura.data.value
-        ?.filter((ext: Extension) =>
-          minExtCober !== null ? ext.cveExtCober >= minExtCober : true,
-        )
-        .sort((a, b) => a.cveExtCober - b.cveExtCober) ?? [];
+    queryExtensionesCobertura.data.value
+    ?.filter((ext: Extension) =>
+      minExtCober !== null ? ext.cveExtCober >= minExtCober : false
+  )
+  .sort((a, b) => a.cveExtCober - b.cveExtCober) ?? [];
   };
 
-  // cuando cambie la consulta de extensiones de cobertura, recalcula las extensiones a mostrar
   watch(
-    () => queryExtensionesCobertura.data.value,
-    (newData) => {
-      if (newData) {
+    [
+      () => queryExtensionesCobertura.data.value,
+      () => generales.value.CAE_OPERACION_RAMO
+    ],
+    ([data, operacion]) => {
+      if (data || operacion) {
         calcularExtensiones();
       }
     },
-    { immediate: true },
+    { immediate: true }
   );
 
+  //  Tabla local — inicializada desde el ref del store 
+  // Se trabaja sobre una copia local para la edición en curso;
+  // guardarDetallesProporcionales actualiza el ref del store + localStorage.
+  const detallesProporcionalesTable = ref<DetallesProporcionalesSection[]>(
+    [...detallesProporcionales.value]
+  );
+
+  // Bloqueado mientras haya al menos un registro activo (patrón criterioEstaFijo)
+  const isDetallesOperacionRamoDisabled = computed<boolean>(
+    () => detallesProporcionalesTable.value.some((r) => r.detalleActivo)
+  );
+
+  // Valor fijo de detallesOperRamo una vez que existe algún registro
+  const detallesOperRamoFijo = computed<number | null>(
+    () => detallesProporcionalesTable.value[0]?.detallesOperRamo ?? null
+  );
+
+  //  Refs de campos numéricos (formateo visual) 
+  const porcentajeRetencion = ref<number | null>(null)
+
+  const porcentajeRetencionSlider = computed({
+    get: () => porcentajeRetencion.value ?? 0,
+    set: (val: number) => {
+      porcentajeRetencion.value = val
+    }
+  })
+  const porcentajeCesion       = ref<number>(0);
+  const montoRetencion         = ref("");
+  const montoRetencionContrato = ref("");
+  const montoCesion            = ref("");
+  const capacidadContrato      = ref("");
+
+  const formatNumberRefs: Record<string, typeof montoRetencion> = {
+    montoRetencion,
+    montoRetencionContrato,
+    montoCesion,
+    capacidadContrato,
+  };
+
+  //  Formulario 
   const showErrors = ref<boolean>(false);
 
   const {
@@ -101,19 +120,23 @@ export const useDetallesProporcionalesSection = () => {
     errors: formErrors,
     validate,
     resetForm,
-  } = useForm({
+  } = useForm<DetallesProporcionalesForm>({
     validationSchema: useDetallesProporcionalesValidations(),
     validateOnMount: false,
+    initialValues: {
+      detallesOperRamo:         detallesOperRamoFijo.value ?? 0,
+      detalleActivo:            true,
+    },
   });
 
+  // Sincronizar detallesOperRamo cuando ya hay registros previos
   watch(
-    () => lastDetalleOperacionRamoSelected,
-    (newVal) => {
-        setFieldValue("detallesOperRamo", newVal);
-    },
+    detallesOperRamoFijo,
+    (val) => { if (val !== null) setFieldValue("detallesOperRamo", val); },
     { immediate: true }
   );
 
+  // Limpiar campos dependientes al cambiar detallesOperRamo
   watch(
     () => formData.detallesOperRamo,
     (newVal) => {
@@ -121,317 +144,177 @@ export const useDetallesProporcionalesSection = () => {
         setFieldValue("cveExtCoberDetalles", null);
         setFieldValue("cveOperRamoDetalles", null);
       }
-    },
+    }
   );
 
-  // Resetea el campo de operación ramo cuando cambie la extensión de cobertura
+  // Limpiar operación/ramo cuando cambia el tipo de extensión
   watch(
     () => formData.cveExtCoberDetalles,
-    (newVal) => {
-      if (newVal) {
-        setFieldValue("cveOperRamoDetalles", null);
-      }
-    },
+    (newVal) => { if (newVal) setFieldValue("cveOperRamoDetalles", null); }
   );
 
-  // cuando cambie el estado de porcentaje de retencion, actualiza el campo en el formulario
-  // el porcentaje de cesion se calcula automaticamente
-  watch(
-    () => porcentajeRetencion.value,
-    (newVal) => {
-      if(!!newVal){
-        setFieldValue("porcentajeRetencion", newVal);
-        porcentajeCesion.value = 100 - newVal;
-        if (newVal < 0) {
-          porcentajeRetencion.value = 0;
-        } else if (newVal > 100) {
-          porcentajeRetencion.value = 100;
-        }
-      }
-    },
-  );
-
-  // cuando cambie el estado de porcentaje de cesion, actualiza el campo en el formulario
-  // el porcentaje de retencion se calcula automaticamente
-  watch(
-    () => porcentajeCesion.value,
-    (newVal) => {
-      setFieldValue("porcentajeCesion", newVal);
-      if (newVal < 0) {
-        porcentajeCesion.value = 0;
-      } else if (newVal > 100) {
-        porcentajeCesion.value = 100;
-      }
-    },
-  );
-
-  //MONTO RETENCION
-  const onInput = (value: string) => {
-    // Solo limpiar el valor, no formatear aún
-    const clean = formattNumber(value);
-    montoRetencion.value = clean;
-
-    // Actualizar el formulario con el número sin formato
-    const numericValue = clean === "" ? null : parseFloat(clean);
-    setFieldValue("montoRetencion", numericValue);
-  };
-
-  const onBlur = () => {
-    if (!montoRetencion.value || montoRetencion.value === "") {
-      setFieldValue("montoRetencion", null);
-      return;
+  //  Porcentajes (lógica cruzada) 
+  watch(porcentajeRetencion, (newVal) => {
+    if (newVal != null) {
+      const clamped = Math.min(100, Math.max(0, newVal));
+      if (clamped !== newVal) porcentajeRetencion.value = clamped;
+      setFieldValue("porcentajeRetencion", clamped);
+      porcentajeCesion.value = parseFloat((100 - clamped).toFixed(2));
+    } else {
+      setFieldValue("porcentajeRetencion", 0);
+      porcentajeCesion.value = 0;
+      setFieldValue("porcentajeCesion", 0);
     }
+  }, { immediate: true });
 
-    // Convertir a número
-    const numericValue = parseFloat(montoRetencion.value);
-
-    // Si el valor no es válido, limpiar
-    if (isNaN(numericValue)) {
-      montoRetencion.value = "";
-      setFieldValue("montoRetencion", null);
-      return;
-    }
-
-    // Almacenar en el formulario
-    setFieldValue("montoRetencion", numericValue);
-
-    // Formatear para visualización con comas y dos decimales
-    montoRetencion.value = formatCurrency(numericValue);
-  };
-
-  // MONTO RETENCION CONTRATO
-  const onInputRC = (value: string) => {
-    // limpiar el valor, no formatear aún
-    const clean = formattNumber(value);
-    montoRetencionContrato.value = clean;
-
-    // Actualizar el formulario con el número sin formato
-    const numericValue = clean === "" ? null : parseFloat(clean);
-    setFieldValue("montoRetencionContrato", numericValue);
-  };
-
-  const onBlurRC = () => {
-    if (!montoRetencionContrato.value || montoRetencionContrato.value === "") {
-      setFieldValue("montoRetencionContrato", null);
-      return;
-    }
-
-    // Convertir a número
-    const numericValue = parseFloat(montoRetencionContrato.value);
-
-    // Si el valor no es válido, limpiar
-    if (isNaN(numericValue)) {
-      montoRetencionContrato.value = "";
-      setFieldValue("montoRetencionContrato", null);
-      return;
-    }
-
-    // Almacenar en el formulario
-    setFieldValue("montoRetencionContrato", numericValue);
-
-    // Formatear para visualización con comas y dos decimales
-    montoRetencionContrato.value = formatCurrency(numericValue);
-  };
-
-  // MONTO CESION
-  const onInputMC = (value: string) => {
-    // limpiar el valor, no formatear aún
-    const clean = formattNumber(value);
-    montoCesion.value = clean;
-
-    // Actualizar el formulario con el número sin formato
-    const numericValue = clean === "" ? null : parseFloat(clean);
-    setFieldValue("montoCesion", numericValue);
-  };
-
-  const onBlurMC = () => {
-    if (!montoCesion.value || montoCesion.value === "") {
-      setFieldValue("montoCesion", null);
-      return;
-    }
-
-    // Convertir a número
-    const numericValue = parseFloat(montoCesion.value);
-
-    // Si el valor no es válido, limpiar
-    if (isNaN(numericValue)) {
-      montoCesion.value = "";
-      setFieldValue("montoCesion", null);
-      return;
-    }
-
-    // Almacenar en el formulario
-    setFieldValue("montoCesion", numericValue);
-
-    // Formatear para visualización con comas y dos decimales
-    montoCesion.value = formatCurrency(numericValue);
-  };
-
-  // CAPACIDAD CONTRATO
-  const onInputCC = (value: string) => {
-    // limpiar el valor, no formatear aún
-    const clean = formattNumber(value);
-    capacidadContrato.value = clean;
-
-    // Actualizar el formulario con el número sin formato
-    const numericValue = clean === "" ? null : parseFloat(clean);
-    setFieldValue("capacidadContrato", numericValue);
-  };
-
-  const onBlurCC = () => {
-    if (!capacidadContrato.value || capacidadContrato.value === "") {
-      setFieldValue("capacidadContrato", null);
-      return;
-    }
-
-    // Convertir a número
-    const numericValue = parseFloat(capacidadContrato.value);
-
-    // Si el valor no es válido, limpiar
-    if (isNaN(numericValue)) {
-      capacidadContrato.value = "";
-      setFieldValue("capacidadContrato", null);
-      return;
-    }
-
-    // Almacenar en el formulario
-    setFieldValue("capacidadContrato", numericValue);
-
-    // Formatear para visualización con comas y dos decimales
-    capacidadContrato.value = formatCurrency(numericValue);
-  };
-
-  const compareRows = (row1: DetallesProporcionalesFormTable, row2: DetallesProporcionalesFormTable) => {
-    return row1.capacidadContrato === row2.capacidadContrato &&
-        row1.cumulos === row2.cumulos &&
-        row1.cveCriterioAsigCapacidad === row2.cveCriterioAsigCapacidad &&
-        row1.cveDistrCesion === row2.cveDistrCesion &&
-        row1.cveExtCoberDetalles === row2.cveExtCoberDetalles &&
-        row1.cveMonedaDetalles === row2.cveMonedaDetalles &&
-        row1.cveOperRamoDetalles === row2.cveOperRamoDetalles &&
-        row1.detallesOperRamo === row2.detallesOperRamo &&
-        row1.montoCesion === row2.montoCesion &&
-        row1.montoRetencion === row2.montoRetencion &&
-        row1.montoRetencionContrato === row2.montoRetencionContrato &&
-        row1.detalleActivo === row2.detalleActivo;
-  };
-
-  // Función helper para obtener descripciones por clave
-  const getDescripcionByClave = (items: any[], claveField: string, descField: string, claveValue: any): string => {
-    const item = items?.find((i) => i[claveField] === claveValue);
-    return item ? item[descField] : claveValue?.toString() || "";
-  };
-
-  // Computed property para transformar los datos de la tabla con las descripciones
-  const detallesProporcionalesTableDisplay = computed<DetallesProporcionalesTableDisplay[]>(() => {
-    return detallesProporcionalesTable.value.map((row) => {
-      return {
-        ...row,
-        // Agregar las descripciones correspondientes
-        descExtCoberDetalles: getDescripcionByClave(
-          queryExtensionesCobertura.data.value ?? [],
-          "cveExtCober",
-          "descExtCober",
-          row.cveExtCoberDetalles
-        ),
-        descOperRamoDetalles: getDescripcionByClave(
-          queryOperacionesRamos.data.value ?? [],
-          "cveCobertura",
-          "descOperacionRamos",
-          row.cveOperRamoDetalles
-        ),
-        descCriterioAsigCapacidad: getDescripcionByClave(
-          queryCriterioAsignacion.data.value ?? [],
-          "cveCriterioAsig",
-          "descCriterioAsig",
-          row.cveCriterioAsigCapacidad
-        ),
-        descDistrCesion: getDescripcionByClave(
-          queryDistribucionCesion.data.value ?? [],
-          "cveDistrcesion",
-          "descDistrcesion",
-          row.cveDistrCesion
-        ),
-        descMonedaDetalles: getDescripcionByClave(
-          queryMoneda.data.value ?? [],
-          "cveMoneda",
-          "descMoneda",
-          row.cveMonedaDetalles
-        ),
-        // Formatear los montos
-        montoRetencionFormatted: formatCurrency(row.montoRetencion),
-        montoRetencionContratoFormatted: formatCurrency(row.montoRetencionContrato),
-        montoCesionFormatted: formatCurrency(row.montoCesion),
-        capacidadContratoFormatted: formatCurrency(row.capacidadContrato),
-      };
-    });
+  // % Cesión es solo lectura: solo se sincroniza al form
+  watch(porcentajeCesion, (newVal) => {
+    setFieldValue("porcentajeCesion", newVal ?? 0);
   });
 
+  //  Handler genérico para campos numéricos con formato 
+  const onInputGeneric = (key: string, value: string) => {
+    const clean    = formattNumber(value);
+    const fieldRef = formatNumberRefs[key];
+    if (fieldRef) {
+      fieldRef.value = clean;
+      setFieldValue(
+        key as keyof DetallesProporcionalesForm,
+        clean === "" ? null : parseFloat(clean)
+      );
+    }
+  };
+
+  const onBlurGeneric = (key: string) => {
+    const fieldRef = formatNumberRefs[key];
+    if (!fieldRef) return;
+
+    if (!fieldRef.value) {
+      setFieldValue(key as keyof DetallesProporcionalesForm, null);
+      return;
+    }
+
+    const numeric = parseFloat(fieldRef.value);
+    if (isNaN(numeric)) {
+      fieldRef.value = "";
+      setFieldValue(key as keyof DetallesProporcionalesForm, null);
+      return;
+    }
+
+    setFieldValue(key as keyof DetallesProporcionalesForm, numeric);
+    fieldRef.value = formatCurrency(numeric);
+  };
+
+  //  Computed display 
+  const getDesc = (items: any[], claveField: string, descField: string, value: any): string =>
+    items?.find((i) => i[claveField] === value)?.[descField] ?? value?.toString() ?? "";
+
+  const detallesProporcionalesTableDisplay = computed<DetallesProporcionalesDisplay[]>(() =>
+    detallesProporcionalesTable.value.map((row) => ({
+      ...row,
+      descExtCoberDetalles: getDesc(
+        queryExtensionesCobertura.data.value ?? [], "cveExtCober", "descExtCober", row.cveExtCoberDetalles
+      ),
+      descOperRamoDetalles: getDesc(
+        queryOperacionesRamos.data.value ?? [], "cveCobertura", "descOperacionRamos", row.cveOperRamoDetalles
+      ),
+      descCriterioAsigCapacidad: getDesc(
+        queryCriterioAsignacion.data.value ?? [], "cveCriterioAsig", "descCriterioAsig", row.cveCriterioAsigCapacidad
+      ),
+      descDistrCesion: getDesc(
+        queryDistribucionCesion.data.value ?? [], "cveDistrcesion", "descDistrcesion", row.cveDistrCesion
+      ),
+      descMonedaDetalles: getDesc(
+        queryMoneda.data.value ?? [], "cveMoneda", "descMoneda", row.cveMonedaDetalles
+      ),
+      montoRetencionFormatted:         formatCurrency(row.montoRetencion),
+      montoRetencionContratoFormatted: formatCurrency(row.montoRetencionContrato),
+      montoCesionFormatted:            formatCurrency(row.montoCesion),
+      capacidadContratoFormatted:      formatCurrency(row.capacidadContrato),
+    }))
+  );
+
+  //  Reset del formulario 
+  const resetFormAndRefs = () => {
+    resetForm();
+    if (detallesOperRamoFijo.value !== null) {
+      setFieldValue("detallesOperRamo", detallesOperRamoFijo.value);
+    }
+    porcentajeRetencion.value    = null;
+    porcentajeCesion.value       = 0;
+    montoRetencion.value         = "";
+    montoRetencionContrato.value = "";
+    montoCesion.value            = "";
+    capacidadContrato.value      = "";
+    showErrors.value             = false;
+  };
+
+  //  Agregar a tabla 
   const sendDataToTable = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que desea agregar los detalles del contrato capturados?",
       type: DialogType.ERROR,
-      ExtraAction: {
-        text: "Sí, agregar",
-        color: "primary",
-        handler: confirmSendDataToTable
-      }
+      autoCloseExtraAction: false,
+      ExtraAction: { text: "Sí, agregar", color: "primary", handler: confirmSendDataToTable },
     });
-  }
-
-  const confirmSendDataToTable = async () => {
-    if(isDetallesOperacionRamoDisabled.value && formData.detallesOperRamo === 0 && detallesProporcionalesTable.value.length >= 1){
-      dialog.show({
-        title: "Atención",
-        message: "No se puede agregar más de un registro a la tabla",
-        type: DialogType.ERROR
-      });
-      return
-    }
-
-    if (!formData.porcentajeRetencion) {
-      setFieldValue("porcentajeRetencion", null);
-    }
-    if (!formData.porcentajeCesion) {
-      setFieldValue("porcentajeCesion", null);
-    }
-  
-    showErrors.value = true;
-    const { valid } = await validate();
-    if (valid) {
-      const newRow = {...formData, detalleActivo: true} as DetallesProporcionalesFormTable;
-
-      // verificar que no exista una fila con la misma informacion
-      const exists = detallesProporcionalesTable.value.some((row) => 
-        compareRows(row, newRow)
-      );
-
-      if(!exists) {
-        detallesProporcionalesTable.value.push(newRow);
-        lastDetalleOperacionRamoSelected.value = formData.detallesOperRamo;
-        // limpiar formulario
-        resetForm();
-        setFieldValue("detallesOperRamo", lastDetalleOperacionRamoSelected.value);
-        showErrors.value = false;
-        porcentajeRetencion.value = null;
-        porcentajeCesion.value = null;
-        montoRetencion.value = "";
-        montoRetencionContrato.value = "";
-        montoCesion.value = "";
-        capacidadContrato.value = "";
-      } else {
-        dialog.show({
-          title: "Error",
-          message: "Ya existe una fila con la misma información. Por favor, modifica los datos para agregar una nueva fila.",
-          type: DialogType.ERROR,
-        });
-      }
-      isDetallesOperacionRamoDisabled.value = true;
-    }
   };
 
-  const handleSubmit = async () => {
+  const confirmSendDataToTable = async () => {
+    // Un solo registro cuando detallesOperRamo = NO
+    if (formData.detallesOperRamo === 0 && detallesProporcionalesTable.value.length >= 1) {
+      dialog.show({
+        title: "Atención",
+        message: "No se puede agregar más de un registro cuando no hay detalles por operación / ramo.",
+        type: DialogType.ERROR,
+      });
+      return;
+    }
+
+    showErrors.value = true;
+
+    const { valid } = await validate();
+    if (!valid) return;
+
+    // Validar duplicado por cveOperRamoDetalles (clave natural del spec)
+    const operRamoNuevo = formData.cveOperRamoDetalles;
+    if (
+      operRamoNuevo != null &&
+      detallesProporcionalesTable.value.some((r) => r.cveOperRamoDetalles === operRamoNuevo)
+    ) {
+      dialog.show({
+        title: "Atención",
+        message: "La operación / ramo seleccionada ya fue registrada previamente y no puede capturarse nuevamente.",
+        type: DialogType.ERROR,
+      });
+      return;
+    }
+
+    const newRow: DetallesProporcionalesSection = {
+      idContrato:               generales.value.idContrato,
+      detallesOperRamo:         formData.detallesOperRamo,
+      cveExtCoberDetalles:      formData.cveExtCoberDetalles ?? null,
+      cveOperRamoDetalles:      formData.cveOperRamoDetalles ?? null,
+      porcentajeRetencion:      formData.porcentajeRetencion ?? null,
+      porcentajeCesion:         formData.porcentajeCesion ?? null,
+      montoRetencion:           formData.montoRetencion ?? 0,
+      montoRetencionContrato:   formData.montoRetencionContrato ?? 0,
+      montoCesion:              formData.montoCesion ?? 0,
+      capacidadContrato:        formData.capacidadContrato ?? 0,
+      cveCriterioAsigCapacidad: formData.cveCriterioAsigCapacidad,
+      cveDistrCesion:           formData.cveDistrCesion,
+      cveMonedaDetalles:        formData.cveMonedaDetalles,
+      cumulos:                  formData.cumulos,
+      detalleActivo:            true,
+    };
+
+    detallesProporcionalesTable.value.push(newRow);
+    resetFormAndRefs();
+    dialog.cerrar();
+  };
+
+  //  Guardar 
+  const handleSubmit = () => {
     if (detallesProporcionalesTable.value.length === 0) {
       dialog.show({
         title: "Atención",
@@ -441,67 +324,72 @@ export const useDetallesProporcionalesSection = () => {
       return;
     }
 
-    guardarDetallesProporcionales(detallesProporcionalesTable.value);
-
     dialog.show({
-      title: "Datos guardados",
-      message: "Los detalles proporcionales han sido guardados exitosamente.",
-      type: DialogType.SUCCESS,
+      title: "Confirmación",
+      message: "¿Confirma que los datos ingresados de detalles del contrato son correctos?",
+      type: DialogType.ERROR,
+      autoCloseExtraAction: false,
+      ExtraAction: {
+        text: "Continuar",
+        color: "primary",
+        handler: doGuardarDetalles,
+      },
     });
   };
 
-  const editRow = (displayItem: DetallesProporcionalesTableDisplay) => {
-    // Encontrar el item original en la tabla de datos (no en la de display)
-    const originalItem = detallesProporcionalesTable.value.find(row => 
-      compareRows(row, displayItem as DetallesProporcionalesFormTable)
+  const doGuardarDetalles = () => {
+    // guardarDetallesProporcionales actualiza detallesProporcionales ref + localStorage
+    aeStore.guardarDetallesProporcionales(detallesProporcionalesTable.value);
+    dialog.cerrar();
+  };
+
+  //  Editar fila 
+  const editRow = (displayItem: DetallesProporcionalesDisplay) => {
+    const index = detallesProporcionalesTable.value.findIndex(
+      (row) => row.cveOperRamoDetalles === displayItem.cveOperRamoDetalles
     );
+    if (index === -1) return;
 
-    if (!originalItem) return;
+    const item = detallesProporcionalesTable.value[index]!;
 
-    // Cargar los datos al formulario
-    setFieldValue("detallesOperRamo", originalItem.detallesOperRamo);
-    setFieldValue("cveExtCoberDetalles", originalItem.cveExtCoberDetalles);
-    setFieldValue("cveOperRamoDetalles", originalItem.cveOperRamoDetalles);
-    
-    // Cargar porcentajes
-    porcentajeRetencion.value = originalItem.porcentajeRetencion;
-    porcentajeCesion.value = originalItem.porcentajeCesion;
-    
-    // Cargar montos formateados
-    montoRetencion.value = formatCurrency(originalItem.montoRetencion);
-    setFieldValue("montoRetencion", originalItem.montoRetencion);
-    
-    montoRetencionContrato.value = formatCurrency(originalItem.montoRetencionContrato);
-    setFieldValue("montoRetencionContrato", originalItem.montoRetencionContrato);
-    
-    montoCesion.value = formatCurrency(originalItem.montoCesion);
-    setFieldValue("montoCesion", originalItem.montoCesion);
-    
-    capacidadContrato.value = formatCurrency(originalItem.capacidadContrato);
-    setFieldValue("capacidadContrato", originalItem.capacidadContrato);
-    
-    setFieldValue("cveCriterioAsigCapacidad", originalItem.cveCriterioAsigCapacidad);
-    setFieldValue("cveDistrCesion", originalItem.cveDistrCesion);
-    setFieldValue("cveMonedaDetalles", originalItem.cveMonedaDetalles);
-    setFieldValue("cumulos", originalItem.cumulos);
+    setFieldValue("detallesOperRamo",         item.detallesOperRamo);
+    setFieldValue("cveExtCoberDetalles",      item.cveExtCoberDetalles);
+    setFieldValue("cveOperRamoDetalles",      item.cveOperRamoDetalles);
+    setFieldValue("cveCriterioAsigCapacidad", item.cveCriterioAsigCapacidad);
+    setFieldValue("cveDistrCesion",           item.cveDistrCesion);
+    setFieldValue("cveMonedaDetalles",        item.cveMonedaDetalles);
+    setFieldValue("cumulos",                  item.cumulos);
 
-    // Eliminar la fila editada de la tabla
-    detallesProporcionalesTable.value = detallesProporcionalesTable.value.filter(
-      row => !compareRows(row, originalItem)
-    );
+    // Solo se asigna retención; cesión se recalcula via watch
+    porcentajeRetencion.value = item.porcentajeRetencion ?? null;
 
-    // Resetear errores
+    montoRetencion.value         = item.montoRetencion         ? formatCurrency(item.montoRetencion)         : "";
+    montoRetencionContrato.value = item.montoRetencionContrato ? formatCurrency(item.montoRetencionContrato) : "";
+    montoCesion.value            = item.montoCesion            ? formatCurrency(item.montoCesion)            : "";
+    capacidadContrato.value      = item.capacidadContrato      ? formatCurrency(item.capacidadContrato)      : "";
+
+    setFieldValue("montoRetencion",         item.montoRetencion);
+    setFieldValue("montoRetencionContrato", item.montoRetencionContrato);
+    setFieldValue("montoCesion",            item.montoCesion);
+    setFieldValue("capacidadContrato",      item.capacidadContrato);
+
+    detallesProporcionalesTable.value.splice(index, 1);
     showErrors.value = false;
   };
 
-  const toggleActive = (displayItem: DetallesProporcionalesTableDisplay) => {
-    // busca si por lo menos hay dos filas activas, para permitir desactivar una
-    const algunaActiva = detallesProporcionalesTable.value.some(
-      (m) => !compareRows(m, displayItem as DetallesProporcionalesFormTable) && m.detalleActivo
+  //  Toggle activo 
+  const toggleActive = (displayItem: DetallesProporcionalesDisplay) => {
+    const index = detallesProporcionalesTable.value.findIndex(
+      (row) => row.cveOperRamoDetalles === displayItem.cveOperRamoDetalles
     );
+    if (index === -1) return;
 
-    // si no hay ninguna activa, mostramos un dialogo y salimos de la funcion
-    if (!algunaActiva) {
+    const estaActivo       = detallesProporcionalesTable.value[index]!.detalleActivo;
+    const activosRestantes = detallesProporcionalesTable.value.filter(
+      (r, i) => i !== index && r.detalleActivo
+    ).length;
+
+    if (estaActivo && activosRestantes === 0) {
       dialog.show({
         title: "Atención",
         message: "Debe haber al menos una fila activa.",
@@ -510,102 +398,27 @@ export const useDetallesProporcionalesSection = () => {
       return;
     }
 
-    // Encontrar el índice en la tabla original
-    const index = detallesProporcionalesTable.value.findIndex(
-      row => compareRows(row, displayItem as DetallesProporcionalesFormTable)
-    );
-
-    if (index !== -1) {
-      detallesProporcionalesTable.value[index]!.detalleActivo = 
-        !detallesProporcionalesTable.value[index]!.detalleActivo;
-    }
+    detallesProporcionalesTable.value[index]!.detalleActivo = !estaActivo;
   };
 
+  //  Headers 
+  const hp = { style: "font-weight: bold" };
+
   const detallesProporcionalesTableHeaders = [
-    { 
-      title: "TIPO OPERACIÓN / RAMO", 
-      key: "descExtCoberDetalles", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "OPERACIÓN / RAMO (DETALLADA)", 
-      key: "descOperRamoDetalles", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "% RETENCIÓN", 
-      key: "porcentajeRetencion", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "% CESIÓN", 
-      key: "porcentajeCesion", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "MONTO RETENCIÓN", 
-      key: "montoRetencionFormatted", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "MONTO RETENCIÓN CONTRATO", 
-      key: "montoRetencionContratoFormatted", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "MONTO CESIÓN", 
-      key: "montoCesionFormatted", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "CAPACIDAD DE CONTRATO", 
-      key: "capacidadContratoFormatted", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "CRITERIO DE CAPACIDAD", 
-      key: "descCriterioAsigCapacidad", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "DISTRIBUCIÓN CESIÓN", 
-      key: "descDistrCesion", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "MONEDA DETALLES", 
-      key: "descMonedaDetalles", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "¿CÚMULOS?", 
-      key: "cumulos", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "ACTIVO", 
-      key: "detalleActivo", 
-      sortable: true, 
-      headerProps: { style: "font-weight: bold" } 
-    },
-    { 
-      title: "ACCIONES", 
-      key: "actions", 
-      sortable: false, 
-      headerProps: { style: "font-weight: bold" } 
-    },
+    { title: "TIPO OPERACIÓN / RAMO",        key: "descExtCoberDetalles",            sortable: true,  headerProps: hp },
+    { title: "OPERACIÓN / RAMO (DETALLADA)", key: "descOperRamoDetalles",            sortable: true,  headerProps: hp },
+    { title: "% RETENCIÓN",                  key: "porcentajeRetencion",             sortable: true,  headerProps: hp },
+    { title: "% CESIÓN",                     key: "porcentajeCesion",                sortable: true,  headerProps: hp },
+    { title: "MONTO RETENCIÓN",              key: "montoRetencionFormatted",         sortable: true,  headerProps: hp },
+    { title: "MONTO RETENCIÓN CONTRATO",     key: "montoRetencionContratoFormatted", sortable: true,  headerProps: hp },
+    { title: "MONTO CESIÓN",                 key: "montoCesionFormatted",            sortable: true,  headerProps: hp },
+    { title: "CAPACIDAD DE CONTRATO",        key: "capacidadContratoFormatted",      sortable: true,  headerProps: hp },
+    { title: "CRITERIO DE CAPACIDAD",        key: "descCriterioAsigCapacidad",       sortable: true,  headerProps: hp },
+    { title: "DISTRIBUCIÓN CESIÓN",          key: "descDistrCesion",                 sortable: true,  headerProps: hp },
+    { title: "MONEDA DETALLES",              key: "descMonedaDetalles",              sortable: true,  headerProps: hp },
+    { title: "¿CÚMULOS?",                    key: "cumulos",                         sortable: true,  headerProps: hp },
+    { title: "ACTIVO",                       key: "detalleActivo",                   sortable: true,  headerProps: hp },
+    { title: "ACCIONES",                     key: "actions",                         sortable: false, headerProps: hp },
   ];
 
   return {
@@ -620,17 +433,11 @@ export const useDetallesProporcionalesSection = () => {
     porcentajeRetencion,
     porcentajeCesion,
     montoRetencion,
-    onInput,
-    onBlur,
     montoRetencionContrato,
-    onInputRC,
-    onBlurRC,
     montoCesion,
-    onInputMC,
-    onBlurMC,
     capacidadContrato,
-    onInputCC,
-    onBlurCC,
+    onInputGeneric,
+    onBlurGeneric,
     queryCriterioAsignacion,
     queryDistribucionCesion,
     queryMoneda,
@@ -639,7 +446,7 @@ export const useDetallesProporcionalesSection = () => {
     sendDataToTable,
     editRow,
     toggleActive,
-    lastDetalleOperacionRamoSelected,
     isDetallesOperacionRamoDisabled,
+    porcentajeRetencionSlider,
   };
 };
