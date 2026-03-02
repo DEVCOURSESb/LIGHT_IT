@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formattNumber } from "@/utils/formattNumber";
 import { DialogType, useDialog } from "@/stores/dialogStore";
-import { useTarifasValidations } from "./useTarifasvalidations";
+import { useTarifasValidations } from "./Usetarifasvalidations";
 import type { TarifasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
 // 
