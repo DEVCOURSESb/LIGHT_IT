@@ -3,25 +3,29 @@
     <v-card-text>
       <v-container>
         <v-form @submit.prevent="">
-          <!-- ! ROW-->
+
+          <!-- ! ROW — Campos de captura fila 1 -->
           <v-row>
-            <!-- DETALLES POR OPERACION RAMO -->
+            <!-- ¿DETALLES POR OPERACIÓN / RAMO? -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SI', 'NO']"
+                :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
+                item-title="title"
+                item-value="value"
                 label="¿Detalles por operación / ramo?"
                 variant="solo-filled"
                 clearable
                 :model-value="formData['detallesOperRamo']"
                 @update:model-value="setFieldValue('detallesOperRamo', $event)"
                 :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
+                :disabled="isDetallesOperacionRamoDisabled"
               />
             </v-col>
 
-            <!-- TIPO DE OPERCIÓN / RAMO DETALLADA -->
-            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 'SI'">
+            <!-- TIPO DE OPERACIÓN / RAMO (DETALLADA) -->
+            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 1">
               <v-select
-                :items="extensionesCoberturaToShow || []"
+                :items="extensionesCoberturaToShow"
                 item-title="descExtCober"
                 item-value="cveExtCober"
                 label="Tipo de operación / ramo (detallada)"
@@ -34,117 +38,114 @@
               />
             </v-col>
 
-            <!-- OPERCIÓN / RAMO DETALLADA si detalles por operacion ramo es si -->
-            <v-col cols="12" md="3"  v-show="formData['detallesOperRamo'] === 'SI'">
+            <!-- OPERACIÓN / RAMO (DETALLADA) -->
+            <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 1">
               <v-select
-                :items="queryOperacionesRamos.data.value?.filter((op: any) => op.cveExtCober == formData['cveExtCoberDetalles']) || []"
+                :items="queryOperacionesRamos.data.value?.filter((op) => String(op.cveExtCober) == String(formData['cveExtCoberDetalles'])) ?? []"
                 item-title="descOperacionRamos"
                 item-value="cveCobertura"
                 label="Operación / ramo (detallada)"
                 variant="solo-filled"
                 clearable
-                :disabled="queryOperacionesRamos.isLoading.value"
+                :disabled="queryOperacionesRamos.isLoading.value || formData['cveExtCoberDetalles'] == null"
                 :model-value="formData['cveOperRamoDetalles']"
                 @update:model-value="setFieldValue('cveOperRamoDetalles', $event)"
                 :error-messages="showErrors ? formErrors['cveOperRamoDetalles'] : undefined"
               />
-
             </v-col>
-            <!-- % DE RETENCION -->
+
+            <!-- % RETENCIÓN (input + slider) -->
             <v-col cols="12" md="3">
-              <v-text-field 
-                label="% Retención" variant="solo-filled"
-                type="number" 
+              <v-text-field
+                label="% Retención"
+                variant="solo-filled"
+                type="number"
                 v-model.number="porcentajeRetencion"
-                min="0.00"
-                max="100.00"
-                step=".01" />
-              
-                <v-slider
-                v-model="porcentajeRetencion"
-                min="0.00"
-                max="100.00"
-                step=".01"
+                min="0"
+                max="100"
+                step="0.01"
+                suffix="%"
+                :error-messages="showErrors ? formErrors['porcentajeRetencion'] : undefined"
+              />
+              <v-slider
+                v-model.number="porcentajeRetencionSlider"
+                min="0"
+                max="100"
+                step="0.01"
                 thumb-label
                 color="primary"
               />
             </v-col>
           </v-row>
 
-          <!-- ! ROW-->
+          <!-- ! ROW — Campos de captura fila 2 -->
           <v-row>
-            <!-- % DE CESION -->
+            <!-- % CESIÓN — solo lectura, calculado automáticamente -->
             <v-col cols="12" md="3">
-              <v-text-field label="% Cesión" variant="solo-filled" 
-                type="number" 
-                v-model.number="porcentajeCesion"
-                min="0.00"
-                max="100.00"
-                step=".01" />
-              <v-slider
-                v-model="porcentajeCesion"
-                min="0.00"
-                max="100.00"
-                step=".01"
-                thumb-label
-                color="primary"
+              <v-text-field
+                label="% Cesión"
+                variant="solo-filled"
+                :model-value="porcentajeCesion != null ? porcentajeCesion.toFixed(2) : ''"
+                readonly
+                suffix="%"
               />
             </v-col>
-            <!-- MONTO RETENCION -->
+
+            <!-- MONTO RETENCIÓN -->
             <v-col cols="12" md="3">
               <v-text-field
                 label="Monto retención"
                 variant="solo-filled"
-                type="text"
                 :model-value="montoRetencion"
-                @update:model-value="onInput"
-                @blur="onBlur"
+                @update:model-value="onInputGeneric('montoRetencion', $event)"
+                @blur="onBlurGeneric('montoRetencion')"
                 :error-messages="showErrors ? formErrors['montoRetencion'] : undefined"
               />
             </v-col>
-            <!-- MONTO RETENCION CONTRATO -->
+
+            <!-- MONTO RETENCIÓN CONTRATO -->
             <v-col cols="12" md="3">
               <v-text-field
                 label="Monto retención contrato"
                 variant="solo-filled"
-                type="text"
                 :model-value="montoRetencionContrato"
-                @update:model-value="onInputRC"
-                @blur="onBlurRC"
+                @update:model-value="onInputGeneric('montoRetencionContrato', $event)"
+                @blur="onBlurGeneric('montoRetencionContrato')"
                 :error-messages="showErrors ? formErrors['montoRetencionContrato'] : undefined"
               />
             </v-col>
-            <!-- MONTO CESION -->
+
+            <!-- MONTO CESIÓN -->
             <v-col cols="12" md="3">
-              <v-text-field 
-              label="Monto cesión" 
-              variant="solo-filled"
-              :model-value="montoCesion"
-              @update:model-value="onInputMC"
-              @blur="onBlurMC"
-              :error-messages="showErrors ? formErrors['montoCesion'] : undefined"
-            />
+              <v-text-field
+                label="Monto cesión"
+                variant="solo-filled"
+                :model-value="montoCesion"
+                @update:model-value="onInputGeneric('montoCesion', $event)"
+                @blur="onBlurGeneric('montoCesion')"
+                :error-messages="showErrors ? formErrors['montoCesion'] : undefined"
+              />
             </v-col>
           </v-row>
 
-          <!-- ! ROW-->
+          <!-- ! ROW — Campos de captura fila 3 -->
           <v-row>
             <!-- CAPACIDAD DE CONTRATO -->
             <v-col cols="12" md="3">
-             <v-text-field 
-              label="Capacidad de contrato" 
-              variant="solo-filled"
-              :model-value="capacidadContrato"
-              @update:model-value="onInputCC"
-              @blur="onBlurCC"
-              :error-messages="showErrors ? formErrors['capacidadContrato'] : undefined"
+              <v-text-field
+                label="Capacidad de contrato"
+                variant="solo-filled"
+                :model-value="capacidadContrato"
+                @update:model-value="onInputGeneric('capacidadContrato', $event)"
+                @blur="onBlurGeneric('capacidadContrato')"
+                :error-messages="showErrors ? formErrors['capacidadContrato'] : undefined"
               />
             </v-col>
 
-            <!-- CRITERIO DE CAPACIDAD -->
+            <!-- CRITERIO DE CAPACIDAD (solo opciones 5 y 10) -->
             <v-col cols="12" md="3">
               <v-select
-                :items="queryCriterioAsignacion.data.value?.filter( item => [5, 10].includes(item.cveCriterioAsig) ) ?? []"
+                :items="queryCriterioAsignacion.data.value?.filter((item) => [5, 10].includes(item.cveCriterioAsig)) ?? []"
                 item-title="descCriterioAsig"
                 item-value="cveCriterioAsig"
                 label="Criterio de capacidad"
@@ -166,12 +167,14 @@
                 label="Distribución de la cesión"
                 variant="solo-filled"
                 clearable
+                :loading="queryDistribucionCesion.isLoading.value"
                 :disabled="queryDistribucionCesion.isLoading.value"
                 :model-value="formData['cveDistrCesion']"
                 @update:model-value="setFieldValue('cveDistrCesion', $event)"
                 :error-messages="showErrors ? formErrors['cveDistrCesion'] : undefined"
               />
             </v-col>
+
             <!-- MONEDA DETALLES -->
             <v-col cols="12" md="3">
               <v-select
@@ -181,6 +184,7 @@
                 label="Moneda detalles"
                 variant="solo-filled"
                 clearable
+                :loading="queryMoneda.isLoading.value"
                 :disabled="queryMoneda.isLoading.value"
                 :model-value="formData['cveMonedaDetalles']"
                 @update:model-value="setFieldValue('cveMonedaDetalles', $event)"
@@ -189,12 +193,14 @@
             </v-col>
           </v-row>
 
-          <!-- ! ROW-->
+          <!-- ! ROW -->
           <v-row>
             <!-- CÚMULOS -->
             <v-col cols="12" md="3">
               <v-select
-                :items="['SI', 'NO']"
+                :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
+                item-title="title"
+                item-value="value"
                 label="¿Cúmulos?"
                 variant="solo-filled"
                 clearable
@@ -204,51 +210,76 @@
               />
             </v-col>
 
-            <!-- SPACER -->
-            <v-col cols="12" md="6"></v-col>
+            <v-col cols="12" md="6" />
 
-            <!-- AGREGAR DETALLES -->
+            <!-- BOTONES -->
             <v-col cols="12" md="3" class="d-flex gap-2 justify-end">
               <v-btn size="large" variant="outlined" @click="sendDataToTable">
                 Agregar detalles
               </v-btn>
-              <!-- GUARDAR DETALLES -->
               <v-btn size="large" variant="outlined" class="btn-guardar" @click="handleSubmit">
                 Guardar detalles
               </v-btn>
             </v-col>
+          </v-row>
 
-            <v-col cols="12" md="12">
+          <br />
+
+          <!-- ! ROW — Tabla -->
+          <v-row>
+            <v-col cols="12">
               <v-data-table
-                class="mt-4"
+                class="mt-2"
                 :headers="detallesProporcionalesTableHeaders"
                 :items="detallesProporcionalesTableDisplay"
-                :loading="false"
                 striped="odd"
               >
-              <template #top>
-                <v-toolbar class="encabezado" flat>
-                  <v-toolbar-title>Solo los registros de esta tabla se registrarán</v-toolbar-title>
-                  <v-spacer />
-                </v-toolbar>
-              </template>
-                <template #no-data> No hay datos disponibles </template>
+                <template #top>
+                  <v-toolbar class="encabezado" flat>
+                    <v-toolbar-title>
+                      Solo los registros de esta tabla se registrarán
+                    </v-toolbar-title>
+                    <v-spacer />
+                  </v-toolbar>
+                </template>
+
+                <template #no-data>No hay datos disponibles</template>
+
+                <!-- % Retención formateado -->
+                <template #item.porcentajeRetencion="{ item }">
+                  {{ item.porcentajeRetencion != null ? `${item.porcentajeRetencion.toFixed(2)} %` : "—" }}
+                </template>
+
+                <!-- % Cesión formateado -->
+                <template #item.porcentajeCesion="{ item }">
+                  {{ item.porcentajeCesion != null ? `${item.porcentajeCesion.toFixed(2)} %` : "—" }}
+                </template>
+
+                <!-- Cúmulos legible -->
+                <template #item.cumulos="{ item }">
+                  {{ item.cumulos === 1 ? "SÍ" : "NO" }}
+                </template>
+
+                <!-- Checkbox activo -->
                 <template #item.detalleActivo="{ item }">
                   <v-checkbox
-                    :model-value="item?.detalleActivo"
-                    @update:model-value="() => toggleActive(item)"
+                    :model-value="item.detalleActivo"
+                    @update:model-value="toggleActive(item)"
                     hide-details
                     density="compact"
                   />
                 </template>
+
+                <!-- Botón editar -->
                 <template #item.actions="{ item }">
-                <v-icon class="edit" size="large" @click="editRow(item)">
-                  mdi-pencil
-                </v-icon>
-              </template>
+                  <v-icon class="edit" size="large" @click="editRow(item)">
+                    mdi-pencil
+                  </v-icon>
+                </template>
               </v-data-table>
             </v-col>
           </v-row>
+
         </v-form>
       </v-container>
     </v-card-text>
@@ -259,36 +290,35 @@
 import { useDetallesProporcionalesSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/detalles_proporcionales/useDetallesProporcionalesSection";
 
 const {
-  formData, 
+  formData,
   setFieldValue,
   formErrors,
   showErrors,
   handleSubmit,
+  // catálogos
   queryExtensionesCobertura,
   extensionesCoberturaToShow,
   queryOperacionesRamos,
-  porcentajeRetencion,
-  porcentajeCesion,
-  montoRetencion,
-  onInput,
-  onBlur,
-  montoRetencionContrato,
-  onInputRC,
-  onBlurRC,
-  montoCesion,
-  onInputMC,
-  onBlurMC,
-  capacidadContrato,
-  onInputCC,
-  onBlurCC,
-  queryCriterioAsignacion,  
+  queryCriterioAsignacion,
   queryDistribucionCesion,
   queryMoneda,
+  // porcentajes
+  porcentajeRetencion,
+  porcentajeCesion,
+  // montos
+  montoRetencion,
+  montoRetencionContrato,
+  montoCesion,
+  capacidadContrato,
+  onInputGeneric,
+  onBlurGeneric,
+  // tabla
   detallesProporcionalesTableDisplay,
   detallesProporcionalesTableHeaders,
   sendDataToTable,
   editRow,
   toggleActive,
+  isDetallesOperacionRamoDisabled,
+  porcentajeRetencionSlider
 } = useDetallesProporcionalesSection();
-
 </script>

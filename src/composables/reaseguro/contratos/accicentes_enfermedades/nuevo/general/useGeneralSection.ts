@@ -1,25 +1,26 @@
 import { monedaConfig } from "@/components/config/catalogos/moneda/moneda.config";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { useForm } from "vee-validate";
-import { ref, watch } from "vue";
+import { computed, ref, toRaw, watch } from "vue";
 import { useGeneralValidations } from "./useGeneralValidations";
 import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
-import type { Moneda } from "@/API/catalogos/monedas/moneda.interfaces";
 import { DialogType, useDialog } from "@/stores/dialogStore";
-import { ExtensionesConfig } from "@/components/config/catalogos/extensiones/extensiones.config";
-import { operacionesRamosConfig } from "@/components/config/catalogos/operaciones-ramos/operaciones-ramos.config";
+import type {
+  GeneralesSection,
+  GeneralSectionTableMoneda,
+  GeneralSectionTableOperacionRamo,
+} from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
+import { set } from "date-fns";
 
-interface dataOperacionRamo {
-  cveExtCober: number;
-  descExtCober: string;
-  cveCobertura: string;
-  descOperacionRamos: string;
-  operRamoActivo: boolean;
-}
+type GeneralesForm = GeneralesSection & {
+  cveMonedaContrato?: number[] | null;
+  cveExtCoberContrato?: number | null;
+  cveOperRamo?: string[] | null;
+};
 
 export const useGeneralSection = () => {
   // estado general del contrato de accidentes y enfermedades
-  const contratoAEStore = useContratoAEStore();
+  const aeStore = useContratoAEStore();
 
   const dialog = useDialog();
 
@@ -37,15 +38,76 @@ export const useGeneralSection = () => {
   } = catalogosActions();
 
   const showErrors = ref(false);
+  const rawGenerales = toRaw(aeStore.generales);
 
-  const initialValues = contratoAEStore.obtenerGenerales();
+  const { CAE_MONEDA_CONTRATO, CAE_OPERACION_RAMO, ...initialValues } =
+  structuredClone(rawGenerales);
 
+  const headerProps = { style: "font-weight: bold" };
 
-  const dataTableMoneda = ref<Moneda[]>(initialValues.dataTableMoneda || []);
+  const dataTableMoneda = ref<GeneralSectionTableMoneda[]>(
+    CAE_MONEDA_CONTRATO || [],
+  );
   const errorTablaMonedas = ref<string | undefined>(undefined);
+  const headersMoneda = [
+    { title: "MONEDA", key: "cveMonedaContrato", sortable: true, headerProps },
+    {
+      title: "DESCRIPCIÓN DE MONEDA",
+      key: "decMoneda",
+      sortable: true,
+      headerProps,
+    },
+    { title: "ACTIVA", key: "monActiva", sortable: true, headerProps },
+  ];
+  const dataMonedaToShow = computed(() => {
+    return dataTableMoneda.value.map((mon) => {
+      const monedaInfo = queryMoneda.data.value?.find(
+        (m) => m.cveMoneda === mon.cveMonedaContrato,
+      );
+      return {
+        ...mon,
+        decMoneda: monedaInfo ? monedaInfo.descMoneda : "Desconocida",
+      };
+    });
+  });
 
-  const dataTableOperacionRamo = ref<dataOperacionRamo[]>(initialValues.dataTableOperacionRamo || []);
+  const dataTableOperacionRamo = ref<GeneralSectionTableOperacionRamo[]>(
+    CAE_OPERACION_RAMO || [],
+  );
   const errorTablaOperacionRamo = ref<string | undefined>(undefined);
+  const headersOperacionRamo = [
+    {
+      title: "TIPO OPERACIÓN / RAMO",
+      key: "descTipoContrato",
+      sortable: true,
+      headerProps,
+    },
+    {
+      title: "OPERACIÓN / RAMO",
+      key: "descOperacionRamos",
+      sortable: true,
+      headerProps,
+    },
+    { title: "ACTIVA", key: "operRamoActivo", sortable: true, headerProps },
+  ];
+  const dataOperacionesRamosShow = computed(() => {
+    return dataTableOperacionRamo.value.map((row) => {
+      // busca el tipo de operacion
+      const tipoOperacionRamo = queryExtensionesCobertura.data.value?.find(
+        (o) => o.cveExtCober === row.cveExtCoberContrato,
+      );
+      // busca la operacion ramo
+      const operacionRamoInfo = queryOperacionesRamos.data.value?.find(
+        (o) => o.cveCobertura === row.cveOperRamo,
+      );
+      return {
+        ...row,
+        descTipoContrato: tipoOperacionRamo?.descExtCober || "Desconocida",
+        descOperacionRamos:
+          operacionRamoInfo?.descOperacionRamos || "Desconocida",
+      };
+    });
+  });
 
   const sendSelectToTableMoneda = () => {
     const monedaSeleccionadas = formData["cveMonedaContrato"];
@@ -67,11 +129,30 @@ export const useGeneralSection = () => {
       ExtraAction: {
         text: "Aceptar",
         handler: () => {
-          const monedasFound = formData["cveMonedaContrato"]?.map((monedaSelected: number) => {
-              const found = queryMoneda.data.value?.find((moneda) => moneda.cveMoneda === monedaSelected);
-              return found ? { ...found, monActiva: true } : null;
-            })
-            .filter(Boolean);
+          const monedasFound =
+            monedaSeleccionadas
+              ?.map((monedaSelected: number) => {
+                const found = queryMoneda.data.value?.find(
+                  (moneda) => moneda.cveMoneda === monedaSelected,
+                );
+
+                return found
+                  ? {
+                      idContrato: "",
+                      cveMonedaContrato: found.cveMoneda,
+                      monActiva: true,
+                    }
+                  : null;
+              })
+              .filter(
+                (
+                  m,
+                ): m is {
+                  idContrato: string;
+                  cveMonedaContrato: number;
+                  monActiva: boolean;
+                } => m !== null,
+              ) ?? [];
 
           dataTableMoneda.value = monedasFound || [];
 
@@ -86,9 +167,11 @@ export const useGeneralSection = () => {
     });
   };
 
-  const toggleMonActiva = (item: Moneda) => {
+  const toggleMonActiva = (item: GeneralSectionTableMoneda) => {
     // busca si por lo menos hay dos monedas activas, para permitir desactivar una
-    const algunaActiva = dataTableMoneda.value.some((m) => m.cveMoneda !== item.cveMoneda && m.monActiva);
+    const algunaActiva = dataTableMoneda.value.some(
+      (m) => m.cveMonedaContrato !== item.cveMonedaContrato && m.monActiva,
+    );
 
     // si no hay ninguna activa, mostramos un dialogo y salimos de la funcion
     if (!algunaActiva) {
@@ -102,11 +185,14 @@ export const useGeneralSection = () => {
     }
 
     // busca el index del itm a modificar
-    const index = dataTableMoneda.value.findIndex((m) => m.cveMoneda === item.cveMoneda);
+    const index = dataTableMoneda.value.findIndex(
+      (m) => m.cveMonedaContrato === item.cveMonedaContrato,
+    );
 
     // si el index es valido, cambia el valor de monActiva
     if (index !== -1) {
-      dataTableMoneda.value[index]!.monActiva = !dataTableMoneda.value[index]?.monActiva;
+      dataTableMoneda.value[index]!.monActiva =
+        !dataTableMoneda.value[index]?.monActiva;
     }
   };
 
@@ -128,13 +214,14 @@ export const useGeneralSection = () => {
   };
 
   const sendSelectToTableOperacionRamo = () => {
-    const cveExtCoberSeleccionada = formData["cveExtCober"];
-    const cveCoberturaSeleccionadas = formData["cveCobertura"];
+    const cveExtCoberSeleccionada = formData["cveExtCoberContrato"];
+    const cveCoberturaSeleccionadas = formData["cveOperRamo"];
 
-    if (!cveExtCoberSeleccionada || !cveCoberturaSeleccionadas) {
+    if (cveExtCoberSeleccionada === null || cveCoberturaSeleccionadas === null) {
       dialog.show({
         title: "Atención",
-        message: "Debe seleccionar una extensión de cobertura y una cobertura antes de agregar a la tabla.",
+        message:
+          "Debe seleccionar una extensión de cobertura y una cobertura antes de agregar a la tabla.",
         type: DialogType.ERROR,
       });
       return;
@@ -142,7 +229,8 @@ export const useGeneralSection = () => {
 
     dialog.show({
       title: "Agregar operación/ramo",
-      message: "Se agregará la operación/ramo seleccionada a la tabla. ¿Desea continuar?",
+      message:
+        "Se agregará la operación/ramo seleccionada a la tabla. ¿Desea continuar?",
       ExtraAction: {
         text: "Aceptar",
         handler: () => {
@@ -151,26 +239,26 @@ export const useGeneralSection = () => {
             (ext) => ext.cveExtCober === cveExtCoberSeleccionada,
           );
 
+          // filtra para eliminar los que no tenga el mismo tipo de operacion ramo
           dataTableOperacionRamo.value = dataTableOperacionRamo.value.filter(
-            (row) => row.cveExtCober !== cveExtCoberSeleccionada,
+            (row) => row.cveExtCoberContrato !== cveExtCoberSeleccionada,
           );
 
           // obtener los objetos completos de operacion ramo seleccionadas
           const coberturasSelected = queryOperacionesRamos.data.value?.filter(
-            (cob) => cveCoberturaSeleccionadas.includes(cob.cveCobertura),
+            (cob) => cveCoberturaSeleccionadas!.includes(cob.cveCobertura),
           );
 
           if (extCoberSelected && coberturasSelected) {
             coberturasSelected.forEach((cobertura) => {
               dataTableOperacionRamo.value.push({
-                cveExtCober: extCoberSelected.cveExtCober,
-                descExtCober: extCoberSelected.descExtCober,
-                cveCobertura: cobertura.cveCobertura,
-                descOperacionRamos: cobertura.descOperacionRamos,
+                idContrato: "",
+                cveExtCoberContrato: extCoberSelected.cveExtCober,
+                cveOperRamo: cobertura.cveCobertura,
                 operRamoActivo: true,
               });
-              setFieldValue("cveExtCober", null);
-              setFieldValue("cveCobertura", null);
+              setFieldValue("cveExtCoberContrato", null);
+              setFieldValue("cveOperRamo", null);
             });
           }
         },
@@ -178,11 +266,10 @@ export const useGeneralSection = () => {
     });
   };
 
-  const toggleOperRamoActivo = (item: dataOperacionRamo) => {
-    console.log("cambio de activo", item);
+  const toggleOperRamoActivo = (item: GeneralSectionTableOperacionRamo) => {
     // buca si por lo menos hay dos monedas activas, para permitir desactivar una
     const algunaActiva = dataTableOperacionRamo.value.some(
-      (m) => m.cveCobertura !== item.cveCobertura && m.operRamoActivo,
+      (m) => m.cveOperRamo !== item.cveOperRamo && m.operRamoActivo,
     );
 
     // si no hay ninguna activa, mostramos un dialogo y salimos de la funcion
@@ -199,25 +286,30 @@ export const useGeneralSection = () => {
     // busca el index del itm a modificar
     const index = dataTableOperacionRamo.value.findIndex(
       (m) =>
-        m.cveExtCober === item.cveExtCober &&
-        m.cveCobertura === item.cveCobertura,
+        m.cveExtCoberContrato === item.cveExtCoberContrato &&
+        m.cveOperRamo === item.cveOperRamo,
     );
 
     // si el index es valido, cambia el valor de monActiva
     if (index !== -1) {
-      dataTableOperacionRamo.value[index]!.operRamoActivo = !dataTableOperacionRamo.value[index]?.operRamoActivo;
+      dataTableOperacionRamo.value[index]!.operRamoActivo =
+        !dataTableOperacionRamo.value[index]?.operRamoActivo;
     }
   };
 
   const validarTablaOperacionRamo = (): boolean => {
     if (dataTableOperacionRamo.value.length === 0) {
-      errorTablaOperacionRamo.value = "Debe agregar al menos un operación/ramo a la tabla.";
+      errorTablaOperacionRamo.value =
+        "Debe agregar al menos un operación/ramo a la tabla.";
       return false;
     }
-    const algunaActiva = dataTableOperacionRamo.value.some((m) => m.operRamoActivo);
+    const algunaActiva = dataTableOperacionRamo.value.some(
+      (m) => m.operRamoActivo,
+    );
 
     if (!algunaActiva) {
-      errorTablaOperacionRamo.value = "Debe haber al menos un operación/ramo activo.";
+      errorTablaOperacionRamo.value =
+        "Debe haber al menos un operación/ramo activo.";
       return false;
     }
     errorTablaOperacionRamo.value = undefined;
@@ -229,8 +321,14 @@ export const useGeneralSection = () => {
     values: formData,
     errors: formErrors,
     validate,
-  } = useForm({
-    initialValues,
+  } = useForm<GeneralesForm>({
+    initialValues: {
+      ...initialValues, 
+      ordenCobertura: initialValues.ordenCobertura ?? 1,
+      cveFcontrac: initialValues.cveFcontrac ?? 0,
+      negociosCubiertos: initialValues.negociosCubiertos ?? "TODA LA CARTERA",
+      contratoActivo: initialValues.contratoActivo ?? false
+    },
     validationSchema: useGeneralValidations(),
     validateOnMount: false,
   });
@@ -239,12 +337,12 @@ export const useGeneralSection = () => {
   watch(
     () => formData.cveTreaseg,
     (newValue) => {
-
+      setFieldValue("idTcontrato", null);
       if (Number(newValue) !== 0) {
         setFieldValue("cveCriterioCob", null);
         setFieldValue("traspasoCartera", null);
       }
-    }
+    },
   );
 
   // Watch para limpiar campos cuando cambia la forma contractual
@@ -253,43 +351,22 @@ export const useGeneralSection = () => {
     (newValue, oldValue) => {
       // Si cambia de facultativa (1) a otro valor, limpiar campos relacionados
       if (oldValue === 1 && newValue !== 1) {
-        setFieldValue('cveEntidad', null);
-        setFieldValue('municipio', null);
-        setFieldValue('cveSector', null);
-        setFieldValue('asegurado', null);
+        setFieldValue("cveEntidad", null);
+        setFieldValue("municipio", null);
+        setFieldValue("cveSector", null);
+        setFieldValue("asegurado", null);
       }
-    }
+    },
   );
 
-  // obteniendo los headers de tablas desde sus archivos de configuracion
-  const headerMoneda = monedaConfig.headers.filter(
-    (header) => header.key != "esActivo" && header.key != "actions",
-  );
-
-  headerMoneda.push({
-    title: "ACTIVO",
-    key: "monActiva",
-    sortable: true,
-    headerProps: {
-      style: "font-weight: bold",
-    },
-  });
-
-  const headersExtension = ExtensionesConfig.headers.filter(header => header.key !== "actions" && header.key !== "esActivo");
-  const headeroperations = operacionesRamosConfig.headers.filter(header => header.key !== "actions" && header.key !== "esActivo");
-
-  const headerOperaciones = [
-    ...headersExtension,
-    ... headeroperations,
-    {
-      title: "ACTIVO",
-      key: "operRamoActivo",
-      sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-    },
-  ];
+    watch(
+      () => formData.cveExtCoberContrato,
+      (newValue, oldValue) => {
+        if (newValue !== oldValue) {
+          setFieldValue("cveOperRamo", null);
+        }
+      }
+    );
 
   const handleSubmit = async () => {
     showErrors.value = true;
@@ -299,11 +376,11 @@ export const useGeneralSection = () => {
     const tablaOperacionRamoValida = validarTablaOperacionRamo();
 
     if (valid && tablaValida && tablaOperacionRamoValida) {
-      contratoAEStore.guardarGenerales({
-        ...formData,
-        dataTableMoneda: dataTableMoneda.value,
-        dataTableOperacionRamo: dataTableOperacionRamo.value,
-      });
+      aeStore.guardarGenerales(
+        formData,
+        dataTableMoneda.value,
+        dataTableOperacionRamo.value,
+      );
     }
   };
 
@@ -316,14 +393,16 @@ export const useGeneralSection = () => {
     showErrors,
 
     //tablas
-    headerMoneda,
+    headerMoneda: headersMoneda,
     dataTableMoneda,
+    dataMonedaToShow,
     sendSelectToTableMoneda,
     toggleMonActiva,
     errorTablaMonedas,
     //
-    headerOperaciones,
+    headerOperaciones: headersOperacionRamo,
     dataTableOperacionRamo,
+    dataOperacionesRamosShow,
     sendSelectToTableOperacionRamo,
     toggleOperRamoActivo,
     errorTablaOperacionRamo,

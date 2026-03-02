@@ -12,31 +12,31 @@
     <v-window-item value="tab-4">
       <reaseguradores-section />
     </v-window-item>
-    <v-window-item value="tab-5">
+    <v-window-item value="tab-5" v-show="haveComisionEscalonada">
       <comisiones-rate-on-line-section />
     </v-window-item>
     <v-window-item value="tab-6">
       <coberturas-section />
     </v-window-item>
-    <v-window-item value="tab-7">
+    <v-window-item value="tab-7" v-show="tipoContrato == 3">
       <excedentes-section />
     </v-window-item>
-    <v-window-item value="tab-8">
+    <v-window-item value="tab-8" v-show="haveCumulos">
       <cumulos-section />
     </v-window-item>
-    <v-window-item value="tab-9">
+    <v-window-item value="tab-9" v-show="isTypeProporcional">
       <tarifa-section />
     </v-window-item>
-    <v-window-item value="tab-10">
+    <v-window-item value="tab-10" v-show="haveProporcionDias">
       <proporcion-prima-section />
     </v-window-item>
-    <v-window-item value="tab-11">
+    <v-window-item value="tab-11" v-show="!isTypeProporcional">
       <reinstalaciones-section />
     </v-window-item>
     <v-window-item value="tab-12">
       <intermediarios-section />
     </v-window-item>
-    <v-window-item value="tab-13">
+    <v-window-item value="tab-13" v-show="haveCorretajeEscalonado">
       <corretaje-section />
     </v-window-item>
     <v-window-item value="tab-14">
@@ -63,5 +63,5 @@ import IntermediariosSection from "./IntermediariosSection.vue";
 import CorretajeSection from "./CorretajeSection.vue";
 import AdministracionSection from "./AdministracionSection.vue";
 const useAEStore = useContratoAEStore();
-const { activeTab, isTypeProporcional, isFacultativo } = storeToRefs(useAEStore);
+const { activeTab, isTypeProporcional, isFacultativo, haveComisionEscalonada, tipoContrato, haveCumulos, haveProporcionDias, haveCorretajeEscalonado } = storeToRefs(useAEStore);
 </script>

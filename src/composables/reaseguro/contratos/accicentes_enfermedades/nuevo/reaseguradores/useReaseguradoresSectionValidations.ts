@@ -17,27 +17,27 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       if (value === null || value === undefined) return "La participación es obligatoria.";
       else return val.minMax(value, 0, 100) || "La participación es obligatoria con un rango de 0.00 a 100.00"
     },
-    otorgaPtu: (value: string) => {
+    otorgaPtu: (value: number) => {
       if ( !isTypeProporcional ) return true;
-      else return !!value || "Otorga PTU es obligatorio"
+      else return val.isFalsyExceptZero(value) || "Otorga PTU es obligatorio"
     },
     porcentajePtu: (value: number, context: any) => {
       const otorgaPTU = context.form?.otorgaPtu;
-      if ( otorgaPTU === "SÍ" ) {
+      if ( otorgaPTU === 1 ) {
         if (value === null || value === undefined) return "El porcentaje es obligatorio.";
         else return val.minMax(value, 0, 100) || "El porcentaje es obligatorio con un rango de 0.00 a 100.00"
       }
       return true;
     },
-    formulaPtu: (value: number, context: any) => {
+    cvePtu: (value: number, context: any) => {
       const otorgaPTU = context.form?.otorgaPtu;
-      if ( otorgaPTU === "SÍ" ) {
+      if ( otorgaPTU === 1 ) {
         return value != null && value >= 0 || "Fórmula cálculo es obligatorio"
       }
       return true;
     },
     porcentajeK: (value: number, context: any) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( cvFormula === 2 ) {
         if (value === null || value === undefined) return "El porcentaje es obligatorio.";
@@ -47,7 +47,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     gastos: (value: number, context: any) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( [5, 6, 7].includes(cvFormula) ) {
         if (value === null || value === undefined) return "Gastos son obligatorios.";
@@ -57,7 +57,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     aniosArrastre: ( value: number, context: any ) => {
-      const cvFormula = context.form?.formulaPtu;
+      const cvFormula = context.form?.cvePtu;
 
       if ( [0, 3, 5, 6].includes(cvFormula) ) {
         if (value === null || value === undefined) return "Años arrastre son obligatorios.";
@@ -66,11 +66,11 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
 
       return true;
     },
-    comisRolReaseguro: (value: string) => !!value || "Comisión / Rol Reaseguro es obligatorio",
+    comisRolReaseguro: (value: number) => val.isFalsyExceptZero(value) || "Comisión / Rol Reaseguro es obligatorio",
     /* tipo de comision rate on line */
     cveAsignacionComisRol: (value: number, context: any) => {
       const comisRol = context.form?.comisRolReaseguro;
-      if ( comisRol === "SÍ" ) {
+      if ( comisRol === 1 ) {
         return value != null && value >= 0 || "Tipo de comisión / rate on line es obligatorio"
       }
       return true;

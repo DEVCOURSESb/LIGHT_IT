@@ -53,6 +53,10 @@ export const validationsHandler = () => {
     return value instanceof Date && !isNaN(value.getTime());
   }
 
+  const isFalsyExceptZero = ( value: any ): boolean => {
+    return value === 0 || !!value;
+  }
+
   return {
     fillString,
     minMaxString,
@@ -64,5 +68,6 @@ export const validationsHandler = () => {
     allowUnderscore,
     noSpecialCharacters,
     isValidDate,
+    isFalsyExceptZero,
   };
 }

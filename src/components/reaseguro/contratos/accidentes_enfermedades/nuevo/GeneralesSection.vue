@@ -51,7 +51,7 @@
                 type="number"
                 variant="solo-filled"
                 :model-value="formData['ordenCobertura']"
-                @update:model-value="setFieldValue('ordenCobertura', $event)"
+                @update:model-value="setFieldValue('ordenCobertura', Number($event))"
                 :error-messages="showErrors ? formErrors['ordenCobertura'] : undefined"
               />
             </v-col>
@@ -129,7 +129,9 @@
             <!-- TRASPASO DE CARTERA si reaseguro es proporcional-->
             <v-col cols="12" md="3" v-if="formData['cveTreaseg'] == 0">
               <v-select
-                :items="['SI', 'NO']"
+                :items="[{title: 'SÍ', value: 1},{title: 'NO', value: 0}]"
+                item-title="title"
+                item-value="value"
                 label="¿Traspaso de cartera?"
                 variant="solo-filled"
                 clearable
@@ -166,7 +168,6 @@
               />
             </v-col>
 
-            <!-- TODO: sector aun no tiene su rest -->
             <!-- TIPO DE SECTOR si forma contractual es facultativa-->
             <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
               <v-select
@@ -221,7 +222,6 @@
                 variant="solo-filled"
                 clearable
                 multiple
-                persistent-hint
                 :disabled="queryMoneda.isLoading.value"
                 :model-value="formData['cveMonedaContrato']"
                 @update:model-value="setFieldValue('cveMonedaContrato', $event)"
@@ -245,24 +245,24 @@
                 variant="solo-filled"
                 clearable
                 :disabled="queryExtensionesCobertura.isLoading.value"
-                :model-value="formData['cveExtCober']"
-                @update:model-value="setFieldValue('cveExtCober', $event)"
+                :model-value="formData['cveExtCoberContrato']"
+                @update:model-value="setFieldValue('cveExtCoberContrato', $event)"
               />
             </v-col>
 
             <!-- OPERACION / RAMO -->
             <v-col cols="12" md="2">
               <v-select
-                :items="queryOperacionesRamos.data.value?.filter(row => row.cveExtCober == formData['cveExtCober'] && row.operacion === '3000') || []"
+                :items="queryOperacionesRamos.data.value?.filter(row => String(row.cveExtCober) === String(formData['cveExtCoberContrato']) && row.operacion === '3000') || []"
                 item-title="descOperacionRamos"
                 item-value="cveCobertura"
                 label="Operación / ramo"
                 variant="solo-filled"
                 clearable
                 multiple
-                :disabled="queryOperacionesRamos.isLoading.value || formData['cveExtCober'] == null"
-                :model-value="formData['cveCobertura']"
-                @update:model-value="setFieldValue('cveCobertura', $event)"
+                :disabled="queryOperacionesRamos.isLoading.value || formData['cveExtCoberContrato'] == null"
+                :model-value="formData['cveOperRamo']"
+                @update:model-value="setFieldValue('cveOperRamo', $event)"
               />
             </v-col>
 
@@ -274,6 +274,15 @@
             </v-col>
           </v-row>
 
+          <v-row>
+            <v-checkbox
+              label="Contrato activo"
+              :model-value="formData['contratoActivo']"
+              @update:model-value="setFieldValue('contratoActivo', !!$event)"
+              :error-messages="showErrors ? formErrors['contratoActivo'] : undefined"
+            ></v-checkbox>
+          </v-row>
+
           <!-- ! ROW-->
           <v-row>
             <!-- table moneda activa -->
@@ -281,7 +290,7 @@
               <v-data-table
                 class="mt-4"
                 :headers="headerMoneda"
-                :items="dataTableMoneda"
+                :items="dataMonedaToShow"
                 :loading="false"
                 striped="odd"
               >
@@ -303,7 +312,7 @@
               <v-data-table
                 class="mt-4"
                 :headers="headerOperaciones"
-                :items="dataTableOperacionRamo"
+                :items="dataOperacionesRamosShow"
                 :loading="false"
                 striped="odd"
               >
@@ -322,12 +331,10 @@
           </v-row>
 
           <!-- ! ROW-->
-          <v-row>
-            <v-col cols="12">
-              <v-btn class="btn-guardar" size="large" @click="handleSubmit">
-                Guardar generales
-              </v-btn>
-            </v-col>
+          <v-row class="flex justify-end">
+            <v-btn class="btn-guardar" size="large" @click="handleSubmit">
+              Guardar generales
+            </v-btn>
           </v-row>
         </v-form>
       </v-container>
@@ -352,9 +359,11 @@ const {
   sendSelectToTableMoneda,
   toggleMonActiva,
   errorTablaMonedas,
+  dataMonedaToShow,
   
   headerOperaciones,
   dataTableOperacionRamo,
+  dataOperacionesRamosShow,
   sendSelectToTableOperacionRamo,
   toggleOperRamoActivo,
   errorTablaOperacionRamo,

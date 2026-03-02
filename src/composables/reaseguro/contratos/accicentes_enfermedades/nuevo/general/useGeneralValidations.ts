@@ -35,7 +35,7 @@ export const useGeneralValidations = () => {
     traspasoCartera: (value: string, context: any) => {
       const cveTreaseg = context.form?.cveTreaseg;
       if (cveTreaseg === 0) {
-        return (value === "SI" || value === "NO") || "El traspaso de cartera es obligatorio.";
+        return val.isFalsyExceptZero(value) || "El traspaso de cartera es obligatorio.";
       }
       return true;
     },
@@ -74,5 +74,6 @@ export const useGeneralValidations = () => {
     negociosCubiertos: (value: string) => {
         return (val.minMaxString(value, 1, 1000) && val.noSpecialCharacters(value) ) || "Máximo 1000 caracteres, sin especiales.";
     },
+    contratoActivo: (value: boolean) => value != null || "El estatus del contrato es obligatorio.",
   };
 };

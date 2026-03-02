@@ -9,10 +9,10 @@ export const useDetallesProporcionalesValidations = () => {
 
 
   return {
-    detallesOperRamo: (value: string) => value === "SI" || value === "NO" || "El detalle de operación ramo es obligatorio.",
+    detallesOperRamo: (value: number) => val.isFalsyExceptZero(value) || "El detalle de operación ramo es obligatorio.",
     cveExtCoberDetalles: (value: number | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
-      if (detallesOperRamo === "SI") {
+      if (detallesOperRamo === 1) {
         return ( (value != null && value >= 0) || "El tipo de operación / ramo es obligatorio." );
       } else {
         return true;
@@ -20,7 +20,7 @@ export const useDetallesProporcionalesValidations = () => {
     },
     cveOperRamoDetalles: (value: number | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
-      if (detallesOperRamo === "SI") {
+      if (detallesOperRamo === 1) {
         return ((value != null && value >= 0) || "La operación / ramo es obligatoria.");
       } else {
         return true;
@@ -79,7 +79,7 @@ export const useDetallesProporcionalesValidations = () => {
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
         return "La capacidad del contrato es obligatoria, debe ser un número positivo y no puede ser mayor al monto de cesión.";
         // SI PORCENTAJE RETENCION ES VACIO 	CAPACIDAD_CONTRATO = PORCENTAJE_CESION * CAPACIDAD_CONTRATO + PORCENTAJE_RETENCION * CAPACIDAD_CONTRATO = MONTO_RETENCION_CONTRATO + MONTO_CESION
-      } else if (context.form?.porcentajeRetencion === null) {
+      } else if (val.isFalsyExceptZero(context.form?.porcentajeRetencion)) {
         const montoEsperado = round2(
           Number(context.form?.montoCesion) +
           Number(context.form?.montoRetencionContrato)
@@ -100,8 +100,8 @@ export const useDetallesProporcionalesValidations = () => {
     cveMonedaDetalles: (value: string | null) => {
       return ( (value != null && value !== "") || "La moneda de los detalles es obligatoria." );
     },
-    cumulos: (value: string | null) => {
-      return ( (value === "SI" || value === "NO") || "El campo de cúmulos es obligatorio." );
+    cumulos: (value: number | null) => {
+      return val.isFalsyExceptZero(value) || "El campo de cúmulos es obligatorio.";
     },
   };
 };
