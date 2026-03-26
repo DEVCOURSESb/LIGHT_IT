@@ -42,7 +42,6 @@
           :headers="headers"
           :items="queryHistory.data.value || []"
           class="elevation-1"
-          hide-default-footer
         >
           <template #item.fechaRegistro="{ item }">
             {{ normalizarFecha(item.fechaRegistro) }}
