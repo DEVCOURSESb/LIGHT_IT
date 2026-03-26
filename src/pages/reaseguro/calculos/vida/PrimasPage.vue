@@ -50,7 +50,6 @@
           :headers="headers"
           :items="queryHistory.data.value || []"
           class="elevation-1"
-          hide-default-footer
         >
           <template #item.idRamo="{ item }">
             {{ getSubramoName(item.idRamo) }}
