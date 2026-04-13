@@ -390,9 +390,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
       payload.CORRETAJE = corretajes.value;
     }
 
-    console.log("📦 Payload a enviar al backend:");
-    console.log(JSON.stringify(payload, null, 2));
-
     return payload;
   };
 

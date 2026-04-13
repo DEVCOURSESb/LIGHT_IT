@@ -235,8 +235,8 @@ export const useTarifasSection = () => {
       const cveOper   = formData.cveOperRamoTarifa;
       const cveReaseg = formData.cveReaseguradorTarifa;
 
-      console.log({cveOper})
-      console.log({cveReaseg})
+      /* console.log({cveOper})
+      console.log({cveReaseg}) */
 
       if (criterioCob === 6) {
         // aqui estan los detalles
@@ -247,7 +247,7 @@ export const useTarifasSection = () => {
               c.cveReaseguradorCobertura == cveReaseg
           )
           .map((c) => String(c.cveCobaye));
-          console.log({cves})
+          /* console.log({cves}) */
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (criterioCob === 3) {

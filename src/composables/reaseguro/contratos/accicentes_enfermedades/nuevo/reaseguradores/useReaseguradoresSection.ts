@@ -412,7 +412,7 @@ export const useReaseguradoresSection = () => {
 };
 
   const editRow = (row: dataTableToDisplay) => {
-    console.log(row);
+    /* console.log(row); */
     // elimina de la tabla
     dataTableOriginal.value = dataTable.value.filter(rowT => !compareRows(rowT, row));
 
@@ -555,7 +555,7 @@ export const useReaseguradoresSection = () => {
 
         /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
         if(newRow.capa && newRow.capa != 1) {
-          console.log({ dataTableOriginal })
+          /* console.log({ dataTableOriginal }) */
           const arrayCapas = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!);
 
           const lastCapa = arrayCapas[arrayCapas.length - 1];
@@ -570,7 +570,7 @@ export const useReaseguradoresSection = () => {
           }
 
           const prioridadEsperada = lastCapa?.prioridad! + lastCapa?.limResponsabilidad!;
-          console.log(lastCapa?.prioridad, lastCapa?.limResponsabilidad)
+          /* console.log(lastCapa?.prioridad, lastCapa?.limResponsabilidad) */
           // si la prioridad es distinto de la suma de prioridad y limite de responsabilidad anterior
           if( newRow.prioridad != prioridadEsperada ) {
             dialog.show({
