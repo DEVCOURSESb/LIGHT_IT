@@ -150,7 +150,7 @@ export const useTarifasSection = () => {
           pushOperacion(row.cveOperRamo);
         });
       } else {
-        const tieneDetalleOperRamo = detallesProporcionales.value[0]?.detallesOperRamo === 1;
+        const tieneDetalleOperRamo = detallesProporcionales.value.some(row => row.detallesOperRamo === 1);
 
         if (tieneDetalleOperRamo) {
           detallesProporcionales.value.forEach((row) => {
@@ -183,6 +183,7 @@ export const useTarifasSection = () => {
     const todasCoberturas    = queryCoberturasAyE.data.value ?? [];
     const criterio           = formData.cveCriterioAsigTarifa;
     const coberturaContrato  = coberturas.value;
+    // TODO: aqui tomo el primer valor de coberturas, ya que es un array, la definicion no especifica si solo debe existir un solo registro
     const criterioCob        = coberturaContrato[0]?.cveCriterioAsigCobertura;
 
     const filtrarPorOperRamo = (cvesPermitidos: string[], cveOperRamo: string | null) => {
@@ -198,7 +199,9 @@ export const useTarifasSection = () => {
 
     // criterio 4 → todos los cveCobaye de coberturas del contrato
     if (criterio === 4) {
+      // recupera todas las claves registradas para l contrato de la tabla CAE_COBERTURAS_CONTRATO
       const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      // de todas las cobrturas extrae toda la data en base a las claves recuperadas
       return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
@@ -232,14 +235,19 @@ export const useTarifasSection = () => {
       const cveOper   = formData.cveOperRamoTarifa;
       const cveReaseg = formData.cveReaseguradorTarifa;
 
+      console.log({cveOper})
+      console.log({cveReaseg})
+
       if (criterioCob === 6) {
+        // aqui estan los detalles
         const cves = coberturaContrato
           .filter(
             (c) =>
-              c.cveOperRamoCobertura     === cveOper &&
-              c.cveReaseguradorCobertura === cveReaseg
+              c.cveOperRamoCobertura     == cveOper &&
+              c.cveReaseguradorCobertura == cveReaseg
           )
           .map((c) => String(c.cveCobaye));
+          console.log({cves})
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (criterioCob === 3) {

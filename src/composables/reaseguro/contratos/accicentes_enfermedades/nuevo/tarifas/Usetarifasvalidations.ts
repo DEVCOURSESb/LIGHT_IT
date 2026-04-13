@@ -53,7 +53,7 @@ export const useTarifasValidations = () => {
 
     primaTarifaReaseg: (value: number | null, context: any) => {
       const cveTarifa = context.form?.cveTarifa;
-      if (cveTarifa === 0) {
+      if ([0, 4].includes(cveTarifa)) {
         if (value === null || value === undefined)
           return "La prima de tarifa fija es obligatoria.";
         return (
