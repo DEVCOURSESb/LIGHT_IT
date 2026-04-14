@@ -1,6 +1,5 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { LimCorretaje } from "./lim_corretaje.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 
 export const LimCorretajeActions = () => {
