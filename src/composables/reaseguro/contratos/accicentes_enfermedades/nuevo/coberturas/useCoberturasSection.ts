@@ -192,7 +192,7 @@ export const useCoberturasSection = () => {
       cvesPermitidos.has(String(c.cveCobertura))
     );
 
-    if (cvesOperRamo.length === 0) return todasLasCoberturas;
+//    if (cvesOperRamo.length === 0) return todasLasCoberturas;
   });
 
   // Watches de limpieza

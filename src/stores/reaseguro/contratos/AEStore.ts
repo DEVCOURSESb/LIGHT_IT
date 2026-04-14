@@ -349,43 +349,43 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
       },
     };
 
-    // 🔹 Tipo proporcional
+    // Tipo proporcional
     if (isTypeProporcional.value) {
       payload.DETALLES_PROPORCIONALES = detallesProporcionales.value;
       payload.TARIFAS = tarifas.value;
     }
 
-    // 🔹 Facultativo
+    // Facultativo
     if (isFacultativo.value) {
       payload.POLIZAS_FACULTATIVAS = polizasFacultativas.value;
     }
 
-    // 🔹 Comisión escalonada
+    // Comisión escalonada
     if (haveComisionEscalonada.value) {
       payload.COMISIONES_RATE_ON_LINE = comisionesRateOnLine.value;
     }
 
-    // 🔹 Excedentes
+    // Excedentes
     if (tipoContrato.value === 3) {
       payload.EXCEDENTES = excedentes.value;
     }
 
-    // 🔹 Cúmulos
+    // Cúmulos
     if (haveCumulos.value) {
       payload.CUMULOS = cumulos.value;
     }
 
-    // 🔹 Proporción de prima
+    // Proporción de prima
     if (haveProporcionDias.value) {
       payload.PROPORCION_PRIMAS = proporcionPrimas.value;
     }
 
-    // 🔹 Reinstalaciones (solo si NO es proporcional)
+    // Reinstalaciones (solo si NO es proporcional)
     if (!isTypeProporcional.value) {
       payload.REINSTALACIONES = reinstalaciones.value;
     }
 
-    // 🔹 Corretaje escalonado
+    // Corretaje escalonado
     if (haveCorretajeEscalonado.value) {
       payload.CORRETAJE = corretajes.value;
     }
