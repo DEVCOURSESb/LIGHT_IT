@@ -11,12 +11,8 @@
         <template v-for="item in listItems" :key="item.name">
 
           <!-- un solo item CHECK -->
-          <v-list-item
-            v-if="item.items.length === 0"
-            link
-            :prepend-icon="item.icon || undefined"
-            :to="`/reaseguro/${item.name}`"
-          >
+          <v-list-item v-if="item.items.length === 0" link :prepend-icon="item.icon || undefined"
+            :to="`/reaseguro/${item.name}`">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
 
@@ -34,22 +30,12 @@
             <!-- items con subitems reaseguro/item/subitem CHECK -->
             <v-list>
               <template v-for="subItem in item.items" :key="subItem.name">
-                <v-list-item
-                  v-if="subItem.items.length === 0"
-                  link
-                  :prepend-icon="subItem.icon || undefined"
-                  :to="`/reaseguro/${item.name}/${subItem.name}`"
-                >
+                <v-list-item v-if="subItem.items.length === 0" link :prepend-icon="subItem.icon || undefined"
+                  :to="`/reaseguro/${item.name}/${subItem.name}`">
                   <v-list-item-title>{{ subItem.title }}</v-list-item-title>
                 </v-list-item>
 
-                <v-menu
-                  v-else
-                  offset-x
-                  :open-on-focus="false"
-                  open-on-hover
-                  submenu
-                >
+                <v-menu v-else offset-x :open-on-focus="false" open-on-hover submenu>
                   <template #activator="{ props: subMenuProps }">
                     <v-list-item v-bind="subMenuProps" link>
                       <v-list-item-title>{{ subItem.title }}</v-list-item-title>
@@ -61,26 +47,15 @@
 
                   <!-- items con subitems reaseguro/item/subitem CHECK -->
                   <v-list>
-                    <template
-                      v-for="submenu in subItem.items" :key="submenu.name">
-                      <v-list-item
-                        v-if="submenu.items.length === 0"
-                        link
-                        :prepend-icon="submenu.icon || undefined"
-                        :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}`"
-                      >
+                    <template v-for="submenu in subItem.items" :key="submenu.name">
+                      <v-list-item v-if="submenu.items.length === 0" link :prepend-icon="submenu.icon || undefined"
+                        :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}`">
                         <v-list-item-title>{{
                           submenu.title
                         }}</v-list-item-title>
                       </v-list-item>
 
-                      <v-menu
-                        v-else
-                        offset-x
-                        :open-on-focus="false"
-                        open-on-hover
-                        submenu
-                      >
+                      <v-menu v-else offset-x :open-on-focus="false" open-on-hover submenu>
                         <template #activator="{ props: subSubMenuProps }">
                           <v-list-item v-bind="subSubMenuProps" link>
                             <v-list-item-title>{{
@@ -93,13 +68,9 @@
                         </template>
 
                         <v-list>
-                          <v-list-item
-                            v-for="subsubmenu in submenu.items"
-                            :key="subsubmenu.name"
-                            link
+                          <v-list-item v-for="subsubmenu in submenu.items" :key="subsubmenu.name" link
                             :prepend-icon="subsubmenu.icon || undefined"
-                            :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}/${subsubmenu.name}`"
-                          >
+                            :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}/${subsubmenu.name}`">
                             <v-list-item-title>{{
                               subsubmenu.title
                             }}</v-list-item-title>
@@ -187,7 +158,7 @@ const listItems: ListItem[] = [
           },
         ],
       },
-       {
+      {
         name: "accidentes_enfermedades",
         title: "Accidentes y Enfermedades",
         icon: "",
@@ -253,9 +224,16 @@ const listItems: ListItem[] = [
   },
   {
     name: "reportesReaseguro",
-    title: "Reportes de reaseguro",
+    title: "Reportes",
     icon: "",
-    items: [],
+    items: [
+      {
+        name: "CalReportes",
+        title: "Cálculo de Reportes",
+        icon: "",
+        items: []
+      }
+    ],
   },
   { name: "RR6", title: "RR6", icon: "", items: [] },
 ];
