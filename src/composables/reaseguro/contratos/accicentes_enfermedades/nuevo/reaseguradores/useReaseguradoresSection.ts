@@ -22,6 +22,7 @@ export const useReaseguradoresSection = () => {
   const aeStore = useContratoAEStore();
   const { isTypeProporcional, reaseguradores } = storeToRefs(aeStore);
 
+
   const {
     queryReaseguradoras,
     queryPtu,
@@ -411,7 +412,7 @@ export const useReaseguradoresSection = () => {
 };
 
   const editRow = (row: dataTableToDisplay) => {
-    console.log(row);
+    /* console.log(row); */
     // elimina de la tabla
     dataTableOriginal.value = dataTable.value.filter(rowT => !compareRows(rowT, row));
 
@@ -492,11 +493,7 @@ export const useReaseguradoresSection = () => {
     const { valid } = await validate();
 
     if (valid) {
-      const reaseguradora = queryReaseguradoras.data.value?.find(
-        (r) => r.cveReasegurador === formData.cveReasegurador
-      );
-
-      
+    
       const newRow: ReaseguradoresSection = {
         idContrato: "",
         cveReasegurador: formData.cveReasegurador,
@@ -558,9 +555,22 @@ export const useReaseguradoresSection = () => {
 
         /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
         if(newRow.capa && newRow.capa != 1) {
-          const lastCapa = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!)[dataTableOriginal.value.length -1];
+          /* console.log({ dataTableOriginal }) */
+          const arrayCapas = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!);
+
+          const lastCapa = arrayCapas[arrayCapas.length - 1];
+
+          if (!lastCapa) {
+              dialog.show({
+              title: "Atención",
+              message: `No existe una capa anterior a la que desea registrar, favor de verificar.`,
+              type: DialogType.ERROR,
+            })
+            return;
+          }
 
           const prioridadEsperada = lastCapa?.prioridad! + lastCapa?.limResponsabilidad!;
+          /* console.log(lastCapa?.prioridad, lastCapa?.limResponsabilidad) */
           // si la prioridad es distinto de la suma de prioridad y limite de responsabilidad anterior
           if( newRow.prioridad != prioridadEsperada ) {
             dialog.show({

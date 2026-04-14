@@ -1,6 +1,5 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { CalculoComision } from "./calculo_comision.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 export const CalculoComisionActions = () => {
   const baseAPI = BaseAPI({

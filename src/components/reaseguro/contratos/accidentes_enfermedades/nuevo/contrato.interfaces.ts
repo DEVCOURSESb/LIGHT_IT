@@ -105,10 +105,11 @@ export interface CoberturasSection {
   idContrato: string;
   cveCriterioAsigCobertura: number;
   cveReaseguradorCobertura: number | null;
-  cveOperRamoCobertura: number | null;
+  cveOperRamoCobertura: string | null;
   cveCobaye: number;
   propiaSaMax: number;
   saMax: number | null;
+  cobBasica: boolean;
   coberActiva: boolean;
 }
 

@@ -25,7 +25,12 @@ export const EntidadFederativaConfig = {
     },
   },
   */
-    { title: 'CLAVE', key: 'cveEntidad', sortable: true,
+    { title: 'CLAVE ENTIDAD', key: 'cveEntidad', sortable: true,
+      headerProps: {
+        style: 'font-weight: bold',
+      },
+    },
+    { title: 'CLAVE ENTIDAD LATINO', key: 'cveEntidadLat', sortable: true,
       headerProps: {
         style: 'font-weight: bold',
       },
@@ -66,12 +71,21 @@ export const EntidadFederativaConfig = {
     },
     {
       name: 'cveEntidad',
-      label: 'Clave',
+      label: 'Clave entidad',
       type: 'text',
       required: true,
       dataKey: 'cveEntidad',
       defaultValue: "",
       transformToAPI: (value: string) => transformToUpperCase(fillString(value, 2, '0')),
+    },
+    {
+      name: 'cveEntidadLatino',
+      label: 'Clave entidad latino',
+      type: 'text',
+      required: true,
+      dataKey: 'cveEntidadLat',
+      defaultValue: "",
+      transformToAPI: (value: string) => transformToUpperCase(value),
     },
     {
       name: 'nombreEntidad',
@@ -113,6 +127,7 @@ export const EntidadFederativaConfig = {
   validationSchema: {
     // numerico, 3 digitos max,
     cveEntidad: (value: string) => minMaxString(value, 1, 2) || 'La clave es requerida, mayor a 0 y máximo 2 dígitos.',
+    cveEntidadLat: (value: string) => minMaxString(value, 1, 10) || 'La clave es requerida, mayor a 0 y máximo 10 dígitos.',
     // alfanumerico, max 100 chars.
     nombreEntidad: (value: string) => minMaxString(value, 1, 100) || 'El nombre es requerido, mayor a 0 y máximo de 100 caracteres.',
     // numerico, mayor a 0 y maximo 5 digitos.

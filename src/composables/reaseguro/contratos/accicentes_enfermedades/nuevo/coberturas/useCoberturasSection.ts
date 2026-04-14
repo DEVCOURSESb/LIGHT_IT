@@ -100,22 +100,27 @@ export const useCoberturasSection = () => {
   // Operaciones/ramos disponibles según tipo de reaseguro
   const operacionesRamosData = ref<{ title: string; value: string }[]>([]);
 
+  // este watch sirve para obtener 
+  // las operaciones / ramos en base a lal tipo de reaseguro
   watch(
     [
       isTypeProporcional,
+      detallesProporcionales,
       () => queryOperacionesRamos.data.value,
       () => queryOperacionesRamos.isLoading.value,
     ],
-    ([proporcional, _, isLoading]) => {
+    ([proporcional,__, _, isLoading]) => {
       if (proporcional == null || isLoading) return;
 
       const helper: { title: string; value: string }[] = [];
 
+      // funcion de ayuda
       const pushOperacion = (cveCobertura: string | null) => {
         if (!cveCobertura) return;
         const operacion = queryOperacionesRamos.data.value?.find(
           (el) => el.cveCobertura === cveCobertura
         );
+
         if (operacion) {
           helper.push({
             title: operacion.descOperacionRamos,
@@ -124,19 +129,24 @@ export const useCoberturasSection = () => {
         }
       };
 
+      // si es NO PROPORCIONAL
       if (!proporcional) {
-        // No proporcional: usa CAE_OPERACION_RAMO de generales
+        // usa CAE_OPERACION_RAMO de generales
         aeStore.generales.CAE_OPERACION_RAMO?.forEach((row) => {
           pushOperacion(row.cveOperRamo);
         });
-      } else {
-        // Proporcional: usa detallesProporcionales si tiene detalle por oper/ramo
-        const tieneDetalleOperRamo = detallesProporcionales.value[0]?.detallesOperRamo === 1;
+      } else { // PROPORCIONAL
+        // usa detallesProporcionales si tiene detalle por oper/ramo
+        const tieneDetalleOperRamo = detallesProporcionales.value.some(row => row.detallesOperRamo === 1);
 
         if (tieneDetalleOperRamo) {
           detallesProporcionales.value.forEach((row) => {
             pushOperacion(row.cveOperRamoDetalles);
           });
+        } else {
+          aeStore.generales.CAE_OPERACION_RAMO.forEach((row) => {
+            pushOperacion(row.cveOperRamo);
+          })
         }
       }
 
@@ -156,23 +166,22 @@ export const useCoberturasSection = () => {
     let cvesOperRamo: string[] = [];
 
     if ([3, 6].includes(criterio!)) {
-      // Criterio 3 o 6: filtra por la oper/ramo seleccionada en el form
-      if (formData.cveOperRamoCobertura != null) {
+      // Criterio 3 o 6: filtrara por el seleccionado en el form
+      // continua con punto d
         cvesOperRamo = [String(formData.cveOperRamoCobertura)];
-      }
     } else {
-      // Resto: usa las operaciones/ramos disponibles del contrato
+      // segun el tipo de reaseguro, punto b
       cvesOperRamo = operacionesRamosData.value.map((o) => o.value);
     }
 
-    if (cvesOperRamo.length === 0) return todasLasCoberturas;
-
+    // punto d
     // Si hay "3000" o "030" se muestran todas las coberturas
     if (cvesOperRamo.some((c) => ["3000", "030"].includes(c))) {
       return todasLasCoberturas;
     }
 
     const cvesPermitidos = new Set<string>();
+
     cvesOperRamo.forEach((cve) => {
       COBERTURAS_POR_OPER_RAMO[cve]?.forEach((p) => cvesPermitidos.add(p));
     });
@@ -182,6 +191,8 @@ export const useCoberturasSection = () => {
     return todasLasCoberturas.filter((c) =>
       cvesPermitidos.has(String(c.cveCobertura))
     );
+
+//    if (cvesOperRamo.length === 0) return todasLasCoberturas;
   });
 
   // Watches de limpieza
@@ -289,6 +300,7 @@ export const useCoberturasSection = () => {
       cveCobaye:                formData.cveCobaye!,
       propiaSaMax:              formData.propiaSaMax,
       saMax:                    formData.saMax ?? null,
+      cobBasica:                true,
       coberActiva:              true,
     };
 
@@ -308,6 +320,19 @@ export const useCoberturasSection = () => {
     if (index !== -1) {
       originalDataTable.value[index]!.coberActiva =
         !originalDataTable.value[index]!.coberActiva;
+    }
+  };
+
+  const toggleCobBasica = (item: CoberturasDisplay) => {
+    const index = originalDataTable.value.findIndex(
+      (r) =>
+        r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
+        r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
+        r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
+        r.cveCobaye                === item.cveCobaye
+    );
+    if (index !== -1) {
+      originalDataTable.value[index]!.cobBasica = !originalDataTable.value[index]!.cobBasica;
     }
   };
 
@@ -380,7 +405,7 @@ export const useCoberturasSection = () => {
     activas: CoberturasSection[]
   ): string | null => {
 
-    if (criterio === 1) {
+    if (criterio === 1) { // por contrato
       const cves        = activas.map((r) => r.cveCobaye);
       const hayDuplicados = cves.length !== new Set(cves).size;
       return hayDuplicados
@@ -388,7 +413,7 @@ export const useCoberturasSection = () => {
         : null;
     }
 
-    if (criterio === 0) {
+    if (criterio === 0) { // por reaseguradora
       const cvesContrato = reaseguradores.value.map((r) => r.cveReasegurador);
       const cvesEnTabla  = [...new Set(activas.map((r) => r.cveReaseguradorCobertura))];
       const faltantes    = cvesContrato.filter((cve) => !cvesEnTabla.includes(cve));
@@ -397,7 +422,7 @@ export const useCoberturasSection = () => {
         : null;
     }
 
-    if (criterio === 3) {
+    if (criterio === 3) { // por operación / ramo
       const requeridos  = _obtenerCvesOperRamoRequeridos();
       const cvesEnTabla = [...new Set(activas.map((r) => String(r.cveOperRamoCobertura)))];
       const faltantes   = requeridos.filter((cve) => !cvesEnTabla.includes(cve));
@@ -406,7 +431,7 @@ export const useCoberturasSection = () => {
         : null;
     }
 
-    if (criterio === 6) {
+    if (criterio === 6) { // por reaseguradora y operacion / ramo
       const cvesOperRamo = _obtenerCvesOperRamoRequeridos();
       const cvesReaseg   = reaseguradores.value.map((r) => r.cveReasegurador);
 
@@ -436,8 +461,7 @@ export const useCoberturasSection = () => {
       );
     }
 
-    const tieneDetalleOperRamo =
-      detallesProporcionales.value[0]?.detallesOperRamo === 1;
+    const tieneDetalleOperRamo = detallesProporcionales.value.some(row => row.detallesOperRamo === 1);
 
     if (tieneDetalleOperRamo) {
       return detallesProporcionales.value
@@ -475,6 +499,7 @@ export const useCoberturasSection = () => {
     { title: "COBERTURA",           key: "descCobaye",         sortable: true,  headerProps: hp },
     { title: "¿PROPIA SA MÁX.?",    key: "descPropiaSaMax",        sortable: true,  headerProps: hp },
     { title: "SUMA ASEGURADA MÁX.", key: "saMax",              sortable: true,  headerProps: hp },
+    { title: "BÁSICA",              key: "cobBasica",        sortable: true,  headerProps: hp },
     { title: "ACTIVA",              key: "coberActiva",        sortable: true,  headerProps: hp },
     { title: "EDITAR",              key: "editar",             sortable: false, headerProps: hp },
   ];
@@ -503,6 +528,7 @@ export const useCoberturasSection = () => {
     handleAgregarCobertura,
     handleGuardarCoberturas,
     toggleRowActiva,
+    toggleCobBasica,
     editRow,
   };
 };

@@ -1,6 +1,5 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { Rr6Sector } from "./rr6_sector.interfaces";
-import { fakeData } from "@/API/fakeData";
 
 export const Rr6SectorActions = () => {
   const baseAPI = BaseAPI({

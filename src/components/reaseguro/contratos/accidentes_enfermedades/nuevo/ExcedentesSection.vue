@@ -25,13 +25,12 @@
             <!-- COBERTURA (solo si criterio = 4 POR COBERTURA) -->
             <v-col cols="12" md="3" v-if="formData['cveCriterioAsigCapa'] === 4">
               <v-select
-                :items="queryCoberturasAyE.data.value ?? []"
+                :items="coberturasDisponibles"
                 item-title="descCobaye"
                 item-value="cveCobaye"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
-                :loading="queryCoberturasAyE.isLoading.value"
                 :model-value="formData['cveCobayeCapa']"
                 @update:model-value="setFieldValue('cveCobayeCapa', $event)"
                 :error-messages="showErrors ? formErrors['cveCobayeCapa'] : undefined"
@@ -155,7 +154,6 @@ const {
   onInputGeneric,
   onBlurGeneric,
   queryCriterioAsignacion,
-  queryCoberturasAyE,
   tableHeaders,
   dataTable,
   criterioEstaFijo,
@@ -163,6 +161,7 @@ const {
   handleGuardarExcedente,
   toggleRowActiva,
   editRow,
+  coberturasDisponibles
 } = useExcedentesSection();
 
 // noCapa se calcula en el template como preview antes de agregar

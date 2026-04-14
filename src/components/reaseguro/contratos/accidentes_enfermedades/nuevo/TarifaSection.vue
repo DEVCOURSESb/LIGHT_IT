@@ -83,8 +83,8 @@
               />
             </v-col>
 
-            <!-- PRIMA DE TARIFA FIJA (cveTarifa = 0) -->
-            <v-col cols="12" md="3" v-if="formData['cveTarifa'] === 0">
+            <!-- PRIMA DE TARIFA FIJA (cveTarifa = 0 o 4) -->
+            <v-col cols="12" md="3" v-if="[0, 4].includes(formData['cveTarifa']!)">
               <v-text-field
                 label="Prima de tarifa fija"
                 variant="solo-filled"

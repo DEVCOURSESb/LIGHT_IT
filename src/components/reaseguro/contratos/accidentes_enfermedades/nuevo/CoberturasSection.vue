@@ -130,6 +130,15 @@
                   {{ item.saMax != null ? item.saMax.toLocaleString("es-MX", { minimumFractionDigits: 2 }) : "—" }}
                 </template>
 
+                <template #item.cobBasica="{ item }">
+                  <v-checkbox
+                    :model-value="item.cobBasica"
+                    @update:model-value="toggleCobBasica(item)"
+                    hide-details
+                    density="compact"
+                  />
+                </template>
+
                 <template #item.coberActiva="{ item }">
                   <v-checkbox
                     :model-value="item.coberActiva"
@@ -175,6 +184,7 @@ const {
   handleAgregarCobertura,
   handleGuardarCoberturas,
   toggleRowActiva,
+  toggleCobBasica,
   editRow,
 } = useCoberturasSection();
 </script>

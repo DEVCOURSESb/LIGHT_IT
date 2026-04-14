@@ -8,6 +8,7 @@ import { formattNumber } from "@/utils/formattNumber";
 import { DialogType, useDialog } from "@/stores/dialogStore";
 import { useExcedentesValidations } from "./useExcedentesValidations ";
 import type { ExcedentesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
+import type { coberturasAye } from "@/API/catalogos/coberturas_aye/coberturas_aye.interfaces";
 
 // Tipo del formulario — sin idContrato, noCapa y capaActiva (los calcula/agrega el composable)
 type ExcedentesForm = Omit<ExcedentesSection, "idContrato" | "noCapa" | "capaActiva">;
@@ -21,7 +22,7 @@ export const useExcedentesSection = () => {
   const aeStore = useContratoAEStore();
   const dialog  = useDialog();
 
-  const { excedentes } = storeToRefs(aeStore);
+  const { excedentes, coberturas } = storeToRefs(aeStore);
 
   const { queryCriterioAsignacion, queryCoberturasAyE } = useAccidentesEnfermedades();
 
@@ -83,6 +84,26 @@ export const useExcedentesSection = () => {
       originalDataTable.value.filter((r) => r.cveCobayeCapa === cveCobaye).length + 1
     );
   };
+
+  const coberturasDisponibles = ref<coberturasAye[]>();
+
+    watch( [
+      coberturas,
+      () => queryCoberturasAyE.data.value,
+      () => queryCoberturasAyE.isLoading.value,
+    ], 
+    ([coberturas, _,  isLoading]) => {
+
+      if(coberturas == null || isLoading) return;
+
+      const coberturasCVES = coberturas.map( row => row.cveCobaye );
+
+      console.log(coberturasCVES)
+      console.log(queryCoberturasAyE.data.value)
+      
+      coberturasDisponibles.value = queryCoberturasAyE.data.value?.filter( row => coberturasCVES.includes(row.cveCobaye) ? row : null );
+    }
+   );
 
   // Watch: limpiar cveCobayeCapa al cambiar criterio
   watch(
@@ -268,5 +289,6 @@ export const useExcedentesSection = () => {
     handleGuardarExcedente,
     toggleRowActiva,
     editRow,
+    coberturasDisponibles
   };
 };
