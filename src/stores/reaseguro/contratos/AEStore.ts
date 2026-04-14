@@ -11,7 +11,7 @@ export interface TablaOperacionRamoContratoInterface {
 
 // claves para localStorage
 const STORAGE_KEYS = {
-  activeTab: "activeTab",
+  activeTab: "CAE_ACTIVE_TAB",
   generalesContrato: "CAE_GENERALES_CONTRATO",
   monedaContrato: "CAE_MONEDA_CONTRATO",
   operacionRamoContrato: "CAE_OPERACION_RAMO_CONTRATO",
@@ -393,10 +393,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     return payload;
   };
 
-  const crearContrato = () => {
-    obtenerPayloadBackend();
-  };
-
   watch(activeTab, (nuevoTab) => {
     localStorage.setItem(STORAGE_KEYS.activeTab, nuevoTab);
   });
@@ -441,6 +437,6 @@ export const useContratoAEStore = defineStore("contratoAccEnf", () => {
     borPrimas,
     borSiniestros,
     guardarAdministracion,
-    crearContrato
+    obtenerPayloadBackend
   };
 });
