@@ -65,6 +65,8 @@ declare module 'vue-router/auto-routes' {
     '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', '/reaseguro/ConfiguracionTarifas/ConfigTarifaVistaAPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage': RouteRecordInfo<'/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', '/reaseguro/ConfiguracionTarifas/ConfiguracionTarifasPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/accidentes-enfermedades/AccidentesEnfermedadesPage': RouteRecordInfo<'/reaseguro/Contratos/accidentes-enfermedades/AccidentesEnfermedadesPage', '/reaseguro/Contratos/accidentes-enfermedades/AccidentesEnfermedadesPage', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModaResumen': RouteRecordInfo<'/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModaResumen', '/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModaResumen', Record<never, never>, Record<never, never>>,
+    '/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage': RouteRecordInfo<'/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage', '/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormComisionesPageM', Record<never, never>, Record<never, never>>,
     '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM': RouteRecordInfo<'/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', '/reaseguro/Contratos/Danios/ModificarContrato/FormCorretajePageM', Record<never, never>, Record<never, never>>,
@@ -316,6 +318,14 @@ declare module 'vue-router/auto-routes' {
     }
     'src/pages/reaseguro/Contratos/accidentes-enfermedades/AccidentesEnfermedadesPage.vue': {
       routes: '/reaseguro/Contratos/accidentes-enfermedades/AccidentesEnfermedadesPage'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModaResumen.vue': {
+      routes: '/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModaResumen'
+      views: never
+    }
+    'src/pages/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage.vue': {
+      routes: '/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage'
       views: never
     }
     'src/pages/reaseguro/Contratos/Danios/ModificarContrato/FormCoberturasPageM.vue': {

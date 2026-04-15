@@ -303,7 +303,8 @@
           <v-btn size="large" variant="outlined" class="btn-guardar" @click="handleGuardarAdministracion">
             Guardar administración
           </v-btn>
-          <v-btn size="large" variant="elevated" color="primary" @click="handleCrearContrato">
+          <!-- <v-btn size="large" variant="elevated" color="primary" @click="handleCrearContrato"> -->
+          <v-btn size="large" variant="elevated" color="primary" @click="() => { showModal = true }">
             Crear contrato
           </v-btn>
         </v-row>
@@ -311,6 +312,7 @@
       </v-container>
     </v-card-text>
   </v-card>
+  <modal-resumen v-model="showModal" />
 </template>
 
 <script lang="ts" setup>
@@ -318,6 +320,11 @@ import {
   useAdministracionSection,
   OPCIONES_PERIODICIDAD,
 } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/administracion/useAdministracionSection";
+
+import ModalResumen from "@/pages/reaseguro/Contratos/accidentes-enfermedades/ModalResumen.vue"
+import { ref } from "vue";
+
+const showModal = ref(false);
 
 const {
   queryFormaPago,
