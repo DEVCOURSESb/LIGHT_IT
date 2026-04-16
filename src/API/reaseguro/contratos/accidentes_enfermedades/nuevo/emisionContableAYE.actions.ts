@@ -3,19 +3,18 @@ import type { EmisionContableAYE } from "./emision_contable_AYE.interface";
 
 export const emisionCobtableAYEActions = () => {
   const baseAPI = BaseAPI({
-    prefix: "ws_contratos_ae/api/v1/emisionContableaye/",
+    prefix: "ws_reaseguro_contratos_aye/api/v1/EmisionContableAyERest/getPolizasByFecContrato",
   });
 
-  const fetch = async (): Promise<EmisionContableAYE[]> => {
+  const fetch = async (f_inicio: Date, f_fin: Date): Promise<EmisionContableAYE[]> => {
     try {
-      return [1, 2, 3, 4, 5].map((num) => ({
-        id: num,
-        NUM_POLIZA: num * 10,
+      const response = await baseAPI.post<number[]>("", {
+        fechaInicioContrato: f_inicio,
+        fechaFinContrato: f_fin,
+      });
+      return response.data.map((item: number) => ({
+        NUM_POLIZA: item,
       }));
-
-      const response =
-        await baseAPI.post<EmisionContableAYE[]>("getAllRecords");
-      return response.data;
     } catch (error) {
       console.error("Error fetching emision contable AYE:", error);
       throw error;
