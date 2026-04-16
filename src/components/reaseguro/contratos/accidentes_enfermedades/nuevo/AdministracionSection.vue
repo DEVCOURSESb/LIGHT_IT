@@ -321,7 +321,7 @@ import {
   OPCIONES_PERIODICIDAD,
 } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/administracion/useAdministracionSection";
 
-import ModalResumen from "@/pages/reaseguro/Contratos/accidentes-enfermedades/ModalResumen.vue"
+import ModalResumen from "@/pages/reaseguro/Contratos/accidentes-enfermedades/modal_final/ModalResumen.vue"
 import { ref } from "vue";
 
 const showModal = ref(false);

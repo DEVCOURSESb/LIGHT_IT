@@ -1,4 +1,3 @@
-import { monedaConfig } from "@/components/config/catalogos/moneda/moneda.config";
 import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
 import { useForm } from "vee-validate";
 import { computed, ref, toRaw, watch } from "vue";
@@ -10,7 +9,6 @@ import type {
   GeneralSectionTableMoneda,
   GeneralSectionTableOperacionRamo,
 } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
-import { set } from "date-fns";
 
 type GeneralesForm = GeneralesSection & {
   cveMonedaContrato?: number[] | null;

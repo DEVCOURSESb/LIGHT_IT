@@ -3,6 +3,7 @@ import { validationsHandler } from "@/utilities/validations/validationsHandler";
 import type { TipoReaseguro } from "@/API/catalogos/tipo-reaseguro/tipo-reaseguro.interfaces";
 import { TipoReaseguroActions } from "@/API/catalogos/tipo-reaseguro/tipo-reaseguro.actions";
 import { ref } from "vue";
+import type { TipoContratoTrasnformado } from "@/API/catalogos/tipos-contrato/tipos-contrato.interfaces";
 
 const actions = TiposContratoActions();
 const tipoReasegAction = TipoReaseguroActions();
@@ -34,7 +35,7 @@ const loadTipoReaseg = async () => {
   }
 };
 
-const fetchTransformado = async () => {
+const fetchTransformado = async (): Promise<TipoContratoTrasnformado[]> => {
   await loadTipoReaseg();
 
   const data = await actions.fetchTipoContratos();
