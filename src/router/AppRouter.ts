@@ -73,7 +73,7 @@ export function AppRouter() {
             {
               path: "CalReportes", 
               component: () => import("@/pages/reaseguro/Reportes/CalReportes.vue"),
-              meta: { title: "Cálculo de Reportes" },
+              meta: { title: "Resumen de Calculos" },
             },
           ],
         },
