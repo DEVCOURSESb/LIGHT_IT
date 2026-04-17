@@ -1,5 +1,5 @@
 import { CoberturasAyeActions } from "@/API/catalogos/coberturas_aye/coberturas_aye.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = CoberturasAyeActions();
 
@@ -10,7 +10,7 @@ const {
   transformBooleanToNumber,
   transformNumberToBoolean,
   transformToUpperCase,
-} = validationsHandler();
+} = handleValidations();
 
 export const coberturasAyeConfig = {
   entity: "coberturas_aye",

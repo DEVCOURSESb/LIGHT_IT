@@ -2,13 +2,13 @@
 import { TipoCambioActions } from "@/API/catalogos/tipo_cambio/tipo_cambio.actions";
 import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions";
 import type { Moneda } from "@/API/catalogos/monedas/moneda.interfaces";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 import { ref, computed } from "vue";
 
 export const useTipoCambioConfig = () => {
   const actions = TipoCambioActions();
   const monedaActions = MonedaActions();
-  const { transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
+  const { transformBooleanToNumber, transformNumberToBoolean } = handleValidations();
 
   const monedaMap = new Map<number, string>();
   const monedaItems = ref<Array<{ text: string; value: number }>>([]);

@@ -1,12 +1,10 @@
 import { BaseAPI } from "@/API/BaseAPI";
-import { OperacionesRamosActions } from "@/API/catalogos/operaciones-ramos/operaciones-ramos.actions";
 import { calculoSiniestrosActions } from "@/API/reaseguro/calculos/calculo_siniestros.actions";
 import type { CalculoSiniestrosVida } from "@/API/reaseguro/calculos/calculo_siniestros.interface";
-import { DialogType, useDialog } from "@/stores/dialogStore";
-import { useSnackbar } from "@/stores/useSnackbar";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 import { downloadFileFromBase64 } from "@/utils/downloadFileFromBase64";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
-import { format, parseISO } from "date-fns";
 import { ref, watch } from "vue";
 
 export const useCalculoVidaSiniestros = () => {

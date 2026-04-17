@@ -1,8 +1,8 @@
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useForm } from "vee-validate";
 import { computed, ref } from "vue";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 
 interface CrudConfig {
   entity: string;

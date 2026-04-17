@@ -1,4 +1,4 @@
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 
 export const showModalExistRow = (message?: string) => {
   const dialog = useDialog();

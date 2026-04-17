@@ -46,8 +46,8 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import FooterComponent from '@/layouts/FooterComponent.vue'
-  import { DialogType, useDialog } from '@/stores/dialogStore'
+  import FooterComponent from '@/components/general/FooterComponent.vue'
+  import { DialogType, useDialog } from '@/stores/general/dialogStore'
 import { useAuth } from '@/composables/auth/useAuth'
 
   const { sendCredentials } = useAuth()

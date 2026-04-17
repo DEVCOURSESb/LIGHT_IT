@@ -263,8 +263,8 @@
 </template>
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useContratoStore } from "@/stores/contratoStore"
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { useContratoStore } from "@/stores/reaseguro/contratos/vidaStore"
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import { NuevoContratoVidaConR } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoConfigR.actions'
 import { ValidacionesContrato } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/ValidacionesContrato'
 

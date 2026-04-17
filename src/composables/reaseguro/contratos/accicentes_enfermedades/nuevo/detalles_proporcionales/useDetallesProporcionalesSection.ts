@@ -2,13 +2,13 @@ import { useForm } from "vee-validate";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { useDetallesProporcionalesValidations } from "./useDetallesProporcionalesValidations";
 import { ref, watch, computed } from "vue";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 import type { DetallesProporcionalesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 import type { Extension } from "@/API/catalogos/extensiones/extensiones.interfaces";
-import { DialogType, useDialog } from "@/stores/dialogStore";
-import { formattNumber } from "@/utils/formattNumber";
-import { formatCurrency } from "@/utils/formatCurrency";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
+import { formattNumber } from "@/utils/formatters/formattNumber";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
 
 // Tipo display: extiende la interfaz con campos calculados para la tabla
 type DetallesProporcionalesDisplay = DetallesProporcionalesSection & {

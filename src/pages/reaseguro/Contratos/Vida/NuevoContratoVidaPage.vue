@@ -52,12 +52,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useContratoStore } from "@/stores/contratoStore";
+import { useContratoStore } from "@/stores/reaseguro/contratos/vidaStore";
 import FormConfiguracionIntermediariosPage from "./NuevoContratoVida/FormConfiguracionIntermediariosPage.vue";
 import FormConfiguracionReaseguradoresPage from "./NuevoContratoVida/FormConfiguracionReaseguradoresPage.vue";
 import FormDatosPage from "./NuevoContratoVida/FormDatosPage.vue";
 import { computed, ref, watch } from "vue";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 
 const contratoStore = useContratoStore();
 const dialog = useDialog();

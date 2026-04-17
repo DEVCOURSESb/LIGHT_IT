@@ -143,8 +143,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch, computed, nextTick } from 'vue'
 import { NuevoContratoVidaConInt } from './NuevoContratoConfigInt.actions'
-import { useContratoStore } from "@/stores/contratoStore"
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { useContratoStore } from "@/stores/reaseguro/contratos/vidaStore"
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import ModalEnviarDatos from './ModalEnviarDatos.vue'
 import { ValidacionesContrato } from './ValidacionesContrato'
 

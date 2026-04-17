@@ -194,8 +194,8 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch, nextTick } from 'vue'
 import { NuevoContratoVidaConR } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoConfigR.actions'
-import { useContratoStore, type ContratoGeneralConfReaseg, type TipoCoberturas } from "@/stores/contratoStore"
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { useContratoStore, type ContratoGeneralConfReaseg, type TipoCoberturas } from "@/stores/reaseguro/contratos/vidaStore"
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import { ValidacionesContrato } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/ValidacionesContrato'
 
 const emits = defineEmits<{

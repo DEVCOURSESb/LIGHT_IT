@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { useCalculoVidaPrimas } from "@/composables/reaseguro/calculos/vida/useCalculoVidaPrimas";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatters/formatDate";
 
 const breadcrumbs = ["Reaseguro", "Cálculos", "Vida", "Primas"];
 

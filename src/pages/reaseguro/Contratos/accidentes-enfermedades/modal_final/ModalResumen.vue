@@ -471,13 +471,13 @@
   </v-dialog>
 </template>
 <script lang="ts" setup>
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { computed } from "vue";
 import { tablesHaders } from "./tablesHeaders";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatters/formatDate";
 import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
 import { replaceNullValues } from "@/utils/replaceNullValues";
-import { formatCurrency } from "@/utils/formatCurrency";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
 import { OPCIONES_PERIODICIDAD } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/administracion/useAdministracionSection";
 const showModal = defineModel<boolean>({ default: false });
 

@@ -1,8 +1,8 @@
 import { FormaPagoActions } from '@/API/catalogos/forma_pago/forma_pago.actions'
-import { validationsHandler } from '@/utilities/validations/validationsHandler';
+import { handleValidations } from '@/utils/validations/handleValidations';
 
 const actions = FormaPagoActions();
-const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = handleValidations();
 
 export const FormaPagoConfig = {
   entity: 'formaPago',

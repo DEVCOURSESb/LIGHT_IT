@@ -5,9 +5,9 @@ import type {
   RegistroTabla,
   ValidacionCSV,
 } from "@/API/generic/carga-archivos";
-import { validarCSV } from "@/utils/validateCSV";
+import { validarCSV } from "@/utils/files/validateCSV";
 import { mesesAnio } from "@/utils/catalogos/mesesAnio";
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 
 
 interface UseCargaArchivosOptions<T> {

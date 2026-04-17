@@ -1,16 +1,16 @@
 import { AuthActions } from "@/API/auth/Auth.actions";
 import type { dataCredentials, ResponseInterinal, } from "@/API/auth/Auth.interfaces";
-import { useRegex } from "@/utilities/validations/useRegex";
-import { AuthStore } from "@/stores/authStore";
+import { AuthStore } from "@/stores/auth/authStore";
+import { handleValidations } from "@/utils/validations/handleValidations";
 import axios from "axios";
 
 export const useAuth = () => {
-  const regex = useRegex();
+  const { isValidEmail } = handleValidations();
   const authActions = AuthActions();
   const authStore = AuthStore();
 
   const sendEmail = async (email: string): Promise<ResponseInterinal> => {
-    if (!regex.isValidEmail(email.trim())) {
+    if (!isValidEmail(email.trim())) {
       return {
         success: false,
         message: "El formato del correo electrónico es inválido",

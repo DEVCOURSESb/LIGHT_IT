@@ -45,7 +45,7 @@
   </v-window>
 </template>
 <script lang="ts" setup>
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 
 import GeneralesSection from "./GeneralesSection.vue";

@@ -80,8 +80,8 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { useContratoStore } from "@/stores/contratoStore"
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { useContratoStore } from "@/stores/reaseguro/contratos/vidaStore"
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import { NuevoContratoVida, type EmisionContable } from './NuevoContratoDG.actions'
 import { BaseAPI } from '@/API/BaseAPI'
 

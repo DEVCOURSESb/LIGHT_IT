@@ -13,9 +13,9 @@ export const SessionManager = {
     sessionExpirationPromise = (async () => {
       try {
         const { useAuth } = await import('@/composables/auth/useAuth');
-        const { AuthStore } = await import('@/stores/authStore');
+        const { AuthStore } = await import('@/stores/auth/authStore');
         const { queryClient } = await import('@/main');
-        const { DialogType, useDialog } = await import('@/stores/dialogStore');
+        const { DialogType, useDialog } = await import('@/stores/general/dialogStore');
         const router = (await import('@/router')).default;
 
         const auth = useAuth();

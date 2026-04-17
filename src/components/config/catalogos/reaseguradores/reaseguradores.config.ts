@@ -1,8 +1,8 @@
 import { ReaseguradoresActions } from "@/API/catalogos/reaseguradores/reaseguradores.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = ReaseguradoresActions()
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const reaseguradoresConfig = {
   entity: "reaseguradores",

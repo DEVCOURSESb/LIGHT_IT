@@ -1,7 +1,7 @@
 // router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import { AppRouter } from './AppRouter'
-import { AuthStore } from '@/stores/authStore'
+import { AuthStore } from '@/stores/auth/authStore'
 
 const { routes } = AppRouter()
 

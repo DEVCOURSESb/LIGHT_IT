@@ -1,8 +1,8 @@
 import { TipoEndosoActions } from "@/API/catalogos/tipo_endoso/tipo_endoso.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = TipoEndosoActions()
-const { minMaxString, validateBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformToUpperCase } = handleValidations();
 
 export const TipoEndosoConfig = {
   entity: "tipoEndoso",

@@ -1,5 +1,5 @@
 import { LimCorretajeActions } from "@/API/catalogos/lim_corretaje/lim_corretaje.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = LimCorretajeActions();
 
@@ -9,7 +9,7 @@ const {
   transformBooleanToNumber,
   transformNumberToBoolean,
   transformToUpperCase,
-} = validationsHandler();
+} = handleValidations();
 
 export const limCorretajeConfig = {
   entity: "lim_corretaje",

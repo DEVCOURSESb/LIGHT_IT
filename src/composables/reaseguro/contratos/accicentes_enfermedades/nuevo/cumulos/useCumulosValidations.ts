@@ -1,7 +1,7 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 export const useCumulosValidations = () => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   return {
     cveOperRamoCumulo: (value: string | null, context: any) => {

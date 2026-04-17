@@ -185,7 +185,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formatCurrency } from "@/utils/formatCurrency";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
 import { useReinstalacionesSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/reinstalaciones/useReinstalacionesSection";
 
 const {

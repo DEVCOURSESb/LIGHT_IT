@@ -1,9 +1,9 @@
 import { TipoAsignacionActions } from "@/API/catalogos/tipo-asignacion/tipo-asignacion.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = TipoAsignacionActions()
 
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const tipoAsignacionConfig = {
   entity: "tipo-asignacion",

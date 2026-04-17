@@ -17,7 +17,7 @@
   </v-tabs>
 </template>
 <script lang="ts" setup>
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 
 const useAEStore = useContratoAEStore();

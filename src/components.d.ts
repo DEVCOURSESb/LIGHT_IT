@@ -23,6 +23,7 @@ declare module 'vue' {
     DetallesProporcionalesSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/DetallesProporcionalesSection.vue')['default']
     DialogGlobal: typeof import('./components/DialogGlobal.vue')['default']
     ExcedentesSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/ExcedentesSection.vue')['default']
+    FooterComponent: typeof import('./components/general/FooterComponent.vue')['default']
     GeneralesSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/GeneralesSection.vue')['default']
     InsumosDropdown: typeof import('./components/menu/InsumosDropdown.vue')['default']
     IntermediariosSection: typeof import('./components/reaseguro/contratos/accidentes_enfermedades/nuevo/IntermediariosSection.vue')['default']

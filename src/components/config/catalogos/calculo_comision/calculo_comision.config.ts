@@ -1,5 +1,5 @@
 import { CalculoComisionActions } from "@/API/catalogos/calculo_comision/calculo_comision.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = CalculoComisionActions();
 
@@ -9,7 +9,7 @@ const {
   transformBooleanToNumber,
   transformNumberToBoolean,
   transformToUpperCase,
-} = validationsHandler();
+} = handleValidations();
 
 export const calculoComisionConfig = {
   entity: "calculo_comision",

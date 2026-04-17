@@ -1,5 +1,5 @@
 // composables/archivos/useTransformacionInsumos.ts
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 import { mesesAnio } from "@/utils/catalogos/mesesAnio";
 import { ref, computed } from "vue";
 

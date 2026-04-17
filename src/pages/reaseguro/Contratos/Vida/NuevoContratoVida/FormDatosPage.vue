@@ -34,7 +34,7 @@
 import { ref } from 'vue'
 import FormGeneralDatosPage from './FormGeneralDatosPage.vue'
 import FormPolizasFacultativasPage from './FormPolizasFacultativasPage.vue'
-import { useContratoStore } from "@/stores/contratoStore";
+import { useContratoStore } from "@/stores/reaseguro/contratos/vidaStore";
 
 const contratoStore = useContratoStore();
 const activeTab = ref('tab-1')

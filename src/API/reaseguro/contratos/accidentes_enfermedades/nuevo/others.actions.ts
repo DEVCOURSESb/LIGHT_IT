@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/vue-query";
 import { emisionCobtableAYEActions } from "./emisionContableAYE.actions";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 
 // otros "cataogos" para el contrato de accidentes y enfermedades

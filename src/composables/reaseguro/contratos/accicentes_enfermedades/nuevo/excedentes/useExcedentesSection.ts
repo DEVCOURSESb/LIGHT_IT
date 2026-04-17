@@ -1,11 +1,11 @@
 import { useForm } from "vee-validate";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { ref, computed, watch } from "vue";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
-import { formatCurrency } from "@/utils/formatCurrency";
-import { formattNumber } from "@/utils/formattNumber";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
+import { formattNumber } from "@/utils/formatters/formattNumber";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useExcedentesValidations } from "./useExcedentesValidations ";
 import type { ExcedentesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 import type { coberturasAye } from "@/API/catalogos/coberturas_aye/coberturas_aye.interfaces";

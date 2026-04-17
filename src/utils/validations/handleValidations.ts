@@ -1,4 +1,4 @@
-export const validationsHandler = () => {
+export const handleValidations = () => {
   const fillString = ( value: string, fillNumber: number, fillwith: string): string => {
     const valueTrim = value.trim();
 
@@ -57,6 +57,12 @@ export const validationsHandler = () => {
     return value === 0 || !!value;
   }
 
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    return emailRegex.test(email);
+  };
+
   return {
     fillString,
     minMaxString,
@@ -69,5 +75,6 @@ export const validationsHandler = () => {
     noSpecialCharacters,
     isValidDate,
     isFalsyExceptZero,
+    isValidEmail
   };
 }

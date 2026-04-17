@@ -1,9 +1,9 @@
 import { useForm } from "vee-validate";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { ref, computed, watch } from "vue";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useProporcionPrimasValidations } from "./useProporcionPrimasValidations";
 import type { ProporcionPrimasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 

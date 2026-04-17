@@ -1,5 +1,5 @@
 import type { BorPrimasSection, BorSiniestrosSection, CoberturasSection, ComisionesRateOnLineSection, CorretajeSection, CumulosSection, DetallesProporcionalesSection, EdoSection, ExcedentesSection, GeneralesSection, GeneralSectionCompleteData, GeneralSectionTableMoneda, GeneralSectionTableOperacionRamo, IntermediarioSection, PagoSection, PolizasFacultativasSection, ProporcionPrimasSection, ReaseguradoresSection, ReinstalacionesSection, TarifasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 export interface TablaOperacionRamoContratoInterface {

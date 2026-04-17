@@ -173,7 +173,7 @@ import { computed } from "vue";
 import SearchComponent from "@/components/catalogos/SearchComponent.vue";
 import { useCrudGeneric } from "@/composables/catalogos/useCrudGeneric";
 import { useSearch } from "@/composables/catalogos/useSearch";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatters/formatDate";
 
 interface CrudConfig {
   entity: string;

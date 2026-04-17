@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import { useCalculoVidaSiniestros } from "@/composables/reaseguro/calculos/vida/useCalculoVidaSiniestros";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatters/formatDate";
 import { format, parseISO } from "date-fns";
 
 

@@ -74,7 +74,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useDialog, DialogType } from '@/stores/dialogStore'
+import { useDialog, DialogType } from '@/stores/general/dialogStore'
 
 const dialog = useDialog()
 
