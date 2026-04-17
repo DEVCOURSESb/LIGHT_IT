@@ -9,7 +9,7 @@
         <!-- !GENERALES -->
         <v-row>
           <v-col cols="12">
-            <h1>Generales</h1>
+            <h1>GENERALES</h1>
             <v-data-table
               class="mt-2"
               :headers="generalesContratoHeaders"
@@ -111,7 +111,7 @@
         <!-- ! POLIZAS FACULTATIVAS -->
          <v-row v-if="isFacultativo" >
           <v-col cols="12" >
-            <h1>POLIZAS FACULTATIVAS</h1>
+            <h1>PÓLIZAS FACULTATIVAS</h1>
               <v-data-table
                 class="mt-2"
                 :headers="polizasFacultativasHeaders"
@@ -248,7 +248,7 @@
         <!-- ! CUMULOS -->
         <v-row v-if="haveCumulos" >
           <v-col cols="12" >
-            <h1>CUMULOS</h1>
+            <h1>CÚMULOS</h1>
               <v-data-table
                 class="mt-2"
                 :headers="cumulosHeaders"

@@ -34,7 +34,7 @@ const STORAGE_KEYS = {
   borSiniestros:         "CAE_BOR_SINIESTROS_CONTRATO"
 } as const;
 
-export const useContratoAEStore = defineStore("contratoAccEnf", () => {
+export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
   const dialog = useDialog();
 
   const activeTab = ref<string>(localStorage.getItem(STORAGE_KEYS.activeTab) ?? "tab-1",);
