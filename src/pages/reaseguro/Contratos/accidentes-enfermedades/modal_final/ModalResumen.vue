@@ -636,7 +636,6 @@ const detallesProporcionalesItems = computed(() => {
       porcentajeRetencion: `${formatCurrency( row.porcentajeRetencion! )} %`,
       porcentajeCesion: `${formatCurrency( row.porcentajeCesion! )} %`,
       montoRetencion: `$${formatCurrency( row.montoRetencion )}`,
-      montoRetencionContrato: `$${formatCurrency( row.montoRetencionContrato )}`,
       montoCesion: `$${formatCurrency( row.montoCesion )}`,
       capacidadContrato: `$${formatCurrency( row.capacidadContrato )}`,
       cveCriterioAsigCapacidad: queryCriterioAsignacion.data.value?.find( el => el.cveCriterioAsig == row.cveCriterioAsigCapacidad )?.descCriterioAsig,
@@ -660,7 +659,7 @@ const reaseguradoresItems = computed( () => {
         porcentajeK: `${formatCurrency(row.porcentajeK)} %`,
         gastos: `$${formatCurrency(row.gastos)}`,
         cveAsignacionComisRol: queryTipoAsignacion.data.value?.find( el => el.cveAsignacion == row.cveAsignacionComisRol )?.descAsignacion,
-        cveCalComis: queryCalculoComision.data.value?.find( el => el.cveCalComis == row.cveCalComis )?.formulaComision,
+        cveCalComis: queryCalculoComision.data.value?.find( el => el.cveCalcomis == row.cveCalComis )?.formulaComision,
         comisRolFija: `${formatCurrency(row.comisRolFija)} %`,
         comisRolProvisional: `${formatCurrency(row.comisRolProvisional)} %`,
         comisRolMin: `${formatCurrency(row.comisRolMin)} %`,
@@ -705,7 +704,7 @@ const coberturasItems =computed(() => {
       cveCriterioAsigCobertura: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigCobertura)?.descCriterioAsig,
       cveReaseguradorCobertura: queryReaseguradoras.data.value?.find(el => el.cveReasegurador == row.cveReaseguradorCobertura)?.nombreReasegurador,
       cveOperRamoCobertura: queryOperacionesRamos.data.value?.find(el => el.cveCobertura == row.cveOperRamoCobertura)?.descOperacionRamos,
-      cveCobAyE: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyE)?.descCobaye,
+      cveCobAyE: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobAyE)?.descCobaye,
       saMax: `$${formatCurrency(row.saMax)}`,
     }
   });
@@ -719,7 +718,7 @@ const excedentesItems = computed(() => {
     return {
       ...row,
       cveCriterioAsigCapa: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigCapa)?.descCriterioAsig,
-      cveCobAyECapa: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyECapa)?.descCobaye,
+      cveCobAyECapa: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobAyECapa)?.descCobaye,
       retencionCapa: `${formatCurrency(row.retencionCapa)} %`,
       cesionCapa: `${formatCurrency(row.cesionCapa)} %`,
     }
@@ -750,7 +749,7 @@ const tarifasItems = computed(() => {
       cveCriterioAsigTarifa: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigTarifa)?.descCriterioAsig,
       cveReaseguradorTarifa: queryReaseguradoras.data.value?.find(el => el.cveReasegurador == row.cveReaseguradorTarifa)?.nombreReasegurador,
       cveOperRamoTarifa: queryOperacionesRamos.data.value?.find(el => el.cveCobertura == row.cveOperRamoTarifa)?.descOperacionRamos,
-      cveCobAyETarifa: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyETarifa)?.descCobaye,
+      cveCobAyETarifa: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobAyETarifa)?.descCobaye,
       cveTarifa: queryTipoTarifa.data.value?.find(el => el.cveTarifa == row.cveTarifa)?.descTarifa,
       primaTarifaReaseg: `$${formatCurrency(row.primaTarifaReaseg)}`,
       porcentajePrimaEmi: `${formatCurrency(row.porcentajePrimaEmi)} %`,
