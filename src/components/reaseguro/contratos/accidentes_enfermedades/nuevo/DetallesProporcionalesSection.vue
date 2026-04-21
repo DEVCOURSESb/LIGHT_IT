@@ -8,19 +8,29 @@
           <v-row>
             <!-- ¿DETALLES POR OPERACIÓN / RAMO? -->
             <v-col cols="12" md="3">
-              <v-select
-                :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
-                item-title="title"
-                item-value="value"
-                label="¿Detalles por operación / ramo?"
-                variant="solo-filled"
-                clearable
-                :model-value="formData['detallesOperRamo']"
-                @update:model-value="setFieldValue('detallesOperRamo', $event)"
-                :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
-                :disabled="isDetallesOperacionRamoDisabled"
-              />
-            </v-col>
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-select
+                      :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
+                      item-title="title"
+                      item-value="value"
+                      label="¿Detalles por operación / ramo?"
+                      variant="solo-filled"
+                      clearable
+                      :model-value="formData['detallesOperRamo']"
+                      @update:model-value="setFieldValue('detallesOperRamo', $event)"
+                      :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
+                      :disabled="isDetallesOperacionRamoDisabled"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  ¿El contrato tiene diferentes condiciones de cobertura entre cada ramo / subramo / subsubramo?
+                </span>
+              </v-tooltip>
+            </v-col>   
 
             <!-- TIPO DE OPERACIÓN / RAMO (DETALLADA) -->
             <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 1">
@@ -100,18 +110,6 @@
                 @update:model-value="onInputGeneric('montoRetencion', $event)"
                 @blur="onBlurGeneric('montoRetencion')"
                 :error-messages="showErrors ? formErrors['montoRetencion'] : undefined"
-              />
-            </v-col>
-
-            <!-- MONTO RETENCIÓN CONTRATO -->
-            <v-col cols="12" md="3">
-              <v-text-field
-                label="Monto retención contrato"
-                variant="solo-filled"
-                :model-value="montoRetencionContrato"
-                @update:model-value="onInputGeneric('montoRetencionContrato', $event)"
-                @blur="onBlurGeneric('montoRetencionContrato')"
-                :error-messages="showErrors ? formErrors['montoRetencionContrato'] : undefined"
               />
             </v-col>
 
@@ -307,7 +305,6 @@ const {
   porcentajeCesion,
   // montos
   montoRetencion,
-  montoRetencionContrato,
   montoCesion,
   capacidadContrato,
   onInputGeneric,

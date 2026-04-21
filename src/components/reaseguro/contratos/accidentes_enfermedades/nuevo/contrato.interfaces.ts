@@ -1,12 +1,13 @@
 export interface GeneralesSection {
+  fechaRegistro: Date;
   cveContrato: number | null;
   idContrato: string;
   fechaInicioContrato: Date;
   fechaFinContrato: Date;
   ordenCobertura: number;
   cveTreaseg: number;
-  idTcontrato: number | null;
-  cveFcontrac: number;
+  idTContrato: number | null;
+  cveFContrac: number;
   cveCriterioCob: number | null;
   traspasoCartera: number | null;
   cveEntidad: string | null;
@@ -15,6 +16,7 @@ export interface GeneralesSection {
   asegurado: string | null;
   negociosCubiertos: string;
   contratoActivo: boolean;
+  contratoRetencion: number;
 }
 
 export interface GeneralSectionTableMoneda {
@@ -43,7 +45,6 @@ export interface DetallesProporcionalesSection {
   porcentajeRetencion: number | null;
   porcentajeCesion: number | null;
   montoRetencion: number;
-  montoRetencionContrato: number;
   montoCesion: number;
   capacidadContrato: number;
   cveCriterioAsigCapacidad: number;
@@ -71,7 +72,7 @@ export interface ReaseguradoresSection {
   aniosArrastre: number | null;
   comisRolReaseguro: number;
   cveAsignacionComisRol: number | null;
-  cveCalcomis: number | null;
+  cveCalComis: number | null;
   comisRolFija: number | null;
   comisRolProvisional: number | null;
   comisRolMin: number | null;
@@ -106,7 +107,7 @@ export interface CoberturasSection {
   cveCriterioAsigCobertura: number;
   cveReaseguradorCobertura: number | null;
   cveOperRamoCobertura: string | null;
-  cveCobaye: number;
+  cveCobAyE: number;
   propiaSaMax: number;
   saMax: number | null;
   cobBasica: boolean;
@@ -116,7 +117,7 @@ export interface CoberturasSection {
 export interface ExcedentesSection {
   idContrato: string;
   cveCriterioAsigCapa: number;
-  cveCobayeCapa: number | null;
+  cveCobAyECapa: number | null;
   noCapa: number;
   retencionCapa: number;
   cesionCapa: number;
@@ -136,7 +137,7 @@ export interface TarifasSection {
   cveCriterioAsigTarifa: number;
   cveReaseguradorTarifa: number | null;
   cveOperRamoTarifa: string | null;
-  cveCobayeTarifa: number | null;
+  cveCobAyETarifa: number | null;
   cveTarifa: number | null;
   primaTarifaReaseg: number | null;
   porcentajePrimaEmi: number | null;
@@ -153,7 +154,7 @@ export interface ProporcionPrimasSection {
   cveCriterioAsigPrimaPropor: number;
   cveReaseguradorPrimaPropor: number | null;
   cveOperRamoPrimaPropor: string | null;
-  cveCobayePrimaPropor: number | null;
+  cveCobAyEPrimaPropor: number | null;
   noDiasCubiertos: number;
   porcentajePrimaAnual: number;
   proporcionActiva: boolean;
@@ -200,7 +201,7 @@ export interface CorretajeSection {
 
 export interface PagoSection {
   idContrato: string;
-  cveFormapago: number;
+  cveFormaPago: number;
   porcentajePago: number | null;
   fechaPago: string | null;
   pagoActivo: boolean;

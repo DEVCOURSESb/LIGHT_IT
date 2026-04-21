@@ -33,7 +33,7 @@ export const useTarifasValidations = () => {
       return true;
     },
 
-    cveCobayeTarifa: (value: number | null, context: any) => {
+    cveCobAyETarifa: (value: number | null, context: any) => {
       const criterio = context.form?.cveCriterioAsigTarifa;
       if ([4, 7, 8, 9].includes(criterio)) {
         return (

@@ -11,7 +11,7 @@ export const useExcedentesValidations = () => {
       );
     },
 
-    cveCobayeCapa: (value: number | null, context: any) => {
+    cveCobAyECapa: (value: number | null, context: any) => {
       const criterio = context.form?.cveCriterioAsigCapa;
       if (criterio === 4) {
         return (

@@ -48,11 +48,11 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
   });
 
   const isFacultativo = computed<boolean>(() => {
-    return generales.value.cveFcontrac === 1;
+    return generales.value.cveFContrac === 1;
   });
 
   const tipoContrato = computed<number | null>(() => {
-    return generales.value.idTcontrato ?? null;
+    return generales.value.idTContrato ?? null;
   });
   
   //const guardarGenerales = (data: Record<string, any>) => {

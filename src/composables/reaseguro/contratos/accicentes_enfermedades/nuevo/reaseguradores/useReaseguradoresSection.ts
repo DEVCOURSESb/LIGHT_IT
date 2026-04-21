@@ -292,7 +292,7 @@ export const useReaseguradoresSection = () => {
         setFieldValue("comisRolFija", null);
       }
       if (newValue == null || newValue != 1) {
-        setFieldValue("cveCalcomis", null);
+        setFieldValue("cveCalComis", null);
         setFieldValue("comisRolProvisional", null);
         setFieldValue("comisRolMin", null);
         setFieldValue("comisRolMax", null);
@@ -359,7 +359,7 @@ export const useReaseguradoresSection = () => {
         row.aniosArrastre === compare.aniosArrastre &&
         row.comisRolReaseguro === compare.comisRolReaseguro &&
         row.cveAsignacionComisRol === compare.cveAsignacionComisRol &&
-        row.cveCalcomis === compare.cveCalcomis &&
+        row.cveCalComis === compare.cveCalComis &&
         row.comisRolFija === compare.comisRolFija &&
         row.comisRolProvisional === compare.comisRolProvisional &&
         row.comisRolMin === compare.comisRolMin &&
@@ -427,7 +427,7 @@ export const useReaseguradoresSection = () => {
     setFieldValue("aniosArrastre", row?.aniosArrastre);
     setFieldValue("comisRolReaseguro", row?.comisRolReaseguro);
     setFieldValue("cveAsignacionComisRol", row?.cveAsignacionComisRol);
-    setFieldValue("cveCalcomis", row?.cveCalcomis);
+    setFieldValue("cveCalComis", row?.cveCalComis);
     setFieldValue("comisRolFija", row?.comisRolFija);
     setFieldValue("comisRolProvisional", row?.comisRolProvisional);
     setFieldValue("comisRolMin", row?.comisRolMin);
@@ -506,7 +506,7 @@ export const useReaseguradoresSection = () => {
         aniosArrastre: formData.aniosArrastre ?? null,
         comisRolReaseguro: formData.comisRolReaseguro ?? null,
         cveAsignacionComisRol: formData.cveAsignacionComisRol ?? null,
-        cveCalcomis: formData.cveCalcomis ?? null,
+        cveCalComis: formData.cveCalComis ?? null,
         comisRolFija: formData.comisRolFija ?? null,
         comisRolProvisional: formData.comisRolProvisional ?? null,
         comisRolMin: formData.comisRolMin ?? null,

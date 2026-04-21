@@ -55,15 +55,15 @@
             <!-- COBERTURA -->
             <v-col v-if="showCobertura" cols="12" md="3">
               <v-select
-                :model-value="formData.cveCobayePrimaPropor"
-                @update:model-value="setFieldValue('cveCobayePrimaPropor', $event)"
+                :model-value="formData.cveCobAyEPrimaPropor"
+                @update:model-value="setFieldValue('cveCobAyEPrimaPropor', $event)"
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobaye"
+                item-value="cveCobAyE"
                 label="Cobertura "
                 variant="solo-filled"
                 clearable
-                :error-messages="showErrors ? formErrors.cveCobayePrimaPropor : ''"
+                :error-messages="showErrors ? formErrors.cveCobAyEPrimaPropor : ''"
               />
             </v-col>
 

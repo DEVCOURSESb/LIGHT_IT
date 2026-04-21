@@ -64,7 +64,7 @@ export const useCoberturasSection = () => {
       ...row,
       nombreReasegurador: getNombreReasegurador(row.cveReaseguradorCobertura),
       descOperRamo:       getDescOperRamo(row.cveOperRamoCobertura),
-      descCobaye:         getDescCobaye(row.cveCobaye),
+      descCobaye:         getDescCobaye(row.cveCobAyE),
       descPropiaSaMax:    row.propiaSaMax === 1 ? "SÍ" : "NO",
     }))
   );
@@ -201,13 +201,13 @@ export const useCoberturasSection = () => {
     () => {
       setFieldValue("cveReaseguradorCobertura", null);
       setFieldValue("cveOperRamoCobertura", null);
-      setFieldValue("cveCobaye", 0);
+      setFieldValue("cveCobAyE", 0);
     }
   );
 
   watch(
     () => formData.cveOperRamoCobertura,
-    () => { setFieldValue("cveCobaye", 0); }
+    () => { setFieldValue("cveCobAyE", 0); }
   );
 
   watch(
@@ -259,7 +259,7 @@ export const useCoberturasSection = () => {
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? ""
     );
   };
 
@@ -297,7 +297,7 @@ export const useCoberturasSection = () => {
       cveCriterioAsigCobertura: formData.cveCriterioAsigCobertura!,
       cveReaseguradorCobertura: formData.cveReaseguradorCobertura ?? null,
       cveOperRamoCobertura:     formData.cveOperRamoCobertura ?? null,
-      cveCobaye:                formData.cveCobaye!,
+      cveCobAyE:                formData.cveCobAyE!,
       propiaSaMax:              formData.propiaSaMax,
       saMax:                    formData.saMax ?? null,
       cobBasica:                true,
@@ -315,7 +315,7 @@ export const useCoberturasSection = () => {
         r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
         r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
         r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
-        r.cveCobaye                === item.cveCobaye
+        r.cveCobAyE                === item.cveCobAyE
     );
     if (index !== -1) {
       originalDataTable.value[index]!.coberActiva =
@@ -329,7 +329,7 @@ export const useCoberturasSection = () => {
         r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
         r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
         r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
-        r.cveCobaye                === item.cveCobaye
+        r.cveCobAyE                === item.cveCobAyE
     );
     if (index !== -1) {
       originalDataTable.value[index]!.cobBasica = !originalDataTable.value[index]!.cobBasica;
@@ -343,7 +343,7 @@ export const useCoberturasSection = () => {
         r.cveCriterioAsigCobertura === item.cveCriterioAsigCobertura &&
         r.cveReaseguradorCobertura === item.cveReaseguradorCobertura &&
         r.cveOperRamoCobertura     === item.cveOperRamoCobertura &&
-        r.cveCobaye                === item.cveCobaye
+        r.cveCobAyE                === item.cveCobAyE
     );
     if (index === -1) return;
 
@@ -352,7 +352,7 @@ export const useCoberturasSection = () => {
     setFieldValue("cveCriterioAsigCobertura", row.cveCriterioAsigCobertura);
     setFieldValue("cveReaseguradorCobertura", row.cveReaseguradorCobertura);
     setFieldValue("cveOperRamoCobertura",     row.cveOperRamoCobertura);
-    setFieldValue("cveCobaye",                row.cveCobaye);
+    setFieldValue("cveCobAyE",                row.cveCobAyE);
     setFieldValue("propiaSaMax",              row.propiaSaMax);
     setFieldValue("saMax",                    row.saMax);
 
@@ -406,7 +406,7 @@ export const useCoberturasSection = () => {
   ): string | null => {
 
     if (criterio === 1) { // por contrato
-      const cves        = activas.map((r) => r.cveCobaye);
+      const cves        = activas.map((r) => r.cveCobAyE);
       const hayDuplicados = cves.length !== new Set(cves).size;
       return hayDuplicados
         ? "Solo se permite un registro por cobertura para el contrato."

@@ -37,7 +37,7 @@ export const useProporcionPrimasValidations = () => {
     },
 
     // Cobertura (obligatoria cuando criterio = 4, 7, 8, 9)
-    cveCobayePrimaPropor: (value: number | null, context: any) => {
+    cveCobAyEPrimaPropor: (value: number | null, context: any) => {
       const criterio = context.form?.cveCriterioAsigPrimaPropor;
       if ([4, 7, 8, 9].includes(criterio)) {
         return (

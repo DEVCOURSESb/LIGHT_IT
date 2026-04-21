@@ -57,13 +57,13 @@
               <v-select
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobaye"
+                item-value="cveCobAyE"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
-                :model-value="formData['cveCobayeTarifa']"
-                @update:model-value="setFieldValue('cveCobayeTarifa', $event)"
-                :error-messages="showErrors ? formErrors['cveCobayeTarifa'] : undefined"
+                :model-value="formData['cveCobAyETarifa']"
+                @update:model-value="setFieldValue('cveCobAyETarifa', $event)"
+                :error-messages="showErrors ? formErrors['cveCobAyETarifa'] : undefined"
               />
             </v-col>
 
