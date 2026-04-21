@@ -1,8 +1,8 @@
 import { FormaContractualActions } from "@/API/catalogos/forma-contractual/forma-contractual.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = FormaContractualActions();
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const FormaContractualConfig = {
   entity: "forma-contractual",

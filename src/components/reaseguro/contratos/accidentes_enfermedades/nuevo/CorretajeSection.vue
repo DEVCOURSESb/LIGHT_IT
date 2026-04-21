@@ -306,7 +306,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import { formatCurrency } from "@/utils/formatCurrency";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
 import type { CorretajeDisplay } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/corretajes/useCorretajeSection";
 import { useCorretajeSection } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/corretajes/useCorretajeSection";
 

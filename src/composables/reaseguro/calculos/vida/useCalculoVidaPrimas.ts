@@ -1,8 +1,8 @@
 import { OperacionesRamosActions } from "@/API/catalogos/operaciones-ramos/operaciones-ramos.actions";
 import { calculoPrimasActions } from "@/API/reaseguro/calculos/calculo_primas.actions";
 import type { CalculoPrimasVidas } from "@/API/reaseguro/calculos/calculo_primas.interface";
-import { useDialog } from "@/stores/dialogStore";
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useDialog } from "@/stores/general/dialogStore";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 import { downloadFileFromBase64 } from "@/utils/downloadFileFromBase64";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { ref } from "vue";

@@ -1,5 +1,5 @@
 import type { BorPrimasSection, BorSiniestrosSection, CoberturasSection, ComisionesRateOnLineSection, CorretajeSection, CumulosSection, DetallesProporcionalesSection, EdoSection, ExcedentesSection, GeneralesSection, GeneralSectionCompleteData, GeneralSectionTableMoneda, GeneralSectionTableOperacionRamo, IntermediarioSection, PagoSection, PolizasFacultativasSection, ProporcionPrimasSection, ReaseguradoresSection, ReinstalacionesSection, TarifasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 export interface TablaOperacionRamoContratoInterface {
@@ -34,7 +34,7 @@ const STORAGE_KEYS = {
   borSiniestros:         "CAE_BOR_SINIESTROS_CONTRATO"
 } as const;
 
-export const useContratoAEStore = defineStore("contratoAccEnf", () => {
+export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
   const dialog = useDialog();
 
   const activeTab = ref<string>(localStorage.getItem(STORAGE_KEYS.activeTab) ?? "tab-1",);

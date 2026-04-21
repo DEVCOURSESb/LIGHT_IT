@@ -1,9 +1,9 @@
 import { ClasificacionCoberturaActions } from "@/API/catalogos/clasificacion/clasificacion-cobertura.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = ClasificacionCoberturaActions()
 
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const ClasificacionCoberturaConfig = {
   entity: "clasificacion-cobertura",

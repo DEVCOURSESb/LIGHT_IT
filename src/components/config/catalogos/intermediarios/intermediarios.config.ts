@@ -1,8 +1,8 @@
 import { IntermediariosActions } from "@/API/catalogos/intermediarios/intermediarios.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler"
+import { handleValidations } from "@/utils/validations/handleValidations"
 
 const actions = IntermediariosActions()
-const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const intermediariosConfig = {
   entity: "intermediarios",

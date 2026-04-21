@@ -1,7 +1,7 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 export const useGeneralValidations = () => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   return {
     idContrato: (value: string) => (val.minMaxString(value, 1, 16) && val.allowUnderscore(value)) || "Debe tener entre 1 y 16 caracteres.",

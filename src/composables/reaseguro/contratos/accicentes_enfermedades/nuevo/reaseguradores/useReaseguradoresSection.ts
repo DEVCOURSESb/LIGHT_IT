@@ -1,12 +1,12 @@
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { useReaseguradoresSectionValidations } from "./useReaseguradoresSectionValidations";
 import { useForm } from "vee-validate";
 import { computed, nextTick, ref, watch, type Ref } from "vue";
-import { formattNumber } from "@/utils/formattNumber";
-import { formatCurrency } from "@/utils/formatCurrency";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { formattNumber } from "@/utils/formatters/formattNumber";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import type { ReaseguradoresSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
 interface FormatNumberOptions {

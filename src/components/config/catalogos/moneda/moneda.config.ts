@@ -1,8 +1,8 @@
 import { MonedaActions } from "@/API/catalogos/monedas/moneda.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = MonedaActions()
-const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMax, minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const monedaConfig = {
   entity: "moneda",

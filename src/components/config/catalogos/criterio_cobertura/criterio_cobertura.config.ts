@@ -1,8 +1,8 @@
 import { CriterioCoberturaActions } from "@/API/catalogos/criterio_cobertura/criterio_cobertura.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = CriterioCoberturaActions();
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const CriterioCoberturaConfig = {
   entity: "CriterioCobertura",

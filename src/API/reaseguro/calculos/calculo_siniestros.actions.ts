@@ -1,6 +1,6 @@
 import { BaseAPI } from "@/API/BaseAPI";
 import type { CalculoSiniestrosVida } from "./calculo_siniestros.interface";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 
 export const calculoSiniestrosActions = () => {
   const baseAPI = BaseAPI({ prefix: 'ws_latino/reaseguro', isBase: false, isPrivate: true });

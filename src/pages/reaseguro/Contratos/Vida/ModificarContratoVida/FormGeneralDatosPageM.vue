@@ -280,8 +280,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { NuevoContratoVida } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoDG.actions'
-import { useContratoStore, type ContratoGeneralDatos } from '@/stores/contratoStore'
-import { DialogType, useDialog } from '@/stores/dialogStore'
+import { useContratoStore, type ContratoGeneralDatos } from '@/stores/reaseguro/contratos/vidaStore'
+import { DialogType, useDialog } from '@/stores/general/dialogStore'
 import { ValidacionesContrato } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/ValidacionesContrato'
 
 const contratoStore = useContratoStore()

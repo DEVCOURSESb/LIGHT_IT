@@ -62,10 +62,10 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
-import { useContratoStore } from '@/stores/contratoStore'
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { useContratoStore } from '@/stores/reaseguro/contratos/vidaStore'
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
-import { AuthStore } from '@/stores/authStore'
+import { AuthStore } from '@/stores/auth/authStore'
 
 const contratoStore = useContratoStore()
 const modalResumen = ref(false)

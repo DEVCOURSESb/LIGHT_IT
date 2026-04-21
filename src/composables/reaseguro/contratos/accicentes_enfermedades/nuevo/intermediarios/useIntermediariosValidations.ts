@@ -1,7 +1,7 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 export const useIntermediariosValidations = () => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   return {
     // ¿Intermediario? (0=NO | 1=SI)

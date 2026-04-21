@@ -168,8 +168,8 @@
 
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue'
-import { useContratoStore, type ComisionReaseguro } from '@/stores/contratoStore'
-import { useDialog, DialogType } from '@/stores/dialogStore'
+import { useContratoStore, type ComisionReaseguro } from '@/stores/reaseguro/contratos/vidaStore'
+import { useDialog, DialogType } from '@/stores/general/dialogStore'
 import { NuevoContratoVidaConR } from '@/pages/reaseguro/Contratos/Vida/NuevoContratoVida/NuevoContratoConfigR.actions'
 
 const emits = defineEmits<{

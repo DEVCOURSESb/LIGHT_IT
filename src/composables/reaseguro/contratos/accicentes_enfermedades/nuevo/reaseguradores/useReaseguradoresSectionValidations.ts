@@ -1,4 +1,4 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 interface props {
   isTypeProporcional: boolean
@@ -9,7 +9,7 @@ interface props {
  * @returns Object
  */
 export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props) => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   return {
     cveReasegurador: (value: number) => (value != null && value >= 0) || "Reasegurador es obligatorio",

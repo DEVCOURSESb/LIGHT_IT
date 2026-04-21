@@ -1,4 +1,4 @@
-import { AuthStore } from '@/stores/authStore';
+import { AuthStore } from '@/stores/auth/authStore';
 import axios, { type AxiosInstance } from 'axios'
 
 interface BaseAPIOptions {
@@ -38,7 +38,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
       async response => {
 
         if (response.status === 208) {
-          const { showModalExistRow } = await import("@/utilities/catalogos/showModalExistRow");
+          const { showModalExistRow } = await import("@/utils/showModalExistRow");
           showModalExistRow();
         }
 
@@ -47,7 +47,7 @@ export function BaseAPI({ prefix, isPrivate = true, isBase = true }: BaseAPIOpti
       async error => {
         console.log(error);
         if (error.code === 'ERR_NETWORK') {
-          const { SessionManager } = await import('@/utils/sessionManager');
+          const { SessionManager } = await import('@/utils/auth/sessionManager');
           await SessionManager.handleSessionExpiration();
         }
         return Promise.reject(error);

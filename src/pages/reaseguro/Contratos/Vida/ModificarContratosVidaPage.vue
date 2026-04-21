@@ -46,7 +46,7 @@
   import { onMounted, ref } from 'vue';
   import { format, parseISO } from 'date-fns';
   import { NuevoContratoVida } from './NuevoContratoVida/NuevoContratoDG.actions';
-  import { DialogType, useDialog } from "@/stores/dialogStore"
+  import { DialogType, useDialog } from "@/stores/general/dialogStore"
 
   const {
     subramoOptions, fetchSubramos

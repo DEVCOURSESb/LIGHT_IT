@@ -13,5 +13,5 @@
 </template>
 
 <script lang="ts" setup>
-  import FooterComponent from '@/layouts/FooterComponent.vue'
+  import FooterComponent from '@/components/general/FooterComponent.vue'
 </script>

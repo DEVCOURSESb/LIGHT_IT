@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch } from 'vue'
-import { useContratoStore } from '@/stores/contratoStore'
+import { useContratoStore } from '@/stores/reaseguro/contratos/vidaStore'
 import ResumenReaseguradoresPageV from './ResumenReaseguradoresPageV.vue'
 
 const contratoStore = useContratoStore()

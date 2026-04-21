@@ -1,12 +1,12 @@
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { useAccidentesEnfermedades } from "../useAccidentesEnfermedades";
 import { useForm } from "vee-validate";
 import { ref, computed } from "vue";
-import { formatCurrency } from "@/utils/formatCurrency";
-import { formattNumber } from "@/utils/formattNumber";
-import { DialogType, useDialog } from "@/stores/dialogStore";
-import { validarCSV, esArchivoCSVValido } from "@/utils/validateCSV";
-import { parseCSVLine, getCSVColumns } from "@/utils/csvParser";
+import { formatCurrency } from "@/utils/formatters/formatCurrency";
+import { formattNumber } from "@/utils/formatters/formattNumber";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
+import { validarCSV, esArchivoCSVValido } from "@/utils/files/validateCSV";
+import { parseCSVLine, getCSVColumns } from "@/utils/files/csvParser";
 import { useComisionesRateOnLineValidations } from "./useComisionesRateOnLineValidations";
 import { storeToRefs } from "pinia";
 import type { ComisionesRateOnLineSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";

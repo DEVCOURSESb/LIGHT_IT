@@ -1,9 +1,9 @@
 import { CriteriosAsignacionActions } from "@/API/catalogos/criterios_asignacion/criterios_asignacion.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = CriteriosAsignacionActions()
 
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const criteriosAsignacionConfig = {
   entity: "criteriosAsignacion",

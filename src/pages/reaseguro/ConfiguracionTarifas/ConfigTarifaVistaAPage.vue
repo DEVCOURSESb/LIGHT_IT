@@ -109,7 +109,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from 'vue'
 import { useRoute } from 'vue-router'
-import { DialogType, useDialog } from "@/stores/dialogStore"
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
 import { BaseAPI } from '@/API/BaseAPI'
 
 const route = useRoute()

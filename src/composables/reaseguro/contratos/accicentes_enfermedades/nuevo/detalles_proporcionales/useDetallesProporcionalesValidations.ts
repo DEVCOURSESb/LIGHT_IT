@@ -1,7 +1,7 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 export const useDetallesProporcionalesValidations = () => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   const round2 = (num: number) => {
     return Math.round((num + Number.EPSILON) * 100) / 100;

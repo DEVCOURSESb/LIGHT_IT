@@ -1,7 +1,7 @@
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 export const useComisionesRateOnLineValidations = () => {
-  const val = validationsHandler();
+  const val = handleValidations();
 
   return {
     cveReaseguradorComisRol: (value: number | null) => {

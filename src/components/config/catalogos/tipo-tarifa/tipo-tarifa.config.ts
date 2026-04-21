@@ -1,8 +1,8 @@
 import { TipoTarifaActions } from "@/API/catalogos/tipos-tarifa/tipos-tarifa.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = TipoTarifaActions()
-const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber } = validationsHandler();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber } = handleValidations();
 
 export const tipoTarifaConfig = {
   entity: "tipo-tarifa",

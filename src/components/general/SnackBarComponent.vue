@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 
 const snackbarStore = useSnackbar();
 const { showSnackbar, text, snackbarColor } = storeToRefs(snackbarStore);

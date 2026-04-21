@@ -1,7 +1,7 @@
 import { othersActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/others.actions";
 import type { PolizasFacultativasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
-import { DialogType, useDialog } from "@/stores/dialogStore";
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { storeToRefs } from "pinia";
 import { useForm } from "vee-validate";
 import { ref } from "vue";

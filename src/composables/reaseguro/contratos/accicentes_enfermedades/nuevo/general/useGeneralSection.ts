@@ -1,9 +1,9 @@
-import { useContratoAEStore } from "@/stores/reaseguro/contratos/AEStore";
+import { useContratoAEStore } from "@/stores/reaseguro/contratos/accidentesEnfermedadesStore";
 import { useForm } from "vee-validate";
 import { computed, ref, toRaw, watch } from "vue";
 import { useGeneralValidations } from "./useGeneralValidations";
 import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import type {
   GeneralesSection,
   GeneralSectionTableMoneda,

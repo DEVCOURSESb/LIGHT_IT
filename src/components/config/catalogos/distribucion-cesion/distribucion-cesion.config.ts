@@ -1,8 +1,8 @@
 import { DistribucionCesionActions } from "@/API/catalogos/distribucion-cesion/distribucion-cesion.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = DistribucionCesionActions()
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const DistribucionCesionConfig = {
   entity: "distribucion-cesion",

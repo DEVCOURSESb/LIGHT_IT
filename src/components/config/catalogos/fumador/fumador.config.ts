@@ -1,8 +1,8 @@
 import { FumadorActions } from "@/API/catalogos/fumador/fumador.actions"
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = FumadorActions();
-const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = validationsHandler();
+const { minMaxString, validateBoolean, transformToUpperCase, transformBooleanToNumber, transformNumberToBoolean } = handleValidations();
 
 export const FumadorConfig = {
   entity: 'Fumador',

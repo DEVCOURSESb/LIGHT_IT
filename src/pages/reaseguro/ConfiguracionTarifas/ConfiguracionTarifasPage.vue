@@ -74,8 +74,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { DialogType, useDialog } from "@/stores/dialogStore"
-import { AuthStore } from '@/stores/authStore'
+import { DialogType, useDialog } from "@/stores/general/dialogStore"
+import { AuthStore } from '@/stores/auth/authStore'
 import { BaseAPI } from '@/API/BaseAPI'
 
 interface DetalleTarifa {

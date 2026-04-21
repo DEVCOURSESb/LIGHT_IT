@@ -203,7 +203,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { useContratoStore } from '@/stores/contratoStore'
+import { useContratoStore } from '@/stores/reaseguro/contratos/vidaStore'
 import { storeToRefs } from 'pinia'
 
 const hidratarListaReaseguradores = () => {

@@ -171,7 +171,7 @@ const listItems: ListItem[] = [
             items: [],
           },
           {
-            name: "visualizarContratoAccidentesEnfermedades",
+            name: "visualizarContrato",
             title: "Visualizar",
             icon: "",
             items: [],

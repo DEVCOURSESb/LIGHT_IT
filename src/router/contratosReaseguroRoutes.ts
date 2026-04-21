@@ -18,15 +18,15 @@ export const contratosReaseguroRoutes = {
           meta: { title: "Nuevo contrato accidentes y enfermedades" },
         },
         {
-          path: "modificarContratoAccidentesEnfermedades",
+          path: "modificarContrato",
           name: "contratos-accidentes-modificar",
           component: () => import("@/pages/TodoPage.vue"),
           meta: { title: "Modificar Contratos" },
         },
         {
-          path: "visualizarContratoAccidentesEnfermedades",
+          path: "visualizarContrato",
           name: "contratos-accidentes-visualizar",
-          component: () => import("@/pages/TodoPage.vue"),
+          component: () => import("@/pages/reaseguro/Contratos/accidentes-enfermedades/VisualizarContratoAyEPage.vue"),
           meta: { title: "Visualizar Contratos" },
         },
       ],

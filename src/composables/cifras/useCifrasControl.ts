@@ -4,7 +4,7 @@ import type {
   CifrasControlSiniestroDTO,
 } from "@/API/generic/cifras-control";
 import { CifrasControlActions } from "@/API/cifras-control/cifras-control.actions";
-import { useSnackbar } from "@/stores/useSnackbar";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 import { computed, watch } from 'vue';
 
 export const useCifrasControl = () => {

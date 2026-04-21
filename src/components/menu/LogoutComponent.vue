@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { DialogType, useDialog } from "@/stores/dialogStore";
+import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useAuth } from "@/composables/auth/useAuth";
 
 const router = useRouter();

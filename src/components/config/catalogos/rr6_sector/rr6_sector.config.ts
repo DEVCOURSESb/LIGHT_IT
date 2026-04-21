@@ -1,9 +1,9 @@
 import { Rr6SectorActions } from "@/API/catalogos/rr6_sector/rr6_sector.actions";
-import { validationsHandler } from "@/utilities/validations/validationsHandler";
+import { handleValidations } from "@/utils/validations/handleValidations";
 
 const actions = Rr6SectorActions();
 
-const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = validationsHandler();
+const { minMaxString, validateBoolean, transformBooleanToNumber, transformNumberToBoolean, transformToUpperCase } = handleValidations();
 
 export const rr6SectorConfig = {
   entity: "rr6_sector",
