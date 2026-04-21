@@ -101,7 +101,7 @@ export const useExcedentesSection = () => {
       console.log(coberturasCVES)
       console.log(queryCoberturasAyE.data.value)
       
-      coberturasDisponibles.value = queryCoberturasAyE.data.value?.filter( row => coberturasCVES.includes(row.cveCobAyE) ? row : null );
+      coberturasDisponibles.value = queryCoberturasAyE.data.value?.filter( row => coberturasCVES.includes(row.cveCobaye) ? row : null );
     }
    );
 
@@ -154,7 +154,7 @@ export const useExcedentesSection = () => {
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
     );
   };
 

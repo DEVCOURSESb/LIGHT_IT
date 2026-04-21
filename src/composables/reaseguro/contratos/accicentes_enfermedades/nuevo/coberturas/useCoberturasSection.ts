@@ -259,7 +259,7 @@ export const useCoberturasSection = () => {
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
     );
   };
 
