@@ -18,7 +18,7 @@ interface Moneda {
 }
 
 interface FormaContractual {
-  cveFcontrac: number
+  cveFContrac: number
   descFcontrac: string
 }
 
@@ -132,7 +132,7 @@ export const NuevoContratoVida = () => {
 
     formaContractualOptions.value = data.map(i => ({
       title: i.descFcontrac,
-      value: Number(i.cveFcontrac)
+      value: Number(i.cveFContrac)
     }))
   }
 

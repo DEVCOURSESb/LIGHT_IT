@@ -27,13 +27,13 @@
               <v-select
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobaye"
+                item-value="cveCobAyE"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
-                :model-value="formData['cveCobayeCapa']"
-                @update:model-value="setFieldValue('cveCobayeCapa', $event)"
-                :error-messages="showErrors ? formErrors['cveCobayeCapa'] : undefined"
+                :model-value="formData['cveCobAyECapa']"
+                @update:model-value="setFieldValue('cveCobAyECapa', $event)"
+                :error-messages="showErrors ? formErrors['cveCobAyECapa'] : undefined"
               />
             </v-col>
 
@@ -168,13 +168,13 @@ const {
 // sigue la misma lógica que calcularNoCapa del composable
 const noCapa = computed(() => {
   const criterio = formData.cveCriterioAsigCapa;
-  const cobaye   = formData.cveCobayeCapa;
+  const cobaye   = formData.cveCobAyECapa;
 
   if (criterio === 1) {
     return dataTable.value.length + 1;
   }
   if (criterio === 4 && cobaye != null) {
-    return dataTable.value.filter((r) => r.cveCobayeCapa === cobaye).length + 1;
+    return dataTable.value.filter((r) => r.cveCobAyECapa === cobaye).length + 1;
   }
   return "—";
 });

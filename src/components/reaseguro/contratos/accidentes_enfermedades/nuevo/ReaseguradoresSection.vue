@@ -175,14 +175,14 @@
               <v-select
                 :items="queryCalculoComision.data.value || []"
                 item-title="formulaComision"
-                item-value="cveCalcomis"
+                item-value="cveCalComis"
                 :disabled="queryCalculoComision.isLoading.value"
                 label="Fórmula comisión / rate on line"
                 variant="solo-filled"
                 clearable
-                :model-value="formData['cveCalcomis']"
-                @update:model-value="setFieldValue('cveCalcomis', $event)"
-                :error-messages="showErrors ? formErrors['cveCalcomis'] : undefined"
+                :model-value="formData['cveCalComis']"
+                @update:model-value="setFieldValue('cveCalComis', $event)"
+                :error-messages="showErrors ? formErrors['cveCalComis'] : undefined"
               />
             </v-col>
 

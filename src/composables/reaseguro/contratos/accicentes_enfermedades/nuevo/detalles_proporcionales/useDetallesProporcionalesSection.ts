@@ -18,12 +18,11 @@ type DetallesProporcionalesDisplay = DetallesProporcionalesSection & {
   descDistrCesion: string;
   descMonedaDetalles: string;
   montoRetencionFormatted: string;
-  montoRetencionContratoFormatted: string;
   montoCesionFormatted: string;
   capacidadContratoFormatted: string;
 };
 
-// Tipo del formulario — sin idContrato (lo agrega el store al guardar)
+// tipo del formulario — sin idContrato (lo agrega el store al guardar)
 type DetallesProporcionalesForm = Omit<DetallesProporcionalesSection, "idContrato">;
 
 export const useDetallesProporcionalesSection = () => {
@@ -44,9 +43,9 @@ export const useDetallesProporcionalesSection = () => {
   const extensionesCoberturaToShow = ref<Extension[]>([]);
 
   const calcularExtensiones = () => {
-    const operaciones = generales.value.CAE_OPERACION_RAMO ?? [];
-    const minExtCober =
-    operaciones.length > 0
+    const operaciones = generales.value.CAE_OPERACION_RAMO.filter(row => row.operRamoActivo) ?? [];
+
+    const minExtCober = operaciones.length == 1
     ? Math.min(...operaciones.map((op) => op.cveExtCoberContrato))
     : null;
     
@@ -79,10 +78,6 @@ export const useDetallesProporcionalesSection = () => {
     [...detallesProporcionales.value]
   );
 
-  // Bloqueado mientras haya al menos un registro activo (patrón criterioEstaFijo)
-  const isDetallesOperacionRamoDisabled = computed<boolean>(
-    () => detallesProporcionalesTable.value.some((r) => r.detalleActivo)
-  );
 
   // Valor fijo de detallesOperRamo una vez que existe algún registro
   const detallesOperRamoFijo = computed<number | null>(
@@ -100,13 +95,11 @@ export const useDetallesProporcionalesSection = () => {
   })
   const porcentajeCesion       = ref<number>(0);
   const montoRetencion         = ref("");
-  const montoRetencionContrato = ref("");
   const montoCesion            = ref("");
   const capacidadContrato      = ref("");
 
   const formatNumberRefs: Record<string, typeof montoRetencion> = {
     montoRetencion,
-    montoRetencionContrato,
     montoCesion,
     capacidadContrato,
   };
@@ -128,6 +121,36 @@ export const useDetallesProporcionalesSection = () => {
       detalleActivo:            true,
     },
   });
+
+   // Bloqueado mientras haya al menos un registro activo (patrón criterioEstaFijo)
+  const isDetallesOperacionRamoDisabled = computed<boolean>(() => {
+    //  tipo de reaseguro es PROPORCIONAL (0)
+    if (generales.value.cveTreaseg !== 0) return true;
+
+    const operacionesActivas = generales.value.CAE_OPERACION_RAMO.filter(
+      (r) => r.operRamoActivo,
+    );
+
+    const total = operacionesActivas.length;
+
+    if (total === 0) return true;
+
+    if (total === 1) {
+      const tipoCober = operacionesActivas[0]!.cveExtCoberContrato;
+      if (tipoCober === 3) {
+        // Spec: total=1 y tipo=3 → forzar NO y deshabilitar
+        setFieldValue("detallesOperRamo", 0);
+        return true;
+      }
+      // total=1 y tipo≠3 → habilitado
+      return false;
+    }
+
+    // total > 1 → habilitado
+    return false;
+  });
+
+
 
   // Sincronizar detallesOperRamo cuando ya hay registros previos
   watch(
@@ -228,7 +251,6 @@ export const useDetallesProporcionalesSection = () => {
         queryMoneda.data.value ?? [], "cveMoneda", "descMoneda", row.cveMonedaDetalles
       ),
       montoRetencionFormatted:         formatCurrency(row.montoRetencion),
-      montoRetencionContratoFormatted: formatCurrency(row.montoRetencionContrato),
       montoCesionFormatted:            formatCurrency(row.montoCesion),
       capacidadContratoFormatted:      formatCurrency(row.capacidadContrato),
     }))
@@ -243,7 +265,6 @@ export const useDetallesProporcionalesSection = () => {
     porcentajeRetencion.value    = null;
     porcentajeCesion.value       = 0;
     montoRetencion.value         = "";
-    montoRetencionContrato.value = "";
     montoCesion.value            = "";
     capacidadContrato.value      = "";
     showErrors.value             = false;
@@ -298,7 +319,6 @@ export const useDetallesProporcionalesSection = () => {
       porcentajeRetencion:      formData.porcentajeRetencion ?? null,
       porcentajeCesion:         formData.porcentajeCesion ?? null,
       montoRetencion:           formData.montoRetencion ?? 0,
-      montoRetencionContrato:   formData.montoRetencionContrato ?? 0,
       montoCesion:              formData.montoCesion ?? 0,
       capacidadContrato:        formData.capacidadContrato ?? 0,
       cveCriterioAsigCapacidad: formData.cveCriterioAsigCapacidad,
@@ -364,12 +384,10 @@ export const useDetallesProporcionalesSection = () => {
     porcentajeRetencion.value = item.porcentajeRetencion ?? null;
 
     montoRetencion.value         = item.montoRetencion         ? formatCurrency(item.montoRetencion)         : "";
-    montoRetencionContrato.value = item.montoRetencionContrato ? formatCurrency(item.montoRetencionContrato) : "";
     montoCesion.value            = item.montoCesion            ? formatCurrency(item.montoCesion)            : "";
     capacidadContrato.value      = item.capacidadContrato      ? formatCurrency(item.capacidadContrato)      : "";
 
     setFieldValue("montoRetencion",         item.montoRetencion);
-    setFieldValue("montoRetencionContrato", item.montoRetencionContrato);
     setFieldValue("montoCesion",            item.montoCesion);
     setFieldValue("capacidadContrato",      item.capacidadContrato);
 
@@ -410,7 +428,6 @@ export const useDetallesProporcionalesSection = () => {
     { title: "% RETENCIÓN",                  key: "porcentajeRetencion",             sortable: true,  headerProps: hp },
     { title: "% CESIÓN",                     key: "porcentajeCesion",                sortable: true,  headerProps: hp },
     { title: "MONTO RETENCIÓN",              key: "montoRetencionFormatted",         sortable: true,  headerProps: hp },
-    { title: "MONTO RETENCIÓN CONTRATO",     key: "montoRetencionContratoFormatted", sortable: true,  headerProps: hp },
     { title: "MONTO CESIÓN",                 key: "montoCesionFormatted",            sortable: true,  headerProps: hp },
     { title: "CAPACIDAD DE CONTRATO",        key: "capacidadContratoFormatted",      sortable: true,  headerProps: hp },
     { title: "CRITERIO DE CAPACIDAD",        key: "descCriterioAsigCapacidad",       sortable: true,  headerProps: hp },
@@ -433,7 +450,6 @@ export const useDetallesProporcionalesSection = () => {
     porcentajeRetencion,
     porcentajeCesion,
     montoRetencion,
-    montoRetencionContrato,
     montoCesion,
     capacidadContrato,
     onInputGeneric,

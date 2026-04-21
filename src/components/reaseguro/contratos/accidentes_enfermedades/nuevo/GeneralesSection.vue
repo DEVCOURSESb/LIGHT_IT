@@ -55,6 +55,35 @@
                 :error-messages="showErrors ? formErrors['ordenCobertura'] : undefined"
               />
             </v-col>
+            
+            <!-- CONTRATO RETENCION-->
+            <v-col cols="12" md="3">
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-select
+                      :disabled="formData['ordenCobertura'] == 1"
+                      :items="[
+                        { title: 'SÍ', value: 1 },
+                        { title: 'NO', value: 0 }
+                      ]"
+                      item-title="title"
+                      item-value="value"
+                      label="Contrato retención"
+                      variant="solo-filled"
+                      clearable
+                      :model-value="formData['contratoRetencion']"
+                      @update:model-value="setFieldValue('contratoRetencion', $event)"
+                      :error-messages="showErrors ? formErrors['contratoRetencion'] : undefined"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  Indicador que permite señalar si el contrato cubre la retención del contrato con orden de cobertura anterior
+                </span>
+              </v-tooltip>
+            </v-col>
           </v-row>
 
           <!-- ! ROW-->
@@ -80,14 +109,14 @@
               <v-select
                 :items="queryTiposContrato.data.value?.filter(row => row.cveTreasegRaw == formData['cveTreaseg']) || []"
                 item-title="descTcontrato"
-                item-value="idTcontrato"
+                item-value="idTContrato"
                 label="Tipo de contrato"
                 variant="solo-filled"
                 clearable
                 :disabled="queryTiposContrato.isLoading.value"
-                :model-value="formData['idTcontrato']"
-                @update:model-value="setFieldValue('idTcontrato', $event)"
-                :error-messages="showErrors ? formErrors['idTcontrato'] : undefined"
+                :model-value="formData['idTContrato']"
+                @update:model-value="setFieldValue('idTContrato', $event)"
+                :error-messages="showErrors ? formErrors['idTContrato'] : undefined"
               />
             </v-col>
 
@@ -96,14 +125,14 @@
               <v-select
                 :items="queryFormaContractual.data.value || []"
                 item-title="descFcontrac"
-                item-value="cveFcontrac"
+                item-value="cveFContrac"
                 label="Forma contractual"
                 variant="solo-filled"
                 clearable
                 :disabled="queryFormaContractual.isLoading.value"
-                :model-value="formData['cveFcontrac']"
-                @update:model-value="setFieldValue('cveFcontrac', $event)"
-                :error-messages="showErrors ? formErrors['cveFcontrac'] : undefined"
+                :model-value="formData['cveFContrac']"
+                @update:model-value="setFieldValue('cveFContrac', $event)"
+                :error-messages="showErrors ? formErrors['cveFContrac'] : undefined"
               />
             </v-col>
 
@@ -142,7 +171,7 @@
             </v-col>
 
             <!-- ENTIDAD FEDERATIVA si forma contractual es facultativa-->
-            <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
+            <v-col cols="12" md="3" v-if="formData['cveFContrac'] == 1">
               <v-select
                 :items="queryEntidadFederativa.data.value || []"
                 item-title="nombreEntidad"
@@ -158,7 +187,7 @@
             </v-col>
 
             <!-- MUNICIPIO si forma contractual es facultativa-->
-            <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
+            <v-col cols="12" md="3" v-if="formData['cveFContrac'] == 1">
               <v-text-field 
                 label="Municipio" 
                 variant="solo-filled" 
@@ -169,7 +198,7 @@
             </v-col>
 
             <!-- TIPO DE SECTOR si forma contractual es facultativa-->
-            <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
+            <v-col cols="12" md="3" v-if="formData['cveFContrac'] == 1">
               <v-select
                 :items="queryRr6Sector.data.value || []"
                 item-title="descSector"
@@ -188,7 +217,7 @@
           <!-- !row -->
           <v-row>
             <!-- ASEGURADO si forma contractual es facultativa-->
-            <v-col cols="12" md="3" v-if="formData['cveFcontrac'] == 1">
+            <v-col cols="12" md="3" v-if="formData['cveFContrac'] == 1">
               <v-text-field
                 label="Asegurado"
                 variant="solo-filled"
@@ -237,23 +266,35 @@
 
             <!-- TIPO DE OPERACION / RAMO -->
             <v-col cols="12" md="2">
-              <v-select
-                :items="queryExtensionesCobertura.data.value || []"
-                item-title="descExtCober"
-                item-value="cveExtCober"
-                label="Tipo de operación / ramo"
-                variant="solo-filled"
-                clearable
-                :disabled="queryExtensionesCobertura.isLoading.value"
-                :model-value="formData['cveExtCoberContrato']"
-                @update:model-value="setFieldValue('cveExtCoberContrato', $event)"
-              />
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-select
+                      :items="opcionesExtCoberDisponibles"
+                      item-title="descExtCober"
+                      item-value="cveExtCober"
+                      item-disabled="disabled"
+                      label="Tipo de operación / ramo"
+                      variant="solo-filled"
+                      clearable
+                      :disabled="queryExtensionesCobertura.isLoading.value"
+                      :model-value="formData['cveExtCoberContrato']"
+                      @update:model-value="setFieldValue('cveExtCoberContrato', $event)"
+                      :error-messages="showErrors ? formErrors['cveExtCoberContrato'] : undefined"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  Indica si el contrato cubre por Operación / Ramo / Subramo / Subsubramo
+                </span>
+              </v-tooltip>
             </v-col>
 
             <!-- OPERACION / RAMO -->
             <v-col cols="12" md="2">
               <v-select
-                :items="queryOperacionesRamos.data.value?.filter(row => String(row.cveExtCober) === String(formData['cveExtCoberContrato']) && row.operacion === '3000') || []"
+                :items="opcionesOperRamoFiltradas"
                 item-title="descOperacionRamos"
                 item-value="cveCobertura"
                 label="Operación / ramo"
@@ -378,5 +419,7 @@ const {
   queryMoneda,
   queryExtensionesCobertura,
   queryOperacionesRamos,
+  opcionesExtCoberDisponibles,
+  opcionesOperRamoFiltradas,
 } = useGeneralSection();
 </script>
