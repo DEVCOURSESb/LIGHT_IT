@@ -3,7 +3,7 @@ import type { CalculoSiniestrosVida } from "./calculo_siniestros.interface";
 import { DialogType, useDialog } from "@/stores/general/dialogStore";
 
 export const calculoSiniestrosActions = () => {
-  const baseAPI = BaseAPI({ prefix: 'ws_latino/reaseguro', isBase: false, isPrivate: true });
+  const baseAPI = BaseAPI({ prefix: 'ws_latino/reaseguro', isBase: true, isPrivate: true });
   const dialog = useDialog()
 
   const fetch = async () => {
