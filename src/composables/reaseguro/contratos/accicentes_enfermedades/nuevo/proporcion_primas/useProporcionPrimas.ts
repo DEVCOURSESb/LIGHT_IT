@@ -186,19 +186,19 @@ export const useProporcionPrimas = () => {
     // Aplica filtro por oper/ramo sobre un conjunto base de CVE_COBAYE
     const filtrarPorOperRamo = (cvesPermitidos: string[], cveOper: string | null) => {
       let base = todasCoberturas.filter((c) =>
-        cvesPermitidos.includes(String(c.cveCobAyE))
+        cvesPermitidos.includes(String(c.cveCobaye))
       );
       if (!cveOper || ["3000", "030"].includes(cveOper)) return base;
       const permitidos = COBERTURAS_POR_OPER_RAMO[cveOper];
       return permitidos
-        ? base.filter((c) => permitidos.includes(String(c.cveCobAyE)))
+        ? base.filter((c) => permitidos.includes(String(c.cveCobaye)))
         : base;
     };
 
     // criterio 4 → todos los cveCobAyE de coberturas del contrato
     if (crit === 4) {
       const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
-      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
     // criterio 7 → por reaseguradora
@@ -207,11 +207,11 @@ export const useProporcionPrimas = () => {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === formData.cveReaseguradorPrimaPropor)
           .map((c) => String(c.cveCobAyE));
-        return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+        return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
       }
       // criterio cobertura 1 o 3 → todos
       const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
-      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
     // criterio 8 → por oper/ramo
@@ -294,20 +294,7 @@ export const useProporcionPrimas = () => {
     operacionesRamosData.value.find((o) => o.value === cve)?.title ?? "";
 
   const getDescCobaye = (cve: number | null): string =>
-    queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? "";
-
-  // Validación de duplicados
-  const esDuplicado = (newRow: ProporcionPrimasSection): boolean => {
-    const crit = newRow.cveCriterioAsigPrimaPropor;
-
-    // POR CONTRATO → solo se permite un registro
-    if (crit === 1) {
-      return originalDataTable.value.some((r) => r.cveCriterioAsigPrimaPropor === 1);
-    }
-
-    // Para el resto → sin restricción adicional (tantos registros como combinaciones posibles)
-    return false;
-  };
+    queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? "";
 
   // Agregar proporción
   const handleAgregarProporcion = () => {
@@ -338,15 +325,6 @@ export const useProporcionPrimas = () => {
       porcentajePrimaAnual:       formData.porcentajePrimaAnual,
       proporcionActiva:           true,
     };
-
-    if (esDuplicado(newRow)) {
-      dialog.show({
-        title: "Atención",
-        message: "Solo se permite un registro de proporción de prima para el contrato cuando el criterio es POR CONTRATO.",
-        type: DialogType.ERROR,
-      });
-      return;
-    }
 
     originalDataTable.value.push(newRow);
     resetFormAndRefs();

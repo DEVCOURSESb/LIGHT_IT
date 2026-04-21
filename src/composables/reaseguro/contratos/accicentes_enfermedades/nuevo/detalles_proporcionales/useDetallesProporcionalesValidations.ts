@@ -52,6 +52,7 @@ export const useDetallesProporcionalesValidations = () => {
         else
           return `La capacidad del contrato no corresponde con el monto de cesión y retención (${montoEsperado}).`;
       } else {
+        //TODO: campo monto retencion contrato no existe
         const esperado = round2(
            Number(context.form?.montoCesion) +
           Number(context.form?.montoRetencionContrato)

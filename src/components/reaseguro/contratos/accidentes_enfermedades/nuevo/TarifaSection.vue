@@ -211,6 +211,14 @@
 
                 <template #no-data>No hay datos disponibles</template>
 
+                <template #item.proporcionDias="{ item }">
+                  <v-checkbox
+                    :model-value="item.proporcionDias"
+                    hide-details
+                    density="compact"
+                  />
+                </template>
+
                 <template #item.primaTarifaReaseg="{ item }">
                   {{ item.primaTarifaReaseg != null
                       ? item.primaTarifaReaseg.toLocaleString("es-MX", { minimumFractionDigits: 2 })
@@ -227,6 +235,9 @@
 
                 <template #item.edad="{ item }">
                   {{ item.edad ?? "—" }}
+                </template>
+                <template #item.cveSexo="{ item }">
+                  {{ item.cveSexo ?? "—" }}
                 </template>
 
                 <template #item.tarifaActiva="{ item }">

@@ -31,6 +31,7 @@
                 @update:model-value="onInputGeneric('participacion', $event)"
                 @blur="onBlurGeneric('participacion')"
                 :error-messages="showErrors ? formErrors['participacion'] : undefined"
+                suffix="%"
               />
               <v-slider
                 v-model="participacion"
@@ -68,6 +69,7 @@
                 @update:model-value="onInputGeneric('porcentajePtu', $event)"
                 @blur="onBlurGeneric('porcentajePtu')"
                 :error-messages="showErrors ? formErrors['porcentajePtu'] : undefined"
+                suffix="%"
               />
               <v-slider
                 v-model="porcentajePtu"
@@ -105,6 +107,7 @@
                 @update:model-value="onInputGeneric('porcentajeK', $event)"
                 @blur="onBlurGeneric('porcentajeK')"
                 :error-messages="showErrors ? formErrors['porcentajeK'] : undefined"
+                suffix="%"
               />
             </v-col>
 
@@ -196,6 +199,7 @@
                 @update:model-value="onInputGeneric('comisRolFija', $event)"
                 @blur="onBlurGeneric('comisRolFija')"
                 :error-messages="showErrors ? formErrors['comisRolFija'] : undefined"
+                suffix="%"
               />
               <v-slider
                 v-model="comisRolFija"
@@ -217,6 +221,7 @@
                @update:model-value="onInputGeneric('comisRolProvisional', $event)"
                @blur="onBlurGeneric('comisRolProvisional')"
                :error-messages="showErrors ? formErrors['comisRolProvisional'] : undefined"
+               suffix="%"
              />
              <v-slider
                v-model="comisRolProvisional"
@@ -239,6 +244,7 @@
                @update:model-value="onInputGeneric('comisRolMin', $event)"
                @blur="onBlurGeneric('comisRolMin')"
                :error-messages="showErrors ? formErrors['comisRolMin'] : undefined"
+               suffix="%"
              />
              <v-slider
                v-model="comisRolMin"
@@ -260,6 +266,7 @@
                @update:model-value="onInputGeneric('comisRolMax', $event)"
                @blur="onBlurGeneric('comisRolMax')"
                :error-messages="showErrors ? formErrors['comisRolMax'] : undefined"
+               suffix="%"
              />
              <v-slider
                v-model="comisRolMax"
@@ -458,6 +465,7 @@
                 @update:model-value="onInputGeneric('noClaims', $event)"
                 @blur="onBlurGeneric('noClaims')"
                 :error-messages="showErrors ? formErrors['noClaims'] : undefined"
+                suffix="%"
               />
             </v-col>
           </v-row>

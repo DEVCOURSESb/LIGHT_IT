@@ -20,8 +20,8 @@ export const useGeneralValidations = () => {
       return true;
     },
     ordenCobertura: (value: number) => val.minMax(value, 1, 999) || "Debe ser un número entre 1 y 999.",
-    cveTreaseg: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.",
-    idTContrato: (value: number) => value >= 0 || "El tipo de contrato es obligatorio.",
+    cveTreaseg: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.a",
+    idTContrato: (value: number) => value >= 0 || "El tipo de contrato es obligatorio.a",
     cveFContrac: (value: number) => value >= 0 || "La forma contractual es obligatoria.",
     // criterio cobertura solo si el reaseguro es proporcional
     cveCriterioCob: (value: number, context: any) => {

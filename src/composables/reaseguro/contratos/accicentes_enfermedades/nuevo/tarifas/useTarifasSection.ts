@@ -188,12 +188,12 @@ export const useTarifasSection = () => {
 
     const filtrarPorOperRamo = (cvesPermitidos: string[], cveOperRamo: string | null) => {
       let base = todasCoberturas.filter((c) =>
-        cvesPermitidos.includes(String(c.cveCobAyE))
+        cvesPermitidos.includes(String(c.cveCobaye))
       );
       if (!cveOperRamo || ["3000", "030"].includes(cveOperRamo)) return base;
       const permitidos = COBERTURAS_POR_OPER_RAMO[cveOperRamo];
       return permitidos
-        ? base.filter((c) => permitidos.includes(String(c.cveCobAyE)))
+        ? base.filter((c) => permitidos.includes(String(c.cveCobaye)))
         : base;
     };
 
@@ -202,7 +202,7 @@ export const useTarifasSection = () => {
       // recupera todas las claves registradas para l contrato de la tabla CAE_COBERTURAS_CONTRATO
       const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       // de todas las cobrturas extrae toda la data en base a las claves recuperadas
-      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
     // criterio 7 → filtrado por reaseguradora si criterio cobertura es 0 o 6
@@ -211,10 +211,10 @@ export const useTarifasSection = () => {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === formData.cveReaseguradorTarifa)
           .map((c) => String(c.cveCobAyE));
-        return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+        return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
       }
       const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
-      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobAyE)));
+      return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
     // criterio 8 → filtrado por oper/ramo
@@ -379,7 +379,7 @@ export const useTarifasSection = () => {
     operacionesRamosData.value.find((o) => o.value === cve)?.title ?? "";
 
   const getDescCobaye = (cve: number | null): string =>
-    queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? "";
+    queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? "";
 
   const getDescTarifa = (cve: number | null): string =>
     (queryTipoTarifa?.data.value ?? []).find((t: any) => t.cveTarifa === cve)
@@ -527,6 +527,9 @@ export const useTarifasSection = () => {
     { title: "% PRIMA EMITIDA",  key: "porcentajePrimaEmi", sortable: true,  headerProps: hp },
     { title: "TARIFA AL MILLAR", key: "tarifaMillar",       sortable: true,  headerProps: hp },
     { title: "EDAD",             key: "edad",               sortable: true,  headerProps: hp },
+    { title: "SEXO",             key: "cveSexo",               sortable: true,  headerProps: hp },
+    { title: "MONEDA TARIFA",    key: "cveMonedaTarifa",               sortable: true,  headerProps: hp },
+    { title: "¿PROPORCIÓN POR DIAS DE VIGENCIA?",    key: "proporcionDias",               sortable: true,  headerProps: hp },
     { title: "ACTIVA",           key: "tarifaActiva",       sortable: true,  headerProps: hp },
     { title: "EDITAR",           key: "editar",             sortable: false, headerProps: hp },
   ];

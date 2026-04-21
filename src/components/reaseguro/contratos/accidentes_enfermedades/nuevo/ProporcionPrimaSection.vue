@@ -69,16 +69,26 @@
 
             <!-- NÚMERO DE DÍAS CUBIERTOS -->
             <v-col cols="12" md="3">
-              <v-text-field
-                :model-value="formData.noDiasCubiertos"
-                @update:model-value="setFieldValue('noDiasCubiertos', $event ? parseInt($event): 0)"
-                label="Número de días cubiertos "
-                variant="solo-filled"
-                type="number"
-                min="0"
-                step="1"
-                :error-messages="showErrors ? formErrors.noDiasCubiertos : ''"
-              />
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-text-field
+                      :model-value="formData.noDiasCubiertos"
+                      @update:model-value="setFieldValue('noDiasCubiertos', $event ? parseInt($event): 0)"
+                      label="Número de días cubiertos "
+                      variant="solo-filled"
+                      type="number"
+                      min="0"
+                      step="1"
+                      :error-messages="showErrors ? formErrors.noDiasCubiertos : ''"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  Indica el número de días de vigencia de la póliza a los cuales se le aplicará la proporción de la prima cedida
+                </span>
+              </v-tooltip>
             </v-col>
 
             <!-- % PRIMA ANUAL -->

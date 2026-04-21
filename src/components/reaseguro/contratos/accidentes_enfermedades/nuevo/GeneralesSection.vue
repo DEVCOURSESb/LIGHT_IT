@@ -109,7 +109,7 @@
               <v-select
                 :items="queryTiposContrato.data.value?.filter(row => row.cveTreasegRaw == formData['cveTreaseg']) || []"
                 item-title="descTcontrato"
-                item-value="idTContrato"
+                item-value="idTcontrato"
                 label="Tipo de contrato"
                 variant="solo-filled"
                 clearable
@@ -125,7 +125,7 @@
               <v-select
                 :items="queryFormaContractual.data.value || []"
                 item-title="descFcontrac"
-                item-value="cveFContrac"
+                item-value="cveFcontrac"
                 label="Forma contractual"
                 variant="solo-filled"
                 clearable
