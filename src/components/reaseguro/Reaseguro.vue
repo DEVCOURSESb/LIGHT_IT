@@ -229,7 +229,7 @@ const listItems: ListItem[] = [
     items: [
       {
         name: "CalReportes",
-        title: "Cálculo de Reportes",
+        title: "Resumen de cálculos",
         icon: "",
         items: []
       }
