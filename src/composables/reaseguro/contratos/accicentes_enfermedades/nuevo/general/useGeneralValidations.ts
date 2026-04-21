@@ -20,9 +20,9 @@ export const useGeneralValidations = () => {
       return true;
     },
     ordenCobertura: (value: number) => val.minMax(value, 1, 999) || "Debe ser un número entre 1 y 999.",
-    cveTreaseg: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.",
-    idTcontrato: (value: number) => value >= 0 || "El tipo de contrato es obligatorio.",
-    cveFcontrac: (value: number) => value >= 0 || "La forma contractual es obligatoria.",
+    cveTreaseg: (value: number) => value >= 0 || "El tipo de reaseguro es obligatorio.a",
+    idTContrato: (value: number) => value >= 0 || "El tipo de contrato es obligatorio.a",
+    cveFContrac: (value: number) => value >= 0 || "La forma contractual es obligatoria.",
     // criterio cobertura solo si el reaseguro es proporcional
     cveCriterioCob: (value: number, context: any) => {
       const cveTreaseg = context.form?.cveTreaseg;
@@ -41,32 +41,32 @@ export const useGeneralValidations = () => {
     },
     // cveEntidad si la forma contractual es facultativa
     cveEntidad: (value: string, context: any) => {
-      const cveFcontrac = context.form?.cveFcontrac;
-      if (cveFcontrac === 1) {
+      const cveFContrac = context.form?.cveFContrac;
+      if (cveFContrac === 1) {
         return val.minMaxString(value, 1, 2) || "La entidad federativa es obligatoria.";
       }
       return true;
     },
     // municipio si la forma contractual es facultativa
     municipio: (value: string, context: any) => {
-      const cveFcontrac = context.form?.cveFcontrac;
-      if (cveFcontrac === 1) {
-        return val.minMaxString(value, 1, 100) || "El municipio es obligatorio y debe tener máximo 100 caracteres.";
+      const cveFContrac = context.form?.cveFContrac;
+      if (cveFContrac === 1) {
+        return val.minMaxString(value, 1, 100) && val.noSpecialCharacters(value) || "El municipio es obligatorio y debe tener máximo 100 caracteres.";
       }
       return true;
     },
     // cveSector si la forma contractual es facultativa
     cveSector: (value: string, context: any) => {
-      const cveFcontrac = context.form?.cveFcontrac;
-      if (cveFcontrac === 1) {
+      const cveFContrac = context.form?.cveFContrac;
+      if (cveFContrac === 1) {
         return val.minMaxString(value, 1, 10) || "El tipo de sector es obligatorio.";
       }
       return true;
     },
     // asegurado si la forma contractual es facultativa
     asegurado: (value: string, context: any) => {
-      const cveFcontrac = context.form?.cveFcontrac;
-      if (cveFcontrac === 1) {
+      const cveFContrac = context.form?.cveFContrac;
+      if (cveFContrac === 1) {
         return val.minMaxString(value, 1, 100) || "El asegurado es obligatorio y debe tener máximo 100 caracteres.";
       }
       return true;
@@ -75,5 +75,8 @@ export const useGeneralValidations = () => {
         return (val.minMaxString(value, 1, 1000) && val.noSpecialCharacters(value) ) || "Máximo 1000 caracteres, sin especiales.";
     },
     contratoActivo: (value: boolean) => value != null || "El estatus del contrato es obligatorio.",
+    contratoRetencion: (value: boolean) => {
+      return val.isFalsyExceptZero(value) || "Contrato retención obligatorio"
+    },
   };
 };

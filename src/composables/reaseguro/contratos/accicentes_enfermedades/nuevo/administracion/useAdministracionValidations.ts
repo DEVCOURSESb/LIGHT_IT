@@ -5,7 +5,7 @@ export const useAdministracionValidations = () => {
 
   // ── PAGOS ──────────────────────────────────────────────────────────────
   const pago = {
-    cveFormapago: (value: number | null | undefined) => {
+    cveFormaPago: (value: number | null | undefined) => {
       return (
         (value != null && value >= 0) ||
         "La forma de pago es obligatoria."
@@ -13,7 +13,7 @@ export const useAdministracionValidations = () => {
     },
 
     porcentajePago: (value: number | null, context: any) => {
-      const forma = context.form?.cveFormapago;
+      const forma = context.form?.cveFormaPago;
       if (forma === 7) {
         if (value == null) return "El % de pago es obligatorio.";
         return (
@@ -25,7 +25,7 @@ export const useAdministracionValidations = () => {
     },
 
     fechaPago: (value: string | null, context: any) => {
-      const forma = context.form?.cveFormapago;
+      const forma = context.form?.cveFormaPago;
       if (forma === 7) {
         return (
           (value != null && value !== "") ||

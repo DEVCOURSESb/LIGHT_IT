@@ -52,7 +52,7 @@ export const useAdministracionSection = () => {
   } = useForm<Omit<PagoSection, "idContrato" | "pagoActivo">>({
     validationSchema: useAdministracionValidations().pago,
     validateOnMount: false,
-    initialValues: { cveFormapago: undefined as unknown as number, porcentajePago: null, fechaPago: null },
+    initialValues: { cveFormaPago: undefined as unknown as number, porcentajePago: null, fechaPago: null },
   });
 
   const {
@@ -113,7 +113,7 @@ export const useAdministracionSection = () => {
   const fechaSinExiste    = (f: string) => tablaBorSiniestros.value.some((r) => r.fechaSiniestros === f);
 
   // Helpers: ¿ya existe un registro con esa periodicidad (no-ESPECÍFICA)?
-  const periodicidadPagoExiste   = (v: number) => tablaPagos.value.some((r) => r.cveFormapago === v);
+  const periodicidadPagoExiste   = (v: number) => tablaPagos.value.some((r) => r.cveFormaPago === v);
   const periodicidadEdoExiste    = (v: number) => tablaEdo.value.some((r) => r.cvePeriodicidadEdo === v);
   const periodicidadPrimasExiste = (v: number) => tablaBorPrimas.value.some((r) => r.cvePeriodicidadPrimas === v);
   const periodicidadSinExiste    = (v: number) => tablaBorSiniestros.value.some((r) => r.cvePeriodicidadSiniestros === v);
@@ -133,25 +133,25 @@ export const useAdministracionSection = () => {
     const { valid } = await validatePagos();
     if (!valid) return;
 
-    const { cveFormapago, porcentajePago: pct, fechaPago } = formPago;
+    const { cveFormaPago, porcentajePago: pct, fechaPago } = formPago;
 
     // Un solo registro si periodicidad ≠ ESPECÍFICA
-    if (cveFormapago !== 7 && periodicidadPagoExiste(cveFormapago)) {
+    if (cveFormaPago !== 7 && periodicidadPagoExiste(cveFormaPago)) {
       dialog.show({ title: "Atención", message: "Solo se permite un registro por forma de pago.", type: DialogType.ERROR });
       return;
     }
 
     // Fecha única
-    if (cveFormapago === 7 && fechaPago && fechaPagoExiste(fechaPago)) {
+    if (cveFormaPago === 7 && fechaPago && fechaPagoExiste(fechaPago)) {
       dialog.show({ title: "Atención", message: "Ya existe un registro para esa fecha de pago.", type: DialogType.ERROR });
       return;
     }
 
     tablaPagos.value.push({
       idContrato: aeStore.generales.idContrato,
-      cveFormapago,
-      porcentajePago: cveFormapago === 7 ? pct : null,
-      fechaPago:      cveFormapago === 7 ? fechaPago : null,
+      cveFormaPago,
+      porcentajePago: cveFormaPago === 7 ? pct : null,
+      fechaPago:      cveFormaPago === 7 ? fechaPago : null,
       pagoActivo:     true,
     });
 
@@ -162,18 +162,18 @@ export const useAdministracionSection = () => {
 
   const togglePagoActivo = (item: PagoSection) => {
     const idx = tablaPagos.value.findIndex(
-      (r) => r.cveFormapago === item.cveFormapago && r.fechaPago === item.fechaPago
+      (r) => r.cveFormaPago === item.cveFormaPago && r.fechaPago === item.fechaPago
     );
     if (idx !== -1) tablaPagos.value[idx]!.pagoActivo = !tablaPagos.value[idx]!.pagoActivo;
   };
 
   const editPago = (item: PagoSection) => {
     const idx = tablaPagos.value.findIndex(
-      (r) => r.cveFormapago === item.cveFormapago && r.fechaPago === item.fechaPago
+      (r) => r.cveFormaPago === item.cveFormaPago && r.fechaPago === item.fechaPago
     );
     if (idx === -1) return;
     const row = tablaPagos.value[idx]!;
-    setFieldPago("cveFormapago",    row.cveFormapago);
+    setFieldPago("cveFormaPago",    row.cveFormaPago);
     setFieldPago("porcentajePago",  row.porcentajePago);
     setFieldPago("fechaPago",       row.fechaPago);
     porcentajePago.value = row.porcentajePago;
@@ -352,7 +352,7 @@ export const useAdministracionSection = () => {
   // GUARDAR ADMINISTRACIÓN
   const handleGuardarAdministracion = () => {
     // Validar suma de porcentajes = 100 si hay registros con forma ESPECÍFICA
-    const tieneEspecifica = tablaPagos.value.some((p) => p.cveFormapago === 7);
+    const tieneEspecifica = tablaPagos.value.some((p) => p.cveFormaPago === 7);
     if (tieneEspecifica && Math.abs(sumaPorcentajePagos.value - 100) > 0.001) {
       dialog.show({
         title: "Error de validación",
@@ -404,7 +404,7 @@ export const useAdministracionSection = () => {
   const hp = { style: "font-weight: bold" };
 
   const headersPago = [
-    { title: "Forma de pago",   key: "cveFormapago",    sortable: true,  headerProps: hp },
+    { title: "Forma de pago",   key: "cveFormaPago",    sortable: true,  headerProps: hp },
     { title: "% Pago",          key: "porcentajePago",  sortable: true,  headerProps: hp },
     { title: "Fecha de pago",   key: "fechaPago",       sortable: true,  headerProps: hp },
     { title: "Activo",          key: "pagoActivo",      sortable: true,  headerProps: hp },

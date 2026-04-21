@@ -33,7 +33,7 @@ export const useExcedentesSection = () => {
   const dataTable = computed<ExcedentesDisplay[]>(() =>
     originalDataTable.value.map((row) => ({
       ...row,
-      descCobaye: getDescCobaye(row.cveCobayeCapa),
+      descCobaye: getDescCobaye(row.cveCobAyECapa),
     }))
   );
 
@@ -73,7 +73,7 @@ export const useExcedentesSection = () => {
   // noCapa automático según criterio
   const calcularNoCapa = (
     cveCriterio: number | null,
-    cveCobaye: number | null
+    cveCobAyE: number | null
   ): number => {
     if (cveCriterio === 1) {
       // POR CONTRATO: secuencial global
@@ -81,7 +81,7 @@ export const useExcedentesSection = () => {
     }
     // POR COBERTURA: secuencial por cobertura
     return (
-      originalDataTable.value.filter((r) => r.cveCobayeCapa === cveCobaye).length + 1
+      originalDataTable.value.filter((r) => r.cveCobAyECapa === cveCobAyE).length + 1
     );
   };
 
@@ -96,19 +96,19 @@ export const useExcedentesSection = () => {
 
       if(coberturas == null || isLoading) return;
 
-      const coberturasCVES = coberturas.map( row => row.cveCobaye );
+      const coberturasCVES = coberturas.map( row => row.cveCobAyE );
 
       console.log(coberturasCVES)
       console.log(queryCoberturasAyE.data.value)
       
-      coberturasDisponibles.value = queryCoberturasAyE.data.value?.filter( row => coberturasCVES.includes(row.cveCobaye) ? row : null );
+      coberturasDisponibles.value = queryCoberturasAyE.data.value?.filter( row => coberturasCVES.includes(row.cveCobAyE) ? row : null );
     }
    );
 
-  // Watch: limpiar cveCobayeCapa al cambiar criterio
+  // Watch: limpiar cveCobAyECapa al cambiar criterio
   watch(
     () => formData.cveCriterioAsigCapa,
-    () => { setFieldValue("cveCobayeCapa", null); }
+    () => { setFieldValue("cveCobAyECapa", null); }
   );
 
   // Handlers genéricos numéricos
@@ -154,7 +154,7 @@ export const useExcedentesSection = () => {
   const getDescCobaye = (cve: number | null): string => {
     if (cve == null) return "";
     return (
-      queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? ""
+      queryCoberturasAyE.data.value?.find((c) => c.cveCobAyE === cve)?.descCobaye ?? ""
     );
   };
 
@@ -180,8 +180,8 @@ export const useExcedentesSection = () => {
     const newRow: ExcedentesSection = {
       idContrato:          "",
       cveCriterioAsigCapa: formData.cveCriterioAsigCapa!,
-      cveCobayeCapa:       formData.cveCobayeCapa ?? null,
-      noCapa:              calcularNoCapa(formData.cveCriterioAsigCapa, formData.cveCobayeCapa),
+      cveCobAyECapa:       formData.cveCobAyECapa ?? null,
+      noCapa:              calcularNoCapa(formData.cveCriterioAsigCapa, formData.cveCobAyECapa),
       retencionCapa:       formData.retencionCapa ?? 0,
       cesionCapa:          formData.cesionCapa ?? 0,
       capaActiva:          true,
@@ -197,7 +197,7 @@ export const useExcedentesSection = () => {
     const index = originalDataTable.value.findIndex(
       (r) =>
         r.cveCriterioAsigCapa === item.cveCriterioAsigCapa &&
-        r.cveCobayeCapa       === item.cveCobayeCapa &&
+        r.cveCobAyECapa       === item.cveCobAyECapa &&
         r.noCapa              === item.noCapa
     );
     if (index !== -1) {
@@ -211,7 +211,7 @@ export const useExcedentesSection = () => {
     const index = originalDataTable.value.findIndex(
       (r) =>
         r.cveCriterioAsigCapa === item.cveCriterioAsigCapa &&
-        r.cveCobayeCapa       === item.cveCobayeCapa &&
+        r.cveCobAyECapa       === item.cveCobAyECapa &&
         r.noCapa              === item.noCapa
     );
     if (index === -1) return;
@@ -219,7 +219,7 @@ export const useExcedentesSection = () => {
     const row = originalDataTable.value[index]!;
 
     setFieldValue("cveCriterioAsigCapa", row.cveCriterioAsigCapa);
-    setFieldValue("cveCobayeCapa",       row.cveCobayeCapa);
+    setFieldValue("cveCobAyECapa",       row.cveCobAyECapa);
     setFieldValue("retencionCapa",       row.retencionCapa);
     setFieldValue("cesionCapa",          row.cesionCapa);
 

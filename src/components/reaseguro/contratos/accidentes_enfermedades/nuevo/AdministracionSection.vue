@@ -15,20 +15,20 @@
             <!-- FORMA DE PAGO -->
             <v-col cols="12" md="3">
               <v-select
-                :model-value="formPago.cveFormapago"
-                @update:model-value="setFieldPago('cveFormapago', $event)"
+                :model-value="formPago.cveFormaPago"
+                @update:model-value="setFieldPago('cveFormaPago', $event)"
                 :items="queryFormaPago?.data.value ?? []"
                 item-title="descFormaPago"
                 item-value="cveFormaPago"
                 label="Forma de pago"
                 variant="solo-filled"
                 clearable
-                :error-messages="showErrorsPago ? errorsPago.cveFormapago : ''"
+                :error-messages="showErrorsPago ? errorsPago.cveFormaPago : ''"
               />
             </v-col>
 
             <!-- % DE PAGO (solo cuando ESPECÍFICA = 7) -->
-            <v-col v-if="formPago.cveFormapago === 7" cols="12" md="3">
+            <v-col v-if="formPago.cveFormaPago === 7" cols="12" md="3">
               <v-text-field
                 :model-value="porcentajePago"
                 @update:model-value="
@@ -60,7 +60,7 @@
             </v-col>
 
             <!-- FECHA DE PAGO (solo cuando ESPECÍFICA = 7) -->
-            <v-col v-if="formPago.cveFormapago === 7" cols="12" md="3">
+            <v-col v-if="formPago.cveFormaPago === 7" cols="12" md="3">
               <v-text-field
                 :model-value="formPago.fechaPago"
                 @update:model-value="setFieldPago('fechaPago', $event)"
@@ -82,7 +82,7 @@
 
           <!-- Indicador suma % -->
           <div
-            v-if="tablaPagos.some(p => p.cveFormapago === 7)"
+            v-if="tablaPagos.some(p => p.cveFormaPago === 7)"
             class="text-caption mb-2"
             :class="Math.abs(sumaPorcentajePagos - 100) < 0.001 ? 'text-success' : 'text-error'"
           >

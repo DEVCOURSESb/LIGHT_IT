@@ -76,7 +76,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
       return true;
     },
     /* formula comision rate online si tipo de comision / rate on line es 1 variable */
-    cveCalcomis: (value: number, context: any) => {
+    cveCalComis: (value: number, context: any) => {
       const comisRol = context.form?.cveAsignacionComisRol;
       if(comisRol === 1) {
         if ( value === null || value === undefined ) return "Fórmula comisión / rate on line es obligatorio";

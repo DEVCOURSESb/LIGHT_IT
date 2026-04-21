@@ -63,7 +63,7 @@ export const useProporcionPrimas = () => {
       ...row,
       nombreReasegurador: getNombreReasegurador(row.cveReaseguradorPrimaPropor),
       descOperRamo:       getDescOperRamo(row.cveOperRamoPrimaPropor),
-      descCobaye:         getDescCobaye(row.cveCobayePrimaPropor),
+      descCobaye:         getDescCobaye(row.cveCobAyEPrimaPropor),
     }))
   );
 
@@ -81,7 +81,7 @@ export const useProporcionPrimas = () => {
       cveCriterioAsigPrimaPropor: 1,
       cveReaseguradorPrimaPropor: null,
       cveOperRamoPrimaPropor:     null,
-      cveCobayePrimaPropor:       null,
+      cveCobAyEPrimaPropor:       null,
       noDiasCubiertos:            undefined as unknown as number,
       porcentajePrimaAnual:       undefined as unknown as number,
     },
@@ -195,9 +195,9 @@ export const useProporcionPrimas = () => {
         : base;
     };
 
-    // criterio 4 → todos los cveCobaye de coberturas del contrato
+    // criterio 4 → todos los cveCobAyE de coberturas del contrato
     if (crit === 4) {
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
@@ -206,11 +206,11 @@ export const useProporcionPrimas = () => {
       if ([0, 6].includes(critCob!)) {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === formData.cveReaseguradorPrimaPropor)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
       }
       // criterio cobertura 1 o 3 → todos
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
@@ -220,11 +220,11 @@ export const useProporcionPrimas = () => {
       if ([3, 6].includes(critCob!)) {
         const cves = coberturaContrato
           .filter((c) => c.cveOperRamoCobertura === cveOper)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
       // criterio cobertura 0 o 1 → todos + filtro oper/ramo
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return filtrarPorOperRamo(cves, cveOper);
     }
 
@@ -240,23 +240,23 @@ export const useProporcionPrimas = () => {
               c.cveOperRamoCobertura     === cveOper &&
               c.cveReaseguradorCobertura === cveReaseg
           )
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (critCob === 3) {
         const cves = coberturaContrato
           .filter((c) => c.cveOperRamoCobertura === cveOper)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (critCob === 0) {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === cveReaseg)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
       // criterio cobertura 1 → todos + filtro oper/ramo
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return filtrarPorOperRamo(cves, cveOper);
     }
 
@@ -269,12 +269,12 @@ export const useProporcionPrimas = () => {
     () => {
       setFieldValue("cveReaseguradorPrimaPropor", null);
       setFieldValue("cveOperRamoPrimaPropor",     null);
-      setFieldValue("cveCobayePrimaPropor",        null);
+      setFieldValue("cveCobAyEPrimaPropor",        null);
     }
   );
 
-  watch(() => formData.cveOperRamoPrimaPropor,     () => setFieldValue("cveCobayePrimaPropor", null));
-  watch(() => formData.cveReaseguradorPrimaPropor, () => setFieldValue("cveCobayePrimaPropor", null));
+  watch(() => formData.cveOperRamoPrimaPropor,     () => setFieldValue("cveCobAyEPrimaPropor", null));
+  watch(() => formData.cveReaseguradorPrimaPropor, () => setFieldValue("cveCobAyEPrimaPropor", null));
 
   // Reset
   const resetFormAndRefs = () => {
@@ -295,19 +295,6 @@ export const useProporcionPrimas = () => {
 
   const getDescCobaye = (cve: number | null): string =>
     queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? "";
-
-  // Validación de duplicados
-  const esDuplicado = (newRow: ProporcionPrimasSection): boolean => {
-    const crit = newRow.cveCriterioAsigPrimaPropor;
-
-    // POR CONTRATO → solo se permite un registro
-    if (crit === 1) {
-      return originalDataTable.value.some((r) => r.cveCriterioAsigPrimaPropor === 1);
-    }
-
-    // Para el resto → sin restricción adicional (tantos registros como combinaciones posibles)
-    return false;
-  };
 
   // Agregar proporción
   const handleAgregarProporcion = () => {
@@ -333,20 +320,11 @@ export const useProporcionPrimas = () => {
       cveCriterioAsigPrimaPropor: formData.cveCriterioAsigPrimaPropor!,
       cveReaseguradorPrimaPropor: formData.cveReaseguradorPrimaPropor ?? null,
       cveOperRamoPrimaPropor:     formData.cveOperRamoPrimaPropor ?? null,
-      cveCobayePrimaPropor:       formData.cveCobayePrimaPropor ?? null,
+      cveCobAyEPrimaPropor:       formData.cveCobAyEPrimaPropor ?? null,
       noDiasCubiertos:            formData.noDiasCubiertos,
       porcentajePrimaAnual:       formData.porcentajePrimaAnual,
       proporcionActiva:           true,
     };
-
-    if (esDuplicado(newRow)) {
-      dialog.show({
-        title: "Atención",
-        message: "Solo se permite un registro de proporción de prima para el contrato cuando el criterio es POR CONTRATO.",
-        type: DialogType.ERROR,
-      });
-      return;
-    }
 
     originalDataTable.value.push(newRow);
     resetFormAndRefs();
@@ -371,7 +349,7 @@ export const useProporcionPrimas = () => {
     setFieldValue("cveCriterioAsigPrimaPropor", row.cveCriterioAsigPrimaPropor);
     setFieldValue("cveReaseguradorPrimaPropor", row.cveReaseguradorPrimaPropor);
     setFieldValue("cveOperRamoPrimaPropor",     row.cveOperRamoPrimaPropor);
-    setFieldValue("cveCobayePrimaPropor",        row.cveCobayePrimaPropor);
+    setFieldValue("cveCobAyEPrimaPropor",        row.cveCobAyEPrimaPropor);
     setFieldValue("noDiasCubiertos",            row.noDiasCubiertos);
     setFieldValue("porcentajePrimaAnual",       row.porcentajePrimaAnual);
 
@@ -388,7 +366,7 @@ export const useProporcionPrimas = () => {
         r.cveCriterioAsigPrimaPropor === item.cveCriterioAsigPrimaPropor &&
         r.cveReaseguradorPrimaPropor === item.cveReaseguradorPrimaPropor &&
         r.cveOperRamoPrimaPropor     === item.cveOperRamoPrimaPropor     &&
-        r.cveCobayePrimaPropor       === item.cveCobayePrimaPropor       &&
+        r.cveCobAyEPrimaPropor       === item.cveCobAyEPrimaPropor       &&
         r.noDiasCubiertos            === item.noDiasCubiertos
     );
 

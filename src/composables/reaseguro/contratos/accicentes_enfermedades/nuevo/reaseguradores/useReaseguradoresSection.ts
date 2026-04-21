@@ -95,6 +95,30 @@ export const useReaseguradoresSection = () => {
     validateOnMount: false,
   });
 
+  watch(() => formData.capa, (capa) => {
+    if( !!capa ) {
+      const rowExistenteConMismaCapa = reaseguradores.value.find(row => row.capa == capa);
+      if ( !!rowExistenteConMismaCapa ) {
+        const prioridadV = String(rowExistenteConMismaCapa.prioridad);
+        prioridad.value = prioridadV;
+        onInputGeneric("prioridad", prioridadV)
+        onBlurGeneric("prioridad");
+      }
+    }
+  });
+
+  watch(() => formData.limResponsabilidad, (limResponsabilidad) => {
+    if( !!limResponsabilidad ) {
+      const rowExistenteConMismoLim = reaseguradores.value.find(row => row.limResponsabilidad == limResponsabilidad);
+      if ( !!rowExistenteConMismoLim ) {
+        const limResponsabilidadV = String(rowExistenteConMismoLim.prioridad);
+        limResponsabilidad.value = limResponsabilidadV;
+        onInputGeneric("limResponsabilidad", limResponsabilidadV)
+        onBlurGeneric("limResponsabilidad");
+      }
+    }
+  });
+
   const showErrors = ref(false);
 
   const onInputGeneric = (key: string, value: string) => {
@@ -292,7 +316,7 @@ export const useReaseguradoresSection = () => {
         setFieldValue("comisRolFija", null);
       }
       if (newValue == null || newValue != 1) {
-        setFieldValue("cveCalcomis", null);
+        setFieldValue("cveCalComis", null);
         setFieldValue("comisRolProvisional", null);
         setFieldValue("comisRolMin", null);
         setFieldValue("comisRolMax", null);
@@ -359,7 +383,7 @@ export const useReaseguradoresSection = () => {
         row.aniosArrastre === compare.aniosArrastre &&
         row.comisRolReaseguro === compare.comisRolReaseguro &&
         row.cveAsignacionComisRol === compare.cveAsignacionComisRol &&
-        row.cveCalcomis === compare.cveCalcomis &&
+        row.cveCalComis === compare.cveCalComis &&
         row.comisRolFija === compare.comisRolFija &&
         row.comisRolProvisional === compare.comisRolProvisional &&
         row.comisRolMin === compare.comisRolMin &&
@@ -427,7 +451,7 @@ export const useReaseguradoresSection = () => {
     setFieldValue("aniosArrastre", row?.aniosArrastre);
     setFieldValue("comisRolReaseguro", row?.comisRolReaseguro);
     setFieldValue("cveAsignacionComisRol", row?.cveAsignacionComisRol);
-    setFieldValue("cveCalcomis", row?.cveCalcomis);
+    setFieldValue("cveCalComis", row?.cveCalComis);
     setFieldValue("comisRolFija", row?.comisRolFija);
     setFieldValue("comisRolProvisional", row?.comisRolProvisional);
     setFieldValue("comisRolMin", row?.comisRolMin);
@@ -506,7 +530,7 @@ export const useReaseguradoresSection = () => {
         aniosArrastre: formData.aniosArrastre ?? null,
         comisRolReaseguro: formData.comisRolReaseguro ?? null,
         cveAsignacionComisRol: formData.cveAsignacionComisRol ?? null,
-        cveCalcomis: formData.cveCalcomis ?? null,
+        cveCalComis: formData.cveCalComis ?? null,
         comisRolFija: formData.comisRolFija ?? null,
         comisRolProvisional: formData.comisRolProvisional ?? null,
         comisRolMin: formData.comisRolMin ?? null,
@@ -555,7 +579,6 @@ export const useReaseguradoresSection = () => {
 
         /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
         if(newRow.capa && newRow.capa != 1) {
-          /* console.log({ dataTableOriginal }) */
           const arrayCapas = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!);
 
           const lastCapa = arrayCapas[arrayCapas.length - 1];
@@ -591,6 +614,18 @@ export const useReaseguradoresSection = () => {
           });
 
           return;
+        }
+
+        if(!!newRow.primaMin && !!newRow.primaMax){
+          if(newRow.primaMin > newRow.primaMax) {
+            dialog.show({
+              title: "Atención",
+              message: `La prima máxima es menor a la prima máxima; favor de verificar`,
+              type: DialogType.ERROR,
+            });
+
+            return;
+          }
         }
         
       }

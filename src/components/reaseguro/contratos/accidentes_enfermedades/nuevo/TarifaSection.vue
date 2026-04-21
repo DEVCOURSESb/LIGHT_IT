@@ -57,13 +57,13 @@
               <v-select
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobaye"
+                item-value="cveCobAyE"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
-                :model-value="formData['cveCobayeTarifa']"
-                @update:model-value="setFieldValue('cveCobayeTarifa', $event)"
-                :error-messages="showErrors ? formErrors['cveCobayeTarifa'] : undefined"
+                :model-value="formData['cveCobAyETarifa']"
+                @update:model-value="setFieldValue('cveCobAyETarifa', $event)"
+                :error-messages="showErrors ? formErrors['cveCobAyETarifa'] : undefined"
               />
             </v-col>
 
@@ -211,6 +211,14 @@
 
                 <template #no-data>No hay datos disponibles</template>
 
+                <template #item.proporcionDias="{ item }">
+                  <v-checkbox
+                    :model-value="item.proporcionDias"
+                    hide-details
+                    density="compact"
+                  />
+                </template>
+
                 <template #item.primaTarifaReaseg="{ item }">
                   {{ item.primaTarifaReaseg != null
                       ? item.primaTarifaReaseg.toLocaleString("es-MX", { minimumFractionDigits: 2 })
@@ -227,6 +235,9 @@
 
                 <template #item.edad="{ item }">
                   {{ item.edad ?? "—" }}
+                </template>
+                <template #item.cveSexo="{ item }">
+                  {{ item.cveSexo ?? "—" }}
                 </template>
 
                 <template #item.tarifaActiva="{ item }">

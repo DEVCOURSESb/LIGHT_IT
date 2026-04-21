@@ -57,8 +57,15 @@ export const useCumulosSection = () => {
 
   // Máximo de capas según excedentes registrados
   const maxCapas = computed(() => {
-    if (!esExcedentePorCapas.value || excedentes.value.length === 0) return 1;
-    return Math.max(...excedentes.value.map((e) => e.noCapa ?? 0));
+    const numReg = detallesProporcionales.value.filter( row => row.cumulos == 1 && row.detalleActivo );
+
+    if (!esExcedentePorCapas.value) {
+      const maxNumCapas = Math.max(...excedentes.value.map((e) => e.noCapa ?? 0));
+      return numReg.length * maxNumCapas;
+    };
+
+    return numReg.length;
+        
   });
 
   // Opciones de oper/ramo: solo detalles con cumulos = 1 (SI)

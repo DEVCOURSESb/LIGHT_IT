@@ -8,19 +8,29 @@
           <v-row>
             <!-- ¿DETALLES POR OPERACIÓN / RAMO? -->
             <v-col cols="12" md="3">
-              <v-select
-                :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
-                item-title="title"
-                item-value="value"
-                label="¿Detalles por operación / ramo?"
-                variant="solo-filled"
-                clearable
-                :model-value="formData['detallesOperRamo']"
-                @update:model-value="setFieldValue('detallesOperRamo', $event)"
-                :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
-                :disabled="isDetallesOperacionRamoDisabled"
-              />
-            </v-col>
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-select
+                      :items="[{ title: 'SÍ', value: 1 }, { title: 'NO', value: 0 }]"
+                      item-title="title"
+                      item-value="value"
+                      label="¿Detalles por operación / ramo?"
+                      variant="solo-filled"
+                      clearable
+                      :model-value="formData['detallesOperRamo']"
+                      @update:model-value="setFieldValue('detallesOperRamo', $event)"
+                      :error-messages="showErrors ? formErrors['detallesOperRamo'] : undefined"
+                      :disabled="isDetallesOperacionRamoDisabled"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  ¿El contrato tiene diferentes condiciones de cobertura entre cada ramo / subramo / subsubramo?
+                </span>
+              </v-tooltip>
+            </v-col>   
 
             <!-- TIPO DE OPERACIÓN / RAMO (DETALLADA) -->
             <v-col cols="12" md="3" v-show="formData['detallesOperRamo'] === 1">
@@ -103,18 +113,6 @@
               />
             </v-col>
 
-            <!-- MONTO RETENCIÓN CONTRATO -->
-            <v-col cols="12" md="3">
-              <v-text-field
-                label="Monto retención contrato"
-                variant="solo-filled"
-                :model-value="montoRetencionContrato"
-                @update:model-value="onInputGeneric('montoRetencionContrato', $event)"
-                @blur="onBlurGeneric('montoRetencionContrato')"
-                :error-messages="showErrors ? formErrors['montoRetencionContrato'] : undefined"
-              />
-            </v-col>
-
             <!-- MONTO CESIÓN -->
             <v-col cols="12" md="3">
               <v-text-field
@@ -177,19 +175,29 @@
 
             <!-- MONEDA DETALLES -->
             <v-col cols="12" md="3">
-              <v-select
-                :items="queryMoneda.data.value ?? []"
-                item-title="descMoneda"
-                item-value="cveMoneda"
-                label="Moneda detalles"
-                variant="solo-filled"
-                clearable
-                :loading="queryMoneda.isLoading.value"
-                :disabled="queryMoneda.isLoading.value"
-                :model-value="formData['cveMonedaDetalles']"
-                @update:model-value="setFieldValue('cveMonedaDetalles', $event)"
-                :error-messages="showErrors ? formErrors['cveMonedaDetalles'] : undefined"
-              />
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <div v-bind="props">
+                    <v-select
+                      :items="queryMoneda.data.value?.filter(row => ![0, 20, 30, 39].includes(row?.cveMoneda)) ?? []"
+                      item-title="descMoneda"
+                      item-value="cveMoneda"
+                      label="Moneda detalles"
+                      variant="solo-filled"
+                      clearable
+                      :loading="queryMoneda.isLoading.value"
+                      :disabled="queryMoneda.isLoading.value"
+                      :model-value="formData['cveMonedaDetalles']"
+                      @update:model-value="setFieldValue('cveMonedaDetalles', $event)"
+                      :error-messages="showErrors ? formErrors['cveMonedaDetalles'] : undefined"
+                    />
+                  </div>
+                </template>
+
+                <span>
+                  Indicia la moneda en la cual se capturan las condiciones del contrato
+                </span>
+              </v-tooltip>
             </v-col>
           </v-row>
 
@@ -307,7 +315,6 @@ const {
   porcentajeCesion,
   // montos
   montoRetencion,
-  montoRetencionContrato,
   montoCesion,
   capacidadContrato,
   onInputGeneric,

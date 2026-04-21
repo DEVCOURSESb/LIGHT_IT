@@ -33,7 +33,7 @@ export const useCoberturasValidations = () => {
       return true;
     },
 
-    cveCobaye: (value: number | null) => {
+    cveCobAyE: (value: number | null) => {
       return (
         (value != null && value >= 0) ||
         "La cobertura es obligatoria."

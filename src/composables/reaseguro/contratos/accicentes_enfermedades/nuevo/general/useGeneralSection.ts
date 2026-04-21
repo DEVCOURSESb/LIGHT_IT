@@ -107,6 +107,78 @@ export const useGeneralSection = () => {
     });
   });
 
+  const tiposExtCoberBloqueados = computed<Set<number>>(() => {
+    const bloqueados = new Set<number>();
+    const tabla = dataTableOperacionRamo.value;
+    const catalogo = queryOperacionesRamos.data.value ?? [];
+
+    // Tipos 0 y 1: basta con que haya al menos un registro activo
+    for (const tipo of [0, 1]) {
+      const tieneActivo = tabla.some(
+        (r) => r.cveExtCoberContrato === tipo && r.operRamoActivo,
+      );
+      if (tieneActivo) bloqueados.add(tipo);
+    }
+
+    // Tipos 2 y 3: bloqueado solo cuando todas las opciones del catálogo están cubiertas y activas
+    for (const tipo of [2, 3]) {
+      const opcionesDelCatalogo = catalogo
+        .filter(
+          (c) => Number(c.cveExtCober) === tipo && c.operacion === "3000",
+        )
+        .map((c) => c.cveCobertura);
+
+      if (opcionesDelCatalogo.length === 0) continue;
+
+      const todasCubiertasYActivas = opcionesDelCatalogo.every((cve) =>
+        tabla.some(
+          (r) =>
+            r.cveExtCoberContrato === tipo &&
+            String(r.cveOperRamo) === String(cve) &&
+            r.operRamoActivo,
+        ),
+      );
+
+      if (todasCubiertasYActivas) bloqueados.add(tipo);
+    }
+
+    return bloqueados;
+  });
+
+  const opcionesExtCoberDisponibles = computed(() => {
+    return (queryExtensionesCobertura.data.value ?? []).map((item) => ({
+        ...item,
+        disabled: tiposExtCoberBloqueados.value.has(item.cveExtCober),
+      }));
+  });
+
+  const opcionesOperRamoFiltradas = computed(() => {
+    const tipo = Number(formData.cveExtCoberContrato);
+    const catalogo = queryOperacionesRamos.data.value ?? [];
+    const tabla = dataTableOperacionRamo.value ?? [];
+
+    if (!tipo) return [];
+
+    let opciones = catalogo.filter(c =>
+      Number(c.cveExtCober) === tipo &&
+      String(c.operacion) === "3000"
+    );
+
+    if (tipo === 3) {
+      const usadosTipo2 = new Set(
+        tabla
+          .filter(r => Number(r.cveExtCoberContrato) === 2)
+          .map(r => String(r.cveOperRamo))
+      );
+
+      opciones = opciones.filter(
+        c => !usadosTipo2.has(String(c.subramo))
+      );
+    }
+
+    return opciones;
+  });
+
   const sendSelectToTableMoneda = () => {
     const monedaSeleccionadas = formData["cveMonedaContrato"];
 
@@ -227,10 +299,9 @@ export const useGeneralSection = () => {
 
     dialog.show({
       title: "Agregar operación/ramo",
-      message:
-        "Se agregará la operación/ramo seleccionada a la tabla. ¿Desea continuar?",
+        message: "¿Confirma que desea agregar las operaciones / ramos seleccionados?",
       ExtraAction: {
-        text: "Aceptar",
+        text: "Continuar",
         handler: () => {
           // obtener el objeto completo de extensión de cobertura
           const extCoberSelected = queryExtensionesCobertura.data.value?.find(
@@ -323,7 +394,7 @@ export const useGeneralSection = () => {
     initialValues: {
       ...initialValues, 
       ordenCobertura: initialValues.ordenCobertura ?? 1,
-      cveFcontrac: initialValues.cveFcontrac ?? 0,
+      cveFContrac: initialValues.cveFContrac ?? 0,
       negociosCubiertos: initialValues.negociosCubiertos ?? "TODA LA CARTERA",
       contratoActivo: initialValues.contratoActivo ?? false
     },
@@ -335,9 +406,9 @@ export const useGeneralSection = () => {
   watch(
     () => formData.cveTreaseg,
     (newValue) => {
-      setFieldValue("idTcontrato", null);
+      setFieldValue("idTContrato", null);
       if (Number(newValue) !== 0) {
-        setFieldValue("cveCriterioCob", null);
+        setFieldValue("cveCriterioCob", 1);
         setFieldValue("traspasoCartera", null);
       }
     },
@@ -345,7 +416,7 @@ export const useGeneralSection = () => {
 
   // Watch para limpiar campos cuando cambia la forma contractual
   watch(
-    () => formData.cveFcontrac,
+    () => formData.cveFContrac,
     (newValue, oldValue) => {
       // Si cambia de facultativa (1) a otro valor, limpiar campos relacionados
       if (oldValue === 1 && newValue !== 1) {
@@ -357,14 +428,23 @@ export const useGeneralSection = () => {
     },
   );
 
-    watch(
-      () => formData.cveExtCoberContrato,
-      (newValue, oldValue) => {
-        if (newValue !== oldValue) {
-          setFieldValue("cveOperRamo", null);
-        }
+  watch(
+    () => formData.cveExtCoberContrato,
+    (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        setFieldValue("cveOperRamo", null);
       }
-    );
+    }
+  );
+
+  watch(
+    () => formData.ordenCobertura,
+    (newValue, oldValue) => {
+      if (newValue !== oldValue && newValue == 1) {
+        setFieldValue("contratoRetencion", 0);
+      }
+    }
+  );
 
   const handleSubmit = async () => {
     showErrors.value = true;
@@ -404,6 +484,8 @@ export const useGeneralSection = () => {
     sendSelectToTableOperacionRamo,
     toggleOperRamoActivo,
     errorTablaOperacionRamo,
+    opcionesExtCoberDisponibles,
+    opcionesOperRamoFiltradas,
 
     // catalogos a utilizar
     queryTiposReaseguro,

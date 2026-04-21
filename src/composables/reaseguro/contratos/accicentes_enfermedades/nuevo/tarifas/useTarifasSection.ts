@@ -69,7 +69,7 @@ export const useTarifasSection = () => {
       ...row,
       nombreReasegurador: getNombreReasegurador(row.cveReaseguradorTarifa),
       descOperRamo:       getDescOperRamo(row.cveOperRamoTarifa),
-      descCobaye:         getDescCobaye(row.cveCobayeTarifa),
+      descCobaye:         getDescCobaye(row.cveCobAyETarifa),
       descTarifa:         getDescTarifa(row.cveTarifa),
     }))
   );
@@ -101,7 +101,7 @@ export const useTarifasSection = () => {
       cveCriterioAsigTarifa: 1,
       cveReaseguradorTarifa: null,
       cveOperRamoTarifa:     null,
-      cveCobayeTarifa:       null,
+      cveCobAyETarifa:       null,
       cveTarifa:             null,
       primaTarifaReaseg:     null,
       porcentajePrimaEmi:    null,
@@ -197,10 +197,10 @@ export const useTarifasSection = () => {
         : base;
     };
 
-    // criterio 4 → todos los cveCobaye de coberturas del contrato
+    // criterio 4 → todos los cveCobAyE de coberturas del contrato
     if (criterio === 4) {
       // recupera todas las claves registradas para l contrato de la tabla CAE_COBERTURAS_CONTRATO
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       // de todas las cobrturas extrae toda la data en base a las claves recuperadas
       return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
@@ -210,10 +210,10 @@ export const useTarifasSection = () => {
       if ([0, 6].includes(criterioCob!)) {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === formData.cveReaseguradorTarifa)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
       }
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return todasCoberturas.filter((c) => cves.includes(String(c.cveCobaye)));
     }
 
@@ -223,10 +223,10 @@ export const useTarifasSection = () => {
       if ([3, 6].includes(criterioCob!)) {
         const cves = coberturaContrato
           .filter((c) => c.cveOperRamoCobertura === cveOper)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return filtrarPorOperRamo(cves, cveOper);
     }
 
@@ -246,23 +246,23 @@ export const useTarifasSection = () => {
               c.cveOperRamoCobertura     == cveOper &&
               c.cveReaseguradorCobertura == cveReaseg
           )
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
           /* console.log({cves}) */
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (criterioCob === 3) {
         const cves = coberturaContrato
           .filter((c) => c.cveOperRamoCobertura === cveOper)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
       if (criterioCob === 0) {
         const cves = coberturaContrato
           .filter((c) => c.cveReaseguradorCobertura === cveReaseg)
-          .map((c) => String(c.cveCobaye));
+          .map((c) => String(c.cveCobAyE));
         return filtrarPorOperRamo(cves, cveOper);
       }
-      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobaye)))];
+      const cves = [...new Set(coberturaContrato.map((c) => String(c.cveCobAyE)))];
       return filtrarPorOperRamo(cves, cveOper);
     }
 
@@ -299,12 +299,12 @@ export const useTarifasSection = () => {
     () => {
       setFieldValue("cveReaseguradorTarifa", null);
       setFieldValue("cveOperRamoTarifa",     null);
-      setFieldValue("cveCobayeTarifa",        null);
+      setFieldValue("cveCobAyETarifa",        null);
     }
   );
 
-  watch(() => formData.cveOperRamoTarifa,    () => setFieldValue("cveCobayeTarifa", null));
-  watch(() => formData.cveReaseguradorTarifa, () => setFieldValue("cveCobayeTarifa", null));
+  watch(() => formData.cveOperRamoTarifa,    () => setFieldValue("cveCobAyETarifa", null));
+  watch(() => formData.cveReaseguradorTarifa, () => setFieldValue("cveCobAyETarifa", null));
 
   watch(
     () => formData.cveTarifa,
@@ -409,7 +409,7 @@ export const useTarifasSection = () => {
       cveCriterioAsigTarifa: formData.cveCriterioAsigTarifa!,
       cveReaseguradorTarifa: formData.cveReaseguradorTarifa ?? null,
       cveOperRamoTarifa:     formData.cveOperRamoTarifa ?? null,
-      cveCobayeTarifa:       formData.cveCobayeTarifa ?? null,
+      cveCobAyETarifa:       formData.cveCobAyETarifa ?? null,
       cveTarifa:             formData.cveTarifa ?? null,
       primaTarifaReaseg:     formData.primaTarifaReaseg ?? null,
       porcentajePrimaEmi:    formData.porcentajePrimaEmi ?? null,
@@ -454,7 +454,7 @@ export const useTarifasSection = () => {
     setFieldValue("cveCriterioAsigTarifa", row.cveCriterioAsigTarifa);
     setFieldValue("cveReaseguradorTarifa", row.cveReaseguradorTarifa);
     setFieldValue("cveOperRamoTarifa",     row.cveOperRamoTarifa);
-    setFieldValue("cveCobayeTarifa",       row.cveCobayeTarifa);
+    setFieldValue("cveCobAyETarifa",       row.cveCobAyETarifa);
     setFieldValue("cveTarifa",             row.cveTarifa);
     setFieldValue("primaTarifaReaseg",     row.primaTarifaReaseg);
     setFieldValue("porcentajePrimaEmi",    row.porcentajePrimaEmi);
@@ -480,7 +480,7 @@ export const useTarifasSection = () => {
         r.cveCriterioAsigTarifa === item.cveCriterioAsigTarifa &&
         r.cveReaseguradorTarifa === item.cveReaseguradorTarifa &&
         r.cveOperRamoTarifa     === item.cveOperRamoTarifa     &&
-        r.cveCobayeTarifa       === item.cveCobayeTarifa       &&
+        r.cveCobAyETarifa       === item.cveCobAyETarifa       &&
         r.cveTarifa             === item.cveTarifa             &&
         r.edad                  === item.edad                  &&
         r.cveSexo               === item.cveSexo
@@ -527,6 +527,9 @@ export const useTarifasSection = () => {
     { title: "% PRIMA EMITIDA",  key: "porcentajePrimaEmi", sortable: true,  headerProps: hp },
     { title: "TARIFA AL MILLAR", key: "tarifaMillar",       sortable: true,  headerProps: hp },
     { title: "EDAD",             key: "edad",               sortable: true,  headerProps: hp },
+    { title: "SEXO",             key: "cveSexo",               sortable: true,  headerProps: hp },
+    { title: "MONEDA TARIFA",    key: "cveMonedaTarifa",               sortable: true,  headerProps: hp },
+    { title: "¿PROPORCIÓN POR DIAS DE VIGENCIA?",    key: "proporcionDias",               sortable: true,  headerProps: hp },
     { title: "ACTIVA",           key: "tarifaActiva",       sortable: true,  headerProps: hp },
     { title: "EDITAR",           key: "editar",             sortable: false, headerProps: hp },
   ];

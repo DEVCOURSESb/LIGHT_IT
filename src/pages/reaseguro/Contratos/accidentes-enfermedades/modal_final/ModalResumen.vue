@@ -476,6 +476,7 @@ import { computed } from "vue";
 import { tablesHaders } from "./tablesHeaders";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
+import { contratoAYEActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/contratoAYE.actions";
 import { replaceNullValues } from "@/utils/replaceNullValues";
 import { formatCurrency } from "@/utils/formatters/formatCurrency";
 import { OPCIONES_PERIODICIDAD } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/administracion/useAdministracionSection";
@@ -561,6 +562,8 @@ const {
   queryFormaPago
 } = catalogosActions();
 
+const { saveGeneralesContrato, saveMonedaContrato, saveOperacionesRamos } = contratoAYEActions();
+
 // !GENERALES /*
 const generalesItems = computed(() => {
   const { CAE_MONEDA_CONTRATO, CAE_OPERACION_RAMO, ...rest } = generales;
@@ -573,11 +576,11 @@ const generalesItems = computed(() => {
       cveTreaseg: queryTiposReaseguro.data.value?.find(
         (el) => el.cveTreaseg == row.cveTreaseg,
       )?.descTreaseg,
-      idTcontrato: queryTiposContrato.data.value?.find(
-        (el) => el?.idTcontrato == row.idTcontrato,
+      idTContrato: queryTiposContrato.data.value?.find(
+        (el) => el?.idTcontrato == row.idTContrato,
       )?.descTcontrato,
-      cveFcontrac: queryFormaContractual.data.value?.find(
-        (el) => el.cveFcontrac == row.cveFcontrac,
+      cveFContrac: queryFormaContractual.data.value?.find(
+        (el) => el.cveFcontrac == row.cveFContrac,
       )?.descFcontrac,
       cveCriterioCob: queryCriterioCobertura.data.value?.find(
         (el) => el.cveCriterioCob == row.cveCriterioCob,
@@ -657,7 +660,7 @@ const reaseguradoresItems = computed( () => {
         porcentajeK: `${formatCurrency(row.porcentajeK)} %`,
         gastos: `$${formatCurrency(row.gastos)}`,
         cveAsignacionComisRol: queryTipoAsignacion.data.value?.find( el => el.cveAsignacion == row.cveAsignacionComisRol )?.descAsignacion,
-        cveCalcomis: queryCalculoComision.data.value?.find( el => el.cveCalcomis == row.cveCalcomis )?.formulaComision,
+        cveCalComis: queryCalculoComision.data.value?.find( el => el.cveCalComis == row.cveCalComis )?.formulaComision,
         comisRolFija: `${formatCurrency(row.comisRolFija)} %`,
         comisRolProvisional: `${formatCurrency(row.comisRolProvisional)} %`,
         comisRolMin: `${formatCurrency(row.comisRolMin)} %`,
@@ -702,7 +705,7 @@ const coberturasItems =computed(() => {
       cveCriterioAsigCobertura: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigCobertura)?.descCriterioAsig,
       cveReaseguradorCobertura: queryReaseguradoras.data.value?.find(el => el.cveReasegurador == row.cveReaseguradorCobertura)?.nombreReasegurador,
       cveOperRamoCobertura: queryOperacionesRamos.data.value?.find(el => el.cveCobertura == row.cveOperRamoCobertura)?.descOperacionRamos,
-      cveCobaye: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobaye)?.descCobaye,
+      cveCobAyE: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyE)?.descCobaye,
       saMax: `$${formatCurrency(row.saMax)}`,
     }
   });
@@ -716,7 +719,7 @@ const excedentesItems = computed(() => {
     return {
       ...row,
       cveCriterioAsigCapa: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigCapa)?.descCriterioAsig,
-      cveCobayeCapa: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobayeCapa)?.descCobaye,
+      cveCobAyECapa: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyECapa)?.descCobaye,
       retencionCapa: `${formatCurrency(row.retencionCapa)} %`,
       cesionCapa: `${formatCurrency(row.cesionCapa)} %`,
     }
@@ -747,7 +750,7 @@ const tarifasItems = computed(() => {
       cveCriterioAsigTarifa: queryCriterioAsignacion.data.value?.find(el => el.cveCriterioAsig == row.cveCriterioAsigTarifa)?.descCriterioAsig,
       cveReaseguradorTarifa: queryReaseguradoras.data.value?.find(el => el.cveReasegurador == row.cveReaseguradorTarifa)?.nombreReasegurador,
       cveOperRamoTarifa: queryOperacionesRamos.data.value?.find(el => el.cveCobertura == row.cveOperRamoTarifa)?.descOperacionRamos,
-      cveCobayeTarifa: queryCoberturasAyE.data.value?.find(el => el.cveCobaye == row.cveCobayeTarifa)?.descCobaye,
+      cveCobAyETarifa: queryCoberturasAyE.data.value?.find(el => el.cveCobAyE == row.cveCobAyETarifa)?.descCobaye,
       cveTarifa: queryTipoTarifa.data.value?.find(el => el.cveTarifa == row.cveTarifa)?.descTarifa,
       primaTarifaReaseg: `$${formatCurrency(row.primaTarifaReaseg)}`,
       porcentajePrimaEmi: `${formatCurrency(row.porcentajePrimaEmi)} %`,
@@ -833,7 +836,7 @@ const administradionPagosItems = computed(() => {
   const data = pagos.map((row) => {
     return {
       ...row,
-      cveFormapago: queryFormaPago.data.value?.find(el => el.cveFormaPago == row.cveFormapago)?.descFormaPago,
+      cveFormaPago: queryFormaPago.data.value?.find(el => el.cveFormaPago == row.cveFormaPago)?.descFormaPago,
       porcentajePago: `${formatCurrency(row.porcentajePago)} %`,
       fechaPago: formatDate(String(row?.fechaPago)) || "-",
     }
@@ -885,8 +888,29 @@ function replaceNullValuesInArray<T extends Record<string, any>>(arr: T[], repla
   return arr.map((obj) => replaceNullValues(obj, replacement));
 }
 
-const sendToService = () => {
-  console.log(obtenerPayloadBackend());
+const sendToService = async () => {
+  const { GENERALES } = obtenerPayloadBackend();
+
+  const { CAE_OPERACION_RAMO, CAE_MONEDA_CONTRATO, ...rest } = GENERALES;
+
+  if ( !!CAE_OPERACION_RAMO && !!CAE_MONEDA_CONTRATO && !!rest ) {
+
+    //const { contratoAYEActions } = await import("@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/emisionContableAYE.actions")
+
+    
+
+    try {
+      
+      await saveGeneralesContrato(rest);
+      await saveMonedaContrato(CAE_MONEDA_CONTRATO);
+      await saveOperacionesRamos(CAE_OPERACION_RAMO);
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 };
 
 const closeModal = () => {

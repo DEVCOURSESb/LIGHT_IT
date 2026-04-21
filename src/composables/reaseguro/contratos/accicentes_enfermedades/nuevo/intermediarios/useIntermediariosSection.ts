@@ -120,18 +120,28 @@ export const useIntermediariosSection = () => {
   // criterio = 0 (POR REASEGURADORA): uno por reasegurador
   const puedeAgregar = (): true | string => {
     const crit = formData.cveCriterioAsigIntermediario;
-    if (crit === 1 && originalDataTable.value.some((r) => r.cveCriterioAsigIntermediario === 1)) {
-      return "Solo se permite un intermediario por contrato cuando el criterio es POR CONTRATO.";
+
+    if (crit === 1) {
+      const existe = originalDataTable.value.some(r =>
+        r.cveCriterioAsigIntermediario === 1 &&
+        r.cveIntermediario === formData.cveIntermediario
+      );
+
+      if (existe)
+        return "Ya existe un registro POR CONTRATO para ese intermediario.";
     }
+
     if (crit === 0) {
-      const cveReaseg = formData.cveReaseguradorIntermediario;
-      if (
-        cveReaseg != null &&
-        originalDataTable.value.some((r) => r.cveReaseguradorIntermediario === cveReaseg)
-      ) {
-        return "Ya existe un registro para esta reaseguradora.";
-      }
+      const existe = originalDataTable.value.some(r =>
+        r.cveCriterioAsigIntermediario === 0 &&
+        r.cveReaseguradorIntermediario === formData.cveReaseguradorIntermediario &&
+        r.cveIntermediario === formData.cveIntermediario
+      );
+
+      if (existe)
+        return "Ya existe esa combinación Reaseguradora + Intermediario.";
     }
+
     return true;
   };
 
