@@ -55,22 +55,27 @@ export function AppRouter() {
           path: "bordereaux",
           name: "bordereaux",
           component: () =>
-          import("@/pages/TodoPage.vue"),
+            import("@/pages/TodoPage.vue"),
           meta: { title: "Bordereaux" },
         },
         {
           path: "estadosCuentaReaseg",
           name: "estadosCuentaReaseg",
           component: () =>
-          import("@/pages/TodoPage.vue"),
+            import("@/pages/TodoPage.vue"),
           meta: { title: "Estados de cuenta reaseguro" },
         },
         {
           path: "reportesReaseguro",
-          name: "reportesReaseguro",
-          component: () =>
-          import("@/pages/TodoPage.vue"),
+          component: () => import("@/pages/reaseguro/Reportes/CalReportes.vue"),
           meta: { title: "Reportes Reaseguro" },
+          children: [
+            {
+              path: "CalReportes", 
+              component: () => import("@/pages/reaseguro/Reportes/CalReportes.vue"),
+              meta: { title: "Resumen de Calculos" },
+            },
+          ],
         },
         {
           path: "RR6",

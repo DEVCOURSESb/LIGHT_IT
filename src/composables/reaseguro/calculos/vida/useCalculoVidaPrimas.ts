@@ -14,7 +14,7 @@ export const useCalculoVidaPrimas = () => {
   const queryClient = useQueryClient();
   const block = ref<boolean>(false);
 
-  const { fetch, calcular, deleteCalculo } = calculoPrimasActions();
+  const { fetch, calcular, deleteCalculo, downloadFile, makeFileCsv, saveFileCsv } = calculoPrimasActions();
 
   const querySubramos = useQuery({
     queryKey: ["operaciones-ramos", "list", "CVE_EXT_COBER-2", "RAMO-010"],
@@ -58,7 +58,8 @@ export const useCalculoVidaPrimas = () => {
   ];
 
   const getSubramoName = (idRamo: string) => {
-    return querySubramos.data.value?.filter((item) =>  item.cveCobertura ===  idRamo)[0]?.descOperacionRamos;
+    const list = (querySubramos.data.value as any[]) || [];
+    return list.find((item: any) => item.cveCobertura === idRamo)?.descOperacionRamos;
   }
 
   const calcularPrimas = async () => {
@@ -72,48 +73,124 @@ export const useCalculoVidaPrimas = () => {
       return;
     }
 
-    snackbar.mostrarMensajeSnackbar("Realizando cálculo de primas...", "success",);
+    snackbar.mostrarMensajeSnackbar("Realizando cálculo de primas y generando archivo...", "success");
 
-    const response = await calcular( subramo.value?.cveCobertura, fechaEvaluada.value );
+    try {
+      const response = await calcular(subramo.value.cveCobertura, fechaEvaluada.value);
 
-    if(response?.status === 200) {
-      queryClient.invalidateQueries({ queryKey: ["calculo-vida-primas-history"] })
-      snackbar.mostrarMensajeSnackbar("Cálculo ralizado con éxito", "success");
-      subramo.value = null;
-      fechaEvaluada.value = undefined;
-    } else if (response?.status === 208) {
-      dialog.show({
-        title: "Cálculo existente",
-        message: `El cálculo con el ${subramo.value?.cveCobertura} y fecha ${fechaEvaluada.value} ya existe. ¿Desea agregar uno nuevo?`,
-        ExtraAction: {
-          text: "Sí, agregar uno nuevo",
-          handler: async () => {
-            try {
-              await deleteCalculo(subramo.value?.cveCobertura, fechaEvaluada.value!)
-              calcularPrimas();
-            } catch (error) {
-              snackbar.mostrarMensajeSnackbar(
-                "Ocurrio un error al agregar un nuevo cálculo, verifique la información",
-                "error"
-              );
-            }
-          },
-          color: "primary"
-        }
-      });
+      if (response?.status === 200) {
+        const payload = {
+          idRamo: subramo.value.cveCobertura,
+          fechaEvaluacion: fechaEvaluada.value
+        };
+
+        await makeFileCsv(payload);
+
+        await saveFileCsv(payload);
+
+        queryClient.invalidateQueries({ queryKey: ["calculo-vida-primas-history"] });
+        snackbar.mostrarMensajeSnackbar("Cálculo y archivo generados con éxito", "success");
+
+        subramo.value = null;
+        fechaEvaluada.value = undefined;
+      } else if (response?.status === 208) {
+        dialog.show({
+          title: "Cálculo existente",
+          message: `El cálculo con el subramo ${subramo.value?.cveCobertura} ya existe. ¿Desea reemplazarlo por uno nuevo?`,
+          ExtraAction: {
+            text: "Sí, agregar uno nuevo",
+            handler: async () => {
+              try {
+                await deleteCalculo(subramo.value?.cveCobertura, fechaEvaluada.value!);
+                calcularPrimas();
+              } catch (error) {
+                snackbar.mostrarMensajeSnackbar(
+                  "Ocurrió un error al intentar reemplazar el cálculo.",
+                  "error"
+                );
+              }
+            },
+            color: "primary"
+          }
+        });
+      }
+    } catch (error) {
+      snackbar.mostrarMensajeSnackbar("Ocurrió un error de red o de servidor.", "error");
+    } finally {
+      block.value = false;
     }
-    
-    block.value = false;
   };
 
-  const descargarItem = (item: CalculoPrimasVidas) => {
-    downloadFileFromBase64(
-      item.documentBytes,
-      item.nombreArchivo,
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    );
+  const descargarItem = async (item: CalculoPrimasVidas) => {
+    block.value = true;
+    try {
+      const response = await downloadFile(String(item.id));
+      const base64Data = typeof response === "string" ? response : response?.documentBytes;
+      if (base64Data) {
+        downloadFileFromBase64(
+          base64Data,
+          item.nombreArchivo || `calculo_${item.id}.xlsx`,
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        );
+      } else {
+        snackbar.mostrarMensajeSnackbar("No se recibieron datos válidos del archivo", "error");
+      }
+    } catch (error) {
+      console.error("Error en la descarga:", error);
+      snackbar.mostrarMensajeSnackbar("Error al descargar el archivo", "error");
+    } finally {
+      block.value = false;
+    }
   };
 
+  const generarCsv = async (item?: { idRamo?: string; fechaEvaluacion?: string | Date; nombreArchivo?: string }) => {
+    block.value = true;
+    try {
+      const payload: any = item || { idRamo: subramo.value?.cveCobertura, fechaEvaluacion: fechaEvaluada.value };
+      await makeFileCsv(payload);
+      snackbar.mostrarMensajeSnackbar("El servidor ha procesado el archivo CSV", "success");
+    } catch (error) {
+      console.error("Error ejecutando proceso CSV:", error);
+      snackbar.mostrarMensajeSnackbar("Error al procesar CSV", "error");
+    } finally {
+      block.value = false;
+    }
+  };
+
+  const guardarCsv = async (payload: { idRamo?: string; fechaEvaluacion?: string | Date; nombreArchivo?: string; documentBytes?: string }) => {
+    block.value = true;
+    try {
+      const data = await saveFileCsv(payload);
+      snackbar.mostrarMensajeSnackbar("Registro guardado correctamente", "success");
+      return data;
+    } catch (error) {
+      console.error("Error guardando CSV:", error);
+      snackbar.mostrarMensajeSnackbar("Error al guardar CSV", "error");
+    } finally {
+      block.value = false;
+    }
+  };
+
+  const borrarItem = (item: CalculoPrimasVidas) => {
+    dialog.show({
+      title: "Confirmar eliminación",
+      message: `¿Eliminar cálculo de ${getSubramoName(item.idRamo)}?`,
+      ExtraAction: {
+        text: "Eliminar",
+        color: "error",
+        handler: async () => {
+          block.value = true;
+          try {
+            await deleteCalculo(item.idRamo, item.fechaCalculo);
+            queryClient.invalidateQueries({ queryKey: ["calculo-vida-primas-history"] });
+            snackbar.mostrarMensajeSnackbar("Eliminado correctamente", "success");
+          } finally {
+            block.value = false;
+          }
+        }
+      }
+    });
+  };
 
   return {
     querySubramos,
@@ -122,6 +199,9 @@ export const useCalculoVidaPrimas = () => {
     headers,
     calcularPrimas,
     descargarItem,
+    generarCsv,
+    guardarCsv,
+    borrarItem,
     queryHistory,
     block,
     getSubramoName,
