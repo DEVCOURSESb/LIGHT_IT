@@ -1,8 +1,8 @@
 import { ref, computed } from "vue";
 import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { BaseAPI } from "@/API/BaseAPI";
-import { useSnackbar } from "@/stores/useSnackbar";
 import { downloadFileFromBase64 } from "@/utils/downloadFileFromBase64";
+import { useSnackbar } from "@/stores/general/snackbarStore";
 
 export const useResumenCalculos = () => {
   const baseAPI = BaseAPI({ prefix: "ws_resumenes_contrato_reaseguro/api/v1/ResumenCalculosReaseguroRest/" });
