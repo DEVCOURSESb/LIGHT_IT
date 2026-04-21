@@ -3,11 +3,12 @@
     v-model="dialog.visible"
     max-width="420"
     transition="dialog-top-transition"
+    scrollable
   >
-    <v-card>
+    <v-card class="rounded-lg overflow-hidden">
 
       <!-- TÍTULO -->
-      <v-card-title class="text-h6 d-flex align-center">
+      <v-card-title class="text-h6 d-flex align-center justify-center py-4 px-6 text-center">
         <v-icon
           class="mr-2"
           :color="iconColor"
@@ -15,11 +16,13 @@
           {{ iconName }}
         </v-icon>
 
-        {{ dialog.title }}
+        <span class="font-weight-medium">
+          {{ dialog.title }}
+        </span>
       </v-card-title>
 
       <!-- MENSAJE -->
-      <v-card-text class="text-center">
+      <v-card-text class="px-6 pb-2 text-center">
         <span
           v-if="dialog.message.includes('<br')"
           v-html="dialog.message"
@@ -30,26 +33,29 @@
       </v-card-text>
 
       <!-- ACCIONES -->
-      <v-card-actions class="pa-4 d-flex flex-column ga-2">
+      <v-card-actions class="px-6 pb-6 pt-2 d-flex flex-column">
 
         <!-- CONFIRM -->
         <template v-if="dialog.type === DialogType.CONFIRM">
-          
-          <v-btn
-          color="primary"
-          block
-          @click="dialog.confirmar"
-          >
-          Confirmar
-        </v-btn>
-        <v-btn
-          variant="text"
-          color="grey"
-          block
-          @click="dialog.cancelar"
-        >
-          Cancelar
-        </v-btn>
+          <div class="w-100 d-flex align-center">
+            <v-btn
+              variant="text"
+              color="grey"
+              @click="dialog.cancelar"
+            >
+              Cancelar
+            </v-btn>
+
+            <v-spacer />
+
+            <v-btn
+              color="secondary"
+              variant="elevated"
+              @click="dialog.confirmar"
+            >
+              Confirmar
+            </v-btn>
+          </div>
         </template>
 
         <!-- NORMAL -->
@@ -58,8 +64,8 @@
           <!-- BOTÓN PRINCIPAL -->
           <v-btn
             block
-            :variant="dialog.ExtraAction ? 'text' : 'flat'"
-            :color="dialog.ExtraAction ? 'grey' : 'primary'"
+            color="secondary"
+            variant="elevated"
             @click="dialog.cerrar"
           >
             {{ dialog.ExtraAction ? 'Cancelar' : 'Aceptar' }}
@@ -69,7 +75,9 @@
           <v-btn
             v-if="dialog.ExtraAction"
             block
-            :color="dialog.ExtraAction.color || 'primary'"
+            class="mt-3"
+            color="secondary"
+            variant="outlined"
             @click="handleExtraAction"
           >
             {{ dialog.ExtraAction.text }}

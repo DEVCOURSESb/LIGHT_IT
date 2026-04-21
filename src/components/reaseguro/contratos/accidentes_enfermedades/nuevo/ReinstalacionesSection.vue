@@ -135,7 +135,7 @@
             >
               <template #top>
                 <v-toolbar class="encabezado" flat>
-                  <v-toolbar-title>
+                  <v-toolbar-title class="text-secondary">
                     Solo los registros de esta tabla se registrarán
                   </v-toolbar-title>
                   <v-spacer />

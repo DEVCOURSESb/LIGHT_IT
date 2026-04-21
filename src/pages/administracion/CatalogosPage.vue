@@ -24,7 +24,7 @@
       >
         <template #top>
           <v-toolbar class="encabezado" flat>
-            <v-toolbar-title>Bitácora de cátalogos</v-toolbar-title>
+            <v-toolbar-title class="text-secondary">Bitácora de cátalogos</v-toolbar-title>
           </v-toolbar>
           <br>
         </template>

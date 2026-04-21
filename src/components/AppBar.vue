@@ -1,7 +1,7 @@
 <template>
-  <v-app-bar app class="text-white" color="#003c71" elevation="4">
+  <v-app-bar app class="text-white" color="secondary" elevation="4">
     <div class="d-flex align-center ml-4" style="width: 150px; cursor: pointer" @click="goHome" >
-      <v-img contain max-height="50" src="/src/assets/logo/latino-seguros-logo-blanco.png" />
+      <v-img contain max-height="50" src="@/assets/logo/light-it.svg" />
     </div>
 
     <v-spacer />

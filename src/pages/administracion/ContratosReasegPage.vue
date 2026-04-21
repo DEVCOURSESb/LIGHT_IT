@@ -23,7 +23,7 @@
     >
       <template #top>
         <v-toolbar class="encabezado" flat>
-          <v-toolbar-title>Bitácora de contratos de reaseguro</v-toolbar-title>
+          <v-toolbar-title class="text-secondary">Bitácora de contratos de reaseguro</v-toolbar-title>
           <v-spacer />
           <v-btn class="btn-agregar"  >
             + Nuevo

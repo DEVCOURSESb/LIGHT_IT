@@ -1,9 +1,8 @@
 <template>
-  <v-img
+    <v-img
     class="bg-fondo"
-    cover
-    src="/src/assets/logo/Banner-web-Fraude-Yote-presto.png"
-  />
+    src="/src/assets/logo/light-it.svg"
+    />
 
   <div class="main-container">
     <div class="form-container">
@@ -12,7 +11,7 @@
           <v-img
             aspect-ratio="1"
             class="mx-auto"
-            src="/src/assets/logo/latino-seguros-logo-blanco.png"
+            src="/src/assets/logo/light-it-logo.svg"
             :width="180"
           />
           <v-label class="title">Bienvenido</v-label>
@@ -35,7 +34,6 @@
       </v-card>
     </div>
   </div>
-  <FooterComponent />
 </template>
 
 <script lang="ts" setup>

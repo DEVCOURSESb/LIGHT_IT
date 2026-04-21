@@ -7,7 +7,7 @@
           <v-icon end>mdi-chevron-down</v-icon>
         </v-btn>
       </template>
-      <v-list>
+      <v-list bg-color="secondary">
         <template v-for="item in listItems" :key="item.name">
 
           <!-- un solo item CHECK -->
@@ -28,7 +28,7 @@
             </template>
 
             <!-- items con subitems reaseguro/item/subitem CHECK -->
-            <v-list>
+            <v-list bg-color="secondary">
               <template v-for="subItem in item.items" :key="subItem.name">
                 <v-list-item v-if="subItem.items.length === 0" link :prepend-icon="subItem.icon || undefined"
                   :to="`/reaseguro/${item.name}/${subItem.name}`">
@@ -46,7 +46,7 @@
                   </template>
 
                   <!-- items con subitems reaseguro/item/subitem CHECK -->
-                  <v-list>
+                  <v-list bg-color="secondary">
                     <template v-for="submenu in subItem.items" :key="submenu.name">
                       <v-list-item v-if="submenu.items.length === 0" link :prepend-icon="submenu.icon || undefined"
                         :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}`">
@@ -67,7 +67,7 @@
                           </v-list-item>
                         </template>
 
-                        <v-list>
+                        <v-list bg-color="secondary">
                           <v-list-item v-for="subsubmenu in submenu.items" :key="subsubmenu.name" link
                             :prepend-icon="subsubmenu.icon || undefined"
                             :to="`/reaseguro/${item.name}/${subItem.name}/${submenu.name}/${subsubmenu.name}`">

@@ -5,7 +5,7 @@
       Bitácora
     </v-card-title>
     <v-spacer class="mb-4" />
-    <v-tabs v-model="activeTab" align-tabs="center" color="primary">
+    <v-tabs v-model="activeTab" align-tabs="center" color="secondary">
       <v-tab value="tab-1">
         Catálogos
       </v-tab>
