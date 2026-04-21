@@ -8,29 +8,14 @@
         <v-form ref="formRef">
           <v-row align="center" justify="center" class="mb-4">
             <v-col cols="12" md="3">
-              <v-select
-                v-model="subramo"
-                :items="querySubramos.data.value || []"
-                item-title="descOperacionRamos"
-                item-value="cveCobertura"
-                label="Subramo"
-                :disabled="querySubramos.isLoading.value || block"
-                return-object
-                variant="solo-filled"
-                clearable
-                required
-              />
+              <v-select v-model="subramo" :items="querySubramos.data.value || []" item-title="descOperacionRamos"
+                item-value="cveCobertura" label="Subramo" :disabled="querySubramos.isLoading.value || block"
+                return-object variant="solo-filled" clearable required />
             </v-col>
 
             <v-col cols="12" md="3">
-              <v-date-input
-                v-model="fechaCalculo"
-                label="Fecha de evaluación"
-                variant="solo-filled"
-                clearable
-                required
-                :disabled="block"
-              />
+              <v-date-input v-model="fechaCalculo" label="Fecha de evaluación" variant="solo-filled" clearable required
+                :disabled="block" />
             </v-col>
 
             <v-col cols="8" md="2" class="title-center">
@@ -46,11 +31,7 @@
           <h6>Historico cálculos de primas</h6>
         </div>
 
-        <v-data-table
-          :headers="headers"
-          :items="queryHistory.data.value || []"
-          class="elevation-1"
-        >
+        <v-data-table :headers="headers" :items="queryHistory.data.value || []" class="elevation-1">
           <template #item.idRamo="{ item }">
             {{ getSubramoName(item.idRamo) }}
           </template>
@@ -63,9 +44,15 @@
             {{ formatDate(item.fechaCalculo) }}
           </template>
           <template #item.actions="{ item }">
-            <v-icon class="edit" size="large" @click="descargarItem(item)">
-              mdi-download
-            </v-icon>
+            <div class="d-flex ga-2">
+              <v-icon class="edit" size="large" @click="descargarItem(item)" color="primary">
+                mdi-download
+              </v-icon>
+
+              <v-icon size="large" @click="borrarItem(item)" color="error">
+                mdi-delete
+              </v-icon>
+            </div>
           </template>
         </v-data-table>
       </v-card-title>
@@ -86,6 +73,7 @@ const {
   headers,
   calcularPrimas,
   descargarItem,
+  borrarItem,
   queryHistory,
   block,
   getSubramoName
