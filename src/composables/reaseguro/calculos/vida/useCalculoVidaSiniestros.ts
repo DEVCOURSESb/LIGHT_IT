@@ -12,7 +12,7 @@ export const useCalculoVidaSiniestros = () => {
   const snackbar = useSnackbar();
   const queryClient = useQueryClient();
   const block = ref<boolean>(false);
-  const baseAPI = BaseAPI({ prefix: 'ws_latino/reaseguro', isBase: false, isPrivate: true });
+  const baseAPI = BaseAPI({ prefix: 'ws_latino/reaseguro', isBase: true, isPrivate: true });
 
 
   const { fetch, calcular, deleteCalculo } = calculoSiniestrosActions();
@@ -59,25 +59,6 @@ export const useCalculoVidaSiniestros = () => {
       },
     },
     // hacer que aparezca el checkbox deshabilitado
-    {
-      title: "PRIMAS",
-      key: "primas",
-      sortable: true,
-      headerProps: {
-        style: "font-weight: bold",
-      },
-      fields: [
-        {
-          name: "primas",
-          label: "Primas",
-          type: "Checkbox",
-          required: true,
-          dataKey: "primas",
-          displayType: "checkbox",
-          defaultValue: true,
-        },
-      ]
-    },
     {
       title: "ACCIONES",
       key: "actions",
