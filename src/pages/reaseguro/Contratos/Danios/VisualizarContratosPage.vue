@@ -5,7 +5,7 @@
       class="image bg-surface elevation-10"
       cover
       height="750"
-      src="/src/assets/logo/Banner-web-Fraude-Yote-presto.png"
+      src="/src/assets/logo/light-it.svg"
       width="auto"
     />
   </div>

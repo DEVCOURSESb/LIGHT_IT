@@ -2,7 +2,7 @@
 <template>
   <v-card class="mt-4" elevation="0" outlined>
     <v-toolbar class="encabezado" flat>
-      <v-toolbar-title>{{ titulo }}</v-toolbar-title>
+      <v-toolbar-title class="text-secondary">{{ titulo }}</v-toolbar-title>
     </v-toolbar>
 
     <v-card-text class="pt-6">

@@ -1,5 +1,5 @@
 <template>
-  <v-tabs v-model="activeTab" align-tabs="center" color="primary">
+  <v-tabs v-model="activeTab" align-tabs="center" color="secondary">
     <v-tab value="tab-1">Generales</v-tab>
     <v-tab value="tab-2" v-if="isTypeProporcional">Detalles Proporcionales</v-tab>
     <v-tab value="tab-3" v-if="isFacultativo">Pólizas Facultativas</v-tab>

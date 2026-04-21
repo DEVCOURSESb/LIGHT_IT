@@ -172,7 +172,7 @@ export function useCrudGeneric(config: CrudConfig) {
             isSubmitting.value = false;
           }
         },
-        color: "primary",
+        color: "secondary",
       },
     });
   };

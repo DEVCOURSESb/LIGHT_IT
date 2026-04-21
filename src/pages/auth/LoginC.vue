@@ -1,11 +1,11 @@
 <template>
-  <v-img class="bg-fondo" cover src="/src/assets/logo/Banner-web-Fraude-Yote-presto.png" />
+  <v-img class="bg-fondo" src="/src/assets/logo/light-it.svg" />
 
   <div class="main-container">
     <div class="form-container">
-      <v-card class="my-8">
+      <v-card class="loginCorreo my-8">
         <v-card-item class="card-item">
-          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/latino-seguros-logo-blanco.png" :width="100" />
+          <v-img aspect-ratio="1" class="mx-auto" src="/src/assets/logo/light-it-logo.svg" :width="100" />
           <v-label>Ingrese la informacion solicitada</v-label>
         </v-card-item>
         <v-card-text>
@@ -40,13 +40,11 @@
       </v-card>
     </div>
   </div>
-  <FooterComponent />
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import FooterComponent from '@/components/general/FooterComponent.vue'
   import { DialogType, useDialog } from '@/stores/general/dialogStore'
 import { useAuth } from '@/composables/auth/useAuth'
 

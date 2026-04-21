@@ -7,7 +7,7 @@
       </v-btn>
     </template>
 
-    <v-list>
+    <v-list bg-color="secondary">
       <v-list-item
         v-for="item in listItems"
         :key="item.name"

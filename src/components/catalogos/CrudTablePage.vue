@@ -123,7 +123,7 @@
       >
         <template #top>
           <v-toolbar class="encabezado" flat>
-            <v-toolbar-title>{{ config.tableTitle }}</v-toolbar-title>
+            <v-toolbar-title class="text-secondary">{{ config.tableTitle }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
         </template>

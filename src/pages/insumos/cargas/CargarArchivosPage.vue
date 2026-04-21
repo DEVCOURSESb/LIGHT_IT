@@ -17,7 +17,7 @@
       <!-- Sección de carga -->
       <v-card class="mt-4" elevation="0" outlined>
         <v-toolbar class="encabezado" flat>
-          <v-toolbar-title>{{ tituloFormulario }}</v-toolbar-title>
+          <v-toolbar-title class="text-secondary">{{ tituloFormulario }}</v-toolbar-title>
         </v-toolbar>
         
         <v-card-text class="pt-6">
@@ -118,7 +118,7 @@
       >
         <template #top>
           <v-toolbar class="encabezado" flat>
-            <v-toolbar-title>{{ tituloTabla }}</v-toolbar-title>
+            <v-toolbar-title class="text-secondary">{{ tituloTabla }}</v-toolbar-title>
             <v-spacer />
           </v-toolbar>
         </template>

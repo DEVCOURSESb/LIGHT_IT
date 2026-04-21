@@ -14,7 +14,7 @@
       <!-- Tabla de Cifras Control Emisión -->
       <v-card class="mt-4" elevation="0" outlined>
         <v-toolbar class="encabezado" flat>
-          <v-toolbar-title>Cifras Control Emisión</v-toolbar-title>
+          <v-toolbar-title class="text-secondary">Cifras Control Emisión</v-toolbar-title>
           <v-spacer />
           <v-btn
             icon
@@ -66,7 +66,7 @@
       <!-- Tabla de Cifras Control Siniestros -->
       <v-card class="mt-4" elevation="0" outlined>
         <v-toolbar class="encabezado" flat>
-          <v-toolbar-title>Cifras Control Siniestros</v-toolbar-title>
+          <v-toolbar-title class="text-secondary">Cifras Control Siniestros</v-toolbar-title>
           <v-spacer />
           <v-btn
             icon
