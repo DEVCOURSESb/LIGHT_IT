@@ -1,4 +1,5 @@
 import { BaseAPI } from "@/API/BaseAPI";
+import type { GeneralesSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
 
 export const contratoAYEActions = () => {
   const baseApi = BaseAPI({
@@ -155,7 +156,18 @@ export const contratoAYEActions = () => {
     }
   };
 
+
+  const getAllContracts = async () => {
+    try {
+      const response = await baseApi.post<GeneralesSection[]>("CaeGeneralesContratoRest/getAllRecords");
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return {
     crearContratoCompleto,
+    getAllContracts
   };
 };

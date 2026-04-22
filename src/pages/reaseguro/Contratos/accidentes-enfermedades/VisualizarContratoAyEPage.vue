@@ -36,6 +36,7 @@
 </template>
 
 <script lang="ts" setup>
+import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
 import { contratoAYEActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/contratoAYE.actions";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { useQuery } from "@tanstack/vue-query";
@@ -84,9 +85,15 @@ const data = useQuery({
   queryFn: getAllContracts,
 });
 
+const { queryEntidadFederativa } = catalogosActions();
+
 const dataToShow = computed(() => {
   return data.data.value?.map((row) => {
-    return { ...row, fechaRegistro: formatDate(row.fechaRegistro) };
+    return { 
+      ...row, 
+      fechaRegistro: formatDate(row.fechaRegistro),
+      entidad: queryEntidadFederativa.data.value?.find(el => el.cveEntidad == row.cveEntidad)?.nombreEntidad || "-"
+    };
   });
 });
 </script>
