@@ -14,60 +14,71 @@
         >
           {{ iconName }}
         </v-icon>
+
         {{ dialog.title }}
       </v-card-title>
 
       <!-- MENSAJE -->
       <v-card-text class="text-center">
-        <span v-if="dialog.message.includes('<br')" v-html="dialog.message"></span>
-        <span v-else>{{ dialog.message }}</span>
+        <span
+          v-if="dialog.message.includes('<br')"
+          v-html="dialog.message"
+        />
+        <span v-else>
+          {{ dialog.message }}
+        </span>
       </v-card-text>
 
       <!-- ACCIONES -->
-      <v-card-actions class="pa-4">
+      <v-card-actions class="pa-4 d-flex flex-column ga-2">
 
         <!-- CONFIRM -->
         <template v-if="dialog.type === DialogType.CONFIRM">
+          
           <v-btn
-            variant="text"
-            color="grey"
-            @click="dialog.cancelar"
+          color="primary"
+          block
+          @click="dialog.confirmar"
           >
-            Cancelar
-          </v-btn>
-
-          <v-spacer />
-
-          <v-btn
-            color="primary"
-            @click="dialog.confirmar"
-          >
-            Confirmar
-          </v-btn>
+          Confirmar
+        </v-btn>
+        <v-btn
+          variant="text"
+          color="grey"
+          block
+          @click="dialog.cancelar"
+        >
+          Cancelar
+        </v-btn>
         </template>
 
-        <!-- NORMAL (SUCCESS / ERROR / INFO) -->
+        <!-- NORMAL -->
         <template v-else>
+
+          <!-- BOTÓN PRINCIPAL -->
           <v-btn
             block
-            color="primary"
+            :variant="dialog.ExtraAction ? 'text' : 'flat'"
+            :color="dialog.ExtraAction ? 'grey' : 'primary'"
             @click="dialog.cerrar"
           >
-            Aceptar
+            {{ dialog.ExtraAction ? 'Cancelar' : 'Aceptar' }}
           </v-btn>
 
+          <!-- EXTRA ACTION -->
           <v-btn
             v-if="dialog.ExtraAction"
             block
-            class="mt-2"
-            :color="dialog.ExtraAction.color || 'secondary'"
+            :color="dialog.ExtraAction.color || 'primary'"
             @click="handleExtraAction"
           >
             {{ dialog.ExtraAction.text }}
           </v-btn>
+
         </template>
 
       </v-card-actions>
+
     </v-card>
   </v-dialog>
 </template>
@@ -81,12 +92,14 @@ const dialog = useDialog()
 const iconColor = computed(() => {
   if (dialog.type === DialogType.SUCCESS) return 'green'
   if (dialog.type === DialogType.ERROR) return 'red'
+  if (dialog.ExtraAction) return 'primary'
   return 'primary'
 })
 
 const iconName = computed(() => {
   if (dialog.type === DialogType.SUCCESS) return 'mdi-check-circle'
   if (dialog.type === DialogType.ERROR) return 'mdi-alert-circle'
+  if (dialog.ExtraAction) return 'mdi-help-circle'
   return 'mdi-information'
 })
 

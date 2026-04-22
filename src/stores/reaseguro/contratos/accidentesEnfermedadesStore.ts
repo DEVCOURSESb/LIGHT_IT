@@ -90,6 +90,7 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
       title: "Datos guardados",
       message: "Los datos generales han sido guardados exitosamente.",
       type: DialogType.SUCCESS,
+      onCancel: () => {}
     });
   };
     
@@ -118,6 +119,13 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
     );
     
     activeTab.value = isFacultativo.value ? "tab-3" : "tab-4";
+
+    dialog.show({
+      title: "Datos guardados",
+      message: "Los detalles se han sido guardados exitosamente.",
+      type: DialogType.SUCCESS,
+      onCancel: () => {}
+    });
   };
   
   // !PÓLIZAS FACULTATIVAS

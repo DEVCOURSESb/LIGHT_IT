@@ -732,10 +732,10 @@ export const useReaseguradoresSection = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que los datos ingresados de reaseguradoras del contrato son correctos?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       autoCloseExtraAction: false,
       ExtraAction: {
-        text: "Sí, agregar",
+        text: "Aceptar",
         color: "primary",
         handler: checkAgregarStore
       }

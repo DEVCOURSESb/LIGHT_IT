@@ -369,10 +369,10 @@ export const useComisionesRateOnLine = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirmas que los datos ingresados de comisiones son correctos?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       autoCloseExtraAction: false,
       ExtraAction: {
-        text: "Continuar",
+        text: "Aceptar",
         color: "primary",
         handler: doGuardarComisiones,
       },

@@ -26,8 +26,9 @@ export const usePolizasFacultativasSection = () => {
 
   const handleSubmit = () => {
    dialog.show({
-    title: "Atención",
+    title: "Confirmación",
     message: "¿Confirma que los datos ingresados de pólizas facultativas del contrato son correctos?",
+    type: DialogType.INFO,
     ExtraAction: {
       text: "Aceptar",
       handler: () => {

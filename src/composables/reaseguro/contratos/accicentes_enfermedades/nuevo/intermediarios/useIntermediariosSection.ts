@@ -14,11 +14,26 @@ import { replaceNullValuesInArray } from "@/utils/replaceNullValues";
 type IntermediariosForm = Omit<IntermediarioSection, "idContrato" | "interActivo">;
 
 // Tipo display — extiende la interfaz con campos calculados para la tabla
-type IntermediariosDisplay = IntermediarioSection & {
+type IntermediariosDisplay = Omit<
+  IntermediarioSection,
+  | "corretaje"
+  | "porcentajeCorretajeFijo"
+  | "montoCorretajeFijo"
+  | "porcentajeCorretajeProvisional"
+  | "montoCorretajeProvisional"
+> & {
   nombreReasegurador: string;
   nombreIntermediario: string;
   descCveLimCorretaje: string | undefined;
   descCveAsignacionCorretaje: string | undefined;
+
+  corretaje: string;
+
+  porcentajeCorretajeFijo: string | null;
+  montoCorretajeFijo: string | null;
+
+  porcentajeCorretajeProvisional: string | null;
+  montoCorretajeProvisional: string | null;
 };
 
 export const useIntermediariosSection = () => {
@@ -39,13 +54,48 @@ export const useIntermediariosSection = () => {
   const originalDataTable = ref<IntermediarioSection[]>([...intermediarios.value]);
 
   // Computed display
-  const dataTable = computed(() => {
+  const dataTable = computed<IntermediariosDisplay[]>(() => {
     const data = originalDataTable.value.map((row) => ({
       ...row,
-      nombreReasegurador:  getNombreReasegurador(row.cveReaseguradorIntermediario),
-      nombreIntermediario: getNombreIntermediario(row.cveIntermediario),
-      descCveLimCorretaje: queryLimiteCorretaje.data.value?.find(el => el.cveLimCorretaje == row.cveLimCorretaje)?.limiteCorretaje,
-      descCveAsignacionCorretaje: queryTipoAsignacion.data.value?.find(el => el.cveAsignacion == row.cveAsignacionCorretaje)?.descAsignacion,
+
+      nombreReasegurador:
+        getNombreReasegurador(row.cveReaseguradorIntermediario),
+
+      nombreIntermediario:
+        getNombreIntermediario(row.cveIntermediario),
+
+      descCveLimCorretaje:
+        queryLimiteCorretaje.data.value?.find(
+          el => el.cveLimCorretaje == row.cveLimCorretaje
+        )?.limiteCorretaje,
+
+      descCveAsignacionCorretaje:
+        queryTipoAsignacion.data.value?.find(
+          el => el.cveAsignacion == row.cveAsignacionCorretaje
+        )?.descAsignacion,
+
+      corretaje:
+        row.corretaje === 1 ? "SI" : "NO",
+
+      porcentajeCorretajeFijo:
+        row.porcentajeCorretajeFijo != null
+          ? formattNumber(String(row.porcentajeCorretajeFijo))
+          : null,
+
+      montoCorretajeFijo:
+        row.montoCorretajeFijo != null
+          ? formatCurrency(row.montoCorretajeFijo)
+          : null,
+
+      porcentajeCorretajeProvisional:
+        row.porcentajeCorretajeProvisional != null
+          ? formattNumber(String(row.porcentajeCorretajeProvisional))
+          : null,
+
+      montoCorretajeProvisional:
+        row.montoCorretajeProvisional != null
+          ? formatCurrency(row.montoCorretajeProvisional)
+          : null,
     }));
 
     return replaceNullValuesInArray(data);
@@ -302,9 +352,9 @@ export const useIntermediariosSection = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que desea agregar al intermediario?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       ExtraAction: {
-        text: "Continuar",
+        text: "Aceptar",
         color: "primary",
         handler: confirmAgregarIntermediario,
       },
@@ -380,12 +430,14 @@ export const useIntermediariosSection = () => {
   };
 
   // Clave compuesta: criterio + reasegurador + intermediario
-  const _findIndex = (item: IntermediarioSection): number =>
+  const _findIndex = (
+    item: IntermediarioSection | IntermediariosDisplay
+  ): number =>
     originalDataTable.value.findIndex(
       (r) =>
         r.cveCriterioAsigIntermediario === item.cveCriterioAsigIntermediario &&
         r.cveReaseguradorIntermediario === item.cveReaseguradorIntermediario &&
-        r.cveIntermediario             === item.cveIntermediario
+        r.cveIntermediario === item.cveIntermediario
     );
 
   // Guardar

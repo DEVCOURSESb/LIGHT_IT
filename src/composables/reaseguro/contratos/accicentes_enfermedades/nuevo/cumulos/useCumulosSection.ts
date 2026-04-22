@@ -270,10 +270,10 @@ export const useCumulosSection = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que los datos ingresados de cúmulos son correctos?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       autoCloseExtraAction: false,
       ExtraAction: {
-        text: "Continuar",
+        text: "Aceptar",
         color: "primary",
         handler: doGuardarCumulos,
       },

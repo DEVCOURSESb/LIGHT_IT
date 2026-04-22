@@ -77,6 +77,8 @@ export const useDialog = defineStore('dialog', () => {
     show,
     confirmar,
     cancelar,
-    cerrar
+    cerrar,
+    onCancel,
+    onConfirm,
   }
 })
