@@ -396,7 +396,7 @@ export const useAdministracionSection = () => {
   const doCrearContrato = () => {
     // Aquí se llama al endpoint/acción de persistencia definitiva
     const data = aeStore.obtenerPayloadBackend();
-    console.log(data)
+    
     dialog.cerrar();
   };
 
