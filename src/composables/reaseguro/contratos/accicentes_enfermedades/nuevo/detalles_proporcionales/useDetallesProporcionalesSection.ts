@@ -43,19 +43,27 @@ export const useDetallesProporcionalesSection = () => {
   const extensionesCoberturaToShow = ref<Extension[]>([]);
 
   const calcularExtensiones = () => {
-    const operaciones = generales.value.CAE_OPERACION_RAMO.filter(row => row.operRamoActivo) ?? [];
+    const operaciones =
+      generales.value.CAE_OPERACION_RAMO.filter(
+        row => row.operRamoActivo
+      ) ?? [];
 
-    const minExtCober = operaciones.length == 1
-    ? Math.min(...operaciones.map((op) => op.cveExtCoberContrato))
-    : null;
-    
-    
+    if (operaciones.length === 0) {
+      extensionesCoberturaToShow.value = [];
+      return;
+    }
+
+    // Para 1 o más registros: tomar el mínimo registrado
+    const minExtCober = Math.min(
+      ...operaciones.map(op => op.cveExtCoberContrato)
+    );
+
     extensionesCoberturaToShow.value =
-    queryExtensionesCobertura.data.value
-    ?.filter((ext: Extension) =>
-      minExtCober !== null ? ext.cveExtCober >= minExtCober : false
-  )
-  .sort((a, b) => a.cveExtCober - b.cveExtCober) ?? [];
+      queryExtensionesCobertura.data.value
+        ?.filter((ext: Extension) =>
+          ext.cveExtCober >= minExtCober
+        )
+        .sort((a, b) => a.cveExtCober - b.cveExtCober) ?? [];
   };
 
   watch(
@@ -138,7 +146,6 @@ export const useDetallesProporcionalesSection = () => {
     if (total === 1) {
       const tipoCober = operacionesActivas[0]!.cveExtCoberContrato;
       if (tipoCober === 3) {
-        // Spec: total=1 y tipo=3 → forzar NO y deshabilitar
         setFieldValue("detallesOperRamo", 0);
         return true;
       }

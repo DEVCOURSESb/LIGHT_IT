@@ -57,7 +57,7 @@
               <v-select
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobAyE"
+                item-value="cveCobaye"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable

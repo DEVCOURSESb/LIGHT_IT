@@ -8,6 +8,7 @@ import { formattNumber } from "@/utils/formatters/formattNumber";
 import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useTarifasValidations } from "./Usetarifasvalidations";
 import type { TarifasSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
+import { replaceNullValuesInArray } from "@/utils/replaceNullValues";
 
 // 
 // Mapa de coberturas permitidas por operación/ramo
@@ -31,11 +32,26 @@ const COBERTURAS_POR_OPER_RAMO: Record<string, string[]> = {
 type TarifasForm = Omit<TarifasSection, "idContrato" | "tarifaActiva">;
 
 // Tipo display — extiende la interfaz con campos calculados para la tabla
-type TarifasDisplay = TarifasSection & {
-  nombreReasegurador: string;
-  descOperRamo: string;
-  descCobaye: string;
-  descTarifa: string;
+type TarifasDisplay = Omit<
+  TarifasSection,
+  | "primaTarifaReaseg"
+  | "porcentajePrimaEmi"
+  | "tarifaMillar"
+  | "edad"
+  | "proporcionDias"
+> & {
+  nombreReasegurador?: string;
+  descOperRamo?: string;
+  descCobaye?: string;
+  descTarifa?: string;
+  descCveSexo?: string;
+  descCveMonedaTarifa?: string;
+
+  primaTarifaReaseg?: string | null;
+  porcentajePrimaEmi?: string | null;
+  tarifaMillar?: string | null;
+  edad?: string | null;
+  proporcionDias?: string | null;
 };
 
 export const useTarifasSection = () => {
@@ -64,15 +80,51 @@ export const useTarifasSection = () => {
   const originalDataTable = ref<TarifasSection[]>([...tarifas.value]);
 
   //  Computed display — agrega campos de descripción, es solo lectura 
-  const dataTable = computed<TarifasDisplay[]>(() =>
-    originalDataTable.value.map((row) => ({
+  const dataTable = computed<TarifasDisplay[]>(() => {
+    const data = originalDataTable.value.map((row) => ({
       ...row,
+
       nombreReasegurador: getNombreReasegurador(row.cveReaseguradorTarifa),
-      descOperRamo:       getDescOperRamo(row.cveOperRamoTarifa),
-      descCobaye:         getDescCobaye(row.cveCobAyETarifa),
-      descTarifa:         getDescTarifa(row.cveTarifa),
-    }))
-  );
+      descOperRamo: getDescOperRamo(row.cveOperRamoTarifa),
+      descCobaye: getDescCobaye(row.cveCobAyETarifa),
+      descTarifa: getDescTarifa(row.cveTarifa),
+
+      descCveSexo:
+        querySexo.data.value?.find(
+          el => el.cveSexo == row.cveSexo
+        )?.descSexo,
+
+      descCveMonedaTarifa:
+        queryMonedas.data.value?.find(
+          el => el.cveMoneda == row.cveMonedaTarifa
+        )?.descMoneda,
+
+      primaTarifaReaseg:
+        row.primaTarifaReaseg != null
+          ? formatCurrency(row.primaTarifaReaseg)
+          : null,
+
+      porcentajePrimaEmi:
+        row.porcentajePrimaEmi != null
+          ? formatCurrency(row.porcentajePrimaEmi)
+          : null,
+
+      tarifaMillar:
+        row.tarifaMillar != null
+          ? formatCurrency(row.tarifaMillar)
+          : null,
+
+      edad:
+        row.edad != null
+          ? String(row.edad)
+          : null,
+
+      proporcionDias:
+        row.proporcionDias === 1 ? "SI" : "NO",
+    }));
+
+    return replaceNullValuesInArray(data);
+  });
 
   //  Refs numéricos (formateo visual) 
   const primaTarifaReaseg  = ref("");
@@ -371,19 +423,19 @@ export const useTarifasSection = () => {
   };
 
   //  Helpers de descripción (para el computed display) 
-  const getNombreReasegurador = (cve: number | null): string =>
+  const getNombreReasegurador = (cve: number | null): string | undefined =>
     queryReaseguradoras.data.value?.find((r) => r.cveReasegurador === cve)
-      ?.nombreReasegurador ?? "";
+      ?.nombreReasegurador;
 
-  const getDescOperRamo = (cve: string | null): string =>
-    operacionesRamosData.value.find((o) => o.value === cve)?.title ?? "";
+  const getDescOperRamo = (cve: string | null): string | undefined =>
+    operacionesRamosData.value.find((o) => o.value === cve)?.title;
 
-  const getDescCobaye = (cve: number | null): string =>
-    queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye ?? "";
+  const getDescCobaye = (cve: number | null): string | undefined =>
+    queryCoberturasAyE.data.value?.find((c) => c.cveCobaye === cve)?.descCobaye;
 
-  const getDescTarifa = (cve: number | null): string =>
+  const getDescTarifa = (cve: number | null): string | undefined =>
     (queryTipoTarifa?.data.value ?? []).find((t: any) => t.cveTarifa === cve)
-      ?.descTarifa ?? "";
+      ?.descTarifa;
 
   //  Agregar tarifa 
   const handleAgregarTarifa = () => {
@@ -474,7 +526,9 @@ export const useTarifasSection = () => {
   };
 
   // Clave compuesta para findIndex — incluye todos los discriminadores únicos
-  const _findIndex = (item: TarifasSection): number =>
+  const _findIndex = (
+  item: TarifasSection | TarifasDisplay
+): number =>
     originalDataTable.value.findIndex(
       (r) =>
         r.cveCriterioAsigTarifa === item.cveCriterioAsigTarifa &&
@@ -527,8 +581,8 @@ export const useTarifasSection = () => {
     { title: "% PRIMA EMITIDA",  key: "porcentajePrimaEmi", sortable: true,  headerProps: hp },
     { title: "TARIFA AL MILLAR", key: "tarifaMillar",       sortable: true,  headerProps: hp },
     { title: "EDAD",             key: "edad",               sortable: true,  headerProps: hp },
-    { title: "SEXO",             key: "cveSexo",               sortable: true,  headerProps: hp },
-    { title: "MONEDA TARIFA",    key: "cveMonedaTarifa",               sortable: true,  headerProps: hp },
+    { title:"SEXO", key:"descCveSexo", sortable: true, headerProps: hp},
+    { title:"MONEDA TARIFA", key:"descCveMonedaTarifa", sortable: true, headerProps: hp},
     { title: "¿PROPORCIÓN POR DIAS DE VIGENCIA?",    key: "proporcionDias",               sortable: true,  headerProps: hp },
     { title: "ACTIVA",           key: "tarifaActiva",       sortable: true,  headerProps: hp },
     { title: "EDITAR",           key: "editar",             sortable: false, headerProps: hp },

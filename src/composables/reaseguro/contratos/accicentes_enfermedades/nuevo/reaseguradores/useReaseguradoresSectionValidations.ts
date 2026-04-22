@@ -131,7 +131,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     prioridad: (value: number) => {
       if ( !isTypeProporcional ) {
         if (value === null || value === undefined) return "Prioridad es obligatoria.";
-        else return val.minMax(value, 0, 99999999999999999999.99) || "Prioridad es obligatoria con un rango de 0 a 99999999999999999999.99"
+        else return val.minMax(value, 0, 9999999999999999999.99) || "Prioridad es obligatoria con un rango de 0 a 9999999999999999999.99"
       }
 
       return true;
@@ -139,7 +139,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     limResponsabilidad: (value: number) => {
       if ( !isTypeProporcional ) {
         if (value === null || value === undefined) return "Límite de responsabilidad es obligatorio.";
-        else return val.minMax(value, 0, 99999999999999999999.99) || "Límite de responsabilidad es obligatorio con un rango de 0 a 99999999999999999999.99"
+        else return val.minMax(value, 0, 9999999999999999999.99) || "Límite de responsabilidad es obligatorio con un rango de 0 a 9999999999999999999.99"
       }
 
       return true;
@@ -147,7 +147,7 @@ export const useReaseguradoresSectionValidations = ({ isTypeProporcional }:props
     limAgregado: (value: number) => {
       if ( !isTypeProporcional ) {
         if (value === null || value === undefined) return "Límite agregado es obligatorio.";
-        else return val.minMax(value, 0, 99999999999999999999.99) || "Límite agregado es obligatorio con un rango de 0 a 99999999999999999999.99"
+        else return val.minMax(value, 0, 9999999999999999999.99) || "Límite agregado es obligatorio con un rango de 0 a 9999999999999999999.99"
       }
 
       return true;

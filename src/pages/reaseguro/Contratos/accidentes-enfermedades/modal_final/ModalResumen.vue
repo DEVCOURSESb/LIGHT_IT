@@ -477,7 +477,7 @@ import { tablesHaders } from "./tablesHeaders";
 import { formatDate } from "@/utils/formatters/formatDate";
 import { catalogosActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/catalogos.actions";
 import { contratoAYEActions } from "@/API/reaseguro/contratos/accidentes_enfermedades/nuevo/contratoAYE.actions";
-import { replaceNullValues } from "@/utils/replaceNullValues";
+import { replaceNullValuesInArray } from "@/utils/replaceNullValues";
 import { formatCurrency } from "@/utils/formatters/formatCurrency";
 import { OPCIONES_PERIODICIDAD } from "@/composables/reaseguro/contratos/accicentes_enfermedades/nuevo/administracion/useAdministracionSection";
 const showModal = defineModel<boolean>({ default: false });
@@ -882,10 +882,6 @@ const administracionBorSiniestros = computed(() => {
 
   return replaceNullValuesInArray(data);
 });
-
-function replaceNullValuesInArray<T extends Record<string, any>>(arr: T[], replacement: string = "-"): T[] {
-  return arr.map((obj) => replaceNullValues(obj, replacement));
-}
 
 const sendToService = async () => {
   const { GENERALES } = obtenerPayloadBackend();

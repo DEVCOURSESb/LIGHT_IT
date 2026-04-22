@@ -107,16 +107,18 @@ export const useReaseguradoresSection = () => {
     }
   });
 
-  watch(() => formData.limResponsabilidad, (limResponsabilidad) => {
-    if( !!limResponsabilidad ) {
-      const rowExistenteConMismoLim = reaseguradores.value.find(row => row.limResponsabilidad == limResponsabilidad);
-      if ( !!rowExistenteConMismoLim ) {
-        const limResponsabilidadV = String(rowExistenteConMismoLim.prioridad);
-        limResponsabilidad.value = limResponsabilidadV;
-        onInputGeneric("limResponsabilidad", limResponsabilidadV)
-        onBlurGeneric("limResponsabilidad");
-      }
-    }
+  watch(() => formData.capa, (capa) => {
+    if (!capa) return;
+
+    const row = reaseguradores.value.find(r => r.capa == capa);
+
+    if (!row) return;
+
+    const valor = String(row.limResponsabilidad ?? "");
+
+    limResponsabilidad.value = valor;
+    onInputGeneric("limResponsabilidad", valor);
+    onBlurGeneric("limResponsabilidad");
   });
 
   const showErrors = ref(false);
@@ -579,7 +581,7 @@ export const useReaseguradoresSection = () => {
 
         /* SI LA CAPA NO ES LA PRIMERA, ENTONCES SE VALIDA PAG 50 */
         if(newRow.capa && newRow.capa != 1) {
-          const arrayCapas = dataTableOriginal.value.filter(row => row.cveReasegurador === newRow.cveReasegurador).sort((a, b) => a.capa! - b.capa!);
+          const arrayCapas = dataTableOriginal.value.sort((a, b) => a.capa! - b.capa!);
 
           const lastCapa = arrayCapas[arrayCapas.length - 1];
 
@@ -606,7 +608,7 @@ export const useReaseguradoresSection = () => {
           }
         }
 
-        if(!(newRow?.prioridad! + newRow?.limResponsabilidad! <= newRow?.limAgregado!)){
+        if (newRow.limResponsabilidad! > newRow.limAgregado!) {
           dialog.show({
             title: "Atención",
             message: `El limite agregado es menor a la capacidad total del contrato, favor de verificar.`,
@@ -620,7 +622,7 @@ export const useReaseguradoresSection = () => {
           if(newRow.primaMin > newRow.primaMax) {
             dialog.show({
               title: "Atención",
-              message: `La prima máxima es menor a la prima máxima; favor de verificar`,
+              message: `La prima máxima es menor a la prima mínima, favor de verificar`,
               type: DialogType.ERROR,
             });
 
@@ -663,7 +665,26 @@ export const useReaseguradoresSection = () => {
     });
 
     return;
-  }else if( !isTypeProporcional.value) {
+  } else if (isTypeProporcional.value && sumaParticipacion > 100) { 
+    dialog.cerrar();
+  
+    nextTick(() => {
+      dialog.show({
+        title: "Atención",
+        message: `¿Desea continuar si el contrato esté cubierto a más de 100%?. participación actual de: ${sumaParticipacion}%`,
+        type: DialogType.ERROR,
+        ExtraAction: {
+          text: "Sí, continuar",
+          color: "primary",
+          handler: () => {
+            aeStore.guardarReaseguradores(reaseguradoresActivos);
+          }
+        }
+      });
+    });
+  
+    return;
+  } else if( !isTypeProporcional.value) {
       reaseguradoresActivos.sort((a, b) => a.capa! - b.capa!)
 
       let messages: string[] = [];

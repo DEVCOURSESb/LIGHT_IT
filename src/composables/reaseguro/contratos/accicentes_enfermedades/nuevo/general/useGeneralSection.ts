@@ -157,7 +157,7 @@ export const useGeneralSection = () => {
     const catalogo = queryOperacionesRamos.data.value ?? [];
     const tabla = dataTableOperacionRamo.value ?? [];
 
-    if (!tipo) return [];
+    if (formData.cveExtCoberContrato === null || formData.cveExtCoberContrato === undefined) return [];
 
     let opciones = catalogo.filter(c =>
       Number(c.cveExtCober) === tipo &&
@@ -396,7 +396,8 @@ export const useGeneralSection = () => {
       ordenCobertura: initialValues.ordenCobertura ?? 1,
       cveFContrac: initialValues.cveFContrac ?? 0,
       negociosCubiertos: initialValues.negociosCubiertos ?? "TODA LA CARTERA",
-      contratoActivo: initialValues.contratoActivo ?? false
+      contratoActivo: initialValues.contratoActivo ?? false,
+      contratoRetencion: 0,
     },
     validationSchema: useGeneralValidations(),
     validateOnMount: false,

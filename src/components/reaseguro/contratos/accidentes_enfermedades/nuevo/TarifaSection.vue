@@ -57,7 +57,7 @@
               <v-select
                 :items="coberturasDisponibles"
                 item-title="descCobaye"
-                item-value="cveCobAyE"
+                item-value="cveCobaye"
                 label="Cobertura"
                 variant="solo-filled"
                 clearable
@@ -216,30 +216,9 @@
                     :model-value="item.proporcionDias"
                     hide-details
                     density="compact"
+                    :disabled="true"
                   />
                 </template>
-
-                <template #item.primaTarifaReaseg="{ item }">
-                  {{ item.primaTarifaReaseg != null
-                      ? item.primaTarifaReaseg.toLocaleString("es-MX", { minimumFractionDigits: 2 })
-                      : "—" }}
-                </template>
-
-                <template #item.porcentajePrimaEmi="{ item }">
-                  {{ item.porcentajePrimaEmi != null ? `${item.porcentajePrimaEmi.toFixed(2)} %` : "—" }}
-                </template>
-
-                <template #item.tarifaMillar="{ item }">
-                  {{ item.tarifaMillar != null ? item.tarifaMillar.toFixed(2) : "—" }}
-                </template>
-
-                <template #item.edad="{ item }">
-                  {{ item.edad ?? "—" }}
-                </template>
-                <template #item.cveSexo="{ item }">
-                  {{ item.cveSexo ?? "—" }}
-                </template>
-
                 <template #item.tarifaActiva="{ item }">
                   <v-checkbox
                     :model-value="item.tarifaActiva"
