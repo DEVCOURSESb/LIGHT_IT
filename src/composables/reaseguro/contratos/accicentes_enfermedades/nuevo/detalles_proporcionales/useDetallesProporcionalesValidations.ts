@@ -40,6 +40,7 @@ export const useDetallesProporcionalesValidations = () => {
         return true;
     },
     capacidadContrato: (value: number, context: any) => {
+      return true;
       const numericValue = round2(Number(value));
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
         return "La capacidad del contrato es obligatoria, debe ser un número positivo.";
@@ -57,7 +58,7 @@ export const useDetallesProporcionalesValidations = () => {
            Number(context.form?.montoCesion) +
           Number(context.form?.montoRetencionContrato)
         );
-        return true;
+        return numericValue === esperado || `La capacidad del contrato debe ser ${esperado}`;
       }
     },
     cveCriterioAsigCapacidad: (value: string | null) => {

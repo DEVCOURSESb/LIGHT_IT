@@ -39,6 +39,12 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
 
   const activeTab = ref<string>(localStorage.getItem(STORAGE_KEYS.activeTab) ?? "tab-1",);
 
+  const limpiarStorageContrato = () => {
+    Object.values(STORAGE_KEYS).forEach((key) => {
+      localStorage.removeItem(key);
+    });
+  };
+
   // !GENERALES
   const generalesData = JSON.parse(localStorage.getItem(STORAGE_KEYS.generalesCompletos) || "{}") as GeneralSectionCompleteData;
   const generales = ref<GeneralSectionCompleteData>({...generalesData, fechaFinContrato: new Date(generalesData.fechaFinContrato), fechaInicioContrato: new Date(generalesData.fechaInicioContrato)});
@@ -90,6 +96,7 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
       title: "Datos guardados",
       message: "Los datos generales han sido guardados exitosamente.",
       type: DialogType.SUCCESS,
+      onCancel: () => {}
     });
   };
     
@@ -118,6 +125,13 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
     );
     
     activeTab.value = isFacultativo.value ? "tab-3" : "tab-4";
+
+    dialog.show({
+      title: "Datos guardados",
+      message: "Los detalles se han sido guardados exitosamente.",
+      type: DialogType.SUCCESS,
+      onCancel: () => {}
+    });
   };
   
   // !PÓLIZAS FACULTATIVAS
@@ -437,6 +451,7 @@ export const useContratoAEStore = defineStore("CONTRATO_AYE", () => {
     borPrimas,
     borSiniestros,
     guardarAdministracion,
-    obtenerPayloadBackend
+    obtenerPayloadBackend,
+    limpiarStorageContrato,
   };
 });

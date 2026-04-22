@@ -349,19 +349,99 @@ export const useCorretajeSection = () => {
     const aAgregar: CorretajeSection[] = [];
 
     csvSelectedRows.value.forEach((row, i) => {
+      const fila = i + 1;
+
+      // intermediario obligatorio
       if (!row.cveIntermediarioCorretaje) {
-        errores.push(`Fila ${i + 1}: intermediario no encontrado.`);
+        errores.push(`Fila ${fila}: intermediario no encontrado.`);
         return;
       }
-      if (hayEscalonadoPorReaseg.value && !row.cveReaseguradorCorretaje) {
-        errores.push(`Fila ${i + 1}: reaseguradora no encontrada ("${row.nombreReasegurador}").`);
+
+      // validar que sea intermediario permitido
+      const permitidoInter = intermediariosData.value.some(
+        x => x.cveIntermediario === row.cveIntermediarioCorretaje
+      );
+
+      if (!permitidoInter) {
+        errores.push(`Fila ${fila}: intermediario no permitido.`);
         return;
       }
-      if (row.porcentajeCorretajeDef == null && row.montoCorretajeDef == null) {
-        errores.push(`Fila ${i + 1}: debe tener % corretaje definitivo o monto corretaje definitivo.`);
+
+      // reaseguradora obligatoria cuando aplica
+      if (hayEscalonadoPorReaseg.value) {
+        if (!row.cveReaseguradorCorretaje) {
+          errores.push(`Fila ${fila}: reaseguradora no encontrada.`);
+          return;
+        }
+
+        const permitidoReaseg = intermediariosEscalonados.value.some(
+          x =>
+            x.cveIntermediario === row.cveIntermediarioCorretaje &&
+            x.cveReaseguradorIntermediario === row.cveReaseguradorCorretaje
+        );
+
+        if (!permitidoReaseg) {
+          errores.push(`Fila ${fila}: reaseguradora no permitida.`);
+          return;
+        }
+      }
+
+      // límites
+      if (
+        row.limiteInfCorretaje < 0 ||
+        row.limiteInfCorretaje > 1000
+      ) {
+        errores.push(`Fila ${fila}: límite inferior inválido.`);
         return;
       }
-      const { nombreIntermediario: _a, nombreReasegurador: _b, ...base } = row;
+
+      if (
+        row.limiteSupCorretaje < 0 ||
+        row.limiteSupCorretaje > 1000
+      ) {
+        errores.push(`Fila ${fila}: límite superior inválido.`);
+        return;
+      }
+
+      if (row.limiteSupCorretaje <= row.limiteInfCorretaje) {
+        errores.push(`Fila ${fila}: límite superior debe ser mayor al inferior.`);
+        return;
+      }
+
+      const tienePct = row.porcentajeCorretajeDef != null;
+      const tieneMonto = row.montoCorretajeDef != null;
+
+      // exclusión mutua
+      if (!tienePct && !tieneMonto) {
+        errores.push(`Fila ${fila}: capture porcentaje o monto.`);
+        return;
+      }
+
+      if (tienePct && tieneMonto) {
+        errores.push(`Fila ${fila}: porcentaje y monto no pueden coexistir.`);
+        return;
+      }
+
+      // rango %
+      if (tienePct) {
+        if (
+          row.porcentajeCorretajeDef! < 0 ||
+          row.porcentajeCorretajeDef! > 100
+        ) {
+          errores.push(`Fila ${fila}: porcentaje inválido.`);
+          return;
+        }
+      }
+
+      // monto positivo
+      if (tieneMonto) {
+        if (row.montoCorretajeDef! < 0) {
+          errores.push(`Fila ${fila}: monto inválido.`);
+          return;
+        }
+      }
+
+      const { nombreIntermediario, nombreReasegurador, ...base } = row;
       aAgregar.push(base);
     });
 

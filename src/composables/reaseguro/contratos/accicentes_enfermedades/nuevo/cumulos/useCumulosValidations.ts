@@ -6,7 +6,7 @@ export const useCumulosValidations = () => {
   return {
     cveOperRamoCumulo: (value: string | null, context: any) => {
       const detallesOperRamo = context.form?.detallesOperRamo;
-      if (detallesOperRamo === "SI") {
+      if (detallesOperRamo === 1) {
         return (
           (value != null && value !== "") ||
           "La operación / ramo es obligatoria."

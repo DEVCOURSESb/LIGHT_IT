@@ -8,3 +8,8 @@ export function replaceNullValues<T extends Record<string, any>>(obj: T, replace
     ]),
   ) as T;
 }
+
+
+export function replaceNullValuesInArray<T extends Record<string, any>>(arr: T[], replacement: string = "-"): T[] {
+  return arr.map((obj) => replaceNullValues(obj, replacement));
+}

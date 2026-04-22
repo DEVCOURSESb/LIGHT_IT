@@ -59,10 +59,13 @@ export const useCumulosSection = () => {
   const maxCapas = computed(() => {
     const numReg = detallesProporcionales.value.filter( row => row.cumulos == 1 && row.detalleActivo );
 
-    if (!esExcedentePorCapas.value) {
-      const maxNumCapas = Math.max(...excedentes.value.map((e) => e.noCapa ?? 0));
+   if (esExcedentePorCapas.value) {
+      const maxNumCapas = Math.max(
+        ...excedentes.value.map(e => e.noCapa ?? 0),
+        0
+      );
       return numReg.length * maxNumCapas;
-    };
+    }
 
     return numReg.length;
         
@@ -192,7 +195,7 @@ export const useCumulosSection = () => {
 
     dialog.show({
       title: "Confirmación",
-      message: "¿Confirma que desea agregar el cúmulo capturado?",
+      message: "¿Confirma que desea agregar los cúmulos capturados?",
       type: DialogType.ERROR,
       ExtraAction: {
         text: "Continuar",
@@ -267,10 +270,10 @@ export const useCumulosSection = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que los datos ingresados de cúmulos son correctos?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       autoCloseExtraAction: false,
       ExtraAction: {
-        text: "Continuar",
+        text: "Aceptar",
         color: "primary",
         handler: doGuardarCumulos,
       },

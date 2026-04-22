@@ -8,14 +8,32 @@ import { formattNumber } from "@/utils/formatters/formattNumber";
 import { DialogType, useDialog } from "@/stores/general/dialogStore";
 import { useIntermediariosValidations } from "./useIntermediariosValidations";
 import type { IntermediarioSection } from "@/components/reaseguro/contratos/accidentes_enfermedades/nuevo/contrato.interfaces";
+import { replaceNullValuesInArray } from "@/utils/replaceNullValues";
 
 // Tipo del formulario — sin idContrato e interActivo
 type IntermediariosForm = Omit<IntermediarioSection, "idContrato" | "interActivo">;
 
 // Tipo display — extiende la interfaz con campos calculados para la tabla
-type IntermediariosDisplay = IntermediarioSection & {
+type IntermediariosDisplay = Omit<
+  IntermediarioSection,
+  | "corretaje"
+  | "porcentajeCorretajeFijo"
+  | "montoCorretajeFijo"
+  | "porcentajeCorretajeProvisional"
+  | "montoCorretajeProvisional"
+> & {
   nombreReasegurador: string;
   nombreIntermediario: string;
+  descCveLimCorretaje: string | undefined;
+  descCveAsignacionCorretaje: string | undefined;
+
+  corretaje: string;
+
+  porcentajeCorretajeFijo: string | null;
+  montoCorretajeFijo: string | null;
+
+  porcentajeCorretajeProvisional: string | null;
+  montoCorretajeProvisional: string | null;
 };
 
 export const useIntermediariosSection = () => {
@@ -36,13 +54,52 @@ export const useIntermediariosSection = () => {
   const originalDataTable = ref<IntermediarioSection[]>([...intermediarios.value]);
 
   // Computed display
-  const dataTable = computed<IntermediariosDisplay[]>(() =>
-    originalDataTable.value.map((row) => ({
+  const dataTable = computed<IntermediariosDisplay[]>(() => {
+    const data = originalDataTable.value.map((row) => ({
       ...row,
-      nombreReasegurador:  getNombreReasegurador(row.cveReaseguradorIntermediario),
-      nombreIntermediario: getNombreIntermediario(row.cveIntermediario),
-    }))
-  );
+
+      nombreReasegurador:
+        getNombreReasegurador(row.cveReaseguradorIntermediario),
+
+      nombreIntermediario:
+        getNombreIntermediario(row.cveIntermediario),
+
+      descCveLimCorretaje:
+        queryLimiteCorretaje.data.value?.find(
+          el => el.cveLimCorretaje == row.cveLimCorretaje
+        )?.limiteCorretaje,
+
+      descCveAsignacionCorretaje:
+        queryTipoAsignacion.data.value?.find(
+          el => el.cveAsignacion == row.cveAsignacionCorretaje
+        )?.descAsignacion,
+
+      corretaje:
+        row.corretaje === 1 ? "SI" : "NO",
+
+      porcentajeCorretajeFijo:
+        row.porcentajeCorretajeFijo != null
+          ? formattNumber(String(row.porcentajeCorretajeFijo))
+          : null,
+
+      montoCorretajeFijo:
+        row.montoCorretajeFijo != null
+          ? formatCurrency(row.montoCorretajeFijo)
+          : null,
+
+      porcentajeCorretajeProvisional:
+        row.porcentajeCorretajeProvisional != null
+          ? formattNumber(String(row.porcentajeCorretajeProvisional))
+          : null,
+
+      montoCorretajeProvisional:
+        row.montoCorretajeProvisional != null
+          ? formatCurrency(row.montoCorretajeProvisional)
+          : null,
+    }));
+
+    return replaceNullValuesInArray(data);
+  });
 
   // Refs numéricos (formateo visual)
   const porcentajeCorretajeFijo          = ref("");
@@ -295,9 +352,9 @@ export const useIntermediariosSection = () => {
     dialog.show({
       title: "Confirmación",
       message: "¿Confirma que desea agregar al intermediario?",
-      type: DialogType.ERROR,
+      type: DialogType.INFO,
       ExtraAction: {
-        text: "Continuar",
+        text: "Aceptar",
         color: "primary",
         handler: confirmAgregarIntermediario,
       },
@@ -373,12 +430,14 @@ export const useIntermediariosSection = () => {
   };
 
   // Clave compuesta: criterio + reasegurador + intermediario
-  const _findIndex = (item: IntermediarioSection): number =>
+  const _findIndex = (
+    item: IntermediarioSection | IntermediariosDisplay
+  ): number =>
     originalDataTable.value.findIndex(
       (r) =>
         r.cveCriterioAsigIntermediario === item.cveCriterioAsigIntermediario &&
         r.cveReaseguradorIntermediario === item.cveReaseguradorIntermediario &&
-        r.cveIntermediario             === item.cveIntermediario
+        r.cveIntermediario === item.cveIntermediario
     );
 
   // Guardar
@@ -394,7 +453,7 @@ export const useIntermediariosSection = () => {
 
     dialog.show({
       title: "Confirmación",
-      message: "¿Confirma que los datos ingresados de reaseguradoras del contrato son correctos?",
+      message: "¿Confirma que los datos ingresados de intermediarios del contrato son correctos?",
       type: DialogType.ERROR,
       autoCloseExtraAction: false,
       ExtraAction: {
@@ -420,6 +479,8 @@ export const useIntermediariosSection = () => {
     { title: "% CORRETAJE FIJO",           key: "porcentajeCorretajeFijo",      sortable: true,  headerProps: hp },
     { title: "MONTO CORRETAJE FIJO",       key: "montoCorretajeFijo",           sortable: true,  headerProps: hp },
     { title: "% CORRETAJE PROVISIONAL",    key: "porcentajeCorretajeProvisional", sortable: true, headerProps: hp },
+    { title: "ASIGNACIÓN CORRETAJE",key: "descCveAsignacionCorretaje",    sortable: true,  headerProps: hp },
+    { title: "LIM. CORRETAJE",key: "descCveLimCorretaje",    sortable: true,  headerProps: hp },
     { title: "MONTO CORRETAJE PROVISIONAL",key: "montoCorretajeProvisional",    sortable: true,  headerProps: hp },
     { title: "ACTIVO",                     key: "interActivo",                  sortable: true,  headerProps: hp },
     { title: "EDITAR",                     key: "editar",                       sortable: false, headerProps: hp },

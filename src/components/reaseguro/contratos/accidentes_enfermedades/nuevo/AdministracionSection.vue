@@ -352,6 +352,5 @@ const {
   handleAgregarBorSiniestros, toggleSiniestrosActivo, editBorSiniestros,
   // guardar / crear
   handleGuardarAdministracion,
-  handleCrearContrato,
 } = useAdministracionSection();
 </script>

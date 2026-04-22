@@ -192,7 +192,7 @@
                 label="Municipio" 
                 variant="solo-filled" 
                 :model-value="formData['municipio']"
-                @update:model-value="setFieldValue('municipio', $event.toUpperCase())"
+                @update:model-value="setFieldValue('municipio', ($event || '').toUpperCase())"
                 :error-messages="showErrors ? formErrors['municipio'] : undefined"
               />
             </v-col>

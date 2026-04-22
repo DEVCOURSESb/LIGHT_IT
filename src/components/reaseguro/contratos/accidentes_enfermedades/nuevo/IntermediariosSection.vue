@@ -225,30 +225,6 @@
 
               <template #no-data>No hay datos disponibles</template>
 
-              <!-- ¿Corretaje? -->
-              <template #item.corretaje="{ item }">
-                {{ item.corretaje === 1 ? 'SI' : 'NO' }}
-              </template>
-
-              <!-- % Corretaje fijo -->
-              <template #item.porcentajeCorretajeFijo="{ item }">
-                {{ item.porcentajeCorretajeFijo != null ? `${item.porcentajeCorretajeFijo.toFixed(4)} %` : '—' }}
-              </template>
-
-              <!-- Monto corretaje fijo -->
-              <template #item.montoCorretajeFijo="{ item }">
-                {{ item.montoCorretajeFijo != null ? formatCurrency(item.montoCorretajeFijo) : '—' }}
-              </template>
-
-              <!-- % Corretaje provisional -->
-              <template #item.porcentajeCorretajeProvisional="{ item }">
-                {{ item.porcentajeCorretajeProvisional != null ? `${item.porcentajeCorretajeProvisional.toFixed(4)} %` : '—' }}
-              </template>
-
-              <!-- Monto corretaje provisional -->
-              <template #item.montoCorretajeProvisional="{ item }">
-                {{ item.montoCorretajeProvisional != null ? formatCurrency(item.montoCorretajeProvisional) : '—' }}
-              </template>
 
               <!-- Checkbox activo -->
               <template #item.interActivo="{ item }">
