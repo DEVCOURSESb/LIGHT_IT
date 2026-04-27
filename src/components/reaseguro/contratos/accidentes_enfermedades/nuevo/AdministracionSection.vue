@@ -53,7 +53,7 @@
                 min="0.01"
                 max="100"
                 step="0.01"
-                color="primary"
+                color="secondary"
                 thumb-label
                 class="mt-1"
               />

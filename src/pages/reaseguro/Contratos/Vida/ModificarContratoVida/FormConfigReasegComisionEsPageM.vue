@@ -24,7 +24,7 @@
               max="1000"
               step="0.01"
               thumb-label
-              color="indigo"
+              color="secondary"
               hide-details
             >
               <template v-slot:append>
@@ -49,7 +49,7 @@
               max="1000"
               step="0.01"
               thumb-label
-              color="indigo"
+              color="secondary"
               hide-details
             >
               <template v-slot:append>
@@ -74,7 +74,7 @@
               max="100"
               step="0.01"
               thumb-label
-              color="orange"
+              color="secondary"
               hide-details
             >
               <template v-slot:append>

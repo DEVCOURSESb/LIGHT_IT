@@ -81,7 +81,7 @@
                 min="0"
                 max="100"
                 step="0.01"
-                color="primary"
+                color="secondary"
                 thumb-label
                 :disabled="formData.montoCorretajeDef != null"
                 class="mt-1"

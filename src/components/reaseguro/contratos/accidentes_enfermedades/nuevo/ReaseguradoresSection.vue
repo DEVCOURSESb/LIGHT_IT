@@ -39,7 +39,7 @@
                 max="100.00"
                 step=".01"
                 thumb-label
-                color="primary"
+                color="secondary"
               />
             </v-col>
 
@@ -77,7 +77,7 @@
                 max="100.00"
                 step=".01"
                 thumb-label
-                color="primary"
+                color="secondary"
               />
             </v-col>
 
@@ -207,7 +207,7 @@
                 max="100.00"
                 step=".01"
                 thumb-label
-                color="primary"
+                color="secondary"
               />
             </v-col>
             
@@ -229,7 +229,7 @@
                max="100.00"
                step=".01"
                thumb-label
-               color="primary"
+               color="secondary"
              />
             </v-col>
             
@@ -252,7 +252,7 @@
                max="100.00"
                step=".01"
                thumb-label
-               color="primary"
+               color="secondary"
              />
             </v-col>
 
@@ -274,7 +274,7 @@
                max="100.00"
                step=".01"
                thumb-label
-               color="primary"
+               color="secondary"
              />
             </v-col>
           </v-row>

@@ -83,7 +83,7 @@
                 max="100"
                 step="0.01"
                 thumb-label
-                color="primary"
+                color="secondary"
               />
             </v-col>
           </v-row>

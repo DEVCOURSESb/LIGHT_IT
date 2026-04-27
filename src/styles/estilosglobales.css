@@ -111,7 +111,7 @@
 }
 
 .v-list{
-  background-color: rgb(255, 255, 0) !important;
+  background-color: rgb(var(--v-theme-secondary)) !important;
 }
 
 .v-list-item,
