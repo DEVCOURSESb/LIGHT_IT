@@ -40,26 +40,28 @@ export const useDetallesProporcionalesValidations = () => {
         return true;
     },
     capacidadContrato: (value: number, context: any) => {
-      return true;
       const numericValue = round2(Number(value));
+
       if (!(value != null && val.minMax(numericValue, 0, 9999999999999999999.99))) {
-        return "La capacidad del contrato es obligatoria, debe ser un número positivo.";
-        // SI PORCENTAJE RETENCION DISTINTO DE VACIO 	CAPACIDAD_CONTRATO
-      } else if (val.isFalsyExceptZero(context.form?.porcentajeRetencion)) {
-        const montoEsperado = round2(
-          Number(context.form?.porcentajeCesion) * Number(context.form?.capacidadContrato) + Number(context.form?.porcentajeRetencion) * Number(context.form?.capacidadContrato)
-        );
-        if (numericValue === montoEsperado) return true;
-        else
-          return `La capacidad del contrato no corresponde con el monto de cesión y retención (${montoEsperado}).`;
-      } else {
-        //TODO: campo monto retencion contrato no existe
-        const esperado = round2(
-           Number(context.form?.montoCesion) +
-          Number(context.form?.montoRetencionContrato)
-        );
-        return numericValue === esperado || `La capacidad del contrato debe ser ${esperado}`;
+        return "La capacidad del contrato es obligatoria.";
       }
+
+      const pctRet = context.form?.porcentajeRetencion;
+      const pctCes = context.form?.porcentajeCesion;
+
+      if (val.isFalsyExceptZero(pctRet)) {
+        const suma = round2((Number(pctCes) || 0) + (Number(pctRet) || 0));
+
+        return suma === 100 || "La suma de porcentajes debe ser 100.";
+      }
+
+      const esperado = round2(
+        Number(context.form?.montoCesion || 0) +
+        Number(context.form?.montoRetencion || 0)
+      );
+
+      return numericValue === esperado ||
+        `La capacidad del contrato debe ser ${esperado}`;
     },
     cveCriterioAsigCapacidad: (value: string | null) => {
       return ( (value != null && value !== "") || "El criterio de capacidad es obligatorio." );
